@@ -1,0 +1,17 @@
+name: Blocking Issues
+
+# Includes the Blocking Issues action from https://github.com/Levi-Lesches/blocking-issues
+
+on: 
+  issues:
+    types: [closed]
+  pull_request_target: 
+    types: [opened, synchronize, edited]
+    
+jobs: 
+  blocking_issues: 
+    runs-on: ubuntu-latest
+    name: Checks for blocking issues
+    
+    steps: 
+      - uses: Levi-Lesches/blocking-issues@v1.1
