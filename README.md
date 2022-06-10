@@ -1,16 +1,4 @@
-# rover_control_dashboard
+# Rover Control Dashboard
+The Rover Control Dashboard is a graphical desktop application the Binghamton University Rover Team will use to operate and monitor the rover. It is a vital part of our remote command station.
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+We are redesigning and rebuilding our remote operating interfaces using more modern toolkits to promote rapid development and deployment. Visit [BinghamtonRover/BurtOS-2](https://github.com/BinghamtonRover/BurtOS-2) for command software from the 2022 competition year.
