@@ -13,10 +13,11 @@ import "package:rover_control_dashboard/pages.dart";
 /// The main class for the app. 
 class RoverControlDashboard extends StatefulWidget {
 	@override
-	_RoverControlDashboardState createState() => _RoverControlDashboardState();
+	RoverControlDashboardState createState() => RoverControlDashboardState();
 }
 
-class _RoverControlDashboardState extends State<RoverControlDashboard> {
+/// The state object for [RoverControlDashboard].
+class RoverControlDashboardState extends State<RoverControlDashboard> {
 	@override
 	Widget build(BuildContext context) => MaterialApp(home: DashboardPage());
 }
