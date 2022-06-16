@@ -1,0 +1,247 @@
+# This file configures the analyzer, which statically analyzes Dart code to
+# check for errors, warnings, and lints.
+#
+# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
+# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
+# invoked from the command line by running `flutter analyze`.
+
+# The following line activates a set of recommended lints for Flutter apps,
+# packages, and plugins designed to encourage good coding practices.
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  # The lint rules applied to this project can be customized in the
+  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
+  # included above or to enable additional rules. A list of all available lints
+  # and their documentation is published at
+  # https://dart-lang.github.io/linter/lints/index.html.
+  #
+  # Instead of disabling a lint rule for the entire project in the
+  # section below, it can also be suppressed for a single line of code
+  # or a specific dart file by using the `// ignore: name_of_lint` and
+  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
+  # producing the lint.
+  rules:
+    # ===== Additional lints NOT included in flutter_lints =====
+    
+    # Always declare a function or method's return type
+    always_declare_return_types: true
+
+    # Put named parameters that are required before optional ones.
+    # This makes it easier to skim parameter lists
+    always_put_required_named_parameters_first: true
+
+    # Avoid true or false in conditions, and instead use logic with actual values
+    # If your condition has something like `&& true`, it can be simplified. 
+    avoid_bool_literals_in_conditional_expressions: true
+
+    # Errors signify a programming error that needs to be fixed. Catch Exceptions instead. 
+    avoid_catching_errors: true
+
+    # Use a different type of quotes when necessary.
+    avoid_escaping_inner_quotes: true
+
+    # Use getters instead of allocating an extra field.
+    avoid_field_initializers_in_const_classes: true
+
+    # A class with private fields won't be == to subclasses without them.
+    # Extending the class inherits the private fields but not implementing. 
+    avoid_implementing_value_types: true
+
+    # Positional parameters don't tell the caller what they do. 
+    # Normally, that is obvious given the value, but not for booleans. 
+    # Use named parameters instead.
+    avoid_positional_boolean_parameters: true
+
+    # Typedefs are for callers to use, and are not internal. 
+    avoid_private_typedef_functions: true
+
+    # If you want the default value, leave it blank.
+    # Unless, of course, if you _really_ don't want the value to change. 
+    avoid_redundant_argument_values: true
+
+    # Users will `await` Futures, so don't return null. Use `async` instead.  
+    avoid_returning_null_for_future: true
+
+    # There is no reason to return `this` from an object. 
+    # If the user called your method, they clearly have access to `this`.
+    # Additionally, returning `this` indicates nothing about the outcome.
+    # Use the cascade syntax for method chaining instead. 
+    avoid_returning_this: true
+
+    # Users expect to be able to get a value if they can set it. 
+    # If you need write-only values, use a `.setX(value)` method instead. 
+    avoid_setters_without_getters: true
+
+    # Type names may be minified, and are never suitable for release builds. 
+    avoid_type_to_string: true
+
+    # If a parameter is unused, delete it.
+    avoid_unused_constructor_parameters: true
+
+    # Asynchronous functions can be awaited only if they return a Future.
+    # If you mark an async function void, it cannot be awaited. 
+    # Even if you do not want the function to be awaited, leave that to the caller. 
+    # If you want the result to be ignored, use `Future<void>`. 
+    avoid_void_async: true
+
+    # Stream subscriptions will continue to fire until they are canceled. 
+    # Not properly cancelling one can cause memory leaks. 
+    cancel_subscriptions: true
+
+    # Don't use `as`, on a nullable value, use `value != null` or `value!` instead.
+    cast_nullable_to_non_nullable: true
+
+    # Doc comments can contain references to other code using [brackets]. 
+    # This lint will warn when the code referenced doesn't actually exist. 
+    comment_references: true
+
+    # Have `dart:` first, then `package:` imports, then relative, then exports.
+    # Each section should be alphabetized. 
+    directives_ordering: true
+
+    # Do not use `.fromEnvironment` as they obscure platform-specific bugs. 
+    # Use hard-coded constants or runtime conditions instead. 
+    # To check the platform, use Flutter's `Platform` class. 
+    do_not_use_environment: true
+
+    # This lint catches conditions that are always true or false, and are thus unnecessary.
+    invariant_booleans: true
+
+    # Instead of allocating a variable and returning it, simply return the value. 
+    join_return_with_assignment: true
+
+    # Add a leading newline which which makes multi-line strings easier to read.
+    leading_newlines_in_multiline_strings: true
+
+    # Don't use literals as conditions, like `if (true)`, since they never change. 
+    literal_only_boolean_expressions: true
+
+    # Don't forget the whitespace between concatenated strings.
+    missing_whitespace_between_adjacent_strings: true
+
+    # Adjacent strings in a list are usually caused by forgetting a comma. 
+    # Use "+" or interpolation instead. 
+    no_adjacent_strings_in_list: true
+
+    # Use `is` instead of checking `.runtimeType`. 
+    no_runtimeType_toString: true
+
+    # Only throw instances of Error or Exception, which are meant to be caught. 
+    # Other types won't work in a try/catch block.
+    only_throw_errors: true
+
+    # Ensure all public APIs are documented. 
+    package_api_docs: true
+
+    # Don't overwrite a parameter. Make a new variable instead. 
+    parameter_assignments: true
+
+    # Put any assert statements in the initializer list instead of the constructor body. 
+    prefer_asserts_in_initializer_lists: true
+
+    # Explicitly note what is wrong in a failed assertion. 
+    prefer_asserts_with_message: true
+
+    # Use named constructors instead of static methods. 
+    # In a case where you need to make a new instance, use a factory.
+    prefer_constructors_over_static_methods: true
+
+    # Use double quotes since they're more familiar to readers. 
+    # Use single strings only inside double quotes or when needed to avoid escaping.
+    prefer_double_quotes: true
+
+    # Use => syntax for a function that only returns a value. 
+    prefer_expression_function_bodies: true
+
+    # Do not reassign the loop value in loops. 
+    prefer_final_in_for_each: true
+
+    # Prefer marking local variables as final, if possible. 
+    prefer_final_locals: true
+
+    # In the case where you're applying a function to every element, use forEach. 
+    # Eg, myList.forEach(print) instead of a for loop
+    prefer_foreach: true
+
+    # Use `if` inside a list comprehension instead of the ternary operator. 
+    prefer_if_elements_to_conditional_expressions: true
+
+    # Use integer literals instead of doubles. 
+    # It is more human-readable to say 5 instead of 5.0.
+    # Dart's type-safety will make it obvious if an int or double is expected.
+    prefer_int_literals: true
+
+    # Ensure all public members are documented. 
+    public_member_api_docs: true
+
+    # Put the unnamed constructor before named ones. 
+    # The unnamed constructor is considered the default, and should be logically first. 
+    sort_unnamed_constructors_first: true
+
+    # The == operator accepts any type, so manually check it yourself. 
+    # If you need to access properties, test first, then cast. 
+    test_types_in_equals: true
+
+    # Code in a `finally` block runs even when there is an error. 
+    # Not only does throwing obscure the error, but causes two simultaneous errors.
+    throw_in_finally: true
+
+    # Use non-nullable types instead of a non-null assertion.
+    tighten_type_of_initializing_formals: true
+
+    # Include types on public API declarations. 
+    # Not only can the compiler use them to catch mistakes, but readers will too.
+    type_annotate_public_apis: true
+
+    # Futures need to be awaited or else they will be skipped over. 
+    # Sometimes, this is desired, but usually not. Use `// ignore:` in those cases.
+    unawaited_futures: true
+
+    # Functions that return a future don't need to await said future. 
+    unnecessary_await_in_return: true
+
+    # Use function tear-offs instead of lambdas when possible. 
+    unnecessary_lambdas: true
+
+    # Remove ! when a value is already non-nullable
+    unnecessary_null_checks: true
+
+    # Remove unnecessary parentheses. 
+    unnecessary_parenthesis: true
+
+    # Most strings do not need to be raw, only those with special characters. 
+    unnecessary_raw_strings: true
+
+    # Avoid a statement that is only an expression, like `1 + 1;`.
+    unnecessary_statements: true
+
+    # Avoid usage of HTML that can lead to security breaches. 
+    unsafe_html: true
+
+    # Use `late` when a variable is temporarily null but won't be null when used.
+    # This makes the API non-nullable.
+    use_late_for_private_fields_and_variables: true
+
+    # Use setters instead of dedicated methods to change fields.
+    # Use methods when side-effects are desired, like UI updates.
+    use_setters_to_change_properties: true
+
+    # Use string buffers instead of concatenation (for performance reasons).
+    use_string_buffers: true
+
+    # If a method returns a different object to represent itself, use: 
+    # - `.toX()` if it copies its state
+    # - `.asX()` if it wraps its state
+    use_to_and_as_if_applicable: true
+
+    # ===== Lints being removed from flutter_lints
+
+    # Including a `key` parameter in widgets is good practice for public APIs. 
+    # However, this project is not being imported by third parties. 
+    use_key_in_widget_constructors: false
+
+
+
+# Additional information about this file can be found at
+# https://dart.dev/guides/language/analysis-options
