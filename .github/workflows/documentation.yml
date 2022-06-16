@@ -6,7 +6,7 @@ name: Documentation
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   documentation:
@@ -36,7 +36,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git branch --all
           git switch --track origin/documentation
-          git merge origin/master
+          git merge origin/main
           rm -rf docs
           git stage docs
           git commit -m "Removed documentation" -m "Will generate new docs"
