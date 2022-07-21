@@ -8,7 +8,7 @@ library app;
 
 import "package:flutter/material.dart";
 
-import "package:rover_control_dashboard/pages.dart";
+import "package:rover_dashboard/pages.dart";
 
 /// The main class for the app. 
 class RoverControlDashboard extends StatefulWidget {
