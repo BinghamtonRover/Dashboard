@@ -30,6 +30,15 @@ class Services extends Service {
 	/// This class has a private constructor since users should only use [Services.instance].
 	Services._();
 
+	late final List<Service> _services = [];
+
 	@override
-	Future<void> init() async { }
+	Future<void> init() async {
+		for (final service in _services) { await service.init(); }
+	}
+
+	@override
+	Future<void> dispose() async { 
+		for (final service in _services) { await service.dispose(); }
+	}
 }
