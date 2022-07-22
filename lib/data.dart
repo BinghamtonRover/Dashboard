@@ -9,3 +9,4 @@
 library data;
 
 export "src/data/metrics.dart";
+export "src/data/wrapped_message.dart";
