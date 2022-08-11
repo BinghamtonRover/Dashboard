@@ -6,4 +6,9 @@
 /// This library may depend on the data, services, models, and widgets libraries. 
 library pages;
 
-export "src/pages/dashboard.dart";
+export "src/pages/home.dart";
+export "src/pages/operating_modes/arm.dart";
+export "src/pages/operating_modes/autonomy.dart";
+export "src/pages/operating_modes/manual.dart";
+export "src/pages/operating_modes/science.dart";
+export "src/pages/settings.dart";

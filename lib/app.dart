@@ -19,5 +19,12 @@ class RoverControlDashboard extends StatefulWidget {
 /// The state object for [RoverControlDashboard].
 class RoverControlDashboardState extends State<RoverControlDashboard> {
 	@override
-	Widget build(BuildContext context) => MaterialApp(home: DashboardPage());
+	Widget build(BuildContext context) => MaterialApp(
+		title: "Binghamton University Rover Team",
+		home: HomePage(),
+		debugShowCheckedModeBanner: false,
+		routes: {
+			Routes.settings: (_) => SettingsPage(),
+		}
+	);
 }

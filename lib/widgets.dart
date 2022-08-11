@@ -14,3 +14,6 @@
 /// 
 /// This library may depend on the data, services, and models library.   
 library widgets;
+
+export "src/widgets/atomic/metrics.dart";
+export "src/widgets/navigation/footer.dart";
