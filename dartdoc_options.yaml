@@ -1,0 +1,9 @@
+# Command used in GitHub Actions Workflow: 
+#   flutter pub global run dartdoc --ignore 'unresolved-doc-reference,not-implemented,no-documentable-libraries,ambiguous-reexport' --exclude 'dart:async,dart:collection,dart:convert,dart:core,dart:developer,dart:io,dart:isolate,dart:math,dart:typed_data,dart:ui,dart:html,dart:js,dart:ffi,dart:js_util' --quiet --json --output docs --no-validate-links --no-verbose-warnings --no-allow-non-local-warnings
+# More general command easy to type by hand: 
+#   dartdoc --show-progress --output docs --auto-include-dependencies
+
+dartdoc: 
+  linkToSource: 
+    root: lib
+    uriTemplate: https://github.com/BinghamtonRover/rover-control-dashboard/blob/main/lib/%f%#L%l%
