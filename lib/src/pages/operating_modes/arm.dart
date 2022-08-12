@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 
-import "package:rover_dashboard/widgets.dart";
-
+/// The page for controlling the rover's arm.
 class ArmMode extends StatelessWidget {
+	/// A const constructor for this widget.
 	const ArmMode();
 
 	@override

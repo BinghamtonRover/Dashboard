@@ -11,4 +11,5 @@ export "src/pages/operating_modes/arm.dart";
 export "src/pages/operating_modes/autonomy.dart";
 export "src/pages/operating_modes/manual.dart";
 export "src/pages/operating_modes/science.dart";
+export "src/pages/routes.dart";
 export "src/pages/settings.dart";

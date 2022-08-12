@@ -1,39 +1,53 @@
-abstract class Metrics {
-	const Metrics();
+import "package:protobuf/protobuf.dart";
+
+/// A readout of metrics reported by one of the rover's subsystems. 
+/// 
+/// To use this class, create a subclass that extends this class with [T] as the generated 
+/// Protobuf class. For example, to create metrics for the science subsystem, use:
+/// ```dart
+/// class ScienceMetrics extends Metrics<ScienceMessage> { }
+/// ```
+abstract class Metrics<T extends GeneratedMessage> {
+	/// The underlying data used to get these metrics.
+	final T data;
+
+	/// A const constructor for metrics.
+	const Metrics(this.data);
+
+	/// A collective name for this group of metrics (usually the name of the subsystem).
+	String get name;
+
+	/// A list of user-friendly explanations for each of the metrics.
+	/// 
+	/// Be sure to store the actual values as fields. This property should be a list of one 
+	/// user-friendly explanation per metric. 
 	List<String> get allMetrics;
 }
 
-class PersistentMetrics extends Metrics {
-	final double temp1, temp2;
-	final double current1, current2;
-	final double voltage1, voltage2;
-	const PersistentMetrics(this.temp1, this.temp2, this.current1, this.current2, this.voltage1, this.voltage2);
+/// Metrics reported by the electrical control board. 
+/// 
+/// These metrics represent the vitals of the rover: basics like voltage, current, and temperature
+/// of the various electrical components. These values aren't useful for the missions, but should
+/// be monitored to catch problems before they cause damage to the rover. 
+class ElectricalMetrics extends Metrics {
+	/// A collection of metrics relevant for monitoring the rover's electrical status.
+	const ElectricalMetrics(super.data);
 
 	@override
-	List<String> get allMetrics => [
-		"Temperatures: $temp1 °F and $temp2 °F",
-		"Currents: $current1 A and $current2 A",
-		"Voltage: $voltage1 V and $voltage2 V",
+	String get name => "Electrical";
+
+	// TODO: implement this
+	@override
+	List<String> get allMetrics => [  
+		// "Battery: ${data.batteryVoltage} V, ${data.batteryCurrent} A",
+		// "12V supply: ${data.v12SupplyVoltage} V, ${data.v12SupplyCurrent} A, ${data.v12SupplyTemperature} °F",
+		// "5V supply: ${data.v5SupplyVoltage} V, ${data.v5SupplyCurrent} A, ${data.v5SupplyTemperature} °F",
+		// "ODrives: ${data.odriveCurrent1} A, ${data.odriveCurrent2} A, ${data.odriveCurrent3} A",
 	];
 }
 
-class ScienceMetrics extends Metrics {
-	final double temperature;
-	final double methaneConcentration;
-	final double co2Concentration;
-	final double ph;
-	final double humidity;
-	const ScienceMetrics(this.temperature, this.methaneConcentration, this.co2Concentration, this.ph, this.humidity);
-
-	@override
-	List<String> get allMetrics => [
-		"Temperature: $temperature °F",
-		"Methane concentration: $methaneConcentration ppb",
-		"CO2 concentration: $co2Concentration ppm",
-		"pH: $ph",
-		"Relative humidity: $humidity%",
-	];
-}
-
-const samplePMetrics = PersistentMetrics(91.2, 93.7, 12, 9, 12, 5.5);
-const sampleSMetrics = ScienceMetrics(71.8, 15.3, 410, 6.5, 63);
+/// Metrics reported by the science subsystem. 
+/// 
+/// These metrics represent analysis of dirt samples extracted by the science subsystem. They need
+/// to not only be recorded but logged as well so the science team can generate charts out of it.
+// class ScienceMetrics extends Metrics<ScienceMessage> { }

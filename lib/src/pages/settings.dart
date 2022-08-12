@@ -1,22 +1,23 @@
 import "package:flutter/material.dart";
 
+/// The settings page. 
 class SettingsPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => Scaffold(
-		appBar: AppBar(title: Text("Settings")),
+		appBar: AppBar(title: const Text("Settings")),
 		body: ListView(
 			children: [
-				Text("Network settings"),
+				const Text("Network settings"),
 				SwitchListTile(value: true, onChanged: (_) {}), 
 				SwitchListTile(value: false, onChanged: (_) {}), 
 				SwitchListTile(value: true, onChanged: (_) {}), 
-				Divider(),
-				Text("Controller settings"),
+				const Divider(),
+				const Text("Controller settings"),
 				SwitchListTile(value: true, onChanged: (_) {}), 
 				SwitchListTile(value: false, onChanged: (_) {}), 
 				SwitchListTile(value: true, onChanged: (_) {}), 
-				Divider(),
-				Text("Subsystem settings"),
+				const Divider(),
+				const Text("Subsystem settings"),
 				SwitchListTile(value: true, onChanged: (_) {}), 
 				SwitchListTile(value: false, onChanged: (_) {}), 
 				SwitchListTile(value: true, onChanged: (_) {}), 
