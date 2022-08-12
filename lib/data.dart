@@ -7,3 +7,5 @@
 /// This library should be the bottom of the dependency graph, meaning that no file included in this
 ///  library should import any other library. 
 library data;
+
+export "src/data/metrics.dart";
