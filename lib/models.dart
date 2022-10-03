@@ -6,3 +6,5 @@
 /// 
 /// This library may depend on the data and services library. 
 library models;
+
+export "src/models/vitals.dart";
