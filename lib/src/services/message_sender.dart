@@ -35,7 +35,7 @@ class MessageSender extends Service {
 
 	/// Wraps the [message] in a [WrappedMessage] container and sends it to the rover. 
 	Future<void> sendMessage(Message message) async { 
-		// final wrapper = WrappedMessage(message.info_.messageName, message.writeToBuffer());
-		// _socket.send(wrapper.writeToBuffer(), address, port);
+		final wrapper = WrappedMessage(name: message.info_.messageName, data: message.writeToBuffer());
+		_socket.send(wrapper.writeToBuffer(), address, port);
 	}
 }
