@@ -31,6 +31,9 @@ jobs:
       # Has to be after checkout since repo won't exist
       - name: Add Flutter to path
         run: echo "../flutter/bin" >> $GITHUB_PATH
+        
+      - name: Generate Protobuf files
+        run: dart run build_runner build
 
       - name: Analyze
         run: flutter analyze --dartdocs
