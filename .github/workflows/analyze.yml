@@ -27,6 +27,7 @@ jobs:
       - uses: actions/checkout@v2
         with: 
           path: repo  # keeps Flutter separate from repo
+          submodules: recursive
 
       # Has to be after checkout since repo won't exist
       - name: Add Flutter to path
