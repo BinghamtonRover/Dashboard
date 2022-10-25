@@ -30,6 +30,11 @@ A Dart library is technically just a file. To add more complexity, classes and f
 
  ## Compiling
 
+Firstly, we're using [Protobuf](https://developers.google.com/protocol-buffers), which means we need to invoke the Protobuf compiler to generate Dart code before we can compile the dashboard. Thankfully, that's all handled by `package:build_runner`, the de facto code generator for Dart. 
+```
+dart run build_runner build
+```
+
 To run a debug build, run the appropriate command for your computer:
 
 ```
@@ -46,7 +51,7 @@ flutter build linux
 flutter build macos
 ```
 
-Note that Flutter is not cross-platform, which means you can only output executables for the platform you compile on. The location of the executable differs by platform: 
+Note that Flutter's compiler is not cross-platform, which means you can only output executables for the platform you compile on. The location of the executable differs by platform: 
 
 - Windows: `build\windows\runner\Release`
 - Linux: `build/linux/x64/release/bundle`

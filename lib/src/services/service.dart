@@ -6,4 +6,7 @@
 abstract class Service {
 	/// Initializes the service. 
 	Future<void> init();
+
+	/// Cleans up any resources used by the service.
+	Future<void> dispose();
 }

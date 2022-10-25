@@ -1,0 +1,19 @@
+targets:
+  $default:
+    sources:
+      - $package$
+      - lib/$lib$
+      - lib/src/data/Protobuf/**.proto
+    builders:
+      protoc_builder:
+        options:
+          # Directory which is treated as the root of all Protobuf files.
+          # (Default: "proto/")
+          root_dir: "lib/src/data/Protobuf/"
+          # Include paths given to the Protobuf compiler during compilation.
+          # (Default: ["proto/"])
+          proto_paths:
+            - "lib/src/data/Protobuf/"
+          # The root directory for generated Dart output files.
+          # (Default: "lib/src/proto")
+          out_dir: "lib/src/data/generated"
