@@ -8,9 +8,9 @@
 ///  library should import any other library. 
 library data;
 
-export "src/data/generated/Protobuf/drive_control.pb.dart";
-export "src/data/generated/Protobuf/sensor_control.pb.dart";
-export "src/data/generated/Protobuf/video_control.pb.dart";
-export "src/data/generated/Protobuf/wrapper.pb.dart";
+export "src/data/generated/drive_control.pb.dart";
+export "src/data/generated/sensor_control.pb.dart";
+export "src/data/generated/video_control.pb.dart";
+export "src/data/generated/wrapper.pb.dart";
 export "src/data/metrics.dart";
 export "src/data/wrapped_message.dart";

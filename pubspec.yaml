@@ -31,6 +31,13 @@ dev_dependencies:
 
   # See `analysis_options.yaml` for details about lints.  
   flutter_lints: ^2.0.0
+  build_runner: ^2.3.2
+  # Using my fork due to a bug on Windows. 
+  # See: https://github.com/pikaju/dart-protoc-builder/issues/5
+  protoc_builder:
+    git:
+      url: https://github.com/Levi-Lesches/dart-protoc-builder.git
+      ref: windows-fix
 
 # The following section is specific to Flutter packages.
 flutter:
