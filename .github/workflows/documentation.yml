@@ -43,7 +43,7 @@ jobs:
           git commit -m "Removed documentation" -m "Will generate new docs"
 
       - name: Add Flutter to path
-        run: echo "../flutter/bin" >> $GITHUB_PATH
+        run: echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
 
       - name: Flutter Setup 
         run: |
