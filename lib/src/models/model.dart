@@ -4,8 +4,4 @@ import "package:flutter/foundation.dart";
 abstract class Model with ChangeNotifier {
 	/// Initializes any data needed by this model.
 	Future<void> init();
-
-	/// Releases any data needed by this model.
-	@override	
-	Future<void> dispose();
 }
