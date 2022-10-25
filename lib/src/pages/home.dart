@@ -9,6 +9,7 @@ import "package:rover_dashboard/widgets.dart";
 /// - change the controller inputs to match the current mode
 /// - change the on-screen UI to provide information useful in this context
 /// - highlight the relevant metrics
+/*
 enum OperatingMode {
 	/// The operating mode for analyzing dirt samples.
 	science(name: "Science", icon: Icons.science, page: ScienceMode()),
@@ -34,6 +35,25 @@ enum OperatingMode {
 	/// Describes the UI for a given operating mode.
 	const OperatingMode({required this.name, required this.page, required this.icon});
 }
+*/
+
+/// class for the operating mode so the variables do not have to be final
+class OpMode {
+  /// The name of the operating mode.
+	final String name;
+	/// The contents of the page while in this operating mode. CANNOT BE FINAL
+	Widget page;
+	/// The icon for this operating mode.
+	final IconData icon;
+
+  /// Describes the UI for a given operating mode.
+  OpMode(this.name, this.page, this.icon);
+}
+
+/// list of all the possible operating modes
+List<OpMode> operatingModes = <OpMode>[OpMode("Science", ScienceMode(), Icons.science), 
+  OpMode("Arm", ArmMode(), Icons.precision_manufacturing), OpMode("Autonomy", AutonomyMode(), Icons.smart_toy),
+  OpMode("Manual", ManualMode(), Icons.sports_esports)];
 
 /// The main dashboard page. 
 /// 
@@ -41,12 +61,12 @@ enum OperatingMode {
 class HomePage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => DefaultTabController(
-		length: OperatingMode.values.length, 
+		length: operatingModes.length, ///OperatingMode.values.length, 
 		child: Scaffold(
 			appBar: AppBar(
 				title: const Text("Rover Control Dashboard"),
 				bottom: TabBar(tabs: [
-					for (final mode in OperatingMode.values)
+					for (final mode in operatingModes) ///OperatingMode.values)
 						Tab(text: mode.name, icon: Icon(mode.icon)),
 				]),
 				actions: [
@@ -58,7 +78,7 @@ class HomePage extends StatelessWidget {
 			),
 			body: Column(children: [
 				Expanded(child: TabBarView(children: [
-					for (final mode in OperatingMode.values) mode.page,
+					for (final mode in operatingModes) mode.page,
 				])),
 				Footer(),
 			]),
