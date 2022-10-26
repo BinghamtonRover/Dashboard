@@ -1,6 +1,3 @@
-# Protobuf code is generated here
-lib/src/data/generated
-
 # Miscellaneous
 *.class
 *.log
