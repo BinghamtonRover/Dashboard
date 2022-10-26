@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 
@@ -6,7 +8,7 @@ void electricalHandler(ElectricalData data) => print("The battery is ${data.batt
 Future<void> main() async {
 	final receiver = MessageReceiver();
 	await receiver.init();
-	print("Listening on ${port}");
+	print("Listening on $port");
 
 	receiver.registerHandler<ElectricalData>(
 		name: "ElectricalData",
