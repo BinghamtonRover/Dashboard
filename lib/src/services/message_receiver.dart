@@ -12,7 +12,7 @@ typedef RawMessageHandler = void Function(List<int> data);
 typedef Handler<T> = void Function(T);
 
 /// The port to listen for messages on.
-const port = 22201;
+const port = 8082;
 
 /// A function that handles incoming data. 
 extension on RawDatagramSocket {
