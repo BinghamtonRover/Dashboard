@@ -73,9 +73,7 @@ class MessageReceiver extends Service {
 		required MessageDecoder<T> decoder, 
 		required Handler<T> handler
 	}) {
-		if (T == Message) {  // no T was actually passed, [Message] is the default
-			throw ArgumentError("No message type was passed");
-		} else if (_handlers.containsKey(name)) {  // handler was already registered
+		if (_handlers.containsKey(name)) {  // handler was already registered
 			throw ArgumentError("Message handler for type [$T] already registered");
 		} else {
 			_handlers[name] = (List<int> data) => handler(decoder(data));
