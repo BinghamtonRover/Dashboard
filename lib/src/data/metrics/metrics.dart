@@ -1,3 +1,4 @@
+import "protobuf.dart";
 
 /// A readout of metrics reported by one of the rover's subsystems. 
 /// 
@@ -6,7 +7,7 @@
 /// ```dart
 /// class ScienceMetrics extends Metrics<ScienceMessage> { }
 /// ```
-abstract class Metrics<T extends GeneratedMessage> {
+abstract class Metrics<T extends Message> {
 	/// The underlying data used to get these metrics.
 	final T data;
 
