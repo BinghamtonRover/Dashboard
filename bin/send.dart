@@ -5,9 +5,7 @@ Future<void> main(List<String> args) async {
 	final sender = MessageSender();
 	await sender.init();
 
-	final double voltage = args.isNotEmpty
-		? (double.tryParse(args.first) ?? 12)
-		: 24;
+	final double voltage = args.isEmpty ? 24 : (double.tryParse(args.first) ?? 12);
 	final data = ElectricalData(batteryVoltage: voltage);
 	await sender.send(data);
 }

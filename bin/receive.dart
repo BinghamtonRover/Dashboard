@@ -11,7 +11,7 @@ Future<void> main() async {
 	print("Listening on $port");
 
 	receiver.registerHandler<ElectricalData>(
-		name: "ElectricalData",
+		name: ElectricalData().messageName,
 		decoder: ElectricalData.fromBuffer,
 		handler: electricalHandler,
 	);
