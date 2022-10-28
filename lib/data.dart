@@ -12,5 +12,8 @@ export "src/data/generated/drive_control.pb.dart";
 export "src/data/generated/sensor_control.pb.dart";
 export "src/data/generated/video_control.pb.dart";
 export "src/data/generated/wrapper.pb.dart";
-export "src/data/metrics.dart";
-export "src/data/wrapped_message.dart";
+
+export "src/data/metrics/electrical.dart";
+export "src/data/metrics/metrics.dart";
+export "src/data/metrics/protobuf.dart";
+export "src/data/metrics/science.dart";
