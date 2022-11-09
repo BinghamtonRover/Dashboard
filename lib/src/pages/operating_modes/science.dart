@@ -3,8 +3,6 @@ import "package:rover_dashboard/pages.dart";
 
 import "package:rover_dashboard/widgets.dart";
 
-import "../../models/view/camera_feed.dart";
-
 /// The page for the science operating mode. 
 class ScienceMode extends StatefulWidget {
 
@@ -14,27 +12,20 @@ class ScienceMode extends StatefulWidget {
   
 }
 
+/// The instance of the stateful widget
 class _ScienceModeInstance extends State<ScienceMode> {
-
   @override
   Widget build(BuildContext contest) => ValueListenableBuilder(
-    valueListenable: HomePage.numCameraFeeds, 
+    valueListenable: HomePage.feedsListener, 
     builder: (BuildContext context, value, screensWidget) {
-      // what is the max number of camera feeds we will have?
-      if(HomePage.numCameraFeeds.value == 0) {
+      if(HomePage.feedsNotifier.feeds.where((element) => element.showing && element.page == 0).isEmpty) {
         screensWidget = zeroFeed;
       }
-      else if(HomePage.numCameraFeeds.value == 1) {
+      else if(HomePage.feedsNotifier.feeds.where((element) => element.showing && element.page == 0).length == 1) {
         screensWidget = oneFeed;
       }
-      else if(HomePage.numCameraFeeds.value == 2) {
+      else if(HomePage.feedsNotifier.feeds.where((element) => element.showing && element.page == 0).length == 2) {
         screensWidget = twoFeed;
-      }
-      else if(HomePage.numCameraFeeds.value == 3) {
-        screensWidget = threeFeed;
-      }
-      else if(HomePage.numCameraFeeds.value == 4) {
-        screensWidget = fourFeed;
       }
       return screensWidget!;
     },
@@ -42,33 +33,36 @@ class _ScienceModeInstance extends State<ScienceMode> {
 
   Widget zeroFeed = const Text("No Feeds Currently Selected");
 
-  Widget oneFeed = Row(children: [
-		Expanded(child: Column(children: [
-			Expanded(child: Container(
-				height: double.infinity,
-				width: double.infinity,
-				color: Colors.green, 
-				child: Text(HomePage.feeds.where((element) => element.showing).first.fullName),
-			))
-		])),
-		Container(
-			width: 225, 
-			color: Colors.yellow, 
-			alignment: Alignment.center,
-			child: ListView(
-				padding: const EdgeInsets.symmetric(horizontal: 16),
-				children: [
-					const MetricsList(),
-					Text("Controls"),
-					const SizedBox(height: 16),
-					for (final control in controls) Text(control),
-				]
-			)
-		),
-	]);
+  Widget oneFeed = ValueListenableBuilder(
+    valueListenable: HomePage.feedsListener, 
+    builder: (BuildContext context, value, screensWidget) => Row(children: [
+      Expanded(child: Column(children: [
+        Expanded(child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          color: Colors.green, 
+          child: Text(HomePage.feedsNotifier.feeds.where((element) => element.showing && element.page == 0).first.fullName),
+        ))
+      ])),
+      Container(
+        width: 225, 
+        color: Colors.yellow, 
+        alignment: Alignment.center,
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          children: [
+            const MetricsList(),
+            const Text("Controls"),
+            const SizedBox(height: 16),
+            for (final control in controls) Text(control),
+          ]
+        )
+      ),
+    ])
+  );
 
   Widget twoFeed = ValueListenableBuilder(
-    valueListenable: HomePage.pinnedCameraFeed, 
+    valueListenable: HomePage.feedsListener, 
     builder: (BuildContext context, value, screensWidget) => Row(children: [
       Expanded(child: Column(children: [
         Expanded(child: Row(
@@ -77,13 +71,13 @@ class _ScienceModeInstance extends State<ScienceMode> {
               height: double.infinity,
               width: double.infinity,
               color: Colors.green, 
-              child: Text(HomePage.feeds.where((element) => element.pinned && element.showing).first.fullName),
+              child: Text(HomePage.feedsNotifier.feeds.where((element) => element.pinned && element.showing && element.page == 0).first.fullName),
             )),
             Expanded(child: Container(
               height: double.infinity,
               width: double.infinity,
               color: Colors.blueGrey,
-              child: Text(HomePage.feeds.where((element) => !element.pinned && element.showing).first.fullName),
+              child: Text(HomePage.feedsNotifier.feeds.where((element) => !element.pinned && element.showing && element.page == 0).first.fullName),
             )),
           ]
         ))
@@ -96,7 +90,7 @@ class _ScienceModeInstance extends State<ScienceMode> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           children: [
             const MetricsList(),
-            Text("Controls"),
+            const Text("Controls"),
             const SizedBox(height: 16),
             for (final control in controls) Text(control),
           ]
@@ -105,6 +99,7 @@ class _ScienceModeInstance extends State<ScienceMode> {
     ]),
   );
 
+  /*
   Widget threeFeed = ValueListenableBuilder(
     valueListenable: HomePage.pinnedCameraFeed, 
     builder: (BuildContext context, value, screensWidget) => Row(children: [
@@ -202,6 +197,7 @@ class _ScienceModeInstance extends State<ScienceMode> {
       ),
     ]),
   );
+  */
 }
 
 /// The controls for the current operating mode, until there is a backend in place.

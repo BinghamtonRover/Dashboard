@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import "package:flutter/material.dart";
-import 'package:rover_dashboard/pages.dart';
-import "package:rover_dashboard/widgets.dart";
-import '../../models/view/camera_feed.dart';
+import "package:rover_dashboard/pages.dart";
+import "../../models/view/camera_feed.dart";
 
 /// The footer, responsible for showing vitals and logs. 
 class Footer extends StatelessWidget {
@@ -15,17 +12,17 @@ class Footer extends StatelessWidget {
 
   /// Constructor passing in the list of camera feeds
   Footer() {
-    selected = HomePage.feeds.where((element) => element.pinned).first.shortName;
+    selected = HomePage.feedsNotifier.feeds.where((element) => element.pinned && element.page == HomePage.feedsNotifier.currentPage).first.shortName;
   }
 
   /// function call to show the camera feeds
   void showFeedsDialog(BuildContext context) {
     final List<Widget> widgetList = [];
     widgetList.add(const Text("Visible Camera Feeds"));
-    for(final CameraFeed feed in HomePage.feeds) {
+    for(final CameraFeed feed in HomePage.feedsNotifier.feeds.where((element) => element.page == HomePage.feedsNotifier.currentPage)) {
       widgetList.add(CheckBoxListTileInstance(feed.shortName));
     }
-    widgetList.add(const Text("PinnedCamera Feed"));
+    widgetList.add(const Text("Pinned Camera Feed"));
     widgetList.add(const DropdownButtonInstance());
     showDialog(context: context, 
       builder: (BuildContext context) => SimpleDialog(
@@ -76,24 +73,27 @@ class DropdownButtonInstance extends StatefulWidget {
 
 /// creating an stated object of the DropDownButtonInstance
 class _DropdownButtonInstanceState extends State<DropdownButtonInstance> {
-  String dropdownValue = HomePage.feeds.where((element) => element.pinned).first.shortName;
+  String dropdownValue = HomePage.feedsNotifier.feeds.where((element) => element.pinned && element.page == HomePage.feedsNotifier.currentPage).first.shortName;
 
   @override
-  Widget build(BuildContext context) => DropdownButton<String>(
-    items: HomePage.feeds.map<DropdownMenuItem<String>>((CameraFeed feed) => DropdownMenuItem<String>(
-      value: feed.shortName,
-      child: Text(feed.shortName),
-      )).toList(), 
-    onChanged: (String? val) {
-      HomePage.feeds.where((element) => element.pinned).first.pinned = false;
-      HomePage.feeds.where((element) => element.shortName == val!).first.pinned = true;
-      HomePage.pinnedCameraFeed.value = HomePage.feeds.where((element) => element.pinned).first.shortName;
-      setState(() {
-        dropdownValue = val!;
-      });
-    },
-    value: dropdownValue,
-    icon: const Icon(Icons.arrow_downward),
+  Widget build(BuildContext context) => ValueListenableBuilder(
+    valueListenable: HomePage.feedsListener, 
+    builder: (BuildContext context, value, screensWidget) => DropdownButton<String>(
+      items: HomePage.feedsNotifier.feeds.where((element) => element.page == HomePage.feedsNotifier.currentPage).map<DropdownMenuItem<String>>((CameraFeed feed) => DropdownMenuItem<String>(
+        value: feed.shortName,
+        child: Text(feed.shortName),
+        )).toList(), 
+      onChanged: (String? val) {
+        HomePage.feedsNotifier.feeds.where((element) => element.pinned && element.page == HomePage.feedsNotifier.currentPage).first.pinned = false;
+        HomePage.feedsNotifier.feeds.where((element) => element.shortName == val!).first.pinned = true;
+        setState(() {
+          dropdownValue = val!;
+          HomePage.feedsNotifier.onChange();
+        });
+      },
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_downward),
+    ),
   );
 }
 
@@ -119,11 +119,11 @@ class _CheckBoxListTileInstanceState extends State<CheckBoxListTileInstance> {
       title: Text(widget.shortName!), 
       onChanged: (bool? value) {
         setState(() {
-          HomePage.feeds.where((element) => element.shortName == widget.shortName).first.showing = value!;
-          value ? HomePage.numCameraFeeds.value++ : HomePage.numCameraFeeds.value--;
+          HomePage.feedsNotifier.feeds.where((element) => element.shortName == widget.shortName).first.showing = value!;
+          HomePage.feedsNotifier.onChange();
         });
       },
-      value: HomePage.feeds.where((element) => element.shortName == widget.shortName).first.showing,
+      value: HomePage.feedsNotifier.feeds.where((element) => element.shortName == widget.shortName).first.showing,
     );
   
 }
