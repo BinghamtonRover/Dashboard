@@ -18,16 +18,8 @@ class GamepadService extends Service {
     gamepad.state = GamepadState.disconnected();
   } 
 
-  ///Check to see if the remote is connected
-  ///
-  ///returns true or false
-  Future<bool> connect() async{ 
-    if(gamepad.isConnected){
-      return true;
-    }else{
-      return false;
-    }
-  }
+/// Whether the gamepad is connected to the user's device. 
+bool get isConnected => gamepad.isConnected;
 
   /// The current state of the gamepad, its buttons, and its connection state. 
   GamepadState get state => gamepad.state; 
