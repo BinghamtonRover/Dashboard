@@ -34,7 +34,4 @@ class GamepadService extends Service {
  
   /// Checks the state of the controller and updates [state].
   Future<void> update() async => gamepad.updateState(); 
-
- 
-
 }
