@@ -2,8 +2,11 @@ import "package:win32_gamepad/win32_gamepad.dart";
 
 import "service.dart";
 
-///A service to send the comtroller's activity
-///using win32_gamepad
+/// A service to receive input from remote control for the robot
+/// Uses win32_gamepad to interact with remote. win32_gamepad only works on windows 
+///
+/// Used to get the current status of the remote control 
+///   -buttons pressed, etc
 class GamepadService extends Service {
   ///The connection to the controller
   static final gamepad = Gamepad(0);
