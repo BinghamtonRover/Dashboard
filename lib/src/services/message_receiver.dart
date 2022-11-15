@@ -1,55 +1,21 @@
-import "dart:async";
-import "dart:io";
-
 import "package:rover_dashboard/data.dart";
-import "service.dart";
 
-/// A callback to execute with raw Protobuf data.
-typedef RawMessageHandler = void Function(List<int> data);
+import "udp_server.dart";
 
 /// A callback to execute with a specific serialized Protobuf message.
-// typedef MessageHandler<T extends Message> = void Function(T);
-typedef Handler<T> = void Function(T);
+typedef MessageHandler<T extends Message> = void Function(T);
 
-/// The port to listen for messages on.
-const port = 8082;
-
-/// A function that handles incoming data. 
-extension on RawDatagramSocket {
-	StreamSubscription listenForData(Handler<List<int>> handler) => listen((event) {
-		final datagram = receive();
-		if (datagram == null) return; 
-		handler(datagram.data);
-	});
-}
-
-/// A service that receives messages over a UDP connection. 
+/// A service that receives Protobuf messages over a UDP connection. 
 /// 
 /// To listen to certain messages, call [registerHandler] with the type of message you want
-/// to receive, as well as a decoder and the handler callback itself. 
-class MessageReceiver extends Service {
+/// to receive, as well as a decoder and the handler callback itself. See the documentation
+/// on that function for usage. 
+class MessageReceiver extends UdpServer {
 	/// Handlers for every possible type of Protobuf message in serialized form.
-	final Map<String, RawMessageHandler> _handlers = {};
+	final Map<String, RawDataHandler> _handlers = {};
 
-	/// The UDP socket to listen on.
-	/// 
-	/// Initialized in [init].
-	late final RawDatagramSocket _socket;
-
-	/// The subscription that listens to [_socket]. 
-	late final StreamSubscription _subscription;
-
-	@override
-	Future<void> init() async {
-		_socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, port);
-		_subscription = _socket.listenForData(_listener);
-	}
-
-	@override
-	Future<void> dispose() async {
-		await _subscription.cancel();
-		_socket.close();
-	}
+	/// Listens for incoming data.
+	MessageReceiver({super.port = 8008});
 
 	/// Runs every time data is received by the socket. 
 	/// 
@@ -57,21 +23,35 @@ class MessageReceiver extends Service {
 	/// underlying message and record their name. We use the type of the underlying message
 	/// to get the appropriate handler from [_handlers] which decodes the message to the 
 	/// correct type and processes it. 
-	void _listener(List<int> data) {
+	@override
+	void onData(List<int> data) {
 		final wrapped = WrappedMessage.fromBuffer(data);
-		final RawMessageHandler? rawHandler = _handlers[wrapped.name];
-		if (rawHandler == null) { /* Log in some meaningful way, through the UI */ }
+		final RawDataHandler? rawHandler = _handlers[wrapped.name];
+		if (rawHandler == null) { /* TODO: Log in some meaningful way, through the UI */ }
 		else { rawHandler(wrapped.data); }
 	}
 
 	/// Adds a handler for a given type. 
 	/// 
-	/// [decoder] is a function that decodes a byte buffer to a Protobuf message class. [handler] 
-	/// then handles that message somehow. 
+	/// When a new message is received, [onData] checks to see if its type matches [name].
+	/// If so, it calls [decoder] to parse the binary data into a Protobuf class, and then
+	/// calls [handler] with that parsed data class. 
+	/// 
+	/// For example, with a message called `ScienceData`, you would use this function as: 
+	/// ```dart
+	/// registerHandler<ScienceData>(
+	/// 	name: ScienceData().messageName,  // identify the data as a ScienceData message
+	/// 	decoder: ScienceData.fromBuffer,  // deserialize into a ScienceData instance
+	/// 	handler: (ScienceData data) => print(data.methane),  // do something with the data
+	/// );
+	/// ```
+	/// 
+	/// This allows the caller to avoid having to parse out on their own which type of data
+	/// was received and how to decode it. 
 	void registerHandler<T extends Message>({
 		required String name, 
 		required MessageDecoder<T> decoder, 
-		required Handler<T> handler
+		required MessageHandler<T> handler
 	}) {
 		if (_handlers.containsKey(name)) {  // handler was already registered
 			throw ArgumentError("Message handler for type [$T] already registered");
