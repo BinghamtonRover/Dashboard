@@ -14,9 +14,7 @@ class GamepadService extends Service {
   }
 
   @override
-  Future<void> dispose() async{  
-    gamepad.state = GamepadState.disconnected();
-  } 
+  Future<void> dispose() async { }
 
 /// Whether the gamepad is connected to the user's device. 
 bool get isConnected => gamepad.isConnected;
