@@ -19,6 +19,8 @@ import "src/services/service.dart";
 
 export "src/services/message_receiver.dart";
 export "src/services/message_sender.dart";
+export "src/services/udp_client.dart";
+export "src/services/udp_server.dart";
 
 /// A dependency injection service that manages the lifecycle of other services.
 /// 

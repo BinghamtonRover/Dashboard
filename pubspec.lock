@@ -336,12 +336,10 @@ packages:
   protoc_builder:
     dependency: "direct dev"
     description:
-      path: "."
-      ref: windows-fix
-      resolved-ref: "40b4a4bb78f0f97957ff2ed3ee233e9a02aee9c2"
-      url: "https://github.com/Levi-Lesches/dart-protoc-builder.git"
-    source: git
-    version: "0.2.1+1"
+      name: protoc_builder
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   pub_semver:
     dependency: transitive
     description:
