@@ -17,6 +17,7 @@ import "src/services/message_receiver.dart";
 import "src/services/message_sender.dart";
 import "src/services/service.dart";
 
+export "src/services/gamepad.dart";
 export "src/services/message_receiver.dart";
 export "src/services/message_sender.dart";
 export "src/services/udp_client.dart";
