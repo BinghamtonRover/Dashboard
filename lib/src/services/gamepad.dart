@@ -9,9 +9,7 @@ class GamepadService extends Service {
   static final gamepad = Gamepad(0);
   
   @override
-  Future<void> init() async{ 
-    connect();
-  }
+  Future<void> init() async { }
 
   @override
   Future<void> dispose() async { }
