@@ -32,9 +32,7 @@ class GamepadService extends Service {
   ///Return the current state of the remote
   GamepadState getState() => gamepad.state; 
  
-  ///
-  ///
-  ///calls win32_gamepad update
+  /// Checks the state of the controller and updates [state].
   Future<void> update() async => gamepad.updateState(); 
 
  
