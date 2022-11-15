@@ -8,7 +8,7 @@ import "service.dart";
 /// Used to get the current status of the remote control 
 ///   -buttons pressed, etc
 class GamepadService extends Service {
-  ///The connection to the controller
+  /// The connection to the controller
   static final gamepad = Gamepad(0);
   
   @override
