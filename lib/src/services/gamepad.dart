@@ -29,8 +29,8 @@ class GamepadService extends Service {
     }
   }
 
-  ///Return the current state of the remote
-  GamepadState getState() => gamepad.state; 
+  /// The current state of the gamepad, its buttons, and its connection state. 
+  GamepadState get state => gamepad.state; 
  
   /// Checks the state of the controller and updates [state].
   Future<void> update() async => gamepad.updateState(); 
