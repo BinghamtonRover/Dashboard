@@ -1,20 +1,16 @@
-/// Class to contain all the settings for the Mars Rover
+/// Contains the settings for running the dashboard and the rover. 
 class Settings {
-  /// The IP the rover is being controlled on
-  String roverIP = "127.0.0.1";
+  /// The amount of time, in seconds, the dashboard should wait before determining it's
+  /// lost connection to the rover. For reference, the rover should be sending messages 
+  /// at least once per second. 
+  int connectionTimeout;
 
-  /// The port data is being sent through
-  int port = 22;
+  /// Initialize settings from YAML.
+  Settings.fromYaml(Map yaml) : 
+    connectionTimeout = yaml["connectionTimeout"] ?? 5;
 
-  /// Converts the data from the settings instance to yaml
-  Map toYaml() => {
-        "ip": roverIP,
-        "port": port,
-      };
-
-  /// Update the settings from yaml
-  void fromYaml(Map yaml) {
-    roverIP = yaml["ip"];
-    port = yaml["port"];
-  }
+  /// Converts the data from the settings instance to YAML.
+  Map toYaml() => { 
+    "connectionTimeout": connectionTimeout,
+  };
 }
