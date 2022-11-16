@@ -13,10 +13,14 @@
 /// not import any other library in this project, only 3rd party plugins. 
 library services;
 
+import "src/services/files.dart";
+import "src/services/gamepad.dart";
 import "src/services/message_receiver.dart";
 import "src/services/message_sender.dart";
 import "src/services/service.dart";
 
+export "src/services/files.dart";
+export "src/services/gamepad.dart";
 export "src/services/gamepad.dart";
 export "src/services/message_receiver.dart";
 export "src/services/message_sender.dart";
@@ -28,8 +32,8 @@ export "src/services/udp_server.dart";
 /// All services must only be used by accessing them from this class, and this class will take care
 /// of calling lifecycle methods like [init] while handling possibly asynchrony. 
 /// 
-/// When adding a new service, declare it as a field in this class **and** add it to the [_services]
-/// list in the constructor. Otherwise, the service will fail to initialize and dispose properly. 
+/// When adding a new service, declare it as a field in this class **and** add it to the [init]
+/// and [dispose] methods. Otherwise, the service will fail to initialize and dispose properly. 
 /// 
 /// To get an instance of this class, use [Services.instance]. 
 class Services extends Service {
@@ -38,10 +42,8 @@ class Services extends Service {
 	/// This is the only instance of this class the app can guarantee is properly initialized. 
 	static Services instance = Services._();
 
-	late final List<Service> _services;
-
 	/// This class has a private constructor since users should only use [Services.instance].
-	Services._() { _services = [messageReceiver, messageSender]; }
+	Services._();
 
 	/// A service that receives messages from the rover over the network.
 	final messageReceiver = MessageReceiver();
@@ -49,13 +51,25 @@ class Services extends Service {
 	/// A service that sends messages to the rover over the network.
 	final messageSender = MessageSender();
 
+	/// A service that handles controller inputs. 
+	final gamepad = GamepadService();
+
+	/// A service that reads and writes to device files.
+	final files = FilesService();
+
 	@override
 	Future<void> init() async {
-		for (final service in _services) { await service.init(); }
+		await messageSender.init();
+		await messageReceiver.init();
+		await gamepad.init();
+		await files.init();
 	}
 
 	@override
 	Future<void> dispose() async { 
-		for (final service in _services) { await service.dispose(); }
+		await messageSender.dispose();
+		await messageReceiver.dispose();
+		await gamepad.dispose();
+		await files.dispose();
 	}
 }
