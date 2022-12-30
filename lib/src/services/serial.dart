@@ -1,16 +1,13 @@
-import "dart:convert";
 import "dart:typed_data";
 
 import "package:libserialport/libserialport.dart";
 import "service.dart";
 
-/// Json Structure
-typedef Json = Map<String, dynamic>;
-
 /// Service to interact with Serial Port(s) from dashboard
 class Serial extends Service {
-  /// Port to interact with
-  SerialPort? port;
+  /// object to send data with
+  SerialPort? writer;
+  /// object to read data from
   SerialPortReader? reader;
 
   /// Initialize the port and open for read/write
@@ -20,35 +17,50 @@ class Serial extends Service {
       return; // raise error
     }
     final name = SerialPort.availablePorts.first;
-    port = SerialPort(name);
-    reader = SerialPortReader(port!);
+    writer = SerialPort(name);
+    reader = SerialPortReader(writer!);
   }
 
   /// Close the port
   @override
   Future<void> dispose() async {
-    port?.dispose();
+    writer?.dispose();
   }
 
   /// Write some data
   void sendBytes(String data) {
     final List<int> codeUnits = data.codeUnits;
     final Uint8List byteList = Uint8List.fromList(codeUnits);
-    port?.write(Uint8List.fromList(byteList), timeout: 500);
+    writer?.write(Uint8List.fromList(byteList), timeout: 500);
   }
 
-  /// Read in bytes from the serial port as a stream
-  Stream<String> incomingData() => reader!.stream.map((Uint8List command) {
-      if (command.first != ":".codeUnitAt(0) || command.last != 10) throw FormatException("Invalid command");
-      return String.fromCharCodes(command);
-    });
+  /// Verify that the command is the correct format
+  /// It must start with ":" and end with "\n" ex: :command arg1 arg2\n
+  /// Otherwise throw a format exception
+  String parseCommand(Uint8List packet) {
+    final buffer = StringBuffer();
+    final String data = String.fromCharCodes(packet);
+    for (int i = 0; i < data.length; i++) {
+      final String char = data[i];
+      if (buffer.isEmpty) {
+        if (char != ":") throw const FormatException("Command should start with :");
+      } else {
+        if (char == ":") throw const FormatException("Command cannot contain a :");
+      }
+        buffer.write(char);
+        if (char == "\n") {
+          if (i != data.length - 1){
+            throw const FormatException("Command cannot contain a \\n");
+          }
+          return buffer.toString().substring(1);
+        }
+      }
+      throw const FormatException("Command did not end with \n");
+  }
+
+  /// Returns a stream of all commands being sent
+  Stream<String> incomingData() => reader!.stream.map(parseCommand);
+
 }
 
 
-/*
-  [97, 98, 99, 10] => "abc\n"
-  [...] => ":precise-swivel "
-*/
-//void main(){
-//  Serial.port
-//}
