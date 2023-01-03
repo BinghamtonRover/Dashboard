@@ -5,6 +5,8 @@ import "package:libserialport/libserialport.dart";
 import "serial_errors.dart";
 import "service.dart";
 
+export "serial_errors.dart";
+
 /// A service to interact with Serial Port(s) from dashboard.
 /// 
 /// Since a device may not be connected right away, or may be disconnected after the dashboard is
@@ -57,7 +59,7 @@ class Serial extends Service {
 	/// 
 	/// - If no device is connected, this will throw a [DeviceNotConnected].
 	/// - If there is an IO error, this will throw a [SerialPortError].
-	void sendBytes(String data) {
+	void send(String data) {
 		final Uint8List byteList = Uint8List.fromList(data.codeUnits);
 		if (_writer == null) throw DeviceNotConnected();
 		try {
