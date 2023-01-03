@@ -7,16 +7,17 @@
 ///
 /// The [Services] class acts as a bundle service for all services defined in this library. Its
 /// responsibilities include initializing and disposing of the services, and it also acts as a
-/// sort of dependency injection service by ensuring simple access.
+/// sort of dependency injection service by ensuring simple access. Use the [services] singleton.
 ///
-/// This library must also be at the bottom of the dependency graph, like the data library. It may
-/// not import any other library in this project, only 3rd party plugins.
+/// This library sits right above the data library, and may import it, but not any other library
+/// in this project, only 3rd party plugins. That way, all other code can import any service.
 library services;
 
 import "src/services/files.dart";
 import "src/services/gamepad.dart";
 import "src/services/message_receiver.dart";
 import "src/services/message_sender.dart";
+import "src/services/serial.dart";
 import "src/services/service.dart";
 
 export "src/services/files.dart";
@@ -36,41 +37,46 @@ export "src/services/udp_server.dart";
 /// When adding a new service, declare it as a field in this class **and** add it to the [init]
 /// and [dispose] methods. Otherwise, the service will fail to initialize and dispose properly.
 ///
-/// To get an instance of this class, use [Services.instance].
+/// To get an instance of this class, use [services].
 class Services extends Service {
-  /// The singleton instance of this class.
-  ///
-  /// This is the only instance of this class the app can guarantee is properly initialized.
-  static Services instance = Services._();
+	/// This class has a private constructor since users should only use [services].
+	Services._();
 
-  /// This class has a private constructor since users should only use [Services.instance].
-  Services._();
+	/// A service that receives messages from the rover over the network.
+	final messageReceiver = MessageReceiver();
 
-  /// A service that receives messages from the rover over the network.
-  final messageReceiver = MessageReceiver();
+	/// A service that sends messages to the rover over the network.
+	final messageSender = MessageSender();
 
-  /// A service that sends messages to the rover over the network.
-  final messageSender = MessageSender();
+	/// A service that handles controller inputs.
+	final gamepad = GamepadService();
 
-  /// A service that handles controller inputs.
-  final gamepad = GamepadService();
+	/// A service that reads and writes to device files.
+	final files = FilesService();
 
-  /// A service that reads and writes to device files.
-  final files = FilesService();
+	/// A service that communicates over a serial connection.
+	final serial = Serial();
 
-  @override
-  Future<void> init() async {
-    await messageSender.init();
-    await messageReceiver.init();
-    await gamepad.init();
-    await files.init();
-  }
+	@override
+	Future<void> init() async {
+		await messageSender.init();
+		await messageReceiver.init();
+		await gamepad.init();
+		await files.init();
+		await serial.init();
+	}
 
-  @override
-  Future<void> dispose() async {
-    await messageSender.dispose();
-    await messageReceiver.dispose();
-    await gamepad.dispose();
-    await files.dispose();
-  }
+	@override
+	Future<void> dispose() async {
+		await messageSender.dispose();
+		await messageReceiver.dispose();
+		await gamepad.dispose();
+		await files.dispose();
+		await serial.dispose();
+	}
 }
+
+/// The singleton instance of the [Services] class.
+///
+/// This is the only instance of this class the app can guarantee is properly initialized.
+final services = Services._();

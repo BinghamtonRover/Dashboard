@@ -11,5 +11,9 @@ library main;
 import "package:flutter/material.dart";
 
 import "app.dart";
+import "services.dart";
 
-void main() => runApp(RoverControlDashboard());
+void main() async {
+	await services.init();
+	runApp(RoverControlDashboard());
+}
