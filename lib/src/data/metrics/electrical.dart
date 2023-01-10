@@ -12,12 +12,10 @@ class ElectricalMetrics extends Metrics<ElectricalData> {
 	@override
 	String get name => "Electrical";
 
-	// TODO: implement this
 	@override
 	List<String> get allMetrics => [  
 		"Battery: ${data.batteryVoltage} V, ${data.batteryCurrent} A",
 		"12V supply: ${data.v12SupplyVoltage} V, ${data.v12SupplyCurrent} A, ${data.v12SupplyTemperature} °F",
 		"5V supply: ${data.v5SupplyVoltage} V, ${data.v5SupplyCurrent} A, ${data.v5SupplyTemperature} °F",
-		"ODrives: ${data.odrive0Current} A, ${data.odrive1Current} A, ${data.odrive2Current} A",
 	];
 }

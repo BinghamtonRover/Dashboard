@@ -7,24 +7,28 @@
 library app;
 
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 
+import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 
 /// The main class for the app. 
-class RoverControlDashboard extends StatefulWidget {
+class RoverControlDashboard extends StatelessWidget {
 	@override
-	RoverControlDashboardState createState() => RoverControlDashboardState();
-}
-
-/// The state object for [RoverControlDashboard].
-class RoverControlDashboardState extends State<RoverControlDashboard> {
-	@override
-	Widget build(BuildContext context) => MaterialApp(
-		title: "Binghamton University Rover Team",
-		home: HomePage(),
-		debugShowCheckedModeBanner: false,
-		routes: {
-			Routes.settings: (_) => SettingsPage(),
-		}
+	Widget build(BuildContext context) => MultiProvider(
+		providers: [
+			ChangeNotifierProvider.value(value: models),
+			ChangeNotifierProvider.value(value: models.metrics),
+		],
+		child: Consumer<Models>(
+			builder: (context, models, _) => MaterialApp(
+				title: "Binghamton University Rover Team",
+				home: models.isReady ? HomePage() : const Scaffold(body: Center(child: CircularProgressIndicator())),
+				debugShowCheckedModeBanner: false,
+				routes: {
+					Routes.settings: (_) => SettingsPage(),
+				}
+			)
+		)
 	);
 }
