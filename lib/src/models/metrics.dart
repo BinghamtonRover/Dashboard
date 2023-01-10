@@ -21,11 +21,5 @@ class MetricsModel extends Model {
 			decoder: ElectricalData.fromBuffer,
 			handler: (data) { electrical = ElectricalMetrics(data); notifyListeners(); }
 		);
-
-		electrical = ElectricalMetrics(ElectricalData(
-			batteryVoltage: 25, 
-			batteryCurrent: 3
-		));
-		notifyListeners();
 	}
 }

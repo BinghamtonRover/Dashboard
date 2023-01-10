@@ -17,6 +17,11 @@ export "src/models/metrics.dart";
 /// Use this class to ensure a data model will be initialized before the dashboard starts. For a 
 /// view model (a model that only needs to be used in one part of the UI), use the model directly
 /// with a `ChangeNotifierProvider` from `package:provider`.
+///
+/// When adding a new model to this class, be sure to: 
+/// 1. Add it as a field
+/// 2. Initialize it in [init]
+/// 3. Add it to the `MultiProvider` in `app.dart`
 class Models extends Model {
 	/// Whether all models have been initialized.
 	bool isReady = false;
@@ -36,7 +41,7 @@ class Models extends Model {
 
 /// The data model representing the entire backend of the dashboard.
 /// 
-/// This constant is here to provide easy access to the backend. But simply using this cariable
+/// This constant is here to provide easy access to the backend. But simply using this variable
 /// will not cause the UI to update. For that, you must place it in a `ChangeNotifierProvider`
 /// and use `Consumer` when needed.
 final models = Models()..init();
