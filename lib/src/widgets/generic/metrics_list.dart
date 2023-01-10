@@ -1,26 +1,33 @@
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 
-import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
+
+extension on BuildContext {
+	TextTheme get textTheme => Theme.of(this).textTheme;
+}
 
 /// Displays metrics of all sorts in a collapsible list.
 class MetricsList extends StatelessWidget {
-	/// A constant constructor for this widget.
+	/// A const constructor for this widget.
 	const MetricsList();
 
-	/// All the metrics to display.
-	static const List<Metrics> tempMetrics = [];
-
 	@override
-	Widget build(BuildContext context) => ExpansionPanelList(
-		children: [
-			for (final metrics in tempMetrics) ExpansionPanel(
-				headerBuilder: (_, __) => Text(metrics.name),
-				body: Column(
+	Widget build(BuildContext context) => Consumer<MetricsModel>(
+		builder: (context, model, _) => ListView(
+			shrinkWrap: true,
+			children: [
+				Text("Metrics", style: context.textTheme.displaySmall),
+				for (final metrics in model.allMetrics) ExpansionTile(
+					title: Text(
+						metrics?.name ?? "Loading...",
+						style: context.textTheme.headlineSmall,
+					),
 					children: [
-						for (final String metric in metrics.allMetrics) Text(metric),
+						for (final String metric in metrics?.allMetrics ?? []) Text(metric),
 					]
 				)
-			)
-		]
+			]
+		)
 	);
 }
