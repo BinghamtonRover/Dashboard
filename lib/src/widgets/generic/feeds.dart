@@ -20,14 +20,14 @@ class VideoFeeds extends StatelessWidget {
 		children: [
 			Expanded(child: Row(
 				children: [
-					if (feeds.isNotEmpty) VideoDisplay(feeds[0]),
-					if (feeds.length >= 2) VideoDisplay(feeds[1]),
+					if (feeds.isNotEmpty) Expanded(child: VideoDisplay(feeds[0])),
+					if (feeds.length >= 2) Expanded(child: VideoDisplay(feeds[1])),
 				],
 			)),
 			Expanded(child: Row(
 				children: [
-					if (feeds.length >= 3) VideoDisplay(feeds[2]),
-					if (feeds.length >= 4) VideoDisplay(feeds[3]),
+					if (feeds.length >= 3) Expanded(child: VideoDisplay(feeds[2])),
+					if (feeds.length >= 4) Expanded(child: VideoDisplay(feeds[3])),
 				],
 			)),
 		]

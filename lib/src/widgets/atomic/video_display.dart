@@ -11,5 +11,5 @@ class VideoDisplay extends StatelessWidget {
 	const VideoDisplay(this.feed);
 
 	@override
-	Widget build(BuildContext context) => Text(feed.name);
+	Widget build(BuildContext context) => Container(color: Colors.blueGrey, child: Center(child: Text(feed.name)));
 }
