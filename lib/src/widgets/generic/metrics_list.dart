@@ -3,10 +3,6 @@ import "package:provider/provider.dart";
 
 import "package:rover_dashboard/models.dart";
 
-extension on BuildContext {
-	TextTheme get textTheme => Theme.of(this).textTheme;
-}
-
 /// Displays metrics of all sorts in a collapsible list.
 class MetricsList extends StatelessWidget {
 	/// A const constructor for this widget.
@@ -17,11 +13,11 @@ class MetricsList extends StatelessWidget {
 		builder: (context, model, _) => ListView(
 			shrinkWrap: true,
 			children: [
-				Text("Metrics", style: context.textTheme.displaySmall),
+				Text("Metrics", style: Theme.of(context).textTheme.displaySmall),
 				for (final metrics in model.allMetrics) ExpansionTile(
 					title: Text(
 						metrics?.name ?? "Loading...",
-						style: context.textTheme.headlineSmall,
+						style: Theme.of(context).textTheme.headlineSmall,
 					),
 					children: [
 						for (final String metric in metrics?.allMetrics ?? []) Text(metric),
