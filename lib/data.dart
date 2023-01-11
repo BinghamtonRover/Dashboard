@@ -1,3 +1,5 @@
+// ignore_for_file: directives_ordering
+
 /// The data library.
 ///
 /// This library defines any data types needed by the rest of the app. While the dataclasses may
@@ -17,4 +19,7 @@ export "src/data/metrics/electrical.dart";
 export "src/data/metrics/metrics.dart";
 export "src/data/metrics/protobuf.dart";
 export "src/data/metrics/science.dart";
+
+export "src/data/camera_feed.dart";
+export "src/data/modes.dart";
 export "src/data/settings.dart";
