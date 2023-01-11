@@ -1,3 +1,5 @@
+// ignore_for_file: directives_ordering
+
 /// A library that manages and controls the state of the app. 
 /// 
 /// This library is comprised of classes that have methods to allow simple control over the app's
@@ -7,10 +9,19 @@
 /// This library may depend on the data and services library. 
 library models;
 
-import "src/models/metrics.dart";
-import "src/models/model.dart";
+import "src/models/data/metrics.dart";
+import "src/models/data/model.dart";
+import "src/models/data/video.dart";
 
-export "src/models/metrics.dart";
+export "src/models/data/metrics.dart";
+export "src/models/data/video.dart";
+
+export "src/models/view/home.dart";
+export "src/models/view/modes/mode.dart";
+export "src/models/view/modes/arm.dart";
+export "src/models/view/modes/autonomy.dart";
+export "src/models/view/modes/drive.dart";
+export "src/models/view/modes/science.dart";
 
 /// A wrapper model around all other data models used by the app.
 /// 
@@ -27,12 +38,16 @@ class Models extends Model {
 	bool isReady = false;
 
 	/// The data model to provide metrics from the rover.
-	final MetricsModel metrics = MetricsModel();
+	final metrics = MetricsModel();
+
+	/// The data model to provide video from the rover.
+	final video = VideoModel(); 
 
 	@override
 	Future<void> init() async {
 		// initialize all models here
 		await metrics.init();
+		await video.init();
 
 		isReady = true;
 		notifyListeners();
