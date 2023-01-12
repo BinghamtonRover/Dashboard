@@ -1,10 +1,23 @@
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 
-/// The page for when the rover drives itself.
-class AutonomyMode extends StatelessWidget {
-	/// A const constructor for this widget.
-	const AutonomyMode();
+import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/widgets.dart";
 
-	@override
-	Widget build(BuildContext context) => Container();
+/// The page for the science operating mode. 
+class AutonomyPage extends StatelessWidget {
+  /// A const constructor.
+  const AutonomyPage();
+  
+  @override
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+    create: (_) => AutonomyModel(), 
+    child: Consumer<AutonomyModel>(
+      builder: (context, model, _) => Row(
+        children: [
+          Expanded(child: VideoFeeds(model.feeds)),
+        ]
+      )
+    )
+  );
 }

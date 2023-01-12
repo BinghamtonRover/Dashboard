@@ -1,14 +1,23 @@
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 
-/// The page for controlling the rover's arm.
-class ArmMode extends StatelessWidget {
-	/// A const constructor for this widget.
-	const ArmMode();
+import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/widgets.dart";
 
-	@override
-	Widget build(BuildContext context) => Column(children: [
-		Container(height: 100, color: Colors.green),
-		const Spacer(),
-		Container(height: 10, color: Colors.red),
-	]);
+/// The page for the science operating mode. 
+class ArmPage extends StatelessWidget {
+  /// A const constructor.
+  const ArmPage();
+
+  @override
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+    create: (_) => ArmModel(), 
+    child: Consumer<ArmModel>(
+      builder: (context, model, _) => Row(
+        children: [
+          Expanded(child: VideoFeeds(model.feeds)),
+        ]
+      )
+    )
+  );
 }

@@ -19,6 +19,7 @@ class RoverControlDashboard extends StatelessWidget {
 		providers: [
 			ChangeNotifierProvider.value(value: models),
 			ChangeNotifierProvider.value(value: models.metrics),
+			ChangeNotifierProvider.value(value: models.video),
 		],
 		child: Consumer<Models>(
 			builder: (context, models, _) => MaterialApp(

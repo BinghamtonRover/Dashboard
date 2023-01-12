@@ -1,38 +1,32 @@
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 
+import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
-/// A mode for operating the rover. 
-/// 
-/// The operator can switch between modes which will: 
-/// - change the controller inputs to match the current mode
-/// - change the on-screen UI to provide information useful in this context
-/// - highlight the relevant metrics
-enum OperatingMode {
-	/// The operating mode for analyzing dirt samples.
-	science(name: "Science", icon: Icons.science, page: ScienceMode()),
+/// Data needed for an operating mode's UI.
+class OperatingModePage { 
+	/// The mode the rover should be in.
+	final OperatingMode mode;
 
-	/// The operating mode for controlling the arm
-	arm(name: "Arm", icon: Icons.precision_manufacturing, page: ArmMode()),
-
-	/// The operating mode for driving autonomously. 
-	autonomy(name: "Autonomy", icon: Icons.smart_toy, page: AutonomyMode()),
-
-	/// The operating mode for driving manually. 
-	manual(name: "Manual", icon: Icons.sports_esports, page: ManualMode());
-
-	/// The name of the operating mode.
-	final String name;
-
-	/// The contents of the page while in this operating mode.
-	final Widget page;
-
-	/// The icon for this operating mode.
+	/// The icon to display in the mode switcher.
 	final IconData icon;
 
-	/// Describes the UI for a given operating mode.
-	const OperatingMode({required this.name, required this.page, required this.icon});
+	/// The page to display in this mode.
+	final Widget page;
+
+	/// A const constructor.
+	const OperatingModePage({required this.mode, required this.icon, required this.page});
+
+	/// All the pages for all the operating modes.
+	static const allPages = [
+		OperatingModePage(mode: OperatingMode.science, page: SciencePage(), icon: Icons.science), 
+		OperatingModePage(mode: OperatingMode.arm, page: ArmPage(), icon: Icons.precision_manufacturing), 
+		OperatingModePage(mode: OperatingMode.autonomy, page: AutonomyPage(), icon: Icons.smart_toy),
+		OperatingModePage(mode: OperatingMode.drive, page: DrivePage(), icon: Icons.sports_esports),
+	];
 }
 
 /// The main dashboard page. 
@@ -41,27 +35,49 @@ enum OperatingMode {
 class HomePage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => DefaultTabController(
-		length: OperatingMode.values.length, 
-		child: Scaffold(
-			appBar: AppBar(
-				title: const Text("Rover Control Dashboard"),
-				bottom: TabBar(tabs: [
-					for (final mode in OperatingMode.values)
-						Tab(text: mode.name, icon: Icon(mode.icon)),
-				]),
-				actions: [
-					IconButton(
-						icon: const Icon(Icons.settings),
-						onPressed: () => Navigator.of(context).pushNamed(Routes.settings),
-					),
-				]
-			),
-			body: Column(children: [
-				Expanded(child: TabBarView(children: [
-					for (final mode in OperatingMode.values) mode.page,
-				])),
-				Footer(),
-			]),
+		length: OperatingModePage.allPages.length,
+		child: ChangeNotifierProvider(
+			create: (_) => HomeModel(), 
+			builder: (context, _) => Scaffold(
+				appBar: AppBar(
+					title: const Text("Dashboard"),
+					bottom: PreferredSize(preferredSize: const Size.fromHeight(32), child: 
+						TabBar(
+						onTap: Provider.of<HomeModel>(context, listen: false).changeMode,
+						tabs: [
+							for (final page in OperatingModePage.allPages)Row(
+								mainAxisAlignment: MainAxisAlignment.center,
+								children: [
+									Text(page.mode.name), 
+									const SizedBox(width: 8), 
+									Icon(page.icon)
+								]
+							)
+						],
+					)),
+					actions: [
+						IconButton(
+							icon: const Icon(Icons.settings),
+							onPressed: () => Navigator.of(context).pushNamed(Routes.settings),
+						),
+					]
+				),
+				body: Column(
+					children: [
+						Expanded(child: Row(
+							children: [
+								Expanded(child: TabBarView(
+									children: [ 
+										for (final page in OperatingModePage.allPages) page.page
+									]
+								)),
+								Sidebar(),
+							]
+						)),
+						Footer(),
+					]
+				),
+			)
 		)
 	);
 }
