@@ -25,6 +25,11 @@ enum OperatingMode {
 	/// Focus on helping the user simply drive the rover.
 	drive("Manual Drive");
 
+	/// The name of this mode.
+	/// 
+	/// Use this instead of [EnumName.name] so we can use a longer name.
 	final String name;
+
+	/// Describes an operating mode.
 	const OperatingMode(this.name);
 }
