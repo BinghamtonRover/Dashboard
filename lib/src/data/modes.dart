@@ -8,20 +8,23 @@ enum OperatingMode {
 	/// Science mode. 
 	/// 
 	/// Focus cameras on the science chamber and allow the user to collect samples and data.
-	science, 
+	science("Environmental Analysis"), 
 
 	/// Arm mode.
 	/// 
 	/// Focus on helping the user manipulate the arm.
-	arm, 
+	arm("Human-Robot Environment Interaction"), 
 
 	/// Autonomy mode. 
 	/// 
 	/// Focus on helping the user understand the rover's decisions.
-	autonomy, 
+	autonomy("Autonomous"), 
 
 	/// Drive mode. 
 	/// 
 	/// Focus on helping the user simply drive the rover.
-	drive
+	drive("Manual Drive");
+
+	final String name;
+	const OperatingMode(this.name);
 }

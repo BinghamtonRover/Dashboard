@@ -40,14 +40,21 @@ class HomePage extends StatelessWidget {
 			create: (_) => HomeModel(), 
 			builder: (context, _) => Scaffold(
 				appBar: AppBar(
-					title: const Text("Rover Control Dashboard"),
-					bottom: TabBar(
+					title: const Text("Dashboard"),
+					bottom: PreferredSize(preferredSize: const Size.fromHeight(32), child: 
+						TabBar(
 						onTap: Provider.of<HomeModel>(context, listen: false).changeMode,
 						tabs: [
-							for (final page in OperatingModePage.allPages)
-								Tab(text: page.mode.name, icon: Icon(page.icon)),
+							for (final page in OperatingModePage.allPages)Row(
+								mainAxisAlignment: MainAxisAlignment.center,
+								children: [
+									Text(page.mode.name), 
+									const SizedBox(width: 8), 
+									Icon(page.icon)
+								]
+							)
 						],
-					),
+					)),
 					actions: [
 						IconButton(
 							icon: const Icon(Icons.settings),
@@ -57,13 +64,16 @@ class HomePage extends StatelessWidget {
 				),
 				body: Column(
 					children: [
-						Expanded(
-							child: TabBarView(
-								children: [ 
-									for (final page in OperatingModePage.allPages) page.page
-								]
-							)
-						),
+						Expanded(child: Row(
+							children: [
+								Expanded(child: TabBarView(
+									children: [ 
+										for (final page in OperatingModePage.allPages) page.page
+									]
+								)),
+								Sidebar(),
+							]
+						)),
 						Footer(),
 					]
 				),

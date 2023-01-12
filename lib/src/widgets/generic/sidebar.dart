@@ -5,14 +5,10 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A widget to display metrics and controls off to the side.
-/// 
-/// The [T] type argument allows this widget to find the controls for the 
-/// current operating mode.
-class Sidebar<T extends OperatingModeModel> extends StatelessWidget {
+class Sidebar extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => Container(
 		width: 225, 
-		color: Colors.yellow, 
 		alignment: Alignment.center,
 		child: Consumer<HomeModel>(
 			child: const MetricsList(),

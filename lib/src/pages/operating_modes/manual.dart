@@ -16,7 +16,6 @@ class DrivePage extends StatelessWidget {
       builder: (context, model, _) => Row(
         children: [
           Expanded(child: VideoFeeds(model.feeds)),
-          Sidebar<DriveModel>(),
         ]
       )
     )
