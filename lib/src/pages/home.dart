@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:provider/provider.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -36,16 +35,15 @@ class HomePage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => DefaultTabController(
 		length: OperatingModePage.allPages.length,
-		child: ChangeNotifierProvider(
-			create: (_) => HomeModel(), 
-			builder: (context, _) => Scaffold(
-				appBar: AppBar(
-					title: const Text("Dashboard"),
-					bottom: PreferredSize(preferredSize: const Size.fromHeight(32), child: 
-						TabBar(
-						onTap: Provider.of<HomeModel>(context, listen: false).changeMode,
+		child: Scaffold(
+			appBar: AppBar(
+				title: const Text("Dashboard"),
+				bottom: PreferredSize(
+					preferredSize: const Size.fromHeight(32), 
+					child: TabBar(
+						onTap: models.home.changeMode,
 						tabs: [
-							for (final page in OperatingModePage.allPages)Row(
+							for (final page in OperatingModePage.allPages) Row(
 								mainAxisAlignment: MainAxisAlignment.center,
 								children: [
 									Text(page.mode.name), 
@@ -54,30 +52,31 @@ class HomePage extends StatelessWidget {
 								]
 							)
 						],
+					)
+				),
+				actions: [
+					IconButton(
+						icon: const Icon(Icons.settings),
+						onPressed: () => Navigator.of(context).pushNamed(Routes.settings),
+					),
+				]
+			),
+			body: Column(
+				children: [
+					Expanded(child: Row(
+						children: [
+							Expanded(child: TabBarView(
+								physics: const NeverScrollableScrollPhysics(),  // must use buttons
+								children: [ 
+									for (final page in OperatingModePage.allPages) page.page
+								]
+							)),
+							Sidebar(),
+						]
 					)),
-					actions: [
-						IconButton(
-							icon: const Icon(Icons.settings),
-							onPressed: () => Navigator.of(context).pushNamed(Routes.settings),
-						),
-					]
-				),
-				body: Column(
-					children: [
-						Expanded(child: Row(
-							children: [
-								Expanded(child: TabBarView(
-									children: [ 
-										for (final page in OperatingModePage.allPages) page.page
-									]
-								)),
-								Sidebar(),
-							]
-						)),
-						Footer(),
-					]
-				),
-			)
+					Footer(),
+				]
+			),
 		)
 	);
 }

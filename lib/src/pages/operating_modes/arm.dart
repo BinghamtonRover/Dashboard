@@ -14,8 +14,8 @@ class ArmPage extends StatelessWidget {
     create: (_) => ArmModel(), 
     child: Consumer<ArmModel>(
       builder: (context, model, _) => Row(
-        children: [
-          Expanded(child: VideoFeeds(model.feeds)),
+        children: const [
+          Expanded(child: VideoFeeds()),
         ]
       )
     )
