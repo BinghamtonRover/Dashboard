@@ -14,8 +14,8 @@ class DrivePage extends StatelessWidget {
     create: (_) => DriveModel(), 
     child: Consumer<DriveModel>(
       builder: (context, model, _) => Row(
-        children: [
-          Expanded(child: VideoFeeds(model.feeds)),
+        children: const [
+          Expanded(child: VideoFeeds()),
         ]
       )
     )
