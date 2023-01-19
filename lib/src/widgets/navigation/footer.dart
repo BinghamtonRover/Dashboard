@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
-// import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
 /// The footer, responsible for showing vitals and logs. 

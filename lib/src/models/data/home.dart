@@ -20,7 +20,6 @@ class HomeModel extends Model {
 
 	/// Changes the mode based on an index.  
 	void changeMode(int index) {
-		print("Changing modes...");
 		mode = OperatingMode.values[index];
 		notifyListeners();
 	}
