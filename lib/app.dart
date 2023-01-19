@@ -27,6 +27,11 @@ class RoverControlDashboard extends StatelessWidget {
 				title: "Binghamton University Rover Team",
 				home: models.isReady ? HomePage() : const Scaffold(body: Center(child: CircularProgressIndicator())),
 				debugShowCheckedModeBanner: false,
+				theme: ThemeData(
+					colorScheme: ColorScheme.fromSeed(
+						seedColor: const Color(0xff005A43),  // Binghamton Green
+					)
+				),
 				routes: {
 					Routes.settings: (_) => SettingsPage(),
 				}

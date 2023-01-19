@@ -10,6 +10,7 @@ class Sidebar extends StatelessWidget {
 	Widget build(BuildContext context) => Container(
 		width: 225, 
 		alignment: Alignment.center,
+		color: Theme.of(context).colorScheme.surfaceVariant,
 		child: Consumer<HomeModel>(
 			child: const MetricsList(),
 			builder: (context, model, metrics) => ListView(

@@ -11,7 +11,7 @@ class Footer extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => Container(
 		height: 48,
-		color: Colors.blue,
+		color: Theme.of(context).colorScheme.secondary,
 		child: Row(
 			mainAxisAlignment: MainAxisAlignment.end,
 			children: [
