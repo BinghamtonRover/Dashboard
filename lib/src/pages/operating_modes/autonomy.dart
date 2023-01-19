@@ -14,8 +14,8 @@ class AutonomyPage extends StatelessWidget {
     create: (_) => AutonomyModel(), 
     child: Consumer<AutonomyModel>(
       builder: (context, model, _) => Row(
-        children: [
-          Expanded(child: VideoFeeds(model.feeds)),
+        children: const [
+          Expanded(child: VideoFeeds()),
         ]
       )
     )

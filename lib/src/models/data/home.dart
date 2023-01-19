@@ -1,11 +1,14 @@
-import "package:flutter/foundation.dart";
-
 import "package:rover_dashboard/data.dart";
 
+import "model.dart";
+
 /// The view model for the main page. 
-class HomeModel with ChangeNotifier {
+class HomeModel extends Model {
 	/// The current operating mode.
 	OperatingMode mode = OperatingMode.science;
+
+	@override
+	Future<void> init() async { } 
 
 	/// The list of controls for this mode.
 	List<String> get controls => [  // TODO: replace with actual backend

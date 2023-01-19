@@ -16,10 +16,14 @@ class CameraFeed {
   /// Whether or not this feed is currently showing.
   bool isActive;
 
+  /// The ID of the camera.
+  final int id;
+
   /// Stores metadata about a camera feed. 
   CameraFeed({
     required this.name, 
+    required this.id,
     this.pageTypes = const [], 
-    this.isActive = true
+    this.isActive = true,
   });  
 }

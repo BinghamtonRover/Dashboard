@@ -14,8 +14,8 @@ class SciencePage extends StatelessWidget {
     create: (_) => ScienceModel(), 
     child: Consumer<ScienceModel>(
       builder: (context, model, _) => Row(
-        children: [
-          Expanded(child: VideoFeeds(model.feeds)),
+        children: const [
+          Expanded(child: VideoFeeds()),
         ]
       )
     )

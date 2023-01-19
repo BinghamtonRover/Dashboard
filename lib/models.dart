@@ -9,14 +9,15 @@
 /// This library may depend on the data and services library. 
 library models;
 
+import "src/models/data/home.dart";
 import "src/models/data/metrics.dart";
 import "src/models/data/model.dart";
 import "src/models/data/video.dart";
 
+export "src/models/data/home.dart";
 export "src/models/data/metrics.dart";
 export "src/models/data/video.dart";
 
-export "src/models/view/home.dart";
 export "src/models/view/modes/mode.dart";
 export "src/models/view/modes/arm.dart";
 export "src/models/view/modes/autonomy.dart";
@@ -43,9 +44,13 @@ class Models extends Model {
 	/// The data model to provide video from the rover.
 	final video = VideoModel(); 
 
+	/// Contains persistent data about the dashboard's current state.
+	final home = HomeModel();
+
 	@override
 	Future<void> init() async {
 		// initialize all models here
+		await home.init();
 		await metrics.init();
 		await video.init();
 
