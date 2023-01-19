@@ -1,5 +1,5 @@
 # The Dashboard outputs files into the output/ directory
-/output/*
+/output
 
 # Miscellaneous
 *.class
