@@ -1,4 +1,3 @@
-import "../message_sender.dart";
 import "../service.dart";
 
 
@@ -6,9 +5,7 @@ import "../service.dart";
 class DriveControl extends Service {
   
   @override
-  Future<void> init() async {
-    final sender = MessageSender(); 
-  } 
+  Future<void> init() async {} 
 
   @override
 	Future<void> dispose() async {}
@@ -16,7 +13,7 @@ class DriveControl extends Service {
   /// Command to change the Rover's speed
   void updateSpeed(double left, double right, double throttle) { 
     //final message = DriveCommand(left, right, throttle);  // TODO: Protobuf class
-    //sender.send_message(message);
+    //services.message_sender.send_message(message);
   }
   
   /// Command to tell the Rover to brake
