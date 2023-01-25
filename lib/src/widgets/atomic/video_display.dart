@@ -36,7 +36,8 @@ class VideoDisplayState extends State<VideoDisplay> {
 			if (widget.feed != null) Container(  // TODO: Implement video player
 				color: Colors.blueGrey, 
 				margin: const EdgeInsets.all(1),
-				child: Center(child: VideoFeed()/*Text(widget.feed!.name)*/),
+				// TODO: listen for frame availability
+				child: Center(child: widget.feed!.isActive ? widget.feed!.feed : Text(widget.feed!.name)),
 			) else Container(
 				color: Colors.blueGrey,
 				margin: const EdgeInsets.all(1),

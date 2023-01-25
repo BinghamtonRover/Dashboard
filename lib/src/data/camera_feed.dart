@@ -1,3 +1,5 @@
+import 'package:rover_dashboard/src/widgets/generic/video_feed.dart';
+
 import "modes.dart";
 
 /// Metadata about a camera feed. 
@@ -18,6 +20,9 @@ class CameraFeed {
 
   /// The ID of the camera.
   final int id;
+
+  /// this will need to be adjusted to the particular feed (or null) based on availability
+  VideoFeed? feed = VideoFeed();
 
   /// Stores metadata about a camera feed. 
   CameraFeed({
