@@ -3,6 +3,8 @@ import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
+import '../generic/video_feed.dart';
+
 /// A video stream based on a [CameraFeed].
 class VideoDisplay extends StatefulWidget {
 	/// The video feed to display.
@@ -34,7 +36,7 @@ class VideoDisplayState extends State<VideoDisplay> {
 			if (widget.feed != null) Container(  // TODO: Implement video player
 				color: Colors.blueGrey, 
 				margin: const EdgeInsets.all(1),
-				child: Center(child: Text(widget.feed!.name)),
+				child: Center(child: VideoFeed()/*Text(widget.feed!.name)*/),
 			) else Container(
 				color: Colors.blueGrey,
 				margin: const EdgeInsets.all(1),

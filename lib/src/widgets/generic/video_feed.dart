@@ -32,7 +32,7 @@ class VideoFeedState extends State<VideoFeed> {
 
   Future<Uint8List> getBytes() =>
     File("/Users/dillonaldrich/Downloads/coding/Dashboard/output/$count.jpg").readAsBytes();
-    //File("~/Downloads/coding/Dashboard/output/$count.jpg").readAsBytes();
+    
 
   Future<Image> loadImage(Uint8List bytes) async {
     final buffer = await ImmutableBuffer.fromUint8List(bytes);
@@ -67,6 +67,7 @@ class VideoFeedState extends State<VideoFeed> {
     appBar: AppBar(),
     body: image == null ? const Placeholder() : RawImage(image: image),
   );
+
 }
 
 void main() => runApp(MaterialApp(home: VideoFeed()));
