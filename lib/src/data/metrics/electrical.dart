@@ -7,15 +7,15 @@ import "package:rover_dashboard/data.dart";
 /// be monitored to catch problems before they cause damage to the rover. 
 class ElectricalMetrics extends Metrics<ElectricalData> {
 	/// A collection of metrics relevant for monitoring the rover's electrical status.
-	const ElectricalMetrics(super.data);
+	ElectricalMetrics() : super(ElectricalData());
 
 	@override
 	String get name => "Electrical";
 
 	@override
 	List<String> get allMetrics => [  
-		"Battery: ${data.batteryVoltage} V, ${data.batteryCurrent} A",
-		"12V supply: ${data.v12SupplyVoltage} V, ${data.v12SupplyCurrent} A, ${data.v12SupplyTemperature} °F",
-		"5V supply: ${data.v5SupplyVoltage} V, ${data.v5SupplyCurrent} A, ${data.v5SupplyTemperature} °F",
+		"Battery: ${data.batteryVoltage}V, ${data.batteryCurrent}A, ${data.batteryTemperature}°F",
+		"12V supply: ${data.v12Voltage}V, ${data.v12Current}A, ${data.v12Temperature}°F",
+		"5V supply: ${data.v5Voltage}V, ${data.v5Current}A, ${data.v5Temperature}°F",
 	];
 }

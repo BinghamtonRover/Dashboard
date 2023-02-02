@@ -22,4 +22,6 @@ abstract class Metrics<T extends Message> {
 	/// Be sure to store the actual values as fields. This property should be a list of one 
 	/// user-friendly explanation per metric. 
 	List<String> get allMetrics;
+
+	void update(T newData) => data.mergeFromMessage(newData);
 }

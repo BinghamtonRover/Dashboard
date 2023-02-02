@@ -10,9 +10,8 @@
 ///  library should import any other library.
 library data;
 
-export "src/data/generated/drive_control.pb.dart";
-export "src/data/generated/sensor_control.pb.dart";
-export "src/data/generated/video_control.pb.dart";
+export "src/data/generated/electrical.pb.dart";
+export "src/data/generated/science.pb.dart";
 export "src/data/generated/wrapper.pb.dart";
 
 export "src/data/metrics/electrical.dart";
