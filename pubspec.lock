@@ -195,6 +195,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_libserialport:
+    dependency: "direct main"
+    description:
+      name: flutter_libserialport
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -271,7 +278,7 @@ packages:
     source: hosted
     version: "4.7.0"
   libserialport:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       name: libserialport
       url: "https://pub.dartlang.org"
@@ -529,4 +536,4 @@ packages:
     version: "1.0.3"
 sdks:
   dart: ">=2.18.0 <3.0.0"
-  flutter: ">=1.16.0"
+  flutter: ">=3.0.0"

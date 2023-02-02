@@ -1,6 +1,6 @@
 import "dart:typed_data";
 
-import "package:libserialport/libserialport.dart";
+import "package:flutter_libserialport/flutter_libserialport.dart";
 
 import "serial_errors.dart";
 import "service.dart";

@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  libserialport: ^0.2.0+3
+  flutter_libserialport: ^0.3.0
   protobuf: ^2.1.0
   provider: ^6.0.5
   win32_gamepad: ^1.0.2
@@ -38,6 +38,9 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   build_runner: ^2.3.2
   protoc_builder: ^0.3.0
+
+dependency_overrides: 
+  libserialport: 0.2.0+3
 
 # The following section is specific to Flutter packages.
 flutter:
