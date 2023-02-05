@@ -1,4 +1,4 @@
-import "package:libserialport/libserialport.dart";
+import "package:flutter_libserialport/flutter_libserialport.dart";
 import "package:rover_dashboard/errors.dart";
 
 /// The base class for all exceptions relating to using Serial devices.
