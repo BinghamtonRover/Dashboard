@@ -11,8 +11,9 @@ class DriveControl extends Service {
 
   /// Command to change the Rover's speed
   void updateSpeed(double left, double right, double throttle) {
-    final message = DriveCommand(left, right, throttle); // TODO: Protobuf class
-    services.messageSender.sendMessage(message);
+    //final message = DriveCommand(left, right, throttle); // TODO: Protobuf class
+    //services.messageSender.sendMessage(message);
+    print("Speed is being updated ${left}, ${right}, ${throttle}");
   }
 
   /// Command to tell the Rover to brake

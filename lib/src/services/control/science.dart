@@ -10,23 +10,23 @@ class ScienceControl extends Service {
   Future<void> dispose() async {}
 
   void moveCarouselHorizontally(double degree) {
-    final message = ScienceCommand(move_carousel_horizontally: degree);
-    services.messageSender.sendMessage(message);
+    //final message = ScienceCommand(move_carousel_horizontally: degree);
+    //services.messageSender.sendMessage(message);
   }
 
   void rotateCarousel(double degree) {
-    final message = ScienceCommand(rotate_carousel: degree);
-    services.messageSender.sendMessage(message);
+    //final message = ScienceCommand(rotate_carousel: degree);
+    //services.messageSender.sendMessage(message);
   }
 
   void moveTestingSuite(double mm) {
-    final message = ScienceCommand(move_testing_suite: mm);
-    services.messageSender.sendMessage(message);
+    //final message = ScienceCommand(move_testing_suite: mm);
+    //services.messageSender.sendMessage(message);
   }
 
   void moveDirtCollection(double mm) {
-    final message = ScienceCommand(move_dirt_collection: mm);
-    services.messageSender.sendMessage(message);
+    //final message = ScienceCommand(move_dirt_collection: mm);
+    //services.messageSender.sendMessage(message);
   }
 
   void vacuum_power({required bool b}) {}
