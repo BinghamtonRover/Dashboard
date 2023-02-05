@@ -37,3 +37,11 @@ class GamepadService extends Service {
   /// so in a way that it is called periodically, either via a timer or Flutter's build function.
   void update() => gamepad.updateState(); 
 }
+
+/// Extenstion on GamepadState object
+extension GamepadStateExtension on GamepadState {
+  /// formatted leftY
+  double get leftY => (leftThumbstickY - 128) / 32768; 
+  /// formatted rightY
+  double get rightY => (rightThumbstickY - 128) / 32768; 
+}

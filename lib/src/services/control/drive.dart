@@ -10,14 +10,18 @@ class DriveControl extends Service {
   Future<void> dispose() async {}
 
   /// Command to change the Rover's speed
-  void updateSpeed(double left, double right, double throttle) {
+  void updateSpeed(double left, double right) {
     //final message = DriveCommand(left, right, throttle); // TODO: Protobuf class
     //services.messageSender.sendMessage(message);
-    print("Speed is being updated ${left}, ${right}, ${throttle}");
+    print("Speed is being updated ${left}, ${right}");
+  }
+
+  void updateMaxSpeed(double throttle){
+
   }
 
   /// Command to tell the Rover to brake
   void brake() {
-    updateSpeed(0, 0, 0);
+    updateSpeed(0, 0);
   }
 }
