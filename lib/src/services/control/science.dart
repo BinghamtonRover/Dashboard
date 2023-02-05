@@ -1,3 +1,4 @@
+import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 import "../service.dart";
 
@@ -9,27 +10,47 @@ class ScienceControl extends Service {
   @override
   Future<void> dispose() async {}
 
-  void moveCarouselHorizontally(double degree) {
-    //final message = ScienceCommand(move_carousel_horizontally: degree);
-    //services.messageSender.sendMessage(message);
+  /// Command to tell the rover to dig
+  void dig({required bool isDigging}){
+    services.messageSender.sendMessage(ScienceCommand(dig: isDigging));
   }
 
-  void rotateCarousel(double degree) {
-    //final message = ScienceCommand(rotate_carousel: degree);
-    //services.messageSender.sendMessage(message);
+  /// Command to spin the carousel tube
+  void spinCarouselTube({required bool isSpinning}){
+    services.messageSender.sendMessage(ScienceCommand(spinCarouselTube: isSpinning));
   }
 
-  void moveTestingSuite(double mm) {
-    //final message = ScienceCommand(move_testing_suite: mm);
-    //services.messageSender.sendMessage(message);
+  /// Command to spin the carousel section
+  void spinCarouselSections({required bool isSpinning}){
+    services.messageSender.sendMessage(ScienceCommand(spinCarouselSection: isSpinning));
   }
 
-  void moveDirtCollection(double mm) {
-    //final message = ScienceCommand(move_dirt_collection: mm);
-    //services.messageSender.sendMessage(message);
+  /// Command to turn on Vacuum
+  void vacuumOn({required bool isOn}){
+    services.messageSender.sendMessage(ScienceCommand(vacuumSuck: isOn));
   }
 
-  void vacuumPower({required bool b}) {}
+  /// Command to change carousel angle
+  void setCarouselAngle(double angle){
+    services.messageSender.sendMessage(ScienceCommand(carouselAngle: angle));
+  }
+
+  /// Command to change carousel position
+  void setCarouselLinearPosition(double pos){
+    services.messageSender.sendMessage(ScienceCommand(carouselLinearPosition: pos));
+  }
+
+  /// Command to change test tube position
+  void setTestLinearPosition(double pos){
+    services.messageSender.sendMessage(ScienceCommand(testLinearPosition: pos));
+  }
+
+  /// Command to change vacuum tube position
+  void setVacuumLinearPosition(double pos){
+    services.messageSender.sendMessage(ScienceCommand(vacuumLinearPosition: pos));
+  }
+
+  void vacuumPower({required bool status}) {}
 
   void pump1({required bool status}) {}
 

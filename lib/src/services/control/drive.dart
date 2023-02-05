@@ -17,15 +17,19 @@ class DriveControl extends Service {
     if (left != 0) {
       services.messageSender.sendMessage(DriveCommand(left: left));
     }
+    if (right != 0) {
+      services.messageSender.sendMessage(DriveCommand(right: right));
+    }
   }
 
   /// Updates the maximum speed of the rover, as a percentage of its total capable speed.
-  void updateMaxSpeed(double throttle){
-
+  void updateMaxSpeed(double throttle) {
+    services.messageSender.sendMessage(DriveCommand(throttle: throttle));
   }
 
   /// Command to tell the Rover to brake
   void brake() {
+    updateMaxSpeed(0);
     updateSpeed(0, 0);
   }
 }
