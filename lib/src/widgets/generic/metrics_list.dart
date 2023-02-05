@@ -16,11 +16,11 @@ class MetricsList extends StatelessWidget {
 				Text("Metrics", style: Theme.of(context).textTheme.displaySmall),
 				for (final metrics in model.allMetrics) ExpansionTile(
 					title: Text(
-						metrics?.name ?? "Loading...",
+						metrics.name,
 						style: Theme.of(context).textTheme.headlineSmall,
 					),
 					children: [
-						for (final String metric in metrics?.allMetrics ?? []) Text(metric),
+						for (final String metric in metrics.allMetrics) Text(metric),
 					]
 				)
 			]

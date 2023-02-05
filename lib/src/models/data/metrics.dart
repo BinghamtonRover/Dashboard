@@ -5,9 +5,10 @@ import "model.dart";
 
 /// A data model that listens for updated data and provides [Metrics] to the UI.
 class MetricsModel extends Model {
-	/// Electrical data.
+	/// Data about the rover's core vitals.
 	final electrical = ElectricalMetrics();
 
+	/// Data from the science subsystem.
 	final science = ScienceMetrics();
 
 	/// A list of all the metrics to iterate over. 
@@ -16,6 +17,7 @@ class MetricsModel extends Model {
 	/// when new data is received. As a getter, every time it is called it will use new data.
 	List<Metrics> get allMetrics => [electrical, science];
 
+	/// Returns a function that updates a [Metrics] object and reloads the UI.
 	void Function(T) update<T extends Message>(Metrics<T> metrics) => 
 		(T data) { metrics.update(data); notifyListeners(); }; 
 
@@ -24,17 +26,12 @@ class MetricsModel extends Model {
 		services.messageReceiver.registerHandler<ElectricalData>(
 			name: ElectricalData().messageName, 
 			decoder: ElectricalData.fromBuffer,
-			// handler: (data) { electrical = ElectricalMetrics(data); notifyListeners(); }
 			handler: update(electrical),
 		);
 		services.messageReceiver.registerHandler<ScienceData>(
 			name: ScienceData().messageName, 
 			decoder: ScienceData.fromBuffer,
-			handler: (data) { 
-				science.update(data); 
-				notifyListeners(); 
-			}, 
+			handler: update(science),
 		);
-
 	}
 }

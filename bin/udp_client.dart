@@ -10,14 +10,11 @@ void main() async {
 	final client = UdpClient(listenPort: sendPort);
 	await client.init();
 
-	print("Sending");
-	int bytes = 0;
-	bytes += client.sendBytes(address: address, port: receivePort, bytes: [1, 2, 3]);
+	client.sendBytes(address: address, port: receivePort, bytes: [1, 2, 3]);
 	await Future.delayed(const Duration(milliseconds: 200));
-	bytes += client.sendBytes(address: address, port: receivePort, bytes: [4, 5, 6]);
+	client.sendBytes(address: address, port: receivePort, bytes: [4, 5, 6]);
 	await Future.delayed(const Duration(milliseconds: 200));
-	bytes += client.sendBytes(address: address, port: receivePort, bytes: [7, 8, 9]);
-	print("Sent $bytes bytes");
+	client.sendBytes(address: address, port: receivePort, bytes: [7, 8, 9]);
 	
 	await client.dispose();
 	print("Done");

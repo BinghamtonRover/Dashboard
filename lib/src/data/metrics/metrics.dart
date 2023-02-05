@@ -23,5 +23,6 @@ abstract class Metrics<T extends Message> {
 	/// user-friendly explanation per metric. 
 	List<String> get allMetrics;
 
+	/// Updates [data] with new data.
 	void update(T newData) => data.mergeFromMessage(newData);
 }
