@@ -29,7 +29,6 @@ class ControlModel extends Model {
   /// Function to read Gamepad State
   /// Executes commands based on the current Operating mode
   void readGamepad(_) {
-    print(services.gamepad.isConnected);
     services.gamepad.update();
     switch (models.home.mode) {
       case OperatingMode.arm:
@@ -48,8 +47,7 @@ class ControlModel extends Model {
   /// Function to control rover in Drive operating mode
   void handleDrive() {
     final state = services.gamepad.state;
-    services.drive.updateSpeed(
-        state.leftY.toDouble(), state.rightY.toDouble());
+    services.drive.updateSpeed(state.leftY, state.rightY);
   }
 
   /// Function to control rover in Science operating mode

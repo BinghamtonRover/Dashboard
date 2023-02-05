@@ -1,3 +1,4 @@
+import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 import "../service.dart";
 
@@ -13,7 +14,10 @@ class DriveControl extends Service {
   void updateSpeed(double left, double right) {
     //final message = DriveCommand(left, right, throttle); // TODO: Protobuf class
     //services.messageSender.sendMessage(message);
-    print("Speed is being updated ${left}, ${right}");
+    if (left != 0) {
+      services.messageSender.sendMessage(DriveCommand(left: left));
+      print("Sent left message");
+    }
   }
 
   void updateMaxSpeed(double throttle){
