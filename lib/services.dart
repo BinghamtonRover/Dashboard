@@ -13,6 +13,7 @@
 /// in this project, only 3rd party plugins. That way, all other code can import any service.
 library services;
 
+import "src/services/control/drive.dart";
 import "src/services/files.dart";
 import "src/services/gamepad.dart";
 import "src/services/message_receiver.dart";
@@ -57,6 +58,9 @@ class Services extends Service {
 	/// A service that communicates over a serial connection.
 	final serial = Serial();
 
+	/// A service to control the Rover in drive operating mode
+	final drive = DriveControl();
+
 	@override
 	Future<void> init() async {
 		await messageSender.init();
@@ -64,6 +68,7 @@ class Services extends Service {
 		await gamepad.init();
 		await files.init();
 		await serial.init();
+		await drive.init();
 	}
 
 	@override
@@ -73,6 +78,7 @@ class Services extends Service {
 		await gamepad.dispose();
 		await files.dispose();
 		await serial.dispose();
+		await drive.dispose();
 	}
 }
 

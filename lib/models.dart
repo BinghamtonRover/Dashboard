@@ -9,6 +9,7 @@
 /// This library may depend on the data and services library. 
 library models;
 
+import "src/models/data/control.dart";
 import "src/models/data/home.dart";
 import "src/models/data/metrics.dart";
 import "src/models/data/model.dart";
@@ -47,12 +48,16 @@ class Models extends Model {
 	/// Contains persistent data about the dashboard's current state.
 	final home = HomeModel();
 
+	/// The data model to control the rover
+	final control = ControlModel();
+
 	@override
 	Future<void> init() async {
 		// initialize all models here
 		await home.init();
 		await metrics.init();
 		await video.init();
+		await control.init();
 
 		isReady = true;
 		notifyListeners();
