@@ -40,46 +40,46 @@ export "src/services/udp_server.dart";
 ///
 /// To get an instance of this class, use [services].
 class Services extends Service {
-  /// This class has a private constructor since users should only use [services].
-  Services._();
+	/// This class has a private constructor since users should only use [services].
+	Services._();
 
-  /// A service that receives messages from the rover over the network.
-  final messageReceiver = MessageReceiver();
+	/// A service that receives messages from the rover over the network.
+	final messageReceiver = MessageReceiver();
 
-  /// A service that sends messages to the rover over the network.
-  final messageSender = MessageSender();
+	/// A service that sends messages to the rover over the network.
+	final messageSender = MessageSender();
 
-  /// A service that handles controller inputs.
-  final gamepad = GamepadService();
+	/// A service that handles controller inputs.
+	final gamepad = GamepadService();
 
-  /// A service that reads and writes to device files.
-  final files = FilesService();
+	/// A service that reads and writes to device files.
+	final files = FilesService();
 
-  /// A service that communicates over a serial connection.
-  final serial = Serial();
+	/// A service that communicates over a serial connection.
+	final serial = Serial();
 
-  /// A service to control the Rover in drive operating mode
-  final drive = DriveControl();
+	/// A service to control the Rover in drive operating mode
+	final drive = DriveControl();
 
-  @override
-  Future<void> init() async {
-    await messageSender.init();
-    await messageReceiver.init();
-    await gamepad.init();
-    await files.init();
-    await serial.init();
-    await drive.init();
-  }
+	@override
+	Future<void> init() async {
+		await messageSender.init();
+		await messageReceiver.init();
+		await gamepad.init();
+		await files.init();
+		await serial.init();
+		await drive.init();
+	}
 
-  @override
-  Future<void> dispose() async {
-    await messageSender.dispose();
-    await messageReceiver.dispose();
-    await gamepad.dispose();
-    await files.dispose();
-    await serial.dispose();
-    await drive.dispose();
-  }
+	@override
+	Future<void> dispose() async {
+		await messageSender.dispose();
+		await messageReceiver.dispose();
+		await gamepad.dispose();
+		await files.dispose();
+		await serial.dispose();
+		await drive.dispose();
+	}
 }
 
 /// The singleton instance of the [Services] class.
