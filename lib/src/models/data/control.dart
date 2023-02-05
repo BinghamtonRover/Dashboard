@@ -22,7 +22,7 @@ class ControlModel extends Model {
   /// Function to connect to the Gamepad
   /// Only to be called after the rover and gamepad are connected
   Future<void> connect() async {
-    print("Connecting...");
+    // TODO: Actually connect
     timer = Timer.periodic(const Duration(milliseconds: 10), readGamepad);
   }
 
@@ -52,7 +52,7 @@ class ControlModel extends Model {
 
   /// Function to control rover in Science operating mode
   void handleScience() {
-    final state = services.gamepad.state;
+
   }
 
   /// Function to control rover in Arm operating mode

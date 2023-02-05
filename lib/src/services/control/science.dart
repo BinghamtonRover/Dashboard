@@ -29,13 +29,13 @@ class ScienceControl extends Service {
     //services.messageSender.sendMessage(message);
   }
 
-  void vacuum_power({required bool b}) {}
+  void vacuumPower({required bool b}) {}
 
-  void pump1(bool_) {}
+  void pump1({required bool status}) {}
 
-  void pump2(bool_) {}
+  void pump2({required bool status}) {}
 
-  void pump3(bool_) {}
+  void pump3({required bool status}) {}
 
-  void pump4(bool_) {}
+  void pump4({required bool status}) {}
 }

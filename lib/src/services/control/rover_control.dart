@@ -5,7 +5,10 @@ import "drive.dart";
 
 /// Class to Control the Rover based on different modes
 class RoverControl extends Service {  
+  /// A service to control the drive subsystem.
   final DriveControl drive = DriveControl();
+
+  /// A service to control the arm subsystem.
   final ArmControl arm = ArmControl();
   
   @override 
