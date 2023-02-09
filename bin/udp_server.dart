@@ -2,7 +2,7 @@
 
 import "package:rover_dashboard/services.dart";
 
-const int receivePort = 8001;
+const int receivePort = 8008;
 const int sendPort = 8002;
 
 class RawServer extends UdpServer {
