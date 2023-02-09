@@ -54,7 +54,6 @@ jobs:
 
       - name: Analyze code
         run: |
-          dart run build_runner build
           flutter analyze --dartdocs
 
       - name: Output error
