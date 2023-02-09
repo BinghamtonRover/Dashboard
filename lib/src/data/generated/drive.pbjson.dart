@@ -12,11 +12,33 @@ import 'dart:typed_data' as $typed_data;
 const DriveCommand$json = const {
   '1': 'DriveCommand',
   '2': const [
-    const {'1': 'throttle', '3': 1, '4': 1, '5': 2, '10': 'throttle'},
-    const {'1': 'left', '3': 2, '4': 1, '5': 2, '10': 'left'},
-    const {'1': 'right', '3': 3, '4': 1, '5': 2, '10': 'right'},
+    const {'1': 'throttle', '3': 1, '4': 1, '5': 2, '9': 0, '10': 'throttle', '17': true},
+    const {'1': 'left', '3': 2, '4': 1, '5': 2, '9': 1, '10': 'left', '17': true},
+    const {'1': 'right', '3': 3, '4': 1, '5': 2, '9': 2, '10': 'right', '17': true},
+  ],
+  '8': const [
+    const {'1': '_throttle'},
+    const {'1': '_left'},
+    const {'1': '_right'},
   ],
 };
 
 /// Descriptor for `DriveCommand`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List driveCommandDescriptor = $convert.base64Decode('CgxEcml2ZUNvbW1hbmQSGgoIdGhyb3R0bGUYASABKAJSCHRocm90dGxlEhIKBGxlZnQYAiABKAJSBGxlZnQSFAoFcmlnaHQYAyABKAJSBXJpZ2h0');
+final $typed_data.Uint8List driveCommandDescriptor = $convert.base64Decode('CgxEcml2ZUNvbW1hbmQSHwoIdGhyb3R0bGUYASABKAJIAFIIdGhyb3R0bGWIAQESFwoEbGVmdBgCIAEoAkgBUgRsZWZ0iAEBEhkKBXJpZ2h0GAMgASgCSAJSBXJpZ2h0iAEBQgsKCV90aHJvdHRsZUIHCgVfbGVmdEIICgZfcmlnaHQ=');
+@$core.Deprecated('Use driveDataDescriptor instead')
+const DriveData$json = const {
+  '1': 'DriveData',
+  '2': const [
+    const {'1': 'throttle', '3': 1, '4': 1, '5': 2, '9': 0, '10': 'throttle', '17': true},
+    const {'1': 'left', '3': 2, '4': 1, '5': 2, '9': 1, '10': 'left', '17': true},
+    const {'1': 'right', '3': 3, '4': 1, '5': 2, '9': 2, '10': 'right', '17': true},
+  ],
+  '8': const [
+    const {'1': '_throttle'},
+    const {'1': '_left'},
+    const {'1': '_right'},
+  ],
+};
+
+/// Descriptor for `DriveData`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List driveDataDescriptor = $convert.base64Decode('CglEcml2ZURhdGESHwoIdGhyb3R0bGUYASABKAJIAFIIdGhyb3R0bGWIAQESFwoEbGVmdBgCIAEoAkgBUgRsZWZ0iAEBEhkKBXJpZ2h0GAMgASgCSAJSBXJpZ2h0iAEBQgsKCV90aHJvdHRsZUIHCgVfbGVmdEIICgZfcmlnaHQ=');
