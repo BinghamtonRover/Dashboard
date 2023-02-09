@@ -33,11 +33,11 @@ jobs:
       - name: Add Flutter to path
         run: echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
         
-      - name: Generate Protobuf files
-        run: |
-          flutter clean
-          flutter pub get
-          dart run build_runner build
+      # - name: Generate Protobuf files
+      #   run: |
+      #     flutter clean
+      #     flutter pub get
+      #     dart run build_runner build
 
       - name: Analyze
         run: flutter analyze --dartdocs
