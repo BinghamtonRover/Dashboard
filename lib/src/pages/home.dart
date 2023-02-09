@@ -19,12 +19,20 @@ class OperatingModePage {
 	/// A const constructor.
 	const OperatingModePage({required this.mode, required this.icon, required this.page});
 
+	/// Creates a new [OperatingModePage] to represent an [OperatingMode]
+	factory OperatingModePage.fromMode(OperatingMode mode) {
+		switch (mode) {
+			case OperatingMode.science: return const OperatingModePage(mode: OperatingMode.science, page: SciencePage(), icon: Icons.science);
+			case OperatingMode.arm: return const OperatingModePage(mode: OperatingMode.arm, page: ArmPage(), icon: Icons.precision_manufacturing);
+			case OperatingMode.autonomy: return const OperatingModePage(mode: OperatingMode.autonomy, page: AutonomyPage(), icon: Icons.smart_toy);
+			case OperatingMode.drive: return const OperatingModePage(mode: OperatingMode.drive, page: DrivePage(), icon: Icons.sports_esports);
+		}
+	}
+
 	/// All the pages for all the operating modes.
-	static const allPages = [
-		OperatingModePage(mode: OperatingMode.science, page: SciencePage(), icon: Icons.science), 
-		OperatingModePage(mode: OperatingMode.arm, page: ArmPage(), icon: Icons.precision_manufacturing), 
-		OperatingModePage(mode: OperatingMode.autonomy, page: AutonomyPage(), icon: Icons.smart_toy),
-		OperatingModePage(mode: OperatingMode.drive, page: DrivePage(), icon: Icons.sports_esports),
+	static final allPages = [
+		for (final OperatingMode mode in OperatingMode.values) 
+			OperatingModePage.fromMode(mode)
 	];
 }
 

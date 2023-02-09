@@ -17,7 +17,7 @@ class GamepadService extends Service {
   /// 
   /// No action is needed to connect to a gamepad. Use [isConnected] to check if there is a 
   /// gamepad connected, and use [state] to read it. 
-  static final gamepad = Gamepad(1);
+  static final gamepad = Gamepad(0);
   
   @override
   Future<void> init() async { }

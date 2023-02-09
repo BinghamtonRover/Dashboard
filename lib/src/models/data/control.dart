@@ -54,13 +54,9 @@ class ControlModel extends Model {
   /// Function to control rover in Science operating mode
   void handleScience() {
     final state = services.gamepad.state;
-    if (!services.gamepad.isConnected) {
-      print("Not connected");
-      return;
-    }
+    if (!services.gamepad.isConnected) return;
     if (state.buttonA) {
       services.messageSender.sendMessage(ScienceCommand(dig: true));
-      print("Sent science command");
     }
   }
 

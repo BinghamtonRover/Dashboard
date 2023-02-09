@@ -50,13 +50,18 @@ class ScienceControl extends Service {
     services.messageSender.sendMessage(ScienceCommand(vacuumLinearPosition: pos));
   }
 
+  /// Turn vacuum on/off.
   void vacuumPower({required bool status}) {}
 
+  /// Turn pump 1 on/off.
   void pump1({required bool status}) {}
 
+  /// Turn pump 1 on/off.
   void pump2({required bool status}) {}
 
+  /// Turn pump 1 on/off.
   void pump3({required bool status}) {}
 
+  /// Turn pump 1 on/off.
   void pump4({required bool status}) {}
 }

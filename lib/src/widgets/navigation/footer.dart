@@ -3,6 +3,7 @@ import "package:provider/provider.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 
 /// The footer, responsible for showing vitals and logs. 
 class Footer extends StatelessWidget {
@@ -20,8 +21,12 @@ class Footer extends StatelessWidget {
 				const Spacer(),
 				VideoFeedCounter(),
 				const SerialButton(),
+				const SizedBox(width: 2),
+				const GamepadChooser(),
+				const SizedBox(width: 2),
+				const SizedBox(width: 2),
 				const Icon(Icons.battery_4_bar),
-				const SizedBox(width: 12),
+				const SizedBox(width: 2),
 				const Icon(Icons.network_wifi_3_bar),
 				const SizedBox(width: 12),
 				Container(width: 14, decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle)),	
@@ -125,5 +130,19 @@ class MessageDisplay extends StatelessWidget {
 				]
 			)
 		)
+	);
+}
+
+/// An icon to indicate whether the gamepad is connected and to provide the option to connect to it.
+class GamepadChooser extends StatelessWidget {
+	/// Provides a const constructor for this widget.
+	const GamepadChooser();
+
+	@override
+	Widget build(BuildContext context) => Consumer<ControlModel>(
+		builder: (_, model, __) => Icon(
+			Icons.sports_esports, 
+			color: services.gamepad.isConnected ? Colors.green : Colors.black
+		),
 	);
 }

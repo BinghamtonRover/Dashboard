@@ -16,6 +16,7 @@ import "src/models/data/model.dart";
 import "src/models/data/serial.dart";
 import "src/models/data/video.dart";
 
+export "src/models/data/control.dart";
 export "src/models/data/home.dart";
 export "src/models/data/metrics.dart";
 export "src/models/data/serial.dart";

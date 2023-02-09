@@ -2,8 +2,8 @@
 
 import "package:rover_dashboard/services.dart";
 
-const int receivePort = 8001;
-const int sendPort = 8002;
+const int receivePort = 8002;
+const int sendPort = 8007;
 final address = InternetAddress("192.168.1.20");
 
 void main() async {
