@@ -10,9 +10,15 @@ typedef Message = proto.GeneratedMessage;
 typedef MessageDecoder<T extends Message> = T Function(List<int> data); 
 
 /// Defines a friendlier method for getting the name of a message.
-extension SimpleName on Message {
+extension MessageUtils on Message {
 	/// The name of the message as declared in the .proto file. 
 	String get messageName => info_.messageName;
+
+	/// Returns a [WrappedMessage] representing this message.
+	WrappedMessage get wrapped => WrappedMessage(
+		name: messageName,
+		data: writeToBuffer(),
+	);
 }
 
 /// Decodes a wrapped Protobuf message. 
