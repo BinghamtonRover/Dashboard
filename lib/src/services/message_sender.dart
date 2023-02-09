@@ -32,7 +32,6 @@ class MessageSender extends UdpClient {
 	/// You may pass in any IP address, but the default is [roverAddress].
 	void sendMessage(Message message, {InternetAddress? address, int port = roverPort}) {
 		address ??= roverAddress;  // can't be default because [InternetAddress] is not const.
-		final wrapper = WrappedMessage(name: message.info_.messageName, data: message.writeToBuffer());
-		super.sendBytes(address: address, port: port, bytes: wrapper.writeToBuffer());
+		sendBytes(address: address, port: port, bytes: message.wrapped.writeToBuffer());
 	}
 }
