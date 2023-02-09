@@ -110,9 +110,6 @@ linter:
     # To check the platform, use Flutter's `Platform` class. 
     do_not_use_environment: true
 
-    # This lint catches conditions that are always true or false, and are thus unnecessary.
-    invariant_booleans: true
-
     # Instead of allocating a variable and returning it, simply return the value. 
     join_return_with_assignment: true
 

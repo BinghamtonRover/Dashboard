@@ -10,6 +10,7 @@
 ///  library should import any other library.
 library data;
 
+export "src/data/generated/core.pb.dart";
 export "src/data/generated/drive.pb.dart";
 export "src/data/generated/electrical.pb.dart";
 export "src/data/generated/science.pb.dart";
@@ -23,3 +24,4 @@ export "src/data/metrics/science.dart";
 export "src/data/camera_feed.dart";
 export "src/data/modes.dart";
 export "src/data/settings.dart";
+export "src/data/taskbar_message.dart";

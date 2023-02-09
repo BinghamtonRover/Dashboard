@@ -13,10 +13,12 @@ import "src/models/data/control.dart";
 import "src/models/data/home.dart";
 import "src/models/data/metrics.dart";
 import "src/models/data/model.dart";
+import "src/models/data/serial.dart";
 import "src/models/data/video.dart";
 
 export "src/models/data/home.dart";
 export "src/models/data/metrics.dart";
+export "src/models/data/serial.dart";
 export "src/models/data/video.dart";
 
 export "src/models/view/modes/mode.dart";
@@ -48,6 +50,9 @@ class Models extends Model {
 	/// Contains persistent data about the dashboard's current state.
 	final home = HomeModel();
 
+	/// Responsible for connecting to and monitoring Serial devices.
+	final serial = SerialModel();
+	
 	/// The data model to control the rover
 	final control = ControlModel();
 
@@ -57,10 +62,21 @@ class Models extends Model {
 		await home.init();
 		await metrics.init();
 		await video.init();
+		await serial.init();
 		await control.init();
 
 		isReady = true;
 		notifyListeners();
+	}
+
+	@override
+	void dispose() {
+		home.dispose();
+		metrics.dispose();
+		video.dispose();
+		serial.dispose();
+		control.dispose();
+		super.dispose();
 	}
 }
 
@@ -70,4 +86,3 @@ class Models extends Model {
 /// will not cause the UI to update. For that, you must place it in a `ChangeNotifierProvider`
 /// and use `Consumer` when needed.
 final models = Models()..init();
-

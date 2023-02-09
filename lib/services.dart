@@ -23,7 +23,6 @@ import "src/services/service.dart";
 
 export "src/services/files.dart";
 export "src/services/gamepad.dart";
-export "src/services/gamepad.dart";
 export "src/services/message_receiver.dart";
 export "src/services/message_sender.dart";
 export "src/services/serial.dart";

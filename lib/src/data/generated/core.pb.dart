@@ -9,13 +9,31 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'core.pbenum.dart';
+
+export 'core.pbenum.dart';
+
 class Connect extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Connect', createEmptyInstance: create)
+    ..e<Device>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'sender', $pb.PbFieldType.OE, defaultOrMaker: Device.DEVICE_UNDEFINED, valueOf: Device.valueOf, enumValues: Device.values)
+    ..e<Device>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'receiver', $pb.PbFieldType.OE, defaultOrMaker: Device.DEVICE_UNDEFINED, valueOf: Device.valueOf, enumValues: Device.values)
     ..hasRequiredFields = false
   ;
 
   Connect._() : super();
-  factory Connect() => create();
+  factory Connect({
+    Device? sender,
+    Device? receiver,
+  }) {
+    final _result = create();
+    if (sender != null) {
+      _result.sender = sender;
+    }
+    if (receiver != null) {
+      _result.receiver = receiver;
+    }
+    return _result;
+  }
   factory Connect.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
   factory Connect.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
@@ -36,6 +54,24 @@ class Connect extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static Connect getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Connect>(create);
   static Connect? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Device get sender => $_getN(0);
+  @$pb.TagNumber(1)
+  set sender(Device v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasSender() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSender() => clearField(1);
+
+  @$pb.TagNumber(2)
+  Device get receiver => $_getN(1);
+  @$pb.TagNumber(2)
+  set receiver(Device v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasReceiver() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearReceiver() => clearField(2);
 }
 
 class Disconnect extends $pb.GeneratedMessage {

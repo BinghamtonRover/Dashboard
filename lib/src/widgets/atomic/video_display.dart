@@ -33,9 +33,11 @@ class VideoDisplayState extends State<VideoDisplay> {
 		children: [
 			if (widget.feed != null) Container(  // TODO: Implement video player
 				color: Colors.blueGrey, 
+				margin: const EdgeInsets.all(1),
 				child: Center(child: Text(widget.feed!.name)),
 			) else Container(
 				color: Colors.blueGrey,
+				margin: const EdgeInsets.all(1),
 				child: const Center(child: Text("Select a feed")),
 			),
 			Positioned(

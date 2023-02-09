@@ -1,3 +1,5 @@
+import "dart:typed_data";
+
 import "package:flutter_libserialport/flutter_libserialport.dart";
 import "package:rover_dashboard/errors.dart";
 
@@ -37,16 +39,36 @@ class DeviceNotConnected extends SerialException {
 /// physical connection issue to the serial device.
 class MalformedSerialPacket extends SerialException {
   /// The malformed packet.
-  final String packet;
+  final Uint8List packet;
   
-  /// The reason this packet is malformed.
-  final String reason;
-
   /// Creates an error about a malformed packet.
-  const MalformedSerialPacket({required this.packet, required this.reason});
+  const MalformedSerialPacket({required this.packet});
 
   @override
-  String toString() => "Malformed serial packet: $packet ($reason).";
+  String toString() => "Malformed serial packet: $packet.";
+}
+
+/// Indicates that the Serial device did not reciprocate the handshake.
+/// 
+/// In particular, the device sent back a "Connect" message, but the fields
+/// weren't set properly.
+class SerialHandshakeFailed extends SerialException { 
+  @override 
+  String toString() => "Connection handshake failed";
+}
+
+/// Indicates that the port could not be opened.
+/// 
+/// This usually means another process has an open handle on the port.
+class SerialCannotOpen extends SerialException {
+  /// The port that failed to open.
+  final String port;
+
+  /// Creates an error about a port that won't open.
+  const SerialCannotOpen(this.port);
+
+  @override
+  String toString() => "Could not open port $port";
 }
 
 /// Indicates that the device is unreachable.
