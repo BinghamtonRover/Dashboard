@@ -4,16 +4,14 @@ import "service.dart";
 
 export "package:win32_gamepad/win32_gamepad.dart";
 
+/// The "deadzone" of the gamepad.
 const epsilon = 0.01;
 
-extension GamepadStateExtension on GamepadState {
-  double get leftY {
-    final value = (leftThumbstickY - 128) / 32768;
-    return (value.abs() < epsilon) ? 0 : value;
-  }
-
-  double get rightY {
-    final value = (rightThumbstickY - 128) / 32768;
+/// An extension to do gamepad math.
+extension GamepadNumbers on num {
+  /// Normalizes joystick inputs to be between 0 and 1.
+  double get normalizeJoystick {
+    final value = (this - 128) / 32768;
     return (value.abs() < epsilon) ? 0 : value;
   }
 }

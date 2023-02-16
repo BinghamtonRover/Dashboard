@@ -10,8 +10,8 @@ class DriveController extends Controller {
 
 	@override
 	List<Message> parseInputs(GamepadState state) => [
-		DriveCommand(setLeft: true, left: state.leftY.clamp(-1, 1)),
-		DriveCommand(setRight: true, right: state.rightY.clamp(-1, 1)),
+		DriveCommand(setLeft: true, left: state.leftThumbstickY.normalizeJoystick.clamp(-1, 1)),
+		DriveCommand(setRight: true, right: state.leftThumbstickY.normalizeJoystick.clamp(-1, 1)),
 		if (state.dpadUp) updateThrottle(throttleIncrement),
 		if (state.dpadDown) updateThrottle(-throttleIncrement),
 	];
