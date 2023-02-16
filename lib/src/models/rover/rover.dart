@@ -1,7 +1,9 @@
 import "dart:async";
 
+import "package:rover_dashboard/models.dart";
+
 import "../model.dart";
-import "core.dart";
+import "controller.dart";
 
 /// The model to control the entire rover.
 /// 
@@ -10,11 +12,15 @@ class Rover extends Model {
 	/// Monitors the connection to the rover.
 	final core = RoverCore();
 
+	late Controller controller;
+
 	/// Whether the rover is connected.
 	bool get isConnected => core.connectionStrength > 0;
 
 	@override
 	Future<void> init() async { 
+		controller = Controller.forMode(models.home.mode);
+		await controller.init();
 		await core.init();
 
 		core.addListener(notifyListeners);
@@ -26,5 +32,12 @@ class Rover extends Model {
 
 		core.removeListener(notifyListeners);
 		super.dispose();
+	}
+
+	Future<void> updateMode(OperatingMode mode) async {
+		controller.dispose();
+		controller = Controller.forMode(mode);
+		await controller.init();
+		notifyListeners();
 	}
 }

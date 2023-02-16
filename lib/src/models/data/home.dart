@@ -1,6 +1,7 @@
 import "dart:async";
 
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 
 import "../model.dart";
 
@@ -37,6 +38,7 @@ class HomeModel extends Model {
 	/// Changes the mode based on an index.  
 	void changeMode(int index) {
 		mode = OperatingMode.values[index];
+		models.rover.updateMode(mode);
 		notifyListeners();
 	}
 }
