@@ -9,6 +9,10 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'video.pbenum.dart';
+
+export 'video.pbenum.dart';
+
 class AdjustCamera extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AdjustCamera', createEmptyInstance: create)
     ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
@@ -198,5 +202,66 @@ class VideoData extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $core.List<CameraStatus> get cameras => $_getList(0);
+}
+
+class VideoFrame extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'VideoFrame', createEmptyInstance: create)
+    ..e<CameraName>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name', $pb.PbFieldType.OE, defaultOrMaker: CameraName.CAMERA_NAME_UNDEFINED, valueOf: CameraName.valueOf, enumValues: CameraName.values)
+    ..a<$core.List<$core.int>>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'frame', $pb.PbFieldType.OY)
+    ..hasRequiredFields = false
+  ;
+
+  VideoFrame._() : super();
+  factory VideoFrame({
+    CameraName? name,
+    $core.List<$core.int>? frame,
+  }) {
+    final _result = create();
+    if (name != null) {
+      _result.name = name;
+    }
+    if (frame != null) {
+      _result.frame = frame;
+    }
+    return _result;
+  }
+  factory VideoFrame.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory VideoFrame.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  VideoFrame clone() => VideoFrame()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  VideoFrame copyWith(void Function(VideoFrame) updates) => super.copyWith((message) => updates(message as VideoFrame)) as VideoFrame; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static VideoFrame create() => VideoFrame._();
+  VideoFrame createEmptyInstance() => create();
+  static $pb.PbList<VideoFrame> createRepeated() => $pb.PbList<VideoFrame>();
+  @$core.pragma('dart2js:noInline')
+  static VideoFrame getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<VideoFrame>(create);
+  static VideoFrame? _defaultInstance;
+
+  @$pb.TagNumber(4)
+  CameraName get name => $_getN(0);
+  @$pb.TagNumber(4)
+  set name(CameraName v) { setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasName() => $_has(0);
+  @$pb.TagNumber(4)
+  void clearName() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.List<$core.int> get frame => $_getN(1);
+  @$pb.TagNumber(5)
+  set frame($core.List<$core.int> v) { $_setBytes(1, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasFrame() => $_has(1);
+  @$pb.TagNumber(5)
+  void clearFrame() => clearField(5);
 }
 

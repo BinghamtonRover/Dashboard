@@ -13,6 +13,7 @@ library data;
 export "src/data/generated/core.pb.dart";
 export "src/data/generated/electrical.pb.dart";
 export "src/data/generated/science.pb.dart";
+export "src/data/generated/video.pb.dart";
 export "src/data/generated/wrapper.pb.dart";
 
 export "src/data/metrics/electrical.dart";

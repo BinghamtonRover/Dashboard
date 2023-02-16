@@ -1,3 +1,4 @@
+import "dart:typed_data";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -34,7 +35,10 @@ class VideoDisplayState extends State<VideoDisplay> {
 			if (widget.feed != null) Container(  // TODO: Implement video player
 				color: Colors.blueGrey, 
 				margin: const EdgeInsets.all(1),
-				child: Center(child: Text(widget.feed!.name)),
+				// child: Center(child: Text("Name: ${widget.feed!.name}, data: ${widget.feed!.frame != null}")),
+				child: widget.feed!.frame == null
+					? Center(child: Text("No feed for ${widget.feed!.name}"))
+					: Image.memory(Uint8List.fromList(widget.feed!.frame!)),
 			) else Container(
 				color: Colors.blueGrey,
 				margin: const EdgeInsets.all(1),

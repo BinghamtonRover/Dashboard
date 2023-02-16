@@ -15,7 +15,7 @@ class MessageReceiver extends UdpServer {
 	final Map<String, RawDataHandler> _handlers = {};
 
 	/// Listens for incoming data.
-	MessageReceiver({super.port = 8008});
+	MessageReceiver({required super.port});
 
 	/// Runs every time data is received by the socket. 
 	/// 

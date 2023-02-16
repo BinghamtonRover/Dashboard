@@ -1,5 +1,8 @@
+import "dart:async";
+
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 
 import "model.dart";
 
@@ -7,29 +10,36 @@ import "model.dart";
 class VideoModel extends Model {
 	/// list of the camera feeds
 	static final allFeeds = [
-		CameraFeed(id: 1, name: "Science", pageTypes: [OperatingMode.science]),
-		CameraFeed(id: 2, name: "Microscope", pageTypes: [OperatingMode.science]), 
-		CameraFeed(id: 3, name: "Rover 1"),
-		CameraFeed(id: 4, name: "Rover 2"), 
-		CameraFeed(id: 5, name: "Arm 1", pageTypes: [OperatingMode.arm]), 
-		CameraFeed(id: 6, name: "Arm 2", pageTypes: [OperatingMode.arm]), 
-		CameraFeed(id: 7, name: "Autonomy", pageTypes: [OperatingMode.autonomy]),
+		CameraFeed(id: CameraName.SCIENCE_CAROUSEL, name: "Science"),
+		CameraFeed(id: CameraName.SCIENCE_MICROSCOPE, name: "Microscope"), 
+		CameraFeed(id: CameraName.ROVER_FRONT, name: "Rover 1"),
+		CameraFeed(id: CameraName.ROVER_REAR, name: "Rover 2"), 
+		CameraFeed(id: CameraName.ARM_BASE, name: "Arm 1"), 
+		CameraFeed(id: CameraName.ARM_GRIPPER, name: "Arm 2"), 
 	];
 
 	/// The current layout of video feeds.
 	Map<OperatingMode, List<CameraFeed?>> userLayout = {
 		OperatingMode.science: [allFeeds[0], allFeeds[1], allFeeds[2], allFeeds[3]],
 		OperatingMode.arm: [allFeeds[4], allFeeds[5], allFeeds[2], allFeeds[3]],
-		OperatingMode.autonomy: [allFeeds[6], allFeeds[2], allFeeds[3]],
+		OperatingMode.autonomy: [allFeeds[2], allFeeds[3]],
 		OperatingMode.drive: [allFeeds[2], allFeeds[3]],
 	};
 
 	/// The camera feeds for the current operating mode.
 	List<CameraFeed?> get feeds => userLayout[models.home.mode]!;
 
+	late final Timer updater;
+
 	@override
 	Future<void> init() async {
 		// TODO: Establish link with the rover and stream video
+		services.videoStreamer.registerHandler<VideoFrame>(
+			name: VideoFrame().messageName,
+			decoder: VideoFrame.fromBuffer,
+			handler: updateFrame,
+		);
+		updater = Timer.periodic(const Duration(milliseconds: 500), (_) => notifyListeners());
 		// TODO: Read the layout from Settings
 		models.home.addListener(notifyListeners);
 	}
@@ -37,7 +47,15 @@ class VideoModel extends Model {
 	@override
 	void dispose() {
 		models.home.removeListener(notifyListeners);
+		updater.cancel();
 		super.dispose();
+	}
+
+	void updateFrame(VideoFrame message) {
+		final feed = getCameraFeed(message.name);
+		feed.isConnected = true;
+		feed.isActive = true;
+		feed.frame = message.frame;
 	}
 
 	/// Adds or subtracts a number of camera feeds to/from the UI
@@ -56,7 +74,7 @@ class VideoModel extends Model {
 	}
 
 	/// Gets the camera feed with the given ID.
-	CameraFeed getCameraFeed(int id) => allFeeds.firstWhere((feed) => feed.id == id);
+	CameraFeed getCameraFeed(CameraName id) => allFeeds.firstWhere((feed) => feed.id == id);
 
 	/// Toggles a video feed on or off. 
 	void toggleFeed(CameraFeed? feed) {
