@@ -12,11 +12,13 @@ library models;
 import "src/models/data/home.dart";
 import "src/models/data/metrics.dart";
 import "src/models/data/model.dart";
+import "src/models/data/rover.dart";
 import "src/models/data/serial.dart";
 import "src/models/data/video.dart";
 
 export "src/models/data/home.dart";
 export "src/models/data/metrics.dart";
+export "src/models/data/rover.dart";
 export "src/models/data/serial.dart";
 export "src/models/data/video.dart";
 
@@ -49,6 +51,9 @@ class Models extends Model {
 	/// Contains persistent data about the dashboard's current state.
 	final home = HomeModel();
 
+	/// Controls and interacts with the rover.
+	final rover = Rover();
+
 	/// Responsible for connecting to and monitoring Serial devices.
 	final serial = SerialModel();
 
@@ -58,6 +63,7 @@ class Models extends Model {
 		await home.init();
 		await metrics.init();
 		await video.init();
+		await rover.init();
 		await serial.init();
 
 		isReady = true;
@@ -69,6 +75,7 @@ class Models extends Model {
 		home.dispose();
 		metrics.dispose();
 		video.dispose();
+		rover.dispose();
 		serial.dispose();
 		super.dispose();
 	}
