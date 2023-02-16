@@ -9,17 +9,8 @@ import "udp_client.dart";
 /// 
 /// There are two Raspberry Pi devices on the rover. The "Subsystems Computer"
 /// is responsible for sending metrics to the dashboard and receiving commands. 
-/// It's IP address and port are recorded in [roverAddress] and [roverPort].
+/// It's IP address and port are recorded in [subsystemsPiAddress] and [subsystemsPort].
 class MessageSender extends UdpClient {
-	/// The IP address of the rover's Subsystems Computer.
-	static final roverAddress = InternetAddress("192.168.1.20");
-
-	/// The port that the rover's Subsystems Computer will be listening on.
-	static const int roverPort = 8002;
-
-	/// The port that the dashboard uses to send messages to the Subsystems Computer.
-	static const int dashboardSendPort = 8007;
-
 	/// Opens a [UdpClient] on port 8007.
 	/// 
 	/// Note that this port is different from the one being used to receive the
@@ -29,9 +20,11 @@ class MessageSender extends UdpClient {
 
 	/// Wraps the [message] in a [WrappedMessage] container and sends it to the rover. 
 	/// 
-	/// You may pass in any IP address, but the default is [roverAddress].
-	void sendMessage(Message message, {InternetAddress? address, int port = roverPort}) {
-		address ??= roverAddress;  // can't be default because [InternetAddress] is not const.
+	/// You may pass in any IP address and port. The default target is the subsystems Pi.
+	void sendMessage(Message message, {InternetAddress? address, int? port}) {
+		// Have to use ??= instead of default parameters because addresses aren't const
+		address ??= subsystemsPiAddress;
+		port ??= subsystemsPort;
 		sendBytes(address: address, port: port, bytes: message.wrapped.writeToBuffer());
 	}
 }

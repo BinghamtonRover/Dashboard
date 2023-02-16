@@ -9,16 +9,22 @@
 /// This library may depend on the data and services library. 
 library models;
 
+import "src/models/model.dart";
+
 import "src/models/data/home.dart";
 import "src/models/data/metrics.dart";
-import "src/models/data/model.dart";
 import "src/models/data/serial.dart";
 import "src/models/data/video.dart";
+
+import "src/models/rover/rover.dart";
 
 export "src/models/data/home.dart";
 export "src/models/data/metrics.dart";
 export "src/models/data/serial.dart";
 export "src/models/data/video.dart";
+
+export "src/models/rover/rover.dart";
+export "src/models/rover/core.dart";
 
 export "src/models/view/modes/mode.dart";
 export "src/models/view/modes/arm.dart";
@@ -49,6 +55,9 @@ class Models extends Model {
 	/// Contains persistent data about the dashboard's current state.
 	final home = HomeModel();
 
+	/// Controls and interacts with the rover.
+	final rover = Rover();
+
 	/// Responsible for connecting to and monitoring Serial devices.
 	final serial = SerialModel();
 
@@ -58,6 +67,7 @@ class Models extends Model {
 		await home.init();
 		await metrics.init();
 		await video.init();
+		await rover.init();
 		await serial.init();
 
 		isReady = true;
@@ -69,6 +79,7 @@ class Models extends Model {
 		home.dispose();
 		metrics.dispose();
 		video.dispose();
+		rover.dispose();
 		serial.dispose();
 		super.dispose();
 	}

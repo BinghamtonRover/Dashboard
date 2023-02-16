@@ -2,6 +2,20 @@ import "package:win32_gamepad/win32_gamepad.dart";
 
 import "service.dart";
 
+export "package:win32_gamepad/win32_gamepad.dart";
+
+/// The "deadzone" of the gamepad.
+const epsilon = 0.01;
+
+/// An extension to do gamepad math.
+extension GamepadNumbers on num {
+  /// Normalizes joystick inputs to be between 0 and 1.
+  double get normalizeJoystick {
+    final value = (this - 128) / 32768;
+    return (value.abs() < epsilon) ? 0 : value;
+  }
+}
+
 /// A service to receive input from a gamepad connected to the user's device.
 /// 
 /// This service uses [`package:win32_gamepad`](https://pub.dev/packages/win32_gamepad), to read 

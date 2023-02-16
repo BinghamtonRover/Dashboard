@@ -1,7 +1,7 @@
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 
-import "model.dart";
+import "../model.dart";
 
 /// A data model that listens for updated data and provides [Metrics] to the UI.
 class MetricsModel extends Model {
