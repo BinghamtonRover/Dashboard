@@ -8,6 +8,22 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+@$core.Deprecated('Use cameraNameDescriptor instead')
+const CameraName$json = const {
+  '1': 'CameraName',
+  '2': const [
+    const {'1': 'CAMERA_NAME_UNDEFINED', '2': 0},
+    const {'1': 'ROVER_FRONT', '2': 1},
+    const {'1': 'ROVER_REAR', '2': 2},
+    const {'1': 'ARM_BASE', '2': 3},
+    const {'1': 'ARM_GRIPPER', '2': 4},
+    const {'1': 'SCIENCE_CAROUSEL', '2': 5},
+    const {'1': 'SCIENCE_MICROSCOPE', '2': 6},
+  ],
+};
+
+/// Descriptor for `CameraName`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List cameraNameDescriptor = $convert.base64Decode('CgpDYW1lcmFOYW1lEhkKFUNBTUVSQV9OQU1FX1VOREVGSU5FRBAAEg8KC1JPVkVSX0ZST05UEAESDgoKUk9WRVJfUkVBUhACEgwKCEFSTV9CQVNFEAMSDwoLQVJNX0dSSVBQRVIQBBIUChBTQ0lFTkNFX0NBUk9VU0VMEAUSFgoSU0NJRU5DRV9NSUNST1NDT1BFEAY=');
 @$core.Deprecated('Use adjustCameraDescriptor instead')
 const AdjustCamera$json = const {
   '1': 'AdjustCamera',
@@ -42,3 +58,14 @@ const VideoData$json = const {
 
 /// Descriptor for `VideoData`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List videoDataDescriptor = $convert.base64Decode('CglWaWRlb0RhdGESJwoHY2FtZXJhcxgBIAMoCzINLkNhbWVyYVN0YXR1c1IHY2FtZXJhcw==');
+@$core.Deprecated('Use videoFrameDescriptor instead')
+const VideoFrame$json = const {
+  '1': 'VideoFrame',
+  '2': const [
+    const {'1': 'name', '3': 4, '4': 1, '5': 14, '6': '.CameraName', '10': 'name'},
+    const {'1': 'frame', '3': 5, '4': 1, '5': 12, '10': 'frame'},
+  ],
+};
+
+/// Descriptor for `VideoFrame`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List videoFrameDescriptor = $convert.base64Decode('CgpWaWRlb0ZyYW1lEh8KBG5hbWUYBCABKA4yCy5DYW1lcmFOYW1lUgRuYW1lEhQKBWZyYW1lGAUgASgMUgVmcmFtZQ==');

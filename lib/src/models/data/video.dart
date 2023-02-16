@@ -1,5 +1,8 @@
+import "dart:async";
+
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 
 import "model.dart";
 
@@ -7,29 +10,41 @@ import "model.dart";
 class VideoModel extends Model {
 	/// list of the camera feeds
 	static final allFeeds = [
-		CameraFeed(id: 1, name: "Science", pageTypes: [OperatingMode.science]),
-		CameraFeed(id: 2, name: "Microscope", pageTypes: [OperatingMode.science]), 
-		CameraFeed(id: 3, name: "Rover 1"),
-		CameraFeed(id: 4, name: "Rover 2"), 
-		CameraFeed(id: 5, name: "Arm 1", pageTypes: [OperatingMode.arm]), 
-		CameraFeed(id: 6, name: "Arm 2", pageTypes: [OperatingMode.arm]), 
-		CameraFeed(id: 7, name: "Autonomy", pageTypes: [OperatingMode.autonomy]),
+		CameraFeed(id: CameraName.SCIENCE_CAROUSEL, name: "Science"),
+		CameraFeed(id: CameraName.SCIENCE_MICROSCOPE, name: "Microscope"), 
+		CameraFeed(id: CameraName.ROVER_FRONT, name: "Rover 1"),
+		CameraFeed(id: CameraName.ROVER_REAR, name: "Rover 2"), 
+		CameraFeed(id: CameraName.ARM_BASE, name: "Arm 1"), 
+		CameraFeed(id: CameraName.ARM_GRIPPER, name: "Arm 2"), 
 	];
 
 	/// The current layout of video feeds.
-	Map<OperatingMode, List<CameraFeed?>> userLayout = {
+	Map<OperatingMode, List<CameraFeed>> userLayout = {
 		OperatingMode.science: [allFeeds[0], allFeeds[1], allFeeds[2], allFeeds[3]],
 		OperatingMode.arm: [allFeeds[4], allFeeds[5], allFeeds[2], allFeeds[3]],
-		OperatingMode.autonomy: [allFeeds[6], allFeeds[2], allFeeds[3]],
+		OperatingMode.autonomy: [allFeeds[2], allFeeds[3]],
 		OperatingMode.drive: [allFeeds[2], allFeeds[3]],
 	};
 
 	/// The camera feeds for the current operating mode.
-	List<CameraFeed?> get feeds => userLayout[models.home.mode]!;
+	List<CameraFeed> get feeds => userLayout[models.home.mode]!;
+
+	/// Triggers when it's time to update a new frame.
+	/// 
+	/// This is kept here to ensure all widgets are in sync.
+	late final Timer frameUpdater;
 
 	@override
 	Future<void> init() async {
-		// TODO: Establish link with the rover and stream video
+		services.videoStreamer.registerHandler<VideoFrame>(
+			name: VideoFrame().messageName,
+			decoder: VideoFrame.fromBuffer,
+			handler: updateFrame,
+		);
+		frameUpdater = Timer.periodic(
+			const Duration(milliseconds: 17),  // 60 FPS 
+			(_) => notifyListeners()
+		);
 		// TODO: Read the layout from Settings
 		models.home.addListener(notifyListeners);
 	}
@@ -37,7 +52,16 @@ class VideoModel extends Model {
 	@override
 	void dispose() {
 		models.home.removeListener(notifyListeners);
+		frameUpdater.cancel();
 		super.dispose();
+	}
+
+	/// Stores the new [VideoFrame.frame] in the corresponding [CameraFeed].
+	void updateFrame(VideoFrame message) {
+		final feed = getCameraFeed(message.name);
+		feed.isConnected = true;
+		feed.isActive = true;
+		feed.frame = message.frame;
 	}
 
 	/// Adds or subtracts a number of camera feeds to/from the UI
@@ -49,27 +73,20 @@ class VideoModel extends Model {
 			userLayout[mode] = userLayout[mode]!.sublist(0, value);
 		} else {
 			for (int i = currentNum; i < value; i++) {
-				userLayout[mode]!.add(null);
+				userLayout[mode]!.add(allFeeds[0]);
 			}
 		}
 		notifyListeners();
 	}
 
 	/// Gets the camera feed with the given ID.
-	CameraFeed getCameraFeed(int id) => allFeeds.firstWhere((feed) => feed.id == id);
+	CameraFeed getCameraFeed(CameraName id) => allFeeds.firstWhere((feed) => feed.id == id);
 
-	/// Toggles a video feed on or off. 
-	void toggleFeed(CameraFeed? feed) {
-		if (feed == null) return;  // user cancelled action
-		if (feed.isActive) {  
-			// TODO: turn off the camera 
-			feed.isActive = false;
-		} else {
-			// TODO: turn on the camera
-			feed.isActive = true;
-		}
-		notifyListeners();
-	}
+	/// Tells the rover to enable the given camera.
+	Future<void> enableFeed(CameraFeed feed) async { }
+
+	/// Tells the rover to disable the given camera.
+	Future<void> disableFeed(CameraFeed feed) async { }
 
 	/// Replaces a video feed at a given index.
 	void selectNewFeed(int index, CameraFeed feed) {

@@ -42,7 +42,12 @@ class Services extends Service {
 	Services._();
 
 	/// A service that receives messages from the rover over the network.
-	final messageReceiver = MessageReceiver();
+	final messageReceiver = MessageReceiver(port: 8008);
+
+	/// A service to receive video frames.
+	/// 
+	/// This is on a separate port from [messageReceiver] to improve bandwidth.
+	final videoStreamer = MessageReceiver(port: 8009);
 
 	/// A service that sends messages to the rover over the network.
 	final messageSender = MessageSender();
@@ -60,6 +65,7 @@ class Services extends Service {
 	Future<void> init() async {
 		await messageSender.init();
 		await messageReceiver.init();
+		await videoStreamer.init();
 		await gamepad.init();
 		await files.init();
 		await serial.init();
@@ -69,6 +75,7 @@ class Services extends Service {
 	Future<void> dispose() async {
 		await messageSender.dispose();
 		await messageReceiver.dispose();
+		await videoStreamer.dispose();
 		await gamepad.dispose();
 		await files.dispose();
 		await serial.dispose();

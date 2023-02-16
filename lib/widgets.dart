@@ -15,7 +15,7 @@
 /// This library may depend on the data, services, and models library.   
 library widgets;
 
-export "src/widgets/atomic/video_display.dart";
+export "src/widgets/atomic/video_feed.dart";
 
 export "src/widgets/generic/feeds.dart";
 export "src/widgets/generic/metrics_list.dart";
