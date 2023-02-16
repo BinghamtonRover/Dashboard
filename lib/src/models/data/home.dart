@@ -2,7 +2,7 @@ import "dart:async";
 
 import "package:rover_dashboard/data.dart";
 
-import "model.dart";
+import "../model.dart";
 
 /// The view model for the main page. 
 class HomeModel extends Model {
