@@ -8,12 +8,12 @@ enum OperatingMode {
 	/// Science mode. 
 	/// 
 	/// Focus cameras on the science chamber and allow the user to collect samples and data.
-	science("Arm"), 
+	science("Science"), 
 
 	/// Arm mode.
 	/// 
 	/// Focus on helping the user manipulate the arm.
-	arm("Science"), 
+	arm("Arm"), 
 
 	/// Autonomy mode. 
 	/// 
