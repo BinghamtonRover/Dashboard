@@ -9,18 +9,22 @@
 /// This library may depend on the data and services library. 
 library models;
 
+import "src/models/model.dart";
+
 import "src/models/data/home.dart";
 import "src/models/data/metrics.dart";
-import "src/models/data/model.dart";
-import "src/models/data/rover.dart";
 import "src/models/data/serial.dart";
 import "src/models/data/video.dart";
 
+import "src/models/rover/rover.dart";
+
 export "src/models/data/home.dart";
 export "src/models/data/metrics.dart";
-export "src/models/data/rover.dart";
 export "src/models/data/serial.dart";
 export "src/models/data/video.dart";
+
+export "src/models/rover/rover.dart";
+export "src/models/rover/core.dart";
 
 export "src/models/view/modes/mode.dart";
 export "src/models/view/modes/arm.dart";
