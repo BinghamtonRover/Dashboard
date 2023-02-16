@@ -2,6 +2,22 @@ import "package:win32_gamepad/win32_gamepad.dart";
 
 import "service.dart";
 
+export "package:win32_gamepad/win32_gamepad.dart";
+
+const epsilon = 0.01;
+
+extension GamepadStateExtension on GamepadState {
+  double get leftY {
+    final value = (leftThumbstickY - 128) / 32768;
+    return (value.abs() < epsilon) ? 0 : value;
+  }
+
+  double get rightY {
+    final value = (rightThumbstickY - 128) / 32768;
+    return (value.abs() < epsilon) ? 0 : value;
+  }
+}
+
 /// A service to receive input from a gamepad connected to the user's device.
 /// 
 /// This service uses [`package:win32_gamepad`](https://pub.dev/packages/win32_gamepad), to read 
