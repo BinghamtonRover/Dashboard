@@ -19,7 +19,7 @@ class VideoModel extends Model {
 	];
 
 	/// The current layout of video feeds.
-	Map<OperatingMode, List<CameraFeed?>> userLayout = {
+	Map<OperatingMode, List<CameraFeed>> userLayout = {
 		OperatingMode.science: [allFeeds[0], allFeeds[1], allFeeds[2], allFeeds[3]],
 		OperatingMode.arm: [allFeeds[4], allFeeds[5], allFeeds[2], allFeeds[3]],
 		OperatingMode.autonomy: [allFeeds[2], allFeeds[3]],
@@ -27,7 +27,7 @@ class VideoModel extends Model {
 	};
 
 	/// The camera feeds for the current operating mode.
-	List<CameraFeed?> get feeds => userLayout[models.home.mode]!;
+	List<CameraFeed> get feeds => userLayout[models.home.mode]!;
 
 	late final Timer updater;
 
@@ -39,7 +39,7 @@ class VideoModel extends Model {
 			decoder: VideoFrame.fromBuffer,
 			handler: updateFrame,
 		);
-		updater = Timer.periodic(const Duration(milliseconds: 500), (_) => notifyListeners());
+		updater = Timer.periodic(const Duration(milliseconds: 100), (_) => notifyListeners());
 		// TODO: Read the layout from Settings
 		models.home.addListener(notifyListeners);
 	}
@@ -67,7 +67,7 @@ class VideoModel extends Model {
 			userLayout[mode] = userLayout[mode]!.sublist(0, value);
 		} else {
 			for (int i = currentNum; i < value; i++) {
-				userLayout[mode]!.add(null);
+				userLayout[mode]!.add(allFeeds[0]);
 			}
 		}
 		notifyListeners();
@@ -76,18 +76,8 @@ class VideoModel extends Model {
 	/// Gets the camera feed with the given ID.
 	CameraFeed getCameraFeed(CameraName id) => allFeeds.firstWhere((feed) => feed.id == id);
 
-	/// Toggles a video feed on or off. 
-	void toggleFeed(CameraFeed? feed) {
-		if (feed == null) return;  // user cancelled action
-		if (feed.isActive) {  
-			// TODO: turn off the camera 
-			feed.isActive = false;
-		} else {
-			// TODO: turn on the camera
-			feed.isActive = true;
-		}
-		notifyListeners();
-	}
+	Future<void> enableFeed(CameraFeed feed) async { }
+	Future<void> disableFeed(CameraFeed feed) async { }
 
 	/// Replaces a video feed at a given index.
 	void selectNewFeed(int index, CameraFeed feed) {
