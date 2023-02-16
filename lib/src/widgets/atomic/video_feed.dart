@@ -5,18 +5,35 @@ import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
+/// Displays frames of a [CameraFeed].
 class VideoFeed extends StatefulWidget {
+	/// The feed to show in this widget.
+	/// 
+	/// May be changed by the user. See [VideoFeedState.feed] for the actual value.
 	final CameraFeed initialFeed;
+
+	/// Displays a [CameraFeed] on the screen.
 	const VideoFeed(this.initialFeed);
 
 	@override
 	VideoFeedState createState() => VideoFeedState();
 }
 
+/// The logic for updating for updating a [VideoFeed].
+/// 
+/// This widget listens to [VideoModel.frameUpdater] to sync its framerate with other [VideoFeed]s.
+/// On every update, this widget grabs the frame from [CameraFeed.frame], decodes it, renders it, 
+/// then replaces the old frame. The key is that all the image processing logic is done off-screen
+/// while the old frame remains on-screen. That way, the user sees one continuous video instead
+/// of a flickering image.
 class VideoFeedState extends State<VideoFeed> {
+	/// The feed being streamed.
 	late CameraFeed feed;
+
+	/// The `dart:ui` instance of the current frame.
 	ui.Image? image;
 
+	/// Whether [feed] has a frame to show.
 	bool get hasFrame => feed.frame != null;
 
 	@override
@@ -29,9 +46,13 @@ class VideoFeedState extends State<VideoFeed> {
 	@override
 	void dispose() {
 		models.video.removeListener(updateImage);
+		image?.dispose();
 		super.dispose();
 	}
 
+	/// Decodes and renders the next frame.
+	/// 
+	/// This process happens off-screen. To display the resulting image, use a [RawImage] widget.
 	Future<ui.Image> loadImage(List<int> bytes) async {
 		final ulist = Uint8List.fromList(bytes);
 		final buffer = await ui.ImmutableBuffer.fromUint8List(ulist);
@@ -41,9 +62,11 @@ class VideoFeedState extends State<VideoFeed> {
 		return frame.image;
 	}
 
+	/// Grabs the new frame, renders it, and replaces the old frame.
 	Future<void> updateImage() async {
 		if (!hasFrame) return;
 		final newImage = await loadImage(feed.frame!);
+		if (!mounted) return;
 		image?.dispose();
 		setState(() => image = newImage);
 	}
@@ -66,7 +89,7 @@ class VideoFeedState extends State<VideoFeed> {
 				child: PopupMenuButton<CameraFeed>(
 					tooltip: "Select a feed",
 					icon: const Icon(Icons.more_horiz),
-					onSelected: updateFeed,
+					onSelected: selectNewFeed,
 					itemBuilder: (_) => [
 						for (final other in VideoModel.allFeeds) PopupMenuItem(
 							value: other,
@@ -78,6 +101,7 @@ class VideoFeedState extends State<VideoFeed> {
 		]
 	);
 
+	/// Displays an error message describing why `image == null`.
 	String get errorMessage {
 		final String name = feed.name;
 		if (hasFrame) { return "Loading feed for $name..."; }
@@ -86,10 +110,10 @@ class VideoFeedState extends State<VideoFeed> {
 		else { return "Unknown error for camera $name"; }
 	}
 
-	Future<void> updateFeed(CameraFeed newFeed) async {
+	/// Switches this widget to a new [CameraFeed].
+	Future<void> selectNewFeed(CameraFeed newFeed) async {
 		await models.video.disableFeed(feed);
 		await models.video.enableFeed(newFeed);
-		print("Switched from ${feed.name} to ${newFeed.name}");
 		image?.dispose();
 		setState(() {
 			feed = newFeed;

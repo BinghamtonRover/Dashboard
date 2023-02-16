@@ -14,6 +14,7 @@ class CameraFeed {
   /// Whether it is possible to enable this camera.
   bool isConnected = false;
 
+  /// The current image frame, as a JPG buffer.
   List<int>? frame;
 
   /// Stores metadata about a camera feed. 

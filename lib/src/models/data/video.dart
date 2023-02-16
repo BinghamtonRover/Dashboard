@@ -29,17 +29,22 @@ class VideoModel extends Model {
 	/// The camera feeds for the current operating mode.
 	List<CameraFeed> get feeds => userLayout[models.home.mode]!;
 
-	late final Timer updater;
+	/// Triggers when it's time to update a new frame.
+	/// 
+	/// This is kept here to ensure all widgets are in sync.
+	late final Timer frameUpdater;
 
 	@override
 	Future<void> init() async {
-		// TODO: Establish link with the rover and stream video
 		services.videoStreamer.registerHandler<VideoFrame>(
 			name: VideoFrame().messageName,
 			decoder: VideoFrame.fromBuffer,
 			handler: updateFrame,
 		);
-		updater = Timer.periodic(const Duration(milliseconds: 100), (_) => notifyListeners());
+		frameUpdater = Timer.periodic(
+			const Duration(milliseconds: 17),  // 60 FPS 
+			(_) => notifyListeners()
+		);
 		// TODO: Read the layout from Settings
 		models.home.addListener(notifyListeners);
 	}
@@ -47,10 +52,11 @@ class VideoModel extends Model {
 	@override
 	void dispose() {
 		models.home.removeListener(notifyListeners);
-		updater.cancel();
+		frameUpdater.cancel();
 		super.dispose();
 	}
 
+	/// Stores the new [VideoFrame.frame] in the corresponding [CameraFeed].
 	void updateFrame(VideoFrame message) {
 		final feed = getCameraFeed(message.name);
 		feed.isConnected = true;
@@ -76,7 +82,10 @@ class VideoModel extends Model {
 	/// Gets the camera feed with the given ID.
 	CameraFeed getCameraFeed(CameraName id) => allFeeds.firstWhere((feed) => feed.id == id);
 
+	/// Tells the rover to enable the given camera.
 	Future<void> enableFeed(CameraFeed feed) async { }
+
+	/// Tells the rover to disable the given camera.
 	Future<void> disableFeed(CameraFeed feed) async { }
 
 	/// Replaces a video feed at a given index.
