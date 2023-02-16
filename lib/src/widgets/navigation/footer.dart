@@ -6,9 +6,6 @@ import "package:rover_dashboard/models.dart";
 
 /// The footer, responsible for showing vitals and logs. 
 class Footer extends StatelessWidget {
-	/// Whether there is a controller currently connected. 
-	static const bool isControllerConnected = true;
-
 	@override
 	Widget build(BuildContext context) => Container(
 		height: 48,
@@ -20,14 +17,45 @@ class Footer extends StatelessWidget {
 				const Spacer(),
 				VideoFeedCounter(),
 				const SerialButton(),
-				const Icon(Icons.battery_4_bar),
-				const SizedBox(width: 12),
-				const Icon(Icons.network_wifi_3_bar),
-				const SizedBox(width: 12),
-				Container(width: 14, decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle)),	
+				const RoverStatus(),
 				const SizedBox(width: 12),
 			]
 		)
+	);
+}
+
+/// A few icons displaying the rover's current status.
+class RoverStatus extends StatelessWidget {
+	/// Provides a const constructor.
+	const RoverStatus();
+
+	/// An appropriate WiFi icon in increments of 1/5 connection strength.
+	IconData getNetworkIcon(double percentage) {
+		if (percentage      >= 0.9) { return Icons.signal_wifi_4_bar; }
+		else if (percentage >= 0.8) { return Icons.network_wifi_outlined; }
+		else if (percentage >= 0.6) { return Icons.network_wifi_3_bar; }
+		else if (percentage >= 0.4) { return Icons.network_wifi_2_bar; }
+		else if (percentage >= 0.2) { return Icons.network_wifi_1_bar; }
+		else { return Icons.signal_wifi_0_bar_outlined; }
+	}
+
+	@override
+	Widget build(BuildContext context) => Consumer<Rover>(
+		builder: (_, rover, __) => Row(
+			children: [
+				const Icon(Icons.battery_4_bar),
+				const SizedBox(width: 12),
+				Icon(getNetworkIcon(rover.core.connectionStrength)),
+				const SizedBox(width: 12),
+				Container(  // status indicator
+					width: 14, 
+					decoration: BoxDecoration(
+						color: rover.isConnected ? Colors.green : Colors.red,
+						shape: BoxShape.circle
+					)
+				)
+			]
+		),	
 	);
 }
 
