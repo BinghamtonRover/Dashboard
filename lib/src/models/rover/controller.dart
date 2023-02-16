@@ -46,6 +46,14 @@ abstract class Controller extends Model {
 	void update([_]) {
 		services.gamepad.update();
 		final messages = parseInputs(services.gamepad.state);
-		messages.forEach(services.messageSender.sendMessage);
+		messages.forEach(sendMessage);
+	}
+
+	Future<void> sendMessage(Message message) async {
+		if (models.serial.isConnected) {
+			await services.serial.sendMessage(message);
+		} else {
+			services.messageSender.sendMessage(message);
+		}
 	}
 }
