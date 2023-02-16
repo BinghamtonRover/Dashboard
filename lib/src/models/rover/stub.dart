@@ -1,6 +1,7 @@
 import "controller.dart";
 
-class Stub extends Controller {
+/// A controller that does nothing.
+class StubController extends Controller {
 	@override
 	List<Message> parseInputs(GamepadState state) => [];
 }

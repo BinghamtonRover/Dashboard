@@ -12,6 +12,7 @@ class Rover extends Model {
 	/// Monitors the connection to the rover.
 	final core = RoverCore();
 
+	/// The [Controller] for the current mode.
 	late Controller controller;
 
 	/// Whether the rover is connected.
@@ -34,6 +35,7 @@ class Rover extends Model {
 		super.dispose();
 	}
 
+	/// Disposes the old [controller] and chooses a new one based on [mode].
 	Future<void> updateMode(OperatingMode mode) async {
 		controller.dispose();
 		controller = Controller.forMode(mode);
