@@ -48,12 +48,11 @@ class StatusIcons extends StatelessWidget {
 
 	/// An appropriate WiFi icon in increments of 1/5 connection strength.
 	IconData getNetworkIcon(double percentage) {
-		if (percentage      >= 0.9) { return Icons.signal_wifi_4_bar; }
-		else if (percentage >= 0.8) { return Icons.network_wifi_outlined; }
+		if (percentage      >= 0.8) { return Icons.signal_wifi_statusbar_4_bar; }
 		else if (percentage >= 0.6) { return Icons.network_wifi_3_bar; }
 		else if (percentage >= 0.4) { return Icons.network_wifi_2_bar; }
 		else if (percentage >= 0.2) { return Icons.network_wifi_1_bar; }
-		else { return Icons.signal_wifi_0_bar_outlined; }
+		else { return Icons.signal_wifi_0_bar; }
 	}
 
 	/// An appropriate battery icon in increments of 1/8 battery level.
@@ -109,13 +108,15 @@ class StatusIcons extends StatelessWidget {
 				Icon(
 					rover.isConnected
 						? getNetworkIcon(rover.core.connectionStrength)
-						: Icons.signal_wifi_off,
+						: Icons.signal_wifi_off_outlined,
 					color: getColor(rover.core.connectionStrength),
 				),
 				const SizedBox(width: 8),
 				Icon(
-					getStatusIcon(rover.metrics.electrical.status),
-					color: getStatusColor(rover.metrics.electrical.status),
+					rover.isConnected
+						? getStatusIcon(rover.status)
+						: Icons.power_off,
+					color: getStatusColor(rover.status),
 				),
 				const SizedBox(width: 4),
 			]
