@@ -20,7 +20,7 @@ class Footer extends StatelessWidget {
 				const SerialButton(),
 				const GamepadIcon(),
 				const SizedBox(width: 4),
-				const RoverStatus(),
+				const StatusIcons(),
 				const SizedBox(width: 12),
 			]
 		)
@@ -42,9 +42,9 @@ class GamepadIcon extends StatelessWidget {
 }
 
 /// A few icons displaying the rover's current status.
-class RoverStatus extends StatelessWidget {
+class StatusIcons extends StatelessWidget {
 	/// Provides a const constructor.
-	const RoverStatus();
+	const StatusIcons();
 
 	/// An appropriate WiFi icon in increments of 1/5 connection strength.
 	IconData getNetworkIcon(double percentage) {
@@ -56,21 +56,68 @@ class RoverStatus extends StatelessWidget {
 		else { return Icons.signal_wifi_0_bar_outlined; }
 	}
 
+	/// An appropriate battery icon in increments of 1/8 battery level.
+	IconData getBatteryIcon(double percentage) {
+		if (percentage >= 0.84) { return Icons.battery_full; }  // 80-100
+		else if (percentage >= 0.72) { return Icons.battery_6_bar; }  // 60-80
+		else if (percentage >= 0.60) { return Icons.battery_5_bar; }  // 60-80
+		else if (percentage >= 0.48) { return Icons.battery_4_bar; }  // 60-80
+		else if (percentage >= 0.36) { return Icons.battery_3_bar; }  // 60-80
+		else if (percentage >= 0.24) { return Icons.battery_2_bar; }  // 40-60
+		else if (percentage >= 0.12) { return Icons.battery_1_bar; }  // 20-40
+		else { return Icons.battery_0_bar; }  // 0-20
+	}
+
+	/// An appropriate battery icon representing the rover's current status.
+	IconData getStatusIcon(RoverStatus status) {
+		switch (status) {
+			case RoverStatus.disconnected: return Icons.power_off;
+			case RoverStatus.standby: return Icons.pause_circle;
+			case RoverStatus.active: return Icons.play_circle;
+		}
+	}
+
+	/// A color representing a meter's fill.
+	Color getColor(double percentage) {
+		if (percentage > 0.75) { return Colors.green; }
+		else if (percentage > 0.5) { return Colors.yellow; }
+		else if (percentage > 0.25) { return Colors.orange; }
+		else if (percentage > 0.0) { return Colors.red; }
+		else { return Colors.black; }
+	}
+
+	/// The color of the rover's status icon.
+	Color getStatusColor(RoverStatus status) {
+		switch(status) {
+			case RoverStatus.disconnected: return Colors.black;
+			case RoverStatus.standby: return Colors.orange;
+			case RoverStatus.active: return Colors.green;
+		}
+	}
+
 	@override
 	Widget build(BuildContext context) => Consumer<Rover>(
 		builder: (_, rover, __) => Row(
 			children: [
-				const Icon(Icons.battery_4_bar),
+				Icon(
+					rover.isConnected 
+						? getBatteryIcon(rover.metrics.electrical.battery)
+						: Icons.battery_unknown,
+					color: getColor(rover.metrics.electrical.battery)
+				),
 				const SizedBox(width: 4),
-				Icon(getNetworkIcon(rover.core.connectionStrength)),
+				Icon(
+					rover.isConnected
+						? getNetworkIcon(rover.core.connectionStrength)
+						: Icons.signal_wifi_off,
+					color: getColor(rover.core.connectionStrength),
+				),
 				const SizedBox(width: 8),
-				Container(  // status indicator
-					width: 12, 
-					decoration: BoxDecoration(
-						color: rover.isConnected ? Colors.green : Colors.red,
-						shape: BoxShape.circle
-					)
-				)
+				Icon(
+					getStatusIcon(rover.metrics.electrical.status),
+					color: getStatusColor(rover.metrics.electrical.status),
+				),
+				const SizedBox(width: 4),
 			]
 		),	
 	);
