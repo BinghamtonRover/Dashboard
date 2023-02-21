@@ -83,7 +83,6 @@ class VideoModel extends Model {
 	Future<void> saveFrame(CameraFeed feed) async {
 		final List<int>? cachedFrame = feed.frame;
 		if (cachedFrame == null) throw ArgumentError.notNull("Feed for ${feed.name}"); 
-		print("Not null");
 		await services.files.writeImage(cachedFrame, feed.name);
 		models.home.setMessage(severity: Severity.info, text: "Screenshot saved");
 	}
