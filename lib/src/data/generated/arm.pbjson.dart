@@ -20,19 +20,6 @@ const Position$json = const {
 
 /// Descriptor for `Position`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List positionDescriptor = $convert.base64Decode('CghQb3NpdGlvbhIMCgF4GAEgASgFUgF4EgwKAXkYAiABKAVSAXkSDAoBehgDIAEoBVIBeg==');
-@$core.Deprecated('Use armCommandDescriptor instead')
-const ArmCommand$json = const {
-  '1': 'ArmCommand',
-  '2': const [
-    const {'1': 'stop', '3': 1, '4': 1, '5': 8, '10': 'stop'},
-    const {'1': 'move_swivel', '3': 2, '4': 1, '5': 2, '10': 'moveSwivel'},
-    const {'1': 'move_shoulder', '3': 3, '4': 1, '5': 2, '10': 'moveShoulder'},
-    const {'1': 'move_elbow', '3': 4, '4': 1, '5': 2, '10': 'moveElbow'},
-  ],
-};
-
-/// Descriptor for `ArmCommand`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List armCommandDescriptor = $convert.base64Decode('CgpBcm1Db21tYW5kEhIKBHN0b3AYASABKAhSBHN0b3ASHwoLbW92ZV9zd2l2ZWwYAiABKAJSCm1vdmVTd2l2ZWwSIwoNbW92ZV9zaG91bGRlchgDIAEoAlIMbW92ZVNob3VsZGVyEh0KCm1vdmVfZWxib3cYBCABKAJSCW1vdmVFbGJvdw==');
 @$core.Deprecated('Use motorStatusDescriptor instead')
 const MotorStatus$json = const {
   '1': 'MotorStatus',
@@ -59,51 +46,43 @@ const ArmData$json = const {
 
 /// Descriptor for `ArmData`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List armDataDescriptor = $convert.base64Decode('CgdBcm1EYXRhEjMKD2N1cnJlbnRQb3NpdGlvbhgBIAEoCzIJLlBvc2l0aW9uUg9jdXJyZW50UG9zaXRpb24SMQoOdGFyZ2V0UG9zaXRpb24YAiABKAsyCS5Qb3NpdGlvblIOdGFyZ2V0UG9zaXRpb24SIAoEYmFzZRgDIAEoCzIMLk1vdG9yU3RhdHVzUgRiYXNlEigKCHNob3VsZGVyGAQgASgLMgwuTW90b3JTdGF0dXNSCHNob3VsZGVyEiIKBWVsYm93GAUgASgLMgwuTW90b3JTdGF0dXNSBWVsYm93');
+@$core.Deprecated('Use armCommandDescriptor instead')
+const ArmCommand$json = const {
+  '1': 'ArmCommand',
+  '2': const [
+    const {'1': 'stop', '3': 1, '4': 1, '5': 8, '10': 'stop'},
+    const {'1': 'calibrate', '3': 2, '4': 1, '5': 8, '10': 'calibrate'},
+    const {'1': 'move_swivel', '3': 3, '4': 1, '5': 2, '10': 'moveSwivel'},
+    const {'1': 'move_shoulder', '3': 4, '4': 1, '5': 2, '10': 'moveShoulder'},
+    const {'1': 'move_elbow', '3': 5, '4': 1, '5': 2, '10': 'moveElbow'},
+  ],
+};
+
+/// Descriptor for `ArmCommand`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List armCommandDescriptor = $convert.base64Decode('CgpBcm1Db21tYW5kEhIKBHN0b3AYASABKAhSBHN0b3ASHAoJY2FsaWJyYXRlGAIgASgIUgljYWxpYnJhdGUSHwoLbW92ZV9zd2l2ZWwYAyABKAJSCm1vdmVTd2l2ZWwSIwoNbW92ZV9zaG91bGRlchgEIAEoAlIMbW92ZVNob3VsZGVyEh0KCm1vdmVfZWxib3cYBSABKAJSCW1vdmVFbGJvdw==');
 @$core.Deprecated('Use gripperDataDescriptor instead')
 const GripperData$json = const {
   '1': 'GripperData',
   '2': const [
-    const {'1': 'rotation', '3': 1, '4': 1, '5': 2, '10': 'rotation'},
-    const {'1': 'swivel', '3': 2, '4': 1, '5': 2, '10': 'swivel'},
-    const {'1': 'pinch', '3': 3, '4': 1, '5': 2, '10': 'pinch'},
-    const {'1': 'motor_temperature', '3': 4, '4': 1, '5': 2, '10': 'motorTemperature'},
+    const {'1': 'rotate', '3': 1, '4': 1, '5': 11, '6': '.MotorStatus', '10': 'rotate'},
+    const {'1': 'lift', '3': 2, '4': 1, '5': 11, '6': '.MotorStatus', '10': 'lift'},
+    const {'1': 'pinch', '3': 3, '4': 1, '5': 11, '6': '.MotorStatus', '10': 'pinch'},
   ],
 };
 
 /// Descriptor for `GripperData`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List gripperDataDescriptor = $convert.base64Decode('CgtHcmlwcGVyRGF0YRIaCghyb3RhdGlvbhgBIAEoAlIIcm90YXRpb24SFgoGc3dpdmVsGAIgASgCUgZzd2l2ZWwSFAoFcGluY2gYAyABKAJSBXBpbmNoEisKEW1vdG9yX3RlbXBlcmF0dXJlGAQgASgCUhBtb3RvclRlbXBlcmF0dXJl');
+final $typed_data.Uint8List gripperDataDescriptor = $convert.base64Decode('CgtHcmlwcGVyRGF0YRIkCgZyb3RhdGUYASABKAsyDC5Nb3RvclN0YXR1c1IGcm90YXRlEiAKBGxpZnQYAiABKAsyDC5Nb3RvclN0YXR1c1IEbGlmdBIiCgVwaW5jaBgDIAEoCzIMLk1vdG9yU3RhdHVzUgVwaW5jaA==');
 @$core.Deprecated('Use gripperCommandDescriptor instead')
 const GripperCommand$json = const {
   '1': 'GripperCommand',
   '2': const [
     const {'1': 'stop', '3': 1, '4': 1, '5': 8, '10': 'stop'},
-    const {'1': 'move_rotate', '3': 2, '4': 1, '5': 2, '10': 'moveRotate'},
-    const {'1': 'move_lift', '3': 3, '4': 1, '5': 2, '10': 'moveLift'},
-    const {'1': 'move_gripper', '3': 4, '4': 1, '5': 2, '10': 'moveGripper'},
+    const {'1': 'calibrate', '3': 2, '4': 1, '5': 8, '10': 'calibrate'},
+    const {'1': 'move_rotate', '3': 3, '4': 1, '5': 2, '10': 'moveRotate'},
+    const {'1': 'move_lift', '3': 4, '4': 1, '5': 2, '10': 'moveLift'},
+    const {'1': 'move_gripper', '3': 5, '4': 1, '5': 2, '10': 'moveGripper'},
   ],
 };
 
 /// Descriptor for `GripperCommand`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List gripperCommandDescriptor = $convert.base64Decode('Cg5HcmlwcGVyQ29tbWFuZBISCgRzdG9wGAEgASgIUgRzdG9wEh8KC21vdmVfcm90YXRlGAIgASgCUgptb3ZlUm90YXRlEhsKCW1vdmVfbGlmdBgDIAEoAlIIbW92ZUxpZnQSIQoMbW92ZV9ncmlwcGVyGAQgASgCUgttb3ZlR3JpcHBlcg==');
-@$core.Deprecated('Use hreiDataDescriptor instead')
-const HreiData$json = const {
-  '1': 'HreiData',
-  '2': const [
-    const {'1': 'arm_data', '3': 1, '4': 1, '5': 11, '6': '.ArmData', '10': 'armData'},
-    const {'1': 'gripper_data', '3': 2, '4': 1, '5': 11, '6': '.GripperData', '10': 'gripperData'},
-  ],
-};
-
-/// Descriptor for `HreiData`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List hreiDataDescriptor = $convert.base64Decode('CghIcmVpRGF0YRIjCghhcm1fZGF0YRgBIAEoCzIILkFybURhdGFSB2FybURhdGESLwoMZ3JpcHBlcl9kYXRhGAIgASgLMgwuR3JpcHBlckRhdGFSC2dyaXBwZXJEYXRh');
-@$core.Deprecated('Use hreiCommandDescriptor instead')
-const HreiCommand$json = const {
-  '1': 'HreiCommand',
-  '2': const [
-    const {'1': 'arm_command', '3': 1, '4': 1, '5': 11, '6': '.ArmCommand', '10': 'armCommand'},
-    const {'1': 'gripper_command', '3': 2, '4': 1, '5': 11, '6': '.GripperCommand', '10': 'gripperCommand'},
-  ],
-};
-
-/// Descriptor for `HreiCommand`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List hreiCommandDescriptor = $convert.base64Decode('CgtIcmVpQ29tbWFuZBIsCgthcm1fY29tbWFuZBgBIAEoCzILLkFybUNvbW1hbmRSCmFybUNvbW1hbmQSOAoPZ3JpcHBlcl9jb21tYW5kGAIgASgLMg8uR3JpcHBlckNvbW1hbmRSDmdyaXBwZXJDb21tYW5k');
+final $typed_data.Uint8List gripperCommandDescriptor = $convert.base64Decode('Cg5HcmlwcGVyQ29tbWFuZBISCgRzdG9wGAEgASgIUgRzdG9wEhwKCWNhbGlicmF0ZRgCIAEoCFIJY2FsaWJyYXRlEh8KC21vdmVfcm90YXRlGAMgASgCUgptb3ZlUm90YXRlEhsKCW1vdmVfbGlmdBgEIAEoAlIIbW92ZUxpZnQSIQoMbW92ZV9ncmlwcGVyGAUgASgCUgttb3ZlR3JpcHBlcg==');
