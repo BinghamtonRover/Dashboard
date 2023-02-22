@@ -48,16 +48,19 @@ class GamepadService extends Service {
   Future<void> dispose() async { }
 
   /// Connects to a gamepad and calls [vibrate].
-  Future<void> connect() async {
+  Future<bool> connect() async {
     for (int i = 0; i < maxGamepads; i++) {
       gamepad = Gamepad(i);
       if (gamepad.isConnected) break;
     }
-    if (gamepad.isConnected) await vibrate();
+    if (gamepad.isConnected) vibrate();
+    return gamepad.isConnected;
   }
 
   /// Makes the gamepad vibrate a small "pulse" 
-  Future<void> vibrate() async {
+  void vibrate() async {  // ignore: avoid_void_async 
+    // ^ because this should not be awaited
+    if (!isConnected) return;
     gamepad.vibrate(leftMotorSpeed: vibrateIntensity, rightMotorSpeed: vibrateIntensity);
     await Future.delayed(const Duration(milliseconds: 300));
     gamepad.vibrate();

@@ -43,6 +43,16 @@ class GamepadIcon extends StatelessWidget {
 		}
 	}
 
+	/// Connects to a gamepad and gives visual + haptic feedback.
+	Future<void> connect() async {
+		final isConnected = await services.gamepad.connect();
+		if (!isConnected) {
+			models.home.setMessage(severity: Severity.error, text: "No gamepad connected");
+		} else {
+			models.home.setMessage(severity: Severity.info, text: "Connected to gamepad");
+		}
+	}
+
 	@override
 	Widget build(BuildContext context) => Consumer<Rover>(
 		builder: (_, model, __) => IconButton(
@@ -50,9 +60,7 @@ class GamepadIcon extends StatelessWidget {
 			color: services.gamepad.isConnected 
 				? getColor(services.gamepad.battery)
 				: Colors.black,
-			onPressed: services.gamepad.isConnected
-				? services.gamepad.vibrate
-				: services.gamepad.connect,
+			onPressed: connect,
 		),
 	);
 }
