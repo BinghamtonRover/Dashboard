@@ -13,15 +13,15 @@ class Footer extends StatelessWidget {
 		color: Theme.of(context).colorScheme.secondary,
 		child: Row(
 			mainAxisAlignment: MainAxisAlignment.end,
-			children: [
-				const MessageDisplay(),
-				const Spacer(),
+			children: const [
+				MessageDisplay(),
+				Spacer(),
 				VideoFeedCounter(),
-				const SerialButton(),
-				const GamepadIcon(),
-				const SizedBox(width: 4),
-				const StatusIcons(),
-				const SizedBox(width: 12),
+				SerialButton(),
+				GamepadIcon(),
+				SizedBox(width: 4),
+				StatusIcons(),
+				SizedBox(width: 12),
 			]
 		)
 	);
@@ -60,6 +60,7 @@ class GamepadIcon extends StatelessWidget {
 			color: services.gamepad.isConnected 
 				? getColor(services.gamepad.battery)
 				: Colors.black,
+			constraints: const BoxConstraints(maxWidth: 36),
 			onPressed: connect,
 		),
 	);
@@ -150,6 +151,9 @@ class StatusIcons extends StatelessWidget {
 
 /// A dropdown to select more or less video feeds.
 class VideoFeedCounter extends StatelessWidget {
+	/// Provides a const constructor for this widget.
+	const VideoFeedCounter();
+
 	@override
 	Widget build(BuildContext context) => Consumer<VideoModel>(
 		builder: (context, video, _) => Consumer<HomeModel>(
@@ -186,9 +190,11 @@ class SerialButton extends StatelessWidget {
 			? IconButton(
 				icon: const Icon(Icons.usb, color: Colors.green),
 				onPressed: model.disconnect,
+				constraints: const BoxConstraints(maxWidth: 36),
 			)
 			: PopupMenuButton(
 				icon: const Icon(Icons.usb),
+				tooltip: "Select device",
 				onSelected: model.connect,
 				itemBuilder: (_) => [
 					for (final String device in model.availableDevices)
