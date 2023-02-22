@@ -34,9 +34,12 @@ class GamepadIcon extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) => Consumer<Rover>(
-		builder: (_, model, __) => Icon(
-			Icons.sports_esports, 
-			color: services.gamepad.isConnected ? Colors.green : Colors.black
+		builder: (_, model, __) => IconButton(
+			icon: const Icon(Icons.sports_esports), 
+			color: services.gamepad.isConnected ? Colors.green : Colors.black,
+			onPressed: services.gamepad.isConnected
+				? services.gamepad.vibrate
+				: services.gamepad.connect,
 		),
 	);
 }
