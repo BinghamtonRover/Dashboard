@@ -22,4 +22,11 @@ class DriveController extends Controller {
 		throttle = throttle.clamp(0, 1);
 		return DriveCommand(setThrottle: true, throttle: throttle);
 	}
+
+	@override
+	List<Message> get onDispose => [
+		DriveCommand(setThrottle: true, throttle: 0),
+		DriveCommand(setLeft: true, left: 0),
+		DriveCommand(setLeft: false, left: 0),
+	];
 }

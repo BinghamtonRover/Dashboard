@@ -9,15 +9,15 @@ import "../model.dart";
 const connectionIncrement = 0.2;
 
 /// How long to wait between handshakes.
-const handshakeInterval = Duration(seconds: 3);
+const handshakeInterval = Duration(seconds: 1);
 
 /// How long to wait for incoming handshakes after sending them out.
-const handshakeWaitDelay = Duration(seconds: 2);
+const handshakeWaitDelay = Duration(milliseconds: 200);
 
 /// Monitors the connection to the rover.
 class RoverCore extends Model {
 	/// A timer that sends handshakes to every device on the rover.
-	late final Timer handshakeTimer;
+	late Timer handshakeTimer;
 
 	/// Connection strengths of all rover devices, in percentages.
 	final Map<Device, double> connections = {
@@ -41,7 +41,7 @@ class RoverCore extends Model {
 			decoder: Connect.fromBuffer,
 			handler: onHandshakeReceived,
 		);
-		handshakeTimer = Timer.periodic(handshakeInterval, sendHandshakes);
+		handshakeTimer = Timer(handshakeInterval, sendHandshakes);
 	}
 
 	@override
@@ -98,6 +98,7 @@ class RoverCore extends Model {
 			if (connections[device]! > 1) connections[device] = 1;
 			if (connections[device]! < 0) connections[device] = 0;
 		}
+		handshakeTimer = Timer(handshakeInterval, sendHandshakes);
 		notifyListeners();
 	}
 }

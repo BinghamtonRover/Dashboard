@@ -4,4 +4,7 @@ import "controller.dart";
 class StubController extends Controller {
 	@override
 	List<Message> parseInputs(GamepadState state) => [];
+
+	@override
+	List<Message> get onDispose => [];
 }
