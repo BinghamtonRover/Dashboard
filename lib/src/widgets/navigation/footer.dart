@@ -32,11 +32,24 @@ class GamepadIcon extends StatelessWidget {
 	/// Provides a const constructor for this widget.
 	const GamepadIcon();
 
+	/// Returns a color representing the gamepad's battery level.
+	Color getColor(GamepadBatteryLevel battery) {
+		switch (battery) {
+			case GamepadBatteryLevel.empty: return Colors.red;
+			case GamepadBatteryLevel.low: return Colors.red;
+			case GamepadBatteryLevel.medium: return Colors.orange;
+			case GamepadBatteryLevel.full: return Colors.green;
+			case GamepadBatteryLevel.unknown: return Colors.black;
+		}
+	}
+
 	@override
 	Widget build(BuildContext context) => Consumer<Rover>(
 		builder: (_, model, __) => IconButton(
 			icon: const Icon(Icons.sports_esports), 
-			color: services.gamepad.isConnected ? Colors.green : Colors.black,
+			color: services.gamepad.isConnected 
+				? getColor(services.gamepad.battery)
+				: Colors.black,
 			onPressed: services.gamepad.isConnected
 				? services.gamepad.vibrate
 				: services.gamepad.connect,

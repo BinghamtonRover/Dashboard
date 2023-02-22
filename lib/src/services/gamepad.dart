@@ -67,6 +67,9 @@ class GamepadService extends Service {
     gamepad.vibrate();
   }
 
+  /// The battery of the connected controller.
+  GamepadBatteryLevel get battery => gamepad.gamepadBatteryInfo.batteryLevel;
+
   /// Whether the gamepad is connected to the user's device. 
   bool get isConnected => gamepad.isConnected;
 
