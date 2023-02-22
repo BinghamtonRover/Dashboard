@@ -13,15 +13,15 @@ class Footer extends StatelessWidget {
 		color: Theme.of(context).colorScheme.secondary,
 		child: Row(
 			mainAxisAlignment: MainAxisAlignment.end,
-			children: [
-				const MessageDisplay(),
-				const Spacer(),
+			children: const [
+				MessageDisplay(),
+				Spacer(),
 				VideoFeedCounter(),
-				const SerialButton(),
-				const GamepadIcon(),
-				const SizedBox(width: 4),
-				const StatusIcons(),
-				const SizedBox(width: 12),
+				SerialButton(),
+				GamepadIcon(),
+				SizedBox(width: 4),
+				StatusIcons(),
+				SizedBox(width: 12),
 			]
 		)
 	);
@@ -32,11 +32,36 @@ class GamepadIcon extends StatelessWidget {
 	/// Provides a const constructor for this widget.
 	const GamepadIcon();
 
+	/// Returns a color representing the gamepad's battery level.
+	Color getColor(GamepadBatteryLevel battery) {
+		switch (battery) {
+			case GamepadBatteryLevel.empty: return Colors.red;
+			case GamepadBatteryLevel.low: return Colors.red;
+			case GamepadBatteryLevel.medium: return Colors.orange;
+			case GamepadBatteryLevel.full: return Colors.green;
+			case GamepadBatteryLevel.unknown: return Colors.black;
+		}
+	}
+
+	/// Connects to a gamepad and gives visual + haptic feedback.
+	Future<void> connect() async {
+		final isConnected = await services.gamepad.connect();
+		if (!isConnected) {
+			models.home.setMessage(severity: Severity.error, text: "No gamepad connected");
+		} else {
+			models.home.setMessage(severity: Severity.info, text: "Connected to gamepad");
+		}
+	}
+
 	@override
 	Widget build(BuildContext context) => Consumer<Rover>(
-		builder: (_, model, __) => Icon(
-			Icons.sports_esports, 
-			color: services.gamepad.isConnected ? Colors.green : Colors.black
+		builder: (_, model, __) => IconButton(
+			icon: const Icon(Icons.sports_esports), 
+			color: services.gamepad.isConnected 
+				? getColor(services.gamepad.battery)
+				: Colors.black,
+			constraints: const BoxConstraints(maxWidth: 36),
+			onPressed: connect,
 		),
 	);
 }
@@ -126,6 +151,9 @@ class StatusIcons extends StatelessWidget {
 
 /// A dropdown to select more or less video feeds.
 class VideoFeedCounter extends StatelessWidget {
+	/// Provides a const constructor for this widget.
+	const VideoFeedCounter();
+
 	@override
 	Widget build(BuildContext context) => Consumer<VideoModel>(
 		builder: (context, video, _) => Consumer<HomeModel>(
@@ -162,9 +190,11 @@ class SerialButton extends StatelessWidget {
 			? IconButton(
 				icon: const Icon(Icons.usb, color: Colors.green),
 				onPressed: model.disconnect,
+				constraints: const BoxConstraints(maxWidth: 36),
 			)
 			: PopupMenuButton(
 				icon: const Icon(Icons.usb),
+				tooltip: "Select device",
 				onSelected: model.connect,
 				itemBuilder: (_) => [
 					for (final String device in model.availableDevices)

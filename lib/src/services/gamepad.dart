@@ -16,6 +16,14 @@ extension GamepadNumbers on num {
   }
 }
 
+/// The maximum amount of gamepads a user can have.
+const maxGamepads = 4;
+
+/// The default vibration intensity.
+/// 
+/// This value is stored in an unsigned 16-bit integer, so it's range is from 0-65,535.
+const vibrateIntensity = 65000;
+
 /// A service to receive input from a gamepad connected to the user's device.
 /// 
 /// This service uses [`package:win32_gamepad`](https://pub.dev/packages/win32_gamepad), to read 
@@ -31,13 +39,39 @@ class GamepadService extends Service {
   /// 
   /// No action is needed to connect to a gamepad. Use [isConnected] to check if there is a 
   /// gamepad connected, and use [state] to read it. 
-  static final gamepad = Gamepad(0);
+  Gamepad gamepad = Gamepad(0);
   
   @override
-  Future<void> init() async { }
+  Future<void> init() async => connect();
 
   @override
   Future<void> dispose() async { }
+
+  /// Connects to a gamepad and calls [vibrate].
+  Future<bool> connect() async {
+    for (int i = 0; i < maxGamepads; i++) {
+      gamepad = Gamepad(i);
+      if (gamepad.isConnected) break;
+    }
+    if (gamepad.isConnected) vibrate();
+    return gamepad.isConnected;
+  }
+
+  /// Makes the gamepad vibrate a small "pulse" 
+  void vibrate() async {  // ignore: avoid_void_async 
+    // ^ because this should not be awaited
+    if (!isConnected) return;
+    gamepad.vibrate(leftMotorSpeed: vibrateIntensity, rightMotorSpeed: vibrateIntensity);
+    await Future.delayed(const Duration(milliseconds: 300));
+    gamepad.vibrate();
+    await Future.delayed(const Duration(milliseconds: 100));
+    gamepad.vibrate(leftMotorSpeed: vibrateIntensity, rightMotorSpeed: vibrateIntensity);
+    await Future.delayed(const Duration(milliseconds: 300));
+    gamepad.vibrate();
+  }
+
+  /// The battery of the connected controller.
+  GamepadBatteryLevel get battery => gamepad.gamepadBatteryInfo.batteryLevel;
 
   /// Whether the gamepad is connected to the user's device. 
   bool get isConnected => gamepad.isConnected;

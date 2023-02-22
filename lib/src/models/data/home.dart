@@ -2,6 +2,7 @@ import "dart:async";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 
 import "../model.dart";
 
@@ -39,6 +40,7 @@ class HomeModel extends Model {
 	void changeMode(int index) {
 		mode = OperatingMode.values[index];
 		models.rover.updateMode(mode);
+		services.gamepad.vibrate();
 		notifyListeners();
 	}
 }
