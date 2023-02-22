@@ -3,7 +3,7 @@ name: Analyzer
 # Analyzes the project on every pull request. 
 # See analysis_options.yaml for lint configuration.
 
-on: pull_request
+on: [pull_request, merge_group]
 
 jobs: 
   analyze: 
