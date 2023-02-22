@@ -79,6 +79,14 @@ class VideoModel extends Model {
 		notifyListeners();
 	}
 
+	/// Takes a screenshot of the current frame.
+	Future<void> saveFrame(CameraFeed feed) async {
+		final List<int>? cachedFrame = feed.frame;
+		if (cachedFrame == null) throw ArgumentError.notNull("Feed for ${feed.name}"); 
+		await services.files.writeImage(cachedFrame, feed.name);
+		models.home.setMessage(severity: Severity.info, text: "Screenshot saved");
+	}
+
 	/// Gets the camera feed with the given ID.
 	CameraFeed getCameraFeed(CameraName id) => allFeeds.firstWhere((feed) => feed.id == id);
 

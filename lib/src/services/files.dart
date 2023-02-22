@@ -54,4 +54,12 @@ class FilesService extends Service {
       return settings;
     }
   }
+
+  /// Saves the current frame in the feed to the camera's output directory.
+  Future<void> writeImage(List<int> image, String cameraName) async {
+    final dir = Directory("${outputDir.path}/$cameraName");
+    if (!(await dir.exists())) await dir.create();    
+    final timestamp = DateTime.now().toString();
+    await File("${dir.path}/$timestamp.jpg").writeAsBytes(image); 
+  }
 }

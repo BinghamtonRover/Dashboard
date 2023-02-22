@@ -83,21 +83,26 @@ class VideoFeedState extends State<VideoFeed> {
 				child: image == null ? Text(errorMessage) 
 					: Row(children: [Expanded(child: RawImage(image: image, fit: BoxFit.fill))]),
 			),
-			Positioned(
-				top: 4, 
-				right: 4,
-				child: PopupMenuButton<CameraFeed>(
-					tooltip: "Select a feed",
-					icon: const Icon(Icons.more_horiz),
-					onSelected: selectNewFeed,
-					itemBuilder: (_) => [
-						for (final other in VideoModel.allFeeds) PopupMenuItem(
-							value: other,
-							child: Text(other.name),
-						),
-					]
-				)
-			)
+			Row(
+				mainAxisAlignment: MainAxisAlignment.end,
+				children: [
+					if (feed.isActive) IconButton(
+						icon: const Icon(Icons.camera_alt), 
+						onPressed: () => models.video.saveFrame(feed),
+					), 
+					PopupMenuButton<CameraFeed>(
+						tooltip: "Select a feed",
+						icon: const Icon(Icons.more_horiz),
+						onSelected: selectNewFeed,
+						itemBuilder: (_) => [
+							for (final other in VideoModel.allFeeds) PopupMenuItem(
+								value: other,
+								child: Text(other.name),
+							),
+						]
+					)
+				]
+			),
 		]
 	);
 
