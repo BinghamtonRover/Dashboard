@@ -50,11 +50,17 @@ abstract class Controller extends Model {
 	@override
 	void dispose() {
 		gamepadTimer.cancel();
+		onDispose.forEach(sendMessage);
 		super.dispose();
 	}
 
 	/// Return a list of commands based on the current state of the gamepad.
 	Iterable<Message> parseInputs(GamepadState state);
+
+	/// A list of commands to send when switching modes.
+	/// 
+	/// Use this to stop the rover when the user switches modes.
+	Iterable<Message> get onDispose;
 
 	/// Sends a command over the network or over Serial.
 	Future<void> sendMessage(Message message) async {
