@@ -34,7 +34,8 @@ jobs:
 
       - name: Git Setup
         run: |
-          git config --local user.name "github-actions[bot]"
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
           git branch --all
           git switch --track origin/documentation
           git reset --hard origin/main
