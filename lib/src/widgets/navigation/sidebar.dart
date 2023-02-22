@@ -11,15 +11,19 @@ class Sidebar extends StatelessWidget {
 		width: 225, 
 		alignment: Alignment.center,
 		color: Theme.of(context).colorScheme.surfaceVariant,
-		child: Consumer<HomeModel>(
+		child: Consumer<Rover>(
 			child: const MetricsList(),
-			builder: (context, model, metrics) => ListView(
+			builder: (context, rover, metrics) => ListView(
 				padding: const EdgeInsets.symmetric(horizontal: 16),
 				children: [
 					metrics!,
+					const Divider(),
 					Text("Controls", style: Theme.of(context).textTheme.displaySmall),
 					const SizedBox(height: 16),
-					for (final control in model.controls) Text(control),
+					for (final entry in rover.controller.controls.entries) ...[
+						Text(entry.key, style: Theme.of(context).textTheme.titleLarge),
+						Text("  ${entry.value}", style: Theme.of(context).textTheme.titleMedium),
+					]
 				]
 			)
 		)
