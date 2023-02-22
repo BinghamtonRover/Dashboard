@@ -86,68 +86,23 @@ class Position extends $pb.GeneratedMessage {
 
 class ArmCommand extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ArmCommand', createEmptyInstance: create)
-    ..aOB(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'calibrate')
-    ..a<$core.double>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'swivel', $pb.PbFieldType.OF)
-    ..a<$core.double>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'extend', $pb.PbFieldType.OF)
-    ..a<$core.double>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lift', $pb.PbFieldType.OF)
-    ..a<$core.double>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'preciseSwivel', $pb.PbFieldType.OF)
-    ..a<$core.double>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'preciseLift', $pb.PbFieldType.OF)
-    ..a<$core.double>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'preciseExtend', $pb.PbFieldType.OF)
-    ..a<$core.double>(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveX', $pb.PbFieldType.OF)
-    ..a<$core.double>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveY', $pb.PbFieldType.OF)
-    ..a<$core.double>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveZ', $pb.PbFieldType.OF)
-    ..a<$core.double>(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveSwivel', $pb.PbFieldType.OF)
-    ..a<$core.double>(13, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveShoulder', $pb.PbFieldType.OF)
-    ..a<$core.double>(14, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveElbow', $pb.PbFieldType.OF)
+    ..aOB(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'stop')
+    ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveSwivel', $pb.PbFieldType.OF)
+    ..a<$core.double>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveShoulder', $pb.PbFieldType.OF)
+    ..a<$core.double>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveElbow', $pb.PbFieldType.OF)
     ..hasRequiredFields = false
   ;
 
   ArmCommand._() : super();
   factory ArmCommand({
-    $core.bool? calibrate,
-    $core.double? swivel,
-    $core.double? extend,
-    $core.double? lift,
-    $core.double? preciseSwivel,
-    $core.double? preciseLift,
-    $core.double? preciseExtend,
-    $core.double? moveX,
-    $core.double? moveY,
-    $core.double? moveZ,
+    $core.bool? stop,
     $core.double? moveSwivel,
     $core.double? moveShoulder,
     $core.double? moveElbow,
   }) {
     final _result = create();
-    if (calibrate != null) {
-      _result.calibrate = calibrate;
-    }
-    if (swivel != null) {
-      _result.swivel = swivel;
-    }
-    if (extend != null) {
-      _result.extend = extend;
-    }
-    if (lift != null) {
-      _result.lift = lift;
-    }
-    if (preciseSwivel != null) {
-      _result.preciseSwivel = preciseSwivel;
-    }
-    if (preciseLift != null) {
-      _result.preciseLift = preciseLift;
-    }
-    if (preciseExtend != null) {
-      _result.preciseExtend = preciseExtend;
-    }
-    if (moveX != null) {
-      _result.moveX = moveX;
-    }
-    if (moveY != null) {
-      _result.moveY = moveY;
-    }
-    if (moveZ != null) {
-      _result.moveZ = moveZ;
+    if (stop != null) {
+      _result.stop = stop;
     }
     if (moveSwivel != null) {
       _result.moveSwivel = moveSwivel;
@@ -181,122 +136,41 @@ class ArmCommand extends $pb.GeneratedMessage {
   static ArmCommand getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ArmCommand>(create);
   static ArmCommand? _defaultInstance;
 
+  @$pb.TagNumber(1)
+  $core.bool get stop => $_getBF(0);
+  @$pb.TagNumber(1)
+  set stop($core.bool v) { $_setBool(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasStop() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearStop() => clearField(1);
+
   @$pb.TagNumber(2)
-  $core.bool get calibrate => $_getBF(0);
+  $core.double get moveSwivel => $_getN(1);
   @$pb.TagNumber(2)
-  set calibrate($core.bool v) { $_setBool(0, v); }
+  set moveSwivel($core.double v) { $_setFloat(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasCalibrate() => $_has(0);
+  $core.bool hasMoveSwivel() => $_has(1);
   @$pb.TagNumber(2)
-  void clearCalibrate() => clearField(2);
+  void clearMoveSwivel() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.double get swivel => $_getN(1);
+  $core.double get moveShoulder => $_getN(2);
   @$pb.TagNumber(3)
-  set swivel($core.double v) { $_setFloat(1, v); }
+  set moveShoulder($core.double v) { $_setFloat(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasSwivel() => $_has(1);
+  $core.bool hasMoveShoulder() => $_has(2);
   @$pb.TagNumber(3)
-  void clearSwivel() => clearField(3);
+  void clearMoveShoulder() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.double get extend => $_getN(2);
+  $core.double get moveElbow => $_getN(3);
   @$pb.TagNumber(4)
-  set extend($core.double v) { $_setFloat(2, v); }
+  set moveElbow($core.double v) { $_setFloat(3, v); }
   @$pb.TagNumber(4)
-  $core.bool hasExtend() => $_has(2);
+  $core.bool hasMoveElbow() => $_has(3);
   @$pb.TagNumber(4)
-  void clearExtend() => clearField(4);
-
-  @$pb.TagNumber(5)
-  $core.double get lift => $_getN(3);
-  @$pb.TagNumber(5)
-  set lift($core.double v) { $_setFloat(3, v); }
-  @$pb.TagNumber(5)
-  $core.bool hasLift() => $_has(3);
-  @$pb.TagNumber(5)
-  void clearLift() => clearField(5);
-
-  @$pb.TagNumber(6)
-  $core.double get preciseSwivel => $_getN(4);
-  @$pb.TagNumber(6)
-  set preciseSwivel($core.double v) { $_setFloat(4, v); }
-  @$pb.TagNumber(6)
-  $core.bool hasPreciseSwivel() => $_has(4);
-  @$pb.TagNumber(6)
-  void clearPreciseSwivel() => clearField(6);
-
-  @$pb.TagNumber(7)
-  $core.double get preciseLift => $_getN(5);
-  @$pb.TagNumber(7)
-  set preciseLift($core.double v) { $_setFloat(5, v); }
-  @$pb.TagNumber(7)
-  $core.bool hasPreciseLift() => $_has(5);
-  @$pb.TagNumber(7)
-  void clearPreciseLift() => clearField(7);
-
-  @$pb.TagNumber(8)
-  $core.double get preciseExtend => $_getN(6);
-  @$pb.TagNumber(8)
-  set preciseExtend($core.double v) { $_setFloat(6, v); }
-  @$pb.TagNumber(8)
-  $core.bool hasPreciseExtend() => $_has(6);
-  @$pb.TagNumber(8)
-  void clearPreciseExtend() => clearField(8);
-
-  @$pb.TagNumber(9)
-  $core.double get moveX => $_getN(7);
-  @$pb.TagNumber(9)
-  set moveX($core.double v) { $_setFloat(7, v); }
-  @$pb.TagNumber(9)
-  $core.bool hasMoveX() => $_has(7);
-  @$pb.TagNumber(9)
-  void clearMoveX() => clearField(9);
-
-  @$pb.TagNumber(10)
-  $core.double get moveY => $_getN(8);
-  @$pb.TagNumber(10)
-  set moveY($core.double v) { $_setFloat(8, v); }
-  @$pb.TagNumber(10)
-  $core.bool hasMoveY() => $_has(8);
-  @$pb.TagNumber(10)
-  void clearMoveY() => clearField(10);
-
-  @$pb.TagNumber(11)
-  $core.double get moveZ => $_getN(9);
-  @$pb.TagNumber(11)
-  set moveZ($core.double v) { $_setFloat(9, v); }
-  @$pb.TagNumber(11)
-  $core.bool hasMoveZ() => $_has(9);
-  @$pb.TagNumber(11)
-  void clearMoveZ() => clearField(11);
-
-  @$pb.TagNumber(12)
-  $core.double get moveSwivel => $_getN(10);
-  @$pb.TagNumber(12)
-  set moveSwivel($core.double v) { $_setFloat(10, v); }
-  @$pb.TagNumber(12)
-  $core.bool hasMoveSwivel() => $_has(10);
-  @$pb.TagNumber(12)
-  void clearMoveSwivel() => clearField(12);
-
-  @$pb.TagNumber(13)
-  $core.double get moveShoulder => $_getN(11);
-  @$pb.TagNumber(13)
-  set moveShoulder($core.double v) { $_setFloat(11, v); }
-  @$pb.TagNumber(13)
-  $core.bool hasMoveShoulder() => $_has(11);
-  @$pb.TagNumber(13)
-  void clearMoveShoulder() => clearField(13);
-
-  @$pb.TagNumber(14)
-  $core.double get moveElbow => $_getN(12);
-  @$pb.TagNumber(14)
-  set moveElbow($core.double v) { $_setFloat(12, v); }
-  @$pb.TagNumber(14)
-  $core.bool hasMoveElbow() => $_has(12);
-  @$pb.TagNumber(14)
-  void clearMoveElbow() => clearField(14);
+  void clearMoveElbow() => clearField(4);
 }
 
 class MotorStatus extends $pb.GeneratedMessage {
@@ -578,19 +452,24 @@ class GripperData extends $pb.GeneratedMessage {
 
 class GripperCommand extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'GripperCommand', createEmptyInstance: create)
-    ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveRotate', $pb.PbFieldType.OF)
-    ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveLift', $pb.PbFieldType.OF)
-    ..a<$core.double>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveGripper', $pb.PbFieldType.OF)
+    ..aOB(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'stop')
+    ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveRotate', $pb.PbFieldType.OF)
+    ..a<$core.double>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveLift', $pb.PbFieldType.OF)
+    ..a<$core.double>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveGripper', $pb.PbFieldType.OF)
     ..hasRequiredFields = false
   ;
 
   GripperCommand._() : super();
   factory GripperCommand({
+    $core.bool? stop,
     $core.double? moveRotate,
     $core.double? moveLift,
     $core.double? moveGripper,
   }) {
     final _result = create();
+    if (stop != null) {
+      _result.stop = stop;
+    }
     if (moveRotate != null) {
       _result.moveRotate = moveRotate;
     }
@@ -624,31 +503,40 @@ class GripperCommand extends $pb.GeneratedMessage {
   static GripperCommand? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.double get moveRotate => $_getN(0);
+  $core.bool get stop => $_getBF(0);
   @$pb.TagNumber(1)
-  set moveRotate($core.double v) { $_setFloat(0, v); }
+  set stop($core.bool v) { $_setBool(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasMoveRotate() => $_has(0);
+  $core.bool hasStop() => $_has(0);
   @$pb.TagNumber(1)
-  void clearMoveRotate() => clearField(1);
+  void clearStop() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.double get moveLift => $_getN(1);
+  $core.double get moveRotate => $_getN(1);
   @$pb.TagNumber(2)
-  set moveLift($core.double v) { $_setFloat(1, v); }
+  set moveRotate($core.double v) { $_setFloat(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasMoveLift() => $_has(1);
+  $core.bool hasMoveRotate() => $_has(1);
   @$pb.TagNumber(2)
-  void clearMoveLift() => clearField(2);
+  void clearMoveRotate() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.double get moveGripper => $_getN(2);
+  $core.double get moveLift => $_getN(2);
   @$pb.TagNumber(3)
-  set moveGripper($core.double v) { $_setFloat(2, v); }
+  set moveLift($core.double v) { $_setFloat(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasMoveGripper() => $_has(2);
+  $core.bool hasMoveLift() => $_has(2);
   @$pb.TagNumber(3)
-  void clearMoveGripper() => clearField(3);
+  void clearMoveLift() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.double get moveGripper => $_getN(3);
+  @$pb.TagNumber(4)
+  set moveGripper($core.double v) { $_setFloat(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasMoveGripper() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearMoveGripper() => clearField(4);
 }
 
 class HreiData extends $pb.GeneratedMessage {

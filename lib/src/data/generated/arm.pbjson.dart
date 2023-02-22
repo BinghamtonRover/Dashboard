@@ -24,24 +24,15 @@ final $typed_data.Uint8List positionDescriptor = $convert.base64Decode('CghQb3Np
 const ArmCommand$json = const {
   '1': 'ArmCommand',
   '2': const [
-    const {'1': 'calibrate', '3': 2, '4': 1, '5': 8, '10': 'calibrate'},
-    const {'1': 'swivel', '3': 3, '4': 1, '5': 2, '10': 'swivel'},
-    const {'1': 'extend', '3': 4, '4': 1, '5': 2, '10': 'extend'},
-    const {'1': 'lift', '3': 5, '4': 1, '5': 2, '10': 'lift'},
-    const {'1': 'precise_swivel', '3': 6, '4': 1, '5': 2, '10': 'preciseSwivel'},
-    const {'1': 'precise_lift', '3': 7, '4': 1, '5': 2, '10': 'preciseLift'},
-    const {'1': 'precise_extend', '3': 8, '4': 1, '5': 2, '10': 'preciseExtend'},
-    const {'1': 'move_x', '3': 9, '4': 1, '5': 2, '10': 'moveX'},
-    const {'1': 'move_y', '3': 10, '4': 1, '5': 2, '10': 'moveY'},
-    const {'1': 'move_z', '3': 11, '4': 1, '5': 2, '10': 'moveZ'},
-    const {'1': 'move_swivel', '3': 12, '4': 1, '5': 2, '10': 'moveSwivel'},
-    const {'1': 'move_shoulder', '3': 13, '4': 1, '5': 2, '10': 'moveShoulder'},
-    const {'1': 'move_elbow', '3': 14, '4': 1, '5': 2, '10': 'moveElbow'},
+    const {'1': 'stop', '3': 1, '4': 1, '5': 8, '10': 'stop'},
+    const {'1': 'move_swivel', '3': 2, '4': 1, '5': 2, '10': 'moveSwivel'},
+    const {'1': 'move_shoulder', '3': 3, '4': 1, '5': 2, '10': 'moveShoulder'},
+    const {'1': 'move_elbow', '3': 4, '4': 1, '5': 2, '10': 'moveElbow'},
   ],
 };
 
 /// Descriptor for `ArmCommand`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List armCommandDescriptor = $convert.base64Decode('CgpBcm1Db21tYW5kEhwKCWNhbGlicmF0ZRgCIAEoCFIJY2FsaWJyYXRlEhYKBnN3aXZlbBgDIAEoAlIGc3dpdmVsEhYKBmV4dGVuZBgEIAEoAlIGZXh0ZW5kEhIKBGxpZnQYBSABKAJSBGxpZnQSJQoOcHJlY2lzZV9zd2l2ZWwYBiABKAJSDXByZWNpc2VTd2l2ZWwSIQoMcHJlY2lzZV9saWZ0GAcgASgCUgtwcmVjaXNlTGlmdBIlCg5wcmVjaXNlX2V4dGVuZBgIIAEoAlINcHJlY2lzZUV4dGVuZBIVCgZtb3ZlX3gYCSABKAJSBW1vdmVYEhUKBm1vdmVfeRgKIAEoAlIFbW92ZVkSFQoGbW92ZV96GAsgASgCUgVtb3ZlWhIfCgttb3ZlX3N3aXZlbBgMIAEoAlIKbW92ZVN3aXZlbBIjCg1tb3ZlX3Nob3VsZGVyGA0gASgCUgxtb3ZlU2hvdWxkZXISHQoKbW92ZV9lbGJvdxgOIAEoAlIJbW92ZUVsYm93');
+final $typed_data.Uint8List armCommandDescriptor = $convert.base64Decode('CgpBcm1Db21tYW5kEhIKBHN0b3AYASABKAhSBHN0b3ASHwoLbW92ZV9zd2l2ZWwYAiABKAJSCm1vdmVTd2l2ZWwSIwoNbW92ZV9zaG91bGRlchgDIAEoAlIMbW92ZVNob3VsZGVyEh0KCm1vdmVfZWxib3cYBCABKAJSCW1vdmVFbGJvdw==');
 @$core.Deprecated('Use motorStatusDescriptor instead')
 const MotorStatus$json = const {
   '1': 'MotorStatus',
@@ -85,14 +76,15 @@ final $typed_data.Uint8List gripperDataDescriptor = $convert.base64Decode('CgtHc
 const GripperCommand$json = const {
   '1': 'GripperCommand',
   '2': const [
-    const {'1': 'move_rotate', '3': 1, '4': 1, '5': 2, '10': 'moveRotate'},
-    const {'1': 'move_lift', '3': 2, '4': 1, '5': 2, '10': 'moveLift'},
-    const {'1': 'move_gripper', '3': 3, '4': 1, '5': 2, '10': 'moveGripper'},
+    const {'1': 'stop', '3': 1, '4': 1, '5': 8, '10': 'stop'},
+    const {'1': 'move_rotate', '3': 2, '4': 1, '5': 2, '10': 'moveRotate'},
+    const {'1': 'move_lift', '3': 3, '4': 1, '5': 2, '10': 'moveLift'},
+    const {'1': 'move_gripper', '3': 4, '4': 1, '5': 2, '10': 'moveGripper'},
   ],
 };
 
 /// Descriptor for `GripperCommand`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List gripperCommandDescriptor = $convert.base64Decode('Cg5HcmlwcGVyQ29tbWFuZBIfCgttb3ZlX3JvdGF0ZRgBIAEoAlIKbW92ZVJvdGF0ZRIbCgltb3ZlX2xpZnQYAiABKAJSCG1vdmVMaWZ0EiEKDG1vdmVfZ3JpcHBlchgDIAEoAlILbW92ZUdyaXBwZXI=');
+final $typed_data.Uint8List gripperCommandDescriptor = $convert.base64Decode('Cg5HcmlwcGVyQ29tbWFuZBISCgRzdG9wGAEgASgIUgRzdG9wEh8KC21vdmVfcm90YXRlGAIgASgCUgptb3ZlUm90YXRlEhsKCW1vdmVfbGlmdBgDIAEoAlIIbW92ZUxpZnQSIQoMbW92ZV9ncmlwcGVyGAQgASgCUgttb3ZlR3JpcHBlcg==');
 @$core.Deprecated('Use hreiDataDescriptor instead')
 const HreiData$json = const {
   '1': 'HreiData',
