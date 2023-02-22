@@ -1,12 +1,13 @@
 import "controller.dart";
 
+/// Controls the arm.
 class ArmController extends Controller {
 	// double swivel = 0, shoulder = 0, elbow = 0;
 
-		// dpad: swivel + wrist
-		// leftY: shoulder
-		// rightY: elbow
-		// bumpers: rotate wrist
+	// dpad: swivel + wrist
+	// leftY: shoulder
+	// rightY: elbow
+	// bumpers: rotate wrist
 	@override
 	List<Message> parseInputs(GamepadState state) => [
 		// ARM ONLY
@@ -22,6 +23,22 @@ class ArmController extends Controller {
 		// WARNING: LIFT IS BROKEN
 		// GripperCommand(moveLift: state.normalRightY),
 	];
+
+	@override
+	List<Message> get onDispose => [
+		ArmCommand(stop: true),
+		GripperCommand(stop: true),
+	];
+
+	@override
+	Map<String, String> get controls => {
+		"Swivel": "Bumpers",
+		"Shoulder": "Left joystick (vertical)",
+		"Elbow": "D-pad up/down",
+		"Gripper Lift": "Right joystick (vertical)",
+		"Gripper rotate": "Right joystick (horizontal)",
+		"Pinch": "Triggers",
+	};
 	
 	// Message updateElbow(double value) {
 	// 	elbow += value*increment;

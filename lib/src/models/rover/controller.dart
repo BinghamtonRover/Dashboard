@@ -63,6 +63,9 @@ abstract class Controller extends Model {
 	/// Use this to stop the rover when the user switches modes.
 	Iterable<Message> get onDispose;
 
+	/// A human-readable list of controls.
+	Map<String, String> get controls;
+
 	/// Sends a command over the network or over Serial.
 	Future<void> sendMessage(Message message) async {
 		if (models.serial.isConnected) {

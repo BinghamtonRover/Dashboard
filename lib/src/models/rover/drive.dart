@@ -29,4 +29,11 @@ class DriveController extends Controller {
 		DriveCommand(setLeft: true, left: 0),
 		DriveCommand(setLeft: false, left: 0),
 	];
+
+	@override
+	Map<String, String> get controls => {
+		"Left Throttle": "Left joystick (vertical)",
+		"Right Throttle": "Right joystick (vertical)",
+		"Max speed": "D-pad up/down",
+	};
 }
