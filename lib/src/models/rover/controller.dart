@@ -5,6 +5,7 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
 import "../model.dart";
+import "arm.dart";
 import "drive.dart";
 import "stub.dart";
 
@@ -32,7 +33,7 @@ abstract class Controller extends Model {
 	/// Constructs the appropriate [Controller] for each mode.
 	factory Controller.forMode(OperatingMode mode) {
 		switch (mode) {
-			case OperatingMode.arm: return StubController();
+			case OperatingMode.arm: return ArmController();
 			case OperatingMode.science: return StubController();
 			case OperatingMode.autonomy: return StubController();
 			case OperatingMode.drive: return DriveController();

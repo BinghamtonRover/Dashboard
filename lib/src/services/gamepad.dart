@@ -14,6 +14,21 @@ extension GamepadNumbers on num {
     final value = (this - 128) / 32768;
     return (value.abs() < epsilon) ? 0 : value;
   }
+
+  double get normalizeTrigger {
+    final value = this / 256;
+    return (value.abs() < epsilon) ? 0 : value;
+  }
+}
+
+extension GamepadUtils on GamepadState {
+  double get normalLeftTrigger => leftTrigger.normalizeTrigger.clamp(0, 1);
+  double get normalRightTrigger => rightTrigger.normalizeTrigger.clamp(0, 1);
+
+  double get normalLeftX => leftThumbstickX.normalizeJoystick.clamp(-1, 1);
+  double get normalLeftY => leftThumbstickY.normalizeJoystick.clamp(-1, 1);
+  double get normalRightX => rightThumbstickX.normalizeJoystick.clamp(-1, 1);
+  double get normalRightY => rightThumbstickY.normalizeJoystick.clamp(-1, 1);
 }
 
 /// The maximum amount of gamepads a user can have.
