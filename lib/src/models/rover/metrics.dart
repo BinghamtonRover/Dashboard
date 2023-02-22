@@ -4,7 +4,7 @@ import "package:rover_dashboard/services.dart";
 import "../model.dart";
 
 /// A data model that listens for updated data and provides [Metrics] to the UI.
-class MetricsModel extends Model {
+class RoverMetrics extends Model {
 	/// Data about the rover's core vitals.
 	final electrical = ElectricalMetrics();
 

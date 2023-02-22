@@ -12,19 +12,18 @@ library models;
 import "src/models/model.dart";
 
 import "src/models/data/home.dart";
-import "src/models/data/metrics.dart";
 import "src/models/data/serial.dart";
 import "src/models/data/video.dart";
 
 import "src/models/rover/rover.dart";
 
 export "src/models/data/home.dart";
-export "src/models/data/metrics.dart";
 export "src/models/data/serial.dart";
 export "src/models/data/video.dart";
 
-export "src/models/rover/rover.dart";
 export "src/models/rover/core.dart";
+export "src/models/rover/metrics.dart";
+export "src/models/rover/rover.dart";
 
 export "src/models/view/modes/mode.dart";
 export "src/models/view/modes/arm.dart";
@@ -46,9 +45,6 @@ class Models extends Model {
 	/// Whether all models have been initialized.
 	bool isReady = false;
 
-	/// The data model to provide metrics from the rover.
-	final metrics = MetricsModel();
-
 	/// The data model to provide video from the rover.
 	final video = VideoModel(); 
 
@@ -65,7 +61,6 @@ class Models extends Model {
 	Future<void> init() async {
 		// initialize all models here
 		await home.init();
-		await metrics.init();
 		await video.init();
 		await rover.init();
 		await serial.init();
@@ -77,7 +72,6 @@ class Models extends Model {
 	@override
 	void dispose() {
 		home.dispose();
-		metrics.dispose();
 		video.dispose();
 		rover.dispose();
 		serial.dispose();
