@@ -59,7 +59,12 @@ class FilesService extends Service {
   Future<void> writeImage(List<int> image, String cameraName) async {
     final dir = Directory("${outputDir.path}/$cameraName");
     if (!(await dir.exists())) await dir.create();    
-    final timestamp = DateTime.now().toString();
-    await File("${dir.path}/$timestamp.jpg").writeAsBytes(image); 
+    final files = dir.listSync();
+    final number = files.isEmpty ? 1 : (int.parse(files.last.filename) + 1);
+    await File("${dir.path}/$number.jpg").writeAsBytes(image); 
   }
+}
+
+extension on FileSystemEntity {
+  String get filename => uri.pathSegments.last.split(".")[0];
 }
