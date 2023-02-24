@@ -10,18 +10,22 @@ class ArmController extends Controller {
 	// bumpers: rotate wrist
 	@override
 	List<Message> parseInputs(GamepadState state) => [
-		// ARM ONLY
-		// if (state.dpadLeft) ArmCommand(moveSwivel: -1),
-		// if (state.dpadRight) ArmCommand(moveSwivel: 1),
-		// ArmCommand(moveElbow: state.normalRightY),
-		// ArmCommand(moveShoulder: state.normalLeftY),
+		// ARM
+		if (state.dpadLeft) ArmCommand(moveSwivel: -1),
+		if (state.dpadRight) ArmCommand(moveSwivel: 1),
+		ArmCommand(moveElbow: state.normalRightY),
+		ArmCommand(moveShoulder: state.normalLeftY),
 
-		// GRIPPER ONLY
+		// GRIPPER
 		if (state.leftTrigger > 0) GripperCommand(moveGripper: -state.normalLeftTrigger),
 		if (state.rightTrigger > 0) GripperCommand(moveGripper: state.normalRightTrigger),
 		GripperCommand(moveRotate: state.normalRightX),
-		// WARNING: LIFT IS BROKEN
-		// GripperCommand(moveLift: state.normalRightY),
+		GripperCommand(moveLift: state.normalRightY),
+
+		if (state.buttonStart) ...[
+			ArmCommand(stop: true),
+			GripperCommand(stop: true),
+		]
 	];
 
 	@override
