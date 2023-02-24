@@ -2,12 +2,6 @@ import "controller.dart";
 
 /// Controls the arm.
 class ArmController extends Controller {
-	// double swivel = 0, shoulder = 0, elbow = 0;
-
-	// dpad: swivel + wrist
-	// leftY: shoulder
-	// rightY: elbow
-	// bumpers: rotate wrist
 	@override
 	List<Message> parseInputs(GamepadState state) => [
 		// ARM
@@ -44,22 +38,4 @@ class ArmController extends Controller {
 		"Gripper rotate": "Right joystick (horizontal)",
 		"Pinch": "Triggers",
 	};
-	
-	// Message updateElbow(double value) {
-	// 	elbow += value*increment;
-	// 	elbow = elbow.clamp(-1, 1);
-	// 	return ArmCommand(moveElbow: elbow);
-	// }
-
-	// Message updateSwivel(double value) {
-	// 	swivel += value*increment;
-	// 	swivel = swivel.clamp(-1, 1);
-	// 	return ArmCommand(moveElbow: elbow);
-	// }
-
-	// Message updateShoulder(double value) {
-	// 	shoulder += value*increment;
-	// 	shoulder = shoulder.clamp(-1, 1);
-	// 	return ArmCommand(moveShoulder: shoulder);
-	// }
 }
