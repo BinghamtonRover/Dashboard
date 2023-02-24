@@ -11,16 +11,17 @@ class ArmController extends Controller {
 	@override
 	List<Message> parseInputs(GamepadState state) => [
 		// ARM
-		if (state.dpadLeft) ArmCommand(moveSwivel: -1),
-		if (state.dpadRight) ArmCommand(moveSwivel: 1),
-		ArmCommand(moveElbow: state.normalRightY),
-		ArmCommand(moveShoulder: state.normalLeftY),
+		if (state.leftShoulder) ArmCommand(moveSwivel: -1),
+		if (state.rightShoulder) ArmCommand(moveSwivel: 1),
+		if (state.normalRightY != 0) ArmCommand(moveElbow: state.normalRightY),
+		if (state.normalLeftY != 0) ArmCommand(moveShoulder: state.normalLeftY),
 
 		// GRIPPER
 		if (state.leftTrigger > 0) GripperCommand(moveGripper: -state.normalLeftTrigger),
 		if (state.rightTrigger > 0) GripperCommand(moveGripper: state.normalRightTrigger),
-		GripperCommand(moveRotate: state.normalRightX),
-		GripperCommand(moveLift: state.normalRightY),
+		if (state.dpadUp) GripperCommand(moveLift: 1),
+		if (state.dpadDown) GripperCommand(moveLift: -1),
+		if (state.normalRightX != 0) GripperCommand(moveRotate: state.normalRightX),
 
 		if (state.buttonStart) ...[
 			ArmCommand(stop: true),
@@ -38,8 +39,8 @@ class ArmController extends Controller {
 	Map<String, String> get controls => {
 		"Swivel": "Bumpers",
 		"Shoulder": "Left joystick (vertical)",
-		"Elbow": "D-pad up/down",
-		"Gripper Lift": "Right joystick (vertical)",
+		"Elbow": "Right joystick (vertical)",
+		"Gripper Lift": "D-pad up/down",
 		"Gripper rotate": "Right joystick (horizontal)",
 		"Pinch": "Triggers",
 	};
