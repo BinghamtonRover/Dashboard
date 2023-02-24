@@ -23,10 +23,10 @@ class ArmController extends Controller {
 		if (state.dpadDown) GripperCommand(moveLift: -1),
 		if (state.normalRightX != 0) GripperCommand(moveRotate: state.normalRightX),
 
-		if (state.buttonStart) ...[
-			ArmCommand(stop: true),
-			GripperCommand(stop: true),
-		]
+		if (state.buttonBack) ArmCommand(stop: true),
+		if (state.buttonBack) GripperCommand(stop: true),
+		if (state.buttonStart) ArmCommand(calibrate: true), 
+		if (state.buttonStart) GripperCommand(calibrate: true),
 	];
 
 	@override
