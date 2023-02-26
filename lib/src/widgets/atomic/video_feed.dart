@@ -1,3 +1,4 @@
+import "dart:math" as math;
 import "dart:typed_data";
 import "dart:ui" as ui;
 import "package:flutter/material.dart";
@@ -81,7 +82,12 @@ class VideoFeedState extends State<VideoFeed> {
 				margin: const EdgeInsets.all(1),
 				alignment: Alignment.center,
 				child: image == null ? Text(errorMessage) 
-					: Row(children: [Expanded(child: RawImage(image: image, fit: BoxFit.fill))]),
+					: Row(children: [
+						Expanded(child: feed.id == CameraName.ARM_BASE 
+							? Transform.rotate(angle: math.pi, child: RawImage(image: image, fit: BoxFit.fill))
+							: RawImage(image: image, fit: BoxFit.fill)
+						)
+					]),
 			),
 			Row(
 				mainAxisAlignment: MainAxisAlignment.end,

@@ -8,7 +8,7 @@ class ArmController extends Controller {
 		if (state.leftShoulder) ArmCommand(moveSwivel: -1),
 		if (state.rightShoulder) ArmCommand(moveSwivel: 1),
 		if (state.normalRightY != 0) ArmCommand(moveElbow: state.normalRightY),
-		if (state.normalLeftY != 0) ArmCommand(moveShoulder: state.normalLeftY),
+		if (state.normalLeftY != 0) ArmCommand(moveShoulder: -state.normalLeftY),
 
 		// GRIPPER
 		if (state.leftTrigger > 0) GripperCommand(moveGripper: -state.normalLeftTrigger),
