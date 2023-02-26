@@ -78,6 +78,7 @@ abstract class Controller extends Model {
 	/// Reads the gamepad, chooses commands, and sends them to the rover.
 	void _update([_]) {
 		services.gamepad.update();
+		if (services.gamepad.state.buttonStart) return models.home.nextMode();
 		final messages = parseInputs(services.gamepad.state);
 		messages.forEach(sendMessage);
 	}

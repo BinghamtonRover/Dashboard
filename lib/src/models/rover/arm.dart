@@ -5,8 +5,8 @@ class ArmController extends Controller {
 	@override
 	List<Message> parseInputs(GamepadState state) => [
 		// ARM
-		if (state.leftShoulder) ArmCommand(moveSwivel: -1),
-		if (state.rightShoulder) ArmCommand(moveSwivel: 1),
+		if (state.leftShoulder) ArmCommand(moveSwivel: -0.75),
+		if (state.rightShoulder) ArmCommand(moveSwivel: 0.75),
 		if (state.normalRightY != 0) ArmCommand(moveElbow: state.normalRightY),
 		if (state.normalLeftY != 0) ArmCommand(moveShoulder: -state.normalLeftY),
 
@@ -15,12 +15,12 @@ class ArmController extends Controller {
 		if (state.rightTrigger > 0) GripperCommand(moveGripper: state.normalRightTrigger),
 		if (state.dpadUp) GripperCommand(moveLift: 1),
 		if (state.dpadDown) GripperCommand(moveLift: -1),
-		if (state.normalRightX != 0) GripperCommand(moveRotate: state.normalRightX),
+		if (state.normalRightX != 0) GripperCommand(moveRotate: 1.25*state.normalRightX),
 
 		if (state.buttonBack) ArmCommand(stop: true),
 		if (state.buttonBack) GripperCommand(stop: true),
-		if (state.buttonStart) ArmCommand(calibrate: true), 
-		if (state.buttonStart) GripperCommand(calibrate: true),
+		// if (state.buttonStart) ArmCommand(calibrate: true), 
+		// if (state.buttonStart) GripperCommand(calibrate: true),
 	];
 
 	@override

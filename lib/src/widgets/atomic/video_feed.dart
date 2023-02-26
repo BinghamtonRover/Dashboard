@@ -1,3 +1,4 @@
+import "dart:async";
 import "dart:math" as math;
 import "dart:typed_data";
 import "dart:ui" as ui;
@@ -34,6 +35,12 @@ class VideoFeedState extends State<VideoFeed> {
 	/// The `dart:ui` instance of the current frame.
 	ui.Image? image;
 
+	ui.ImmutableBuffer? buffer;
+
+	ui.ImageDescriptor? descriptor;
+
+	ui.Codec? codec;
+
 	/// Whether [feed] has a frame to show.
 	bool get hasFrame => feed.frame != null;
 
@@ -44,10 +51,17 @@ class VideoFeedState extends State<VideoFeed> {
 		models.video.addListener(updateImage);
 	}
 
+	void disposeImage() {
+		image?.dispose();
+		codec?.dispose();
+		descriptor?.dispose();
+		buffer?.dispose();
+	}
+
 	@override
 	void dispose() {
 		models.video.removeListener(updateImage);
-		image?.dispose();
+		disposeImage();
 		super.dispose();
 	}
 
@@ -55,20 +69,20 @@ class VideoFeedState extends State<VideoFeed> {
 	/// 
 	/// This process happens off-screen. To display the resulting image, use a [RawImage] widget.
 	Future<ui.Image> loadImage(List<int> bytes) async {
-		final ulist = Uint8List.fromList(bytes);
-		final buffer = await ui.ImmutableBuffer.fromUint8List(ulist);
-		final descriptor = await ui.ImageDescriptor.encoded(buffer);
-		final codec = await descriptor.instantiateCodec();
-		final frame = await codec.getNextFrame();
+		final ulist = Uint8List.fromList(bytes.toList());
+		buffer = await ui.ImmutableBuffer.fromUint8List(ulist);
+		descriptor = await ui.ImageDescriptor.encoded(buffer!);
+		codec = await descriptor!.instantiateCodec();
+		final frame = await codec!.getNextFrame();
 		return frame.image;
 	}
 
 	/// Grabs the new frame, renders it, and replaces the old frame.
 	Future<void> updateImage() async {
 		if (!hasFrame) return;
-		final newImage = await loadImage(feed.frame!);
 		if (!mounted) return;
-		image?.dispose();
+		// disposeImage();
+		final newImage = await loadImage(feed.frame!);
 		setState(() => image = newImage);
 	}
 
@@ -125,7 +139,6 @@ class VideoFeedState extends State<VideoFeed> {
 	Future<void> selectNewFeed(CameraFeed newFeed) async {
 		await models.video.disableFeed(feed);
 		await models.video.enableFeed(newFeed);
-		image?.dispose();
 		setState(() {
 			feed = newFeed;
 			image = null;
