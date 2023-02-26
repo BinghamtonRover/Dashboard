@@ -60,7 +60,6 @@ class HomeState extends State<HomePage> with SingleTickerProviderStateMixin {
 	/// Listens to mode changes and animates [controller].
 	void listener() {
 		controller.animateTo(models.home.mode.index);
-		setState(() {});
 	}
 
 	@override

@@ -10,8 +10,7 @@ class MetricsList extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) => Consumer<Rover>(
-		builder: (context, rover, _) => ListView(
-			shrinkWrap: true,
+		builder: (context, rover, _) => Column(
 			children: [
 				Text("Metrics", style: Theme.of(context).textTheme.displaySmall),
 				for (final metrics in rover.metrics.allMetrics) ExpansionTile(

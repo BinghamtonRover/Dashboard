@@ -28,14 +28,6 @@ class HomeModel extends Model {
 		_messageTimer = Timer(const Duration(seconds: 5), () { message = null; notifyListeners(); });
 	} 
 
-	/// The list of controls for this mode.
-	List<String> get controls => [  // TODO: replace with actual backend
-		"Start dig sequence: START",
-		"Change operation mode: BACK",
-		"Move Auger: D-pad Up/Down",
-		"...",
-	];
-
 	/// Changes the mode based on an index.  
 	void changeMode(int index) {
 		mode = OperatingMode.values[index];
