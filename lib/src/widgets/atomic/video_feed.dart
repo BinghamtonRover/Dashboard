@@ -7,6 +7,41 @@ import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
+/// A helper class to load and manage resources used by a [ui.Image].
+/// 
+/// To use: 
+/// - Call [load] with your image data
+/// - Pass [image] to a [RawImage] widget, if it isn't null
+/// - Call [dispose] to release all resources used by the image.
+/// 
+/// It is safe to call [load] or [dispose] multiple times, and calling [load]
+/// will automatically call [dispose] on the existing resources.
+class ImageLoader {
+	/// The `dart:ui` instance of the current frame.
+	ui.Image? image;
+
+	/// The codec used by [image].
+	ui.Codec? codec;
+
+	/// Whether this loader has been initialized.
+	bool get hasImage => image != null;
+
+	/// Processes the next frame and stores the result in [image].
+	Future<void> load(List<int> bytes) async {
+		if (hasImage) dispose();
+		final ulist = Uint8List.fromList(bytes.toList());
+		codec = await ui.instantiateImageCodec(ulist);
+		final frame = await codec!.getNextFrame();
+		image = frame.image;
+	}
+
+	/// Disposes all the resources associated with the current frame.
+	void dispose() {
+		codec?.dispose();
+		image?.dispose();
+	}
+}
+
 /// Displays frames of a [CameraFeed].
 class VideoFeed extends StatefulWidget {
 	/// The feed to show in this widget.
@@ -32,17 +67,11 @@ class VideoFeedState extends State<VideoFeed> {
 	/// The feed being streamed.
 	late CameraFeed feed;
 
-	/// The `dart:ui` instance of the current frame.
-	ui.Image? image;
-
-	ui.ImmutableBuffer? buffer;
-
-	ui.ImageDescriptor? descriptor;
-
-	ui.Codec? codec;
-
 	/// Whether [feed] has a frame to show.
 	bool get hasFrame => feed.frame != null;
+
+	/// A helper class responsible for managing and loading an image.
+	final imageLoader = ImageLoader();
 
 	@override
 	void initState() {
@@ -51,38 +80,18 @@ class VideoFeedState extends State<VideoFeed> {
 		models.video.addListener(updateImage);
 	}
 
-	void disposeImage() {
-		image?.dispose();
-		codec?.dispose();
-		descriptor?.dispose();
-		buffer?.dispose();
-	}
-
 	@override
 	void dispose() {
 		models.video.removeListener(updateImage);
-		disposeImage();
+		imageLoader.dispose();
 		super.dispose();
-	}
-
-	/// Decodes and renders the next frame.
-	/// 
-	/// This process happens off-screen. To display the resulting image, use a [RawImage] widget.
-	Future<ui.Image> loadImage(List<int> bytes) async {
-		final ulist = Uint8List.fromList(bytes.toList());
-		buffer = await ui.ImmutableBuffer.fromUint8List(ulist);
-		descriptor = await ui.ImageDescriptor.encoded(buffer!);
-		codec = await descriptor!.instantiateCodec();
-		final frame = await codec!.getNextFrame();
-		return frame.image;
 	}
 
 	/// Grabs the new frame, renders it, and replaces the old frame.
 	Future<void> updateImage() async {
 		if (!hasFrame) return;
-		// disposeImage();
-		final newImage = await loadImage(feed.frame!);
-		if (mounted) setState(() => image = newImage);
+		await imageLoader.load(feed.frame!);
+		if (mounted) setState(() { });
 	}
 
 	@override
@@ -94,11 +103,12 @@ class VideoFeedState extends State<VideoFeed> {
 				width: double.infinity,
 				margin: const EdgeInsets.all(1),
 				alignment: Alignment.center,
-				child: image == null ? Text(errorMessage) 
+				child: !imageLoader.hasImage ? Text(errorMessage) 
 					: Row(children: [
+						// Special case: ARM_BASE camera is flipped, let's unflip it in software
 						Expanded(child: feed.id == CameraName.ARM_BASE 
-							? Transform.rotate(angle: math.pi, child: RawImage(image: image, fit: BoxFit.fill))
-							: RawImage(image: image, fit: BoxFit.fill)
+							? Transform.rotate(angle: math.pi, child: RawImage(image: imageLoader.image, fit: BoxFit.fill))
+							: RawImage(image: imageLoader.image, fit: BoxFit.fill)
 						)
 					]),
 			),
@@ -138,10 +148,8 @@ class VideoFeedState extends State<VideoFeed> {
 	Future<void> selectNewFeed(CameraFeed newFeed) async {
 		await models.video.disableFeed(feed);
 		await models.video.enableFeed(newFeed);
-		setState(() {
-			feed = newFeed;
-			image = null;
-		});
+		imageLoader.dispose();
+		setState(() => feed = newFeed);
 		await updateImage();
 	}
 }
