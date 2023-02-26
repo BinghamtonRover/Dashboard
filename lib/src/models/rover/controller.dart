@@ -86,7 +86,7 @@ abstract class Controller extends Model {
 		if (services.gamepad.state.buttonStart) {
 			isStartPressed = true;
 		} else if (isStartPressed) {
-			models.home.nextMode();  // must be AFTER delay			
+			models.home.nextMode();
 		} 
 		final messages = parseInputs(services.gamepad.state);
 		messages.forEach(sendMessage);

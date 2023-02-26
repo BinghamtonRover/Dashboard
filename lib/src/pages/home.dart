@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:provider/provider.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -37,63 +36,77 @@ class HomePage extends StatefulWidget {
 	HomeState createState() => HomeState();
 }
 
+/// A state for the home page.
+/// 
+/// Responsible for listening to changes in [HomeModel.mode] and animating the UI.
 class HomeState extends State<HomePage> with SingleTickerProviderStateMixin {
-	late final controller;
+	/// Controls tab-related UI, like animation.
+	late final TabController controller;
 
 	@override
 	void initState() {
 		super.initState();
+		models.home.addListener(listener);
 		controller = TabController(initialIndex: 1, length: OperatingMode.values.length, vsync: this);
 	}
 
 	@override
-	Widget build(BuildContext context) => Consumer<HomeModel>(
-		builder: (_, home, __) => DefaultTabController(
-			length: OperatingModePage.allPages.length,
-			initialIndex: home.mode.index,
-			child: Scaffold(
-			appBar: AppBar(
-				title: const Text("Dashboard"),
-				bottom: PreferredSize(
-					preferredSize: const Size.fromHeight(32), 
-					child: TabBar(
-						controller: controller,
-						onTap: models.home.changeMode,
-						tabs: [
-							for (final page in OperatingModePage.allPages) Row(
-								mainAxisAlignment: MainAxisAlignment.center,
-								children: [
-									Text(page.mode.name), 
-									const SizedBox(width: 8), 
-									Icon(page.icon)
-								]
-							)
-						],
-					)
+	void dispose() {
+		controller.dispose();
+		models.home.removeListener(listener);
+		super.dispose();
+	}
+
+	/// Listens to mode changes and animates [controller].
+	void listener() {
+		controller.animateTo(models.home.mode.index);
+		setState(() {});
+	}
+
+	@override
+	Widget build(BuildContext context) => Scaffold(
+		appBar: AppBar(
+			title: const Text("Dashboard"),
+			bottom: PreferredSize(
+				preferredSize: const Size.fromHeight(32), 
+				child: TabBar(
+					controller: controller,
+					onTap: models.home.changeMode,
+					tabs: [
+						for (final page in OperatingModePage.allPages) Row(
+							mainAxisAlignment: MainAxisAlignment.center,
+							children: [
+								Text(page.mode.name), 
+								const SizedBox(width: 8), 
+								Icon(page.icon)
+							]
+						)
+					],
+				)
+			),
+			actions: [
+				IconButton(
+					icon: const Icon(Icons.settings),
+					onPressed: () => Navigator.of(context).pushNamed(Routes.settings),
 				),
-				actions: [
-					IconButton(
-						icon: const Icon(Icons.settings),
-						onPressed: () => Navigator.of(context).pushNamed(Routes.settings),
-					),
-				]
-			),
-			body: Column(
-				children: [
-					Expanded(child: Row(
-						children: [
-							Expanded(child: TabBarView(
-								physics: const NeverScrollableScrollPhysics(),  // must use buttons
-								children: [ 
-									for (final page in OperatingModePage.allPages) page.page
-								]
-							)),
-							Sidebar(),
-						]
-					)),
-					Footer(),
-				]
-			),
-		))
+			]
+		),
+		body: Column(
+			children: [
+				Expanded(child: Row(
+					children: [
+						Expanded(child: TabBarView(
+							controller: controller,
+							physics: const NeverScrollableScrollPhysics(),  // must use buttons
+							children: [ 
+								for (final page in OperatingModePage.allPages) page.page
+							]
+						)),
+						Sidebar(),
+					]
+				)),
+				Footer(),
+			]
+		),
 	);
 }
