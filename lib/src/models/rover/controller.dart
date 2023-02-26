@@ -27,6 +27,11 @@ abstract class Controller extends Model {
 	/// Reads the gamepad and controls the rover when triggered.
 	late final Timer gamepadTimer;
 
+	/// Whether the start button has been pressed.
+	/// 
+	/// When the start button is released, the dashboard will switch to the next mode.
+	bool isStartPressed = false;
+
 	/// Allows this class to be subclassed.
 	Controller();
 
@@ -76,9 +81,13 @@ abstract class Controller extends Model {
 	}
 
 	/// Reads the gamepad, chooses commands, and sends them to the rover.
-	void _update([_]) {
+	Future<void> _update([_]) async {
 		services.gamepad.update();
-		if (services.gamepad.state.buttonStart) return models.home.nextMode();
+		if (services.gamepad.state.buttonStart) {
+			isStartPressed = true;
+		} else if (isStartPressed) {
+			models.home.nextMode();  // must be AFTER delay			
+		} 
 		final messages = parseInputs(services.gamepad.state);
 		messages.forEach(sendMessage);
 	}

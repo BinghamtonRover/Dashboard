@@ -39,15 +39,15 @@ class HomeModel extends Model {
 	/// Changes the mode based on an index.  
 	void changeMode(int index) {
 		mode = OperatingMode.values[index];
-		// print("Switching to $mode");
 		models.rover.updateMode(mode);
 		services.gamepad.vibrate();
 		notifyListeners();
 	}
 
+	/// Switches to the next mode.
 	void nextMode() {
-		// int index = mode.index + 1;
-		// if (index == OperatingMode.values.length) index = 0;
-		// changeMode(index);
+		int index = mode.index + 1;
+		if (index == OperatingMode.values.length) index = 0;
+		changeMode(index);
 	}
 }

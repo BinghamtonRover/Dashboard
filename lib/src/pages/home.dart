@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -31,16 +32,32 @@ class OperatingModePage {
 /// The main dashboard page. 
 /// 
 /// TODO: Define what exactly will go here.
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
 	@override
-	Widget build(BuildContext context) => DefaultTabController(
-		length: OperatingModePage.allPages.length,
-		child: Scaffold(
+	HomeState createState() => HomeState();
+}
+
+class HomeState extends State<HomePage> with SingleTickerProviderStateMixin {
+	late final controller;
+
+	@override
+	void initState() {
+		super.initState();
+		controller = TabController(initialIndex: 1, length: OperatingMode.values.length, vsync: this);
+	}
+
+	@override
+	Widget build(BuildContext context) => Consumer<HomeModel>(
+		builder: (_, home, __) => DefaultTabController(
+			length: OperatingModePage.allPages.length,
+			initialIndex: home.mode.index,
+			child: Scaffold(
 			appBar: AppBar(
 				title: const Text("Dashboard"),
 				bottom: PreferredSize(
 					preferredSize: const Size.fromHeight(32), 
 					child: TabBar(
+						controller: controller,
 						onTap: models.home.changeMode,
 						tabs: [
 							for (final page in OperatingModePage.allPages) Row(
@@ -77,6 +94,6 @@ class HomePage extends StatelessWidget {
 					Footer(),
 				]
 			),
-		)
+		))
 	);
 }

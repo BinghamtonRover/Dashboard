@@ -80,10 +80,9 @@ class VideoFeedState extends State<VideoFeed> {
 	/// Grabs the new frame, renders it, and replaces the old frame.
 	Future<void> updateImage() async {
 		if (!hasFrame) return;
-		if (!mounted) return;
 		// disposeImage();
 		final newImage = await loadImage(feed.frame!);
-		setState(() => image = newImage);
+		if (mounted) setState(() => image = newImage);
 	}
 
 	@override

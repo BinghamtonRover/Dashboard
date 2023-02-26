@@ -5,8 +5,8 @@ class ArmController extends Controller {
 	@override
 	List<Message> parseInputs(GamepadState state) => [
 		// ARM
-		if (state.leftShoulder) ArmCommand(moveSwivel: -0.75),
-		if (state.rightShoulder) ArmCommand(moveSwivel: 0.75),
+		if (state.leftShoulder) ArmCommand(moveSwivel: -0.25),
+		if (state.rightShoulder) ArmCommand(moveSwivel: 0.25),
 		if (state.normalRightY != 0) ArmCommand(moveElbow: state.normalRightY),
 		if (state.normalLeftY != 0) ArmCommand(moveShoulder: -state.normalLeftY),
 
