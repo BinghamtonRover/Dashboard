@@ -47,7 +47,7 @@ class HomeState extends State<HomePage> with SingleTickerProviderStateMixin {
 	void initState() {
 		super.initState();
 		models.home.addListener(listener);
-		controller = TabController(initialIndex: 1, length: OperatingMode.values.length, vsync: this);
+		controller = TabController(length: OperatingMode.values.length, vsync: this);
 	}
 
 	@override
