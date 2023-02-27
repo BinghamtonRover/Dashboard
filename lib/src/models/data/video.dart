@@ -42,7 +42,7 @@ class VideoModel extends Model {
 			handler: updateFrame,
 		);
 		frameUpdater = Timer.periodic(
-			const Duration(milliseconds: 17),  // 60 FPS 
+			const Duration(milliseconds: 42),  // 24 FPS 
 			(_) => notifyListeners()
 		);
 		// TODO: Read the layout from Settings

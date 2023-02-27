@@ -9,11 +9,38 @@ const epsilon = 0.01;
 
 /// An extension to do gamepad math.
 extension GamepadNumbers on num {
-  /// Normalizes joystick inputs to be between 0 and 1.
+  /// Normalizes joystick inputs to be between -1 and 1.
   double get normalizeJoystick {
     final value = (this - 128) / 32768;
-    return (value.abs() < epsilon) ? 0 : value;
+    return (value.abs() < epsilon) ? 0 : value.clamp(-1, 1);
   }
+
+  /// Normalizes the trigger inputs to be between 0 and 1.
+  double get normalizeTrigger {
+    final value = this / 256;
+    return (value.abs() < epsilon) ? 0 : value.clamp(0, 1);
+  }
+}
+
+/// More user-friendly values from [GamepadState].
+extension GamepadUtils on GamepadState {
+  /// Returns a normalized value for the left trigger. See [GamepadNumbers.normalizeTrigger].
+  double get normalLeftTrigger => leftTrigger.normalizeTrigger;
+
+  /// Returns a normalized value for the right trigger. See [GamepadNumbers.normalizeTrigger].
+  double get normalRightTrigger => rightTrigger.normalizeTrigger;
+
+  /// Returns a normalized value for the left joystick's X-axis. See [GamepadNumbers.normalizeJoystick].
+  double get normalLeftX => leftThumbstickX.normalizeJoystick;
+
+  /// Returns a normalized value for the left joystick's Y-axis. See [GamepadNumbers.normalizeJoystick].
+  double get normalLeftY => leftThumbstickY.normalizeJoystick;
+
+  /// Returns a normalized value for the right joystick's X-axis. See [GamepadNumbers.normalizeJoystick].
+  double get normalRightX => rightThumbstickX.normalizeJoystick;
+
+  /// Returns a normalized value for the right joystick's Y-axis. See [GamepadNumbers.normalizeJoystick].
+  double get normalRightY => rightThumbstickY.normalizeJoystick;
 }
 
 /// The maximum amount of gamepads a user can have.

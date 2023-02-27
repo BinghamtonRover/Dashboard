@@ -5,6 +5,7 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
 import "../model.dart";
+import "arm.dart";
 import "drive.dart";
 import "stub.dart";
 
@@ -26,13 +27,18 @@ abstract class Controller extends Model {
 	/// Reads the gamepad and controls the rover when triggered.
 	late final Timer gamepadTimer;
 
+	/// Whether the start button has been pressed.
+	/// 
+	/// When the start button is released, the dashboard will switch to the next mode.
+	bool isStartPressed = false;
+
 	/// Allows this class to be subclassed.
 	Controller();
 
 	/// Constructs the appropriate [Controller] for each mode.
 	factory Controller.forMode(OperatingMode mode) {
 		switch (mode) {
-			case OperatingMode.arm: return StubController();
+			case OperatingMode.arm: return ArmController();
 			case OperatingMode.science: return StubController();
 			case OperatingMode.autonomy: return StubController();
 			case OperatingMode.drive: return DriveController();
@@ -62,6 +68,9 @@ abstract class Controller extends Model {
 	/// Use this to stop the rover when the user switches modes.
 	Iterable<Message> get onDispose;
 
+	/// A human-readable list of controls.
+	Map<String, String> get controls;
+
 	/// Sends a command over the network or over Serial.
 	Future<void> sendMessage(Message message) async {
 		if (models.serial.isConnected) {
@@ -72,8 +81,13 @@ abstract class Controller extends Model {
 	}
 
 	/// Reads the gamepad, chooses commands, and sends them to the rover.
-	void _update([_]) {
+	Future<void> _update([_]) async {
 		services.gamepad.update();
+		if (services.gamepad.state.buttonStart) {
+			isStartPressed = true;
+		} else if (isStartPressed) {
+			models.home.nextMode();
+		} 
 		final messages = parseInputs(services.gamepad.state);
 		messages.forEach(sendMessage);
 	}

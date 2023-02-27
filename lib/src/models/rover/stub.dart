@@ -7,4 +7,7 @@ class StubController extends Controller {
 
 	@override
 	List<Message> get onDispose => [];
+
+	@override
+	Map<String, String> get controls => {};
 }
