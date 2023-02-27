@@ -10,10 +10,27 @@ class DriveController extends Controller {
 
 	@override
 	List<Message> parseInputs(GamepadState state) => [
-		DriveCommand(setLeft: true, left: state.leftThumbstickY.normalizeJoystick.clamp(-1, 1)),
+		// Manual controls
+		DriveCommand(setLeft: true, left: -1*state.leftThumbstickY.normalizeJoystick.clamp(-1, 1)),
 		DriveCommand(setRight: true, right: state.rightThumbstickY.normalizeJoystick.clamp(-1, 1)),
 		if (state.dpadUp) updateThrottle(throttleIncrement),
 		if (state.dpadDown) updateThrottle(-throttleIncrement),
+
+		// More intuitive controls
+		if (state.leftShoulder) ...[
+			DriveCommand(setLeft: true, left: 1),
+			DriveCommand(setRight: true, right: 1),
+		] else if (state.rightShoulder)...[
+			DriveCommand(setLeft: true, left: -1),
+			DriveCommand(setRight: true, right: -1),
+		],
+		if (state.leftTrigger > 0) ...[
+			DriveCommand(setLeft: true, left: state.normalLeftTrigger),
+			DriveCommand(setRight: true, right: -1*state.normalRightTrigger),
+		] else if (state.rightTrigger > 0)...[
+			DriveCommand(setLeft: true, left: -1*state.normalLeftTrigger),
+			DriveCommand(setRight: true, right: state.normalRightTrigger),
+		]
 	];
 
 	/// Updates the throttle by [throttleIncrement], clamping at [0, 1].
@@ -34,6 +51,8 @@ class DriveController extends Controller {
 	Map<String, String> get controls => {
 		"Left Throttle": "Left joystick (vertical)",
 		"Right Throttle": "Right joystick (vertical)",
-		"Max speed": "D-pad up/down",
+		"Drive Straight": "Triggers",
+		"Turn in place": "Bumpers",
+		"Adjust speed": "D-pad up/down",
 	};
 }
