@@ -9,10 +9,10 @@ import "../model.dart";
 const connectionIncrement = 0.2;
 
 /// How long to wait between handshakes.
-const handshakeInterval = Duration(seconds: 1);
+const handshakeInterval = Duration(milliseconds: 200);
 
 /// How long to wait for incoming handshakes after sending them out.
-const handshakeWaitDelay = Duration(milliseconds: 200);
+const handshakeWaitDelay = Duration(milliseconds: 50);
 
 /// Monitors the connection to the rover.
 class RoverCore extends Model {
