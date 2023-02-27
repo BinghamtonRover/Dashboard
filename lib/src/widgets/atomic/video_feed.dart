@@ -28,7 +28,7 @@ class ImageLoader {
 
 	/// Processes the next frame and stores the result in [image].
 	Future<void> load(List<int> bytes) async {
-		if (hasImage) dispose();
+		// if (hasImage) dispose();
 		final ulist = Uint8List.fromList(bytes.toList());
 		codec = await ui.instantiateImageCodec(ulist);
 		final frame = await codec!.getNextFrame();
