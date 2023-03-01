@@ -10,7 +10,7 @@ import "controller.dart";
 /// Find more specific functionality in this class's fields.
 class Rover extends Model {
 	/// Monitors the connection to the rover.
-	final core = RoverCore();
+	final heartbeats = RoverHeartbeats();
 
 	/// Monitors metrics coming from the rover.
 	final metrics = RoverMetrics();
@@ -19,7 +19,7 @@ class Rover extends Model {
 	late Controller controller;
 
 	/// Whether the rover is connected.
-	bool get isConnected => core.connectionStrength > 0;
+	bool get isConnected => heartbeats.connectionStrength > 0;
 
 	/// The current status of the rover.
 	/// 
@@ -30,24 +30,32 @@ class Rover extends Model {
 	@override
 	Future<void> init() async { 
 		controller = Controller.forMode(models.home.mode);
-		await core.init();
+		await heartbeats.init();
 		await metrics.init();
 		await controller.init();
 
-		core.addListener(notifyListeners);
+		heartbeats.addListener(notifyListeners);
 		metrics.addListener(notifyListeners);
 	}
 
 	@override
 	void dispose() {
-		core.removeListener(notifyListeners);
+		heartbeats.removeListener(notifyListeners);
 		metrics.removeListener(notifyListeners);
 
-		core.dispose();
+		heartbeats.dispose();
 		metrics.dispose();
 		controller.dispose();
 		super.dispose();
 	}
+
+	/// Sets the status of the rover.
+	/// 
+	/// See [RoverStatus] for details.
+	void setStatus(RoverStatus status) {
+		final message = UpdateSetting(status: status);
+		services.messageSender.sendMessage(message);
+	} 
 
 	/// Disposes the old [controller] and chooses a new one based on [mode].
 	Future<void> updateMode(OperatingMode mode) async {

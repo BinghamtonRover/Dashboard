@@ -21,7 +21,7 @@ export "src/models/data/home.dart";
 export "src/models/data/serial.dart";
 export "src/models/data/video.dart";
 
-export "src/models/rover/core.dart";
+export "src/models/rover/heartbeats.dart";
 export "src/models/rover/metrics.dart";
 export "src/models/rover/rover.dart";
 
