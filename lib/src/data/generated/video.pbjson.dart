@@ -13,17 +13,17 @@ const CameraName$json = const {
   '1': 'CameraName',
   '2': const [
     const {'1': 'CAMERA_NAME_UNDEFINED', '2': 0},
-    const {'1': 'CAMERA_NAME_ROVER_FRONT', '2': 1},
-    const {'1': 'CAMERA_NAME_ROVER_REAR', '2': 2},
-    const {'1': 'CAMERA_NAME_ARM_BASE', '2': 3},
-    const {'1': 'CAMERA_NAME_ARM_GRIPPER', '2': 4},
-    const {'1': 'CAMERA_NAME_SCIENCE_CAROUSEL', '2': 5},
-    const {'1': 'CAMERA_NAME_SCIENCE_MICROSCOPE', '2': 6},
+    const {'1': 'ROVER_FRONT', '2': 1},
+    const {'1': 'ROVER_REAR', '2': 2},
+    const {'1': 'ARM_BASE', '2': 3},
+    const {'1': 'ARM_GRIPPER', '2': 4},
+    const {'1': 'SCIENCE_CAROUSEL', '2': 5},
+    const {'1': 'SCIENCE_MICROSCOPE', '2': 6},
   ],
 };
 
 /// Descriptor for `CameraName`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List cameraNameDescriptor = $convert.base64Decode('CgpDYW1lcmFOYW1lEhkKFUNBTUVSQV9OQU1FX1VOREVGSU5FRBAAEhsKF0NBTUVSQV9OQU1FX1JPVkVSX0ZST05UEAESGgoWQ0FNRVJBX05BTUVfUk9WRVJfUkVBUhACEhgKFENBTUVSQV9OQU1FX0FSTV9CQVNFEAMSGwoXQ0FNRVJBX05BTUVfQVJNX0dSSVBQRVIQBBIgChxDQU1FUkFfTkFNRV9TQ0lFTkNFX0NBUk9VU0VMEAUSIgoeQ0FNRVJBX05BTUVfU0NJRU5DRV9NSUNST1NDT1BFEAY=');
+final $typed_data.Uint8List cameraNameDescriptor = $convert.base64Decode('CgpDYW1lcmFOYW1lEhkKFUNBTUVSQV9OQU1FX1VOREVGSU5FRBAAEg8KC1JPVkVSX0ZST05UEAESDgoKUk9WRVJfUkVBUhACEgwKCEFSTV9CQVNFEAMSDwoLQVJNX0dSSVBQRVIQBBIUChBTQ0lFTkNFX0NBUk9VU0VMEAUSFgoSU0NJRU5DRV9NSUNST1NDT1BFEAY=');
 @$core.Deprecated('Use adjustCameraDescriptor instead')
 const AdjustCamera$json = const {
   '1': 'AdjustCamera',
