@@ -2,8 +2,7 @@ import "dart:async";
 
 import "package:rover_dashboard/models.dart";
 
-import "../model.dart";
-import "controller.dart";
+import "controllers/controller.dart";
 import "settings.dart";
 
 /// The model to control the entire rover.

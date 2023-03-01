@@ -4,7 +4,6 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
-import "../model.dart";
 import "arm.dart";
 import "drive.dart";
 import "science.dart";

@@ -2,8 +2,6 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
-import "../model.dart";
-
 /// The amount of time to wait between sending a request and receiving a confirmation.
 const confirmationDelay = Duration(milliseconds: 100);
 

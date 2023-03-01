@@ -10,21 +10,23 @@
 library models;
 
 import "src/models/model.dart";
-
 import "src/models/data/home.dart";
 import "src/models/data/serial.dart";
 import "src/models/data/video.dart";
-
 import "src/models/rover/rover.dart";
+export "src/models/model.dart";
 
+// Data models
 export "src/models/data/home.dart";
 export "src/models/data/serial.dart";
 export "src/models/data/video.dart";
 
+// Rover models
 export "src/models/rover/heartbeats.dart";
 export "src/models/rover/metrics.dart";
 export "src/models/rover/rover.dart";
 
+// View models
 export "src/models/view/modes/mode.dart";
 export "src/models/view/modes/arm.dart";
 export "src/models/view/modes/autonomy.dart";
