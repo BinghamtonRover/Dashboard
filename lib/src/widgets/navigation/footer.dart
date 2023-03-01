@@ -116,7 +116,7 @@ class StatusIcons extends StatelessWidget {
 	Color getStatusColor(RoverStatus status) {
 		switch(status) {
 			case RoverStatus.DISCONNECTED: return Colors.black;
-			case RoverStatus.IDLE: return Colors.orange;
+			case RoverStatus.IDLE: return Colors.yellow;
 			case RoverStatus.MANUAL: return Colors.green;
 			case RoverStatus.AUTONOMOUS: return Colors.blueGrey;
 		}
@@ -127,29 +127,36 @@ class StatusIcons extends StatelessWidget {
 	Widget build(BuildContext context) => Consumer<Rover>(
 		builder: (_, rover, __) => Row(
 			children: [
-				Icon(
+				Icon(  // battery level
 					rover.isConnected 
 						? getBatteryIcon(rover.metrics.electrical.battery)
 						: Icons.battery_unknown,
 					color: getColor(rover.metrics.electrical.battery)
 				),
 				const SizedBox(width: 4),
-				Icon(
+				Icon(  // network strength
 					rover.isConnected
 						? getNetworkIcon(rover.heartbeats.connectionStrength)
 						: Icons.signal_wifi_off_outlined,
 					color: getColor(rover.heartbeats.connectionStrength),
 				),
 				const SizedBox(width: 8),
-				Icon(
-					rover.isConnected
-						? getStatusIcon(rover.status)
-						: Icons.power_off,
-					color: getStatusColor(rover.status),
+				PopupMenuButton(  // status
+					icon: Icon(
+						getStatusIcon(rover.status),
+						color: getStatusColor(rover.status),
+					),
+					tooltip: "Change mode",
+					onSelected: rover.settings.setStatus,
+					itemBuilder: (_) => [
+						for (final value in RoverStatus.values)
+							if (value != RoverStatus.DISCONNECTED)  // can't select this!
+								PopupMenuItem(value: value, child: Text(value.humanName))
+					],
 				),
 				const SizedBox(width: 4),
 			]
-		),	
+		),
 	);
 }
 
