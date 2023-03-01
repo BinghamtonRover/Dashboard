@@ -13,7 +13,7 @@ const confirmationDelay = Duration(milliseconds: 100);
 /// confirmationDelay], we conclude that the rover didn't receive our request, similar to heartbeat.
 class RoverSettings extends Model {
 	/// The status of the rover.
-	RoverStatus status = RoverStatus.DISCONNECTED;
+	RoverStatus status = RoverStatus.MANUAL;
 
 	/// The last received confirmation
 	UpdateSetting? _confirmation;
@@ -30,11 +30,16 @@ class RoverSettings extends Model {
 	/// Sets the status of the rover.
 	/// 
 	/// See [RoverStatus] for details.
-	Future<void> setStatus(RoverStatus status) async {
-		final message = UpdateSetting(status: status);
+	Future<void> setStatus(RoverStatus value) async {
+		final message = UpdateSetting(status: value);
 		services.messageSender.sendMessage(message);
 		await Future.delayed(confirmationDelay);
-		if (message == _confirmation) { return; }
-		else { models.home.setMessage(severity: Severity.error, text: "Failed to set status"); }
+		if (message == _confirmation) {
+			models.home.setMessage(severity: Severity.info, text: "Set mode to ${value.humanName}");
+			status = value;
+			notifyListeners();
+		} else { 
+			models.home.setMessage(severity: Severity.error, text: "Failed to set status"); 
+		}
 	} 
 }
