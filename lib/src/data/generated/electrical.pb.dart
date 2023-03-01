@@ -15,22 +15,17 @@ export 'electrical.pbenum.dart';
 
 class ElectricalCommand extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ElectricalCommand', createEmptyInstance: create)
-    ..e<LedColor>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'autonomyLedColor', $pb.PbFieldType.OE, defaultOrMaker: LedColor.LED_COLOR_UNDEFINED, valueOf: LedColor.valueOf, enumValues: LedColor.values)
-    ..e<LedColor>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'powerLedColor', $pb.PbFieldType.OE, defaultOrMaker: LedColor.LED_COLOR_UNDEFINED, valueOf: LedColor.valueOf, enumValues: LedColor.values)
+    ..e<LedButtonColor>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ledButtonColor', $pb.PbFieldType.OE, defaultOrMaker: LedButtonColor.LED_COLOR_UNDEFINED, valueOf: LedButtonColor.valueOf, enumValues: LedButtonColor.values)
     ..hasRequiredFields = false
   ;
 
   ElectricalCommand._() : super();
   factory ElectricalCommand({
-    LedColor? autonomyLedColor,
-    LedColor? powerLedColor,
+    LedButtonColor? ledButtonColor,
   }) {
     final _result = create();
-    if (autonomyLedColor != null) {
-      _result.autonomyLedColor = autonomyLedColor;
-    }
-    if (powerLedColor != null) {
-      _result.powerLedColor = powerLedColor;
+    if (ledButtonColor != null) {
+      _result.ledButtonColor = ledButtonColor;
     }
     return _result;
   }
@@ -56,22 +51,13 @@ class ElectricalCommand extends $pb.GeneratedMessage {
   static ElectricalCommand? _defaultInstance;
 
   @$pb.TagNumber(1)
-  LedColor get autonomyLedColor => $_getN(0);
+  LedButtonColor get ledButtonColor => $_getN(0);
   @$pb.TagNumber(1)
-  set autonomyLedColor(LedColor v) { setField(1, v); }
+  set ledButtonColor(LedButtonColor v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasAutonomyLedColor() => $_has(0);
+  $core.bool hasLedButtonColor() => $_has(0);
   @$pb.TagNumber(1)
-  void clearAutonomyLedColor() => clearField(1);
-
-  @$pb.TagNumber(2)
-  LedColor get powerLedColor => $_getN(1);
-  @$pb.TagNumber(2)
-  set powerLedColor(LedColor v) { setField(2, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasPowerLedColor() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearPowerLedColor() => clearField(2);
+  void clearLedButtonColor() => clearField(1);
 }
 
 class PowerSourceStatus extends $pb.GeneratedMessage {
