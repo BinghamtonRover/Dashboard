@@ -4,6 +4,7 @@ import "package:rover_dashboard/models.dart";
 
 import "../model.dart";
 import "controller.dart";
+import "settings.dart";
 
 /// The model to control the entire rover.
 /// 
@@ -14,6 +15,9 @@ class Rover extends Model {
 
 	/// Monitors metrics coming from the rover.
 	final metrics = RoverMetrics();
+
+	/// A model to adjust settings on the rover.
+	final settings = RoverSettings();
 
 	/// The [Controller] for the current mode.
 	late Controller controller;
@@ -33,6 +37,7 @@ class Rover extends Model {
 		await heartbeats.init();
 		await metrics.init();
 		await controller.init();
+		await settings.init();
 
 		heartbeats.addListener(notifyListeners);
 		metrics.addListener(notifyListeners);
@@ -46,16 +51,9 @@ class Rover extends Model {
 		heartbeats.dispose();
 		metrics.dispose();
 		controller.dispose();
+		settings.dispose();
 		super.dispose();
 	}
-
-	/// Sets the status of the rover.
-	/// 
-	/// See [RoverStatus] for details.
-	void setStatus(RoverStatus status) {
-		final message = UpdateSetting(status: status);
-		services.messageSender.sendMessage(message);
-	} 
 
 	/// Disposes the old [controller] and chooses a new one based on [mode].
 	Future<void> updateMode(OperatingMode mode) async {
