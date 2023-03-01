@@ -2,8 +2,6 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
-import "../model.dart";
-
 /// Connects to and monitors Serial devices connected over USB.
 /// 
 /// See the [Serial] service for the actual implementation.

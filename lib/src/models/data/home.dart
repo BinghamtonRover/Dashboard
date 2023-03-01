@@ -4,8 +4,6 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
-import "../model.dart";
-
 /// The view model for the main page. 
 class HomeModel extends Model {
 	/// The current operating mode.
