@@ -95,9 +95,11 @@ class StatusIcons extends StatelessWidget {
 	/// An appropriate battery icon representing the rover's current status.
 	IconData getStatusIcon(RoverStatus status) {
 		switch (status) {
-			case RoverStatus.disconnected: return Icons.power_off;
-			case RoverStatus.standby: return Icons.pause_circle;
-			case RoverStatus.active: return Icons.play_circle;
+			case RoverStatus.DISCONNECTED: return Icons.power_off;
+			case RoverStatus.IDLE: return Icons.pause_circle;
+			case RoverStatus.MANUAL: return Icons.play_circle;
+			case RoverStatus.AUTONOMOUS: return Icons.smart_toy;
+			default: throw ArgumentError("Unrecognized rover status: $status");
 		}
 	}
 
@@ -113,9 +115,11 @@ class StatusIcons extends StatelessWidget {
 	/// The color of the rover's status icon.
 	Color getStatusColor(RoverStatus status) {
 		switch(status) {
-			case RoverStatus.disconnected: return Colors.black;
-			case RoverStatus.standby: return Colors.orange;
-			case RoverStatus.active: return Colors.green;
+			case RoverStatus.DISCONNECTED: return Colors.black;
+			case RoverStatus.IDLE: return Colors.orange;
+			case RoverStatus.MANUAL: return Colors.green;
+			case RoverStatus.AUTONOMOUS: return Colors.blueGrey;
+			default: throw ArgumentError("Unrecognized rover status: $status");
 		}
 	}
 

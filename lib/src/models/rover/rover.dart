@@ -25,8 +25,7 @@ class Rover extends Model {
 	/// 
 	/// Since the rover obviously cannot tell us if it's disconnected,
 	/// this function checks the connection strength first.
-	RoverStatus get status => isConnected 
-		? metrics.electrical.status : RoverStatus.disconnected;
+	RoverStatus get status => isConnected ? RoverStatus.MANUAL : RoverStatus.DISCONNECTED; 
 
 	@override
 	Future<void> init() async { 
