@@ -10,7 +10,7 @@ const connectionIncrement = 0.2;
 const handshakeInterval = Duration(milliseconds: 200);
 
 /// How long to wait for incoming handshakes after sending them out.
-const handshakeWaitDelay = Duration(milliseconds: 50);
+const handshakeWaitDelay = Duration(milliseconds: 100);
 
 /// Monitors the connection to the rover.
 class RoverHeartbeats extends Model {
