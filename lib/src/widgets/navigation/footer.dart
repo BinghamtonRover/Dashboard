@@ -99,8 +99,8 @@ class StatusIcons extends StatelessWidget {
 			case RoverStatus.IDLE: return Icons.pause_circle;
 			case RoverStatus.MANUAL: return Icons.play_circle;
 			case RoverStatus.AUTONOMOUS: return Icons.smart_toy;
-			default: throw ArgumentError("Unrecognized rover status: $status");
 		}
+		throw ArgumentError("Unrecognized rover status: $status");
 	}
 
 	/// A color representing a meter's fill.
@@ -119,8 +119,8 @@ class StatusIcons extends StatelessWidget {
 			case RoverStatus.IDLE: return Colors.orange;
 			case RoverStatus.MANUAL: return Colors.green;
 			case RoverStatus.AUTONOMOUS: return Colors.blueGrey;
-			default: throw ArgumentError("Unrecognized rover status: $status");
 		}
+		throw ArgumentError("Unrecognized rover status: $status");
 	}
 
 	@override
@@ -136,9 +136,9 @@ class StatusIcons extends StatelessWidget {
 				const SizedBox(width: 4),
 				Icon(
 					rover.isConnected
-						? getNetworkIcon(rover.core.connectionStrength)
+						? getNetworkIcon(rover.heartbeats.connectionStrength)
 						: Icons.signal_wifi_off_outlined,
-					color: getColor(rover.core.connectionStrength),
+					color: getColor(rover.heartbeats.connectionStrength),
 				),
 				const SizedBox(width: 8),
 				Icon(
