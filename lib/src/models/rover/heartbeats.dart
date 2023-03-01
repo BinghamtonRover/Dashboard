@@ -3,8 +3,6 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
-import "../model.dart";
-
 /// How much each successful/missed handshake is worth, as a percent.
 const connectionIncrement = 0.2;
 
@@ -12,10 +10,10 @@ const connectionIncrement = 0.2;
 const handshakeInterval = Duration(milliseconds: 200);
 
 /// How long to wait for incoming handshakes after sending them out.
-const handshakeWaitDelay = Duration(milliseconds: 50);
+const handshakeWaitDelay = Duration(milliseconds: 100);
 
 /// Monitors the connection to the rover.
-class RoverCore extends Model {
+class RoverHeartbeats extends Model {
 	/// A timer that sends handshakes to every device on the rover.
 	late Timer handshakeTimer;
 

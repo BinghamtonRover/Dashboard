@@ -15,7 +15,7 @@ export 'video.pbenum.dart';
 
 class AdjustCamera extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AdjustCamera', createEmptyInstance: create)
-    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
+    ..e<CameraName>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name', $pb.PbFieldType.OE, defaultOrMaker: CameraName.CAMERA_NAME_UNDEFINED, valueOf: CameraName.valueOf, enumValues: CameraName.values)
     ..aOB(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'isEnabled')
     ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resolution', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
@@ -23,13 +23,13 @@ class AdjustCamera extends $pb.GeneratedMessage {
 
   AdjustCamera._() : super();
   factory AdjustCamera({
-    $core.int? id,
+    CameraName? name,
     $core.bool? isEnabled,
     $core.int? resolution,
   }) {
     final _result = create();
-    if (id != null) {
-      _result.id = id;
+    if (name != null) {
+      _result.name = name;
     }
     if (isEnabled != null) {
       _result.isEnabled = isEnabled;
@@ -61,13 +61,13 @@ class AdjustCamera extends $pb.GeneratedMessage {
   static AdjustCamera? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
+  CameraName get name => $_getN(0);
   @$pb.TagNumber(1)
-  set id($core.int v) { $_setSignedInt32(0, v); }
+  set name(CameraName v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
+  $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
-  void clearId() => clearField(1);
+  void clearName() => clearField(1);
 
   @$pb.TagNumber(2)
   $core.bool get isEnabled => $_getBF(1);
@@ -90,7 +90,7 @@ class AdjustCamera extends $pb.GeneratedMessage {
 
 class CameraStatus extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CameraStatus', createEmptyInstance: create)
-    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
+    ..e<CameraName>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name', $pb.PbFieldType.OE, defaultOrMaker: CameraName.CAMERA_NAME_UNDEFINED, valueOf: CameraName.valueOf, enumValues: CameraName.values)
     ..aOB(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'isEnabled')
     ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resolution', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
@@ -98,13 +98,13 @@ class CameraStatus extends $pb.GeneratedMessage {
 
   CameraStatus._() : super();
   factory CameraStatus({
-    $core.int? id,
+    CameraName? name,
     $core.bool? isEnabled,
     $core.int? resolution,
   }) {
     final _result = create();
-    if (id != null) {
-      _result.id = id;
+    if (name != null) {
+      _result.name = name;
     }
     if (isEnabled != null) {
       _result.isEnabled = isEnabled;
@@ -136,13 +136,13 @@ class CameraStatus extends $pb.GeneratedMessage {
   static CameraStatus? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
+  CameraName get name => $_getN(0);
   @$pb.TagNumber(1)
-  set id($core.int v) { $_setSignedInt32(0, v); }
+  set name(CameraName v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
+  $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
-  void clearId() => clearField(1);
+  void clearName() => clearField(1);
 
   @$pb.TagNumber(2)
   $core.bool get isEnabled => $_getBF(1);

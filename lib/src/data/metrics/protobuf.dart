@@ -26,3 +26,17 @@ extension Unwrapper on WrappedMessage {
 	/// Decodes the wrapped message into a message of type [T]. 
 	T decode<T extends Message>(MessageDecoder<T> decoder) => decoder(data);
 }
+
+/// Gets a user-friendly name for a [RoverStatus].
+extension HumanName on RoverStatus {
+	/// Gets a user-friendly name for a [RoverStatus].
+	String get humanName {
+		switch (this) {
+			case RoverStatus.DISCONNECTED: return "Disconnected";
+			case RoverStatus.IDLE: return "Idle";
+			case RoverStatus.MANUAL: return "Manual";
+			case RoverStatus.AUTONOMOUS: return "Autonomous";
+		}
+		throw ArgumentError("Unrecognized rover status: $this");
+	}
+}

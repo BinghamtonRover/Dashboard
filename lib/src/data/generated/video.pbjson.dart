@@ -28,26 +28,26 @@ final $typed_data.Uint8List cameraNameDescriptor = $convert.base64Decode('CgpDYW
 const AdjustCamera$json = const {
   '1': 'AdjustCamera',
   '2': const [
-    const {'1': 'id', '3': 1, '4': 1, '5': 5, '10': 'id'},
+    const {'1': 'name', '3': 1, '4': 1, '5': 14, '6': '.CameraName', '10': 'name'},
     const {'1': 'is_enabled', '3': 2, '4': 1, '5': 8, '10': 'isEnabled'},
     const {'1': 'resolution', '3': 3, '4': 1, '5': 5, '10': 'resolution'},
   ],
 };
 
 /// Descriptor for `AdjustCamera`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List adjustCameraDescriptor = $convert.base64Decode('CgxBZGp1c3RDYW1lcmESDgoCaWQYASABKAVSAmlkEh0KCmlzX2VuYWJsZWQYAiABKAhSCWlzRW5hYmxlZBIeCgpyZXNvbHV0aW9uGAMgASgFUgpyZXNvbHV0aW9u');
+final $typed_data.Uint8List adjustCameraDescriptor = $convert.base64Decode('CgxBZGp1c3RDYW1lcmESHwoEbmFtZRgBIAEoDjILLkNhbWVyYU5hbWVSBG5hbWUSHQoKaXNfZW5hYmxlZBgCIAEoCFIJaXNFbmFibGVkEh4KCnJlc29sdXRpb24YAyABKAVSCnJlc29sdXRpb24=');
 @$core.Deprecated('Use cameraStatusDescriptor instead')
 const CameraStatus$json = const {
   '1': 'CameraStatus',
   '2': const [
-    const {'1': 'id', '3': 1, '4': 1, '5': 5, '10': 'id'},
+    const {'1': 'name', '3': 1, '4': 1, '5': 14, '6': '.CameraName', '10': 'name'},
     const {'1': 'is_enabled', '3': 2, '4': 1, '5': 8, '10': 'isEnabled'},
     const {'1': 'resolution', '3': 3, '4': 1, '5': 5, '10': 'resolution'},
   ],
 };
 
 /// Descriptor for `CameraStatus`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List cameraStatusDescriptor = $convert.base64Decode('CgxDYW1lcmFTdGF0dXMSDgoCaWQYASABKAVSAmlkEh0KCmlzX2VuYWJsZWQYAiABKAhSCWlzRW5hYmxlZBIeCgpyZXNvbHV0aW9uGAMgASgFUgpyZXNvbHV0aW9u');
+final $typed_data.Uint8List cameraStatusDescriptor = $convert.base64Decode('CgxDYW1lcmFTdGF0dXMSHwoEbmFtZRgBIAEoDjILLkNhbWVyYU5hbWVSBG5hbWUSHQoKaXNfZW5hYmxlZBgCIAEoCFIJaXNFbmFibGVkEh4KCnJlc29sdXRpb24YAyABKAVSCnJlc29sdXRpb24=');
 @$core.Deprecated('Use videoDataDescriptor instead')
 const VideoData$json = const {
   '1': 'VideoData',

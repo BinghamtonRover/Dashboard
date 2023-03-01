@@ -23,6 +23,19 @@ const Device$json = const {
 
 /// Descriptor for `Device`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List deviceDescriptor = $convert.base64Decode('CgZEZXZpY2USFAoQREVWSUNFX1VOREVGSU5FRBAAEg0KCURBU0hCT0FSRBABEg4KClNVQlNZU1RFTVMQAhIJCgVWSURFTxADEgwKCEFVVE9OT01ZEAQSDAoIRklSTVdBUkUQBQ==');
+@$core.Deprecated('Use roverStatusDescriptor instead')
+const RoverStatus$json = const {
+  '1': 'RoverStatus',
+  '2': const [
+    const {'1': 'DISCONNECTED', '2': 0},
+    const {'1': 'IDLE', '2': 1},
+    const {'1': 'MANUAL', '2': 2},
+    const {'1': 'AUTONOMOUS', '2': 3},
+  ],
+};
+
+/// Descriptor for `RoverStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List roverStatusDescriptor = $convert.base64Decode('CgtSb3ZlclN0YXR1cxIQCgxESVNDT05ORUNURUQQABIICgRJRExFEAESCgoGTUFOVUFMEAISDgoKQVVUT05PTU9VUxAD');
 @$core.Deprecated('Use connectDescriptor instead')
 const Connect$json = const {
   '1': 'Connect',
@@ -37,7 +50,20 @@ final $typed_data.Uint8List connectDescriptor = $convert.base64Decode('CgdDb25uZ
 @$core.Deprecated('Use disconnectDescriptor instead')
 const Disconnect$json = const {
   '1': 'Disconnect',
+  '2': const [
+    const {'1': 'sender', '3': 1, '4': 1, '5': 14, '6': '.Device', '10': 'sender'},
+  ],
 };
 
 /// Descriptor for `Disconnect`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List disconnectDescriptor = $convert.base64Decode('CgpEaXNjb25uZWN0');
+final $typed_data.Uint8List disconnectDescriptor = $convert.base64Decode('CgpEaXNjb25uZWN0Eh8KBnNlbmRlchgBIAEoDjIHLkRldmljZVIGc2VuZGVy');
+@$core.Deprecated('Use updateSettingDescriptor instead')
+const UpdateSetting$json = const {
+  '1': 'UpdateSetting',
+  '2': const [
+    const {'1': 'status', '3': 1, '4': 1, '5': 14, '6': '.RoverStatus', '10': 'status'},
+  ],
+};
+
+/// Descriptor for `UpdateSetting`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateSettingDescriptor = $convert.base64Decode('Cg1VcGRhdGVTZXR0aW5nEiQKBnN0YXR1cxgBIAEoDjIMLlJvdmVyU3RhdHVzUgZzdGF0dXM=');

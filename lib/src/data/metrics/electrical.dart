@@ -1,17 +1,5 @@
 import "package:rover_dashboard/data.dart";
 
-/// The current power status of the rover.
-enum RoverStatus {
-	/// The rover is not connected, or is in some other unknown state.
-	disconnected, 
-
-	/// The rover is in standby mode and is not accepting new commands.
-	standby, 
-
-	/// The rover is in active mode and can operate normally.
-	active
-}
-
 /// Metrics reported by the electrical control board. 
 /// 
 /// These metrics represent the vitals of the rover: basics like voltage, current, and temperature
@@ -33,14 +21,4 @@ class ElectricalMetrics extends Metrics<ElectricalData> {
 
 	/// Shorthand for accessing the battery.
 	double get battery => data.batteryVoltage;
-
-	/// The state of the rover. 
-	RoverStatus get status {
-		switch (PowerMode.ACTIVE) {  // TODO: replace with actual mode
-			case PowerMode.POWER_MODE_UNDEFINED: return RoverStatus.disconnected;
-			case PowerMode.IDLE: return RoverStatus.standby;
-			case PowerMode.ACTIVE: return RoverStatus.active;
-			default: throw ArgumentError("Unrecognized power mode");  // TODO: Use actual value
-		}
-	}
 }

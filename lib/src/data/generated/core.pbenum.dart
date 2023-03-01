@@ -32,3 +32,22 @@ class Device extends $pb.ProtobufEnum {
   const Device._($core.int v, $core.String n) : super(v, n);
 }
 
+class RoverStatus extends $pb.ProtobufEnum {
+  static const RoverStatus DISCONNECTED = RoverStatus._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'DISCONNECTED');
+  static const RoverStatus IDLE = RoverStatus._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'IDLE');
+  static const RoverStatus MANUAL = RoverStatus._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MANUAL');
+  static const RoverStatus AUTONOMOUS = RoverStatus._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'AUTONOMOUS');
+
+  static const $core.List<RoverStatus> values = <RoverStatus> [
+    DISCONNECTED,
+    IDLE,
+    MANUAL,
+    AUTONOMOUS,
+  ];
+
+  static final $core.Map<$core.int, RoverStatus> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static RoverStatus? valueOf($core.int value) => _byValue[value];
+
+  const RoverStatus._($core.int v, $core.String n) : super(v, n);
+}
+

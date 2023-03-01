@@ -9,39 +9,22 @@
 import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-class PowerMode extends $pb.ProtobufEnum {
-  static const PowerMode POWER_MODE_UNDEFINED = PowerMode._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'POWER_MODE_UNDEFINED');
-  static const PowerMode IDLE = PowerMode._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'IDLE');
-  static const PowerMode ACTIVE = PowerMode._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ACTIVE');
+class LedButtonColor extends $pb.ProtobufEnum {
+  static const LedButtonColor LED_COLOR_UNDEFINED = LedButtonColor._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'LED_COLOR_UNDEFINED');
+  static const LedButtonColor RED = LedButtonColor._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RED');
+  static const LedButtonColor YELLOW = LedButtonColor._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'YELLOW');
+  static const LedButtonColor GREEN = LedButtonColor._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'GREEN');
 
-  static const $core.List<PowerMode> values = <PowerMode> [
-    POWER_MODE_UNDEFINED,
-    IDLE,
-    ACTIVE,
-  ];
-
-  static final $core.Map<$core.int, PowerMode> _byValue = $pb.ProtobufEnum.initByValue(values);
-  static PowerMode? valueOf($core.int value) => _byValue[value];
-
-  const PowerMode._($core.int v, $core.String n) : super(v, n);
-}
-
-class LedColor extends $pb.ProtobufEnum {
-  static const LedColor LED_COLOR_UNDEFINED = LedColor._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'LED_COLOR_UNDEFINED');
-  static const LedColor RED = LedColor._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'RED');
-  static const LedColor YELLOW = LedColor._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'YELLOW');
-  static const LedColor GREEN = LedColor._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'GREEN');
-
-  static const $core.List<LedColor> values = <LedColor> [
+  static const $core.List<LedButtonColor> values = <LedButtonColor> [
     LED_COLOR_UNDEFINED,
     RED,
     YELLOW,
     GREEN,
   ];
 
-  static final $core.Map<$core.int, LedColor> _byValue = $pb.ProtobufEnum.initByValue(values);
-  static LedColor? valueOf($core.int value) => _byValue[value];
+  static final $core.Map<$core.int, LedButtonColor> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static LedButtonColor? valueOf($core.int value) => _byValue[value];
 
-  const LedColor._($core.int v, $core.String n) : super(v, n);
+  const LedButtonColor._($core.int v, $core.String n) : super(v, n);
 }
 
