@@ -7,13 +7,14 @@ import "package:rover_dashboard/services.dart";
 import "../model.dart";
 import "arm.dart";
 import "drive.dart";
+import "science.dart";
 import "stub.dart";
 
 export "package:rover_dashboard/data.dart";
 export "package:rover_dashboard/services.dart";
 
 /// How often to check the gamepad for new button presses.
-const gamepadDelay = Duration(milliseconds: 100);
+const gamepadDelay = Duration(milliseconds: 10);
 
 /// An abstract class for controlling one subsystem of the rover.
 /// 
@@ -39,7 +40,7 @@ abstract class Controller extends Model {
 	factory Controller.forMode(OperatingMode mode) {
 		switch (mode) {
 			case OperatingMode.arm: return ArmController();
-			case OperatingMode.science: return StubController();
+			case OperatingMode.science: return ScienceController();
 			case OperatingMode.autonomy: return StubController();
 			case OperatingMode.drive: return DriveController();
 		}
