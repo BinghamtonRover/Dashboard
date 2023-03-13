@@ -8,24 +8,18 @@ import "package:rover_dashboard/services.dart";
 class VideoModel extends Model {
 	/// list of the camera feeds
 	static final allFeeds = [
-		CameraFeed(id: CameraName.SCIENCE_CAROUSEL, name: "Science"),
-		CameraFeed(id: CameraName.SCIENCE_MICROSCOPE, name: "Microscope"), 
 		CameraFeed(id: CameraName.ROVER_FRONT, name: "Rover 1"),
 		CameraFeed(id: CameraName.ROVER_REAR, name: "Rover 2"), 
 		CameraFeed(id: CameraName.ARM_BASE, name: "Arm 1"), 
 		CameraFeed(id: CameraName.ARM_GRIPPER, name: "Arm 2"), 
+		CameraFeed(id: CameraName.SCIENCE_CAROUSEL, name: "Science"),
+		CameraFeed(id: CameraName.SCIENCE_MICROSCOPE, name: "Microscope"), 
 	];
 
 	/// The current layout of video feeds.
-	Map<OperatingMode, List<CameraFeed>> userLayout = {
-		OperatingMode.science: [allFeeds[0], allFeeds[1], allFeeds[2], allFeeds[3]],
-		OperatingMode.arm: [allFeeds[4], allFeeds[5], allFeeds[2], allFeeds[3]],
-		OperatingMode.autonomy: [allFeeds[2], allFeeds[3]],
-		OperatingMode.drive: [allFeeds[2], allFeeds[3]],
-	};
-
-	/// The camera feeds for the current operating mode.
-	List<CameraFeed> get feeds => userLayout[models.home.mode]!;
+	List<CameraFeed> feeds = [
+		allFeeds[0], allFeeds[1], allFeeds[2], allFeeds[3],
+	];
 
 	/// Triggers when it's time to update a new frame.
 	/// 
@@ -64,14 +58,13 @@ class VideoModel extends Model {
 
 	/// Adds or subtracts a number of camera feeds to/from the UI
 	void setNumFeeds(int? value) {
-		final mode = models.home.mode;
 		if (value == null || value > 4 || value < 1) return;
-		final int currentNum = userLayout[mode]!.length;
+		final int currentNum = feeds.length;
 		if (value < currentNum) {
-			userLayout[mode] = userLayout[mode]!.sublist(0, value);
+			feeds = feeds.sublist(0, value);
 		} else {
 			for (int i = currentNum; i < value; i++) {
-				userLayout[mode]!.add(allFeeds[0]);
+				feeds.add(allFeeds[0]);
 			}
 		}
 		notifyListeners();
@@ -96,7 +89,7 @@ class VideoModel extends Model {
 
 	/// Replaces a video feed at a given index.
 	void selectNewFeed(int index, CameraFeed feed) {
-		userLayout[models.home.mode]![index] = feed;
+		feeds[index] = feed;
 		notifyListeners();
 	}
 }

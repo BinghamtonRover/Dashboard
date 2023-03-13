@@ -2,13 +2,9 @@ import "dart:async";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/services.dart";
 
 /// The view model for the main page. 
 class HomeModel extends Model {
-	/// The current operating mode.
-	OperatingMode mode = OperatingMode.science;
-
 	/// The message currently displaying on the taskbar.
 	TaskbarMessage? message;
 
@@ -25,19 +21,4 @@ class HomeModel extends Model {
 		notifyListeners();
 		_messageTimer = Timer(const Duration(seconds: 5), () { message = null; notifyListeners(); });
 	} 
-
-	/// Changes the mode based on an index.  
-	void changeMode(int index) {
-		mode = OperatingMode.values[index];
-		models.rover.updateMode(mode);
-		services.gamepad.vibrate();
-		notifyListeners();
-	}
-
-	/// Switches to the next mode.
-	void nextMode() {
-		int index = mode.index + 1;
-		if (index == OperatingMode.values.length) index = 0;
-		changeMode(index);
-	}
 }

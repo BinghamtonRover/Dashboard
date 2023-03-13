@@ -23,7 +23,7 @@ enum OperatingMode {
 	/// Drive mode. 
 	/// 
 	/// Focus on helping the user simply drive the rover.
-	drive("Manual Drive");
+	drive("Drive");
 
 	/// The name of this mode.
 	/// 
