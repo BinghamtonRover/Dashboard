@@ -5,13 +5,11 @@ import "package:rover_dashboard/services.dart";
 
 Future<void> main(List<String> args) async {
 	// Initialize client and server
-	final sender = MessageSender();
-	final receiver = MessageReceiver(port: 8001);
-	await sender.init();
-	await receiver.init();
+	final socket = ProtoSocket(port: 8001);
+	await socket.init();
 
-	// Tell the receiver we want to listen for [ElectricalData] messages
-	receiver.registerHandler<ElectricalData>(
+	// Tell the socket we want to listen for [ElectricalData] messages
+	socket.registerHandler<ElectricalData>(
 		name: ElectricalData().messageName,
 		decoder: ElectricalData.fromBuffer,
 		handler: (data) => print("The battery is ${data.batteryVoltage}V"),
@@ -19,11 +17,10 @@ Future<void> main(List<String> args) async {
 
 	// Send a test message to localhost:8001
 	final data = ElectricalData(batteryVoltage: 24);
-	sender.sendMessage(data, address: InternetAddress.loopbackIPv4, port: 8001);
+	socket.sendMessage(data, address: InternetAddress.loopbackIPv4, port: 8001);
 	await Future.delayed(const Duration(milliseconds: 500));  // small delay
 
 	// Cleanup
-	await sender.dispose();
-	await receiver.dispose();
+	await socket.dispose();
 	print("Done");
 }
