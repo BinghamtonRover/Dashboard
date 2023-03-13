@@ -12,14 +12,17 @@ class MetricsList extends StatelessWidget {
 	Widget build(BuildContext context) => Consumer<Rover>(
 		builder: (context, rover, _) => Column(
 			children: [
-				Text("Metrics", style: Theme.of(context).textTheme.displaySmall),
 				for (final metrics in rover.metrics.allMetrics) ExpansionTile(
+					expandedCrossAxisAlignment: CrossAxisAlignment.start,
+					expandedAlignment: Alignment.centerLeft,
+					childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
 					title: Text(
 						metrics.name,
 						style: Theme.of(context).textTheme.headlineSmall,
 					),
 					children: [
 						for (final String metric in metrics.allMetrics) Text(metric),
+						const SizedBox(height: 4),
 					]
 				)
 			]

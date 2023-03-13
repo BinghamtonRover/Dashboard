@@ -13,15 +13,16 @@ class Footer extends StatelessWidget {
 		color: Theme.of(context).colorScheme.secondary,
 		child: Row(
 			mainAxisAlignment: MainAxisAlignment.end,
-			children: const [
-				MessageDisplay(),
-				Spacer(),
-				VideoFeedCounter(),
-				SerialButton(),
-				GamepadIcon(),
-				SizedBox(width: 4),
-				StatusIcons(),
-				SizedBox(width: 12),
+			children: [
+				const MessageDisplay(),
+				const Spacer(),
+				const VideoFeedCounter(),
+				const SerialButton(),
+				GamepadIcon(models.rover.controller1),
+				GamepadIcon(models.rover.controller2),
+				const SizedBox(width: 4),
+				const StatusIcons(),
+				const SizedBox(width: 12),
 			]
 		)
 	);
@@ -29,8 +30,11 @@ class Footer extends StatelessWidget {
 
 /// An icon to indicate whether the gamepad is connected.
 class GamepadIcon extends StatelessWidget {
+	/// The rover controller for this gamepad.
+	final Controller controller;
+
 	/// Provides a const constructor for this widget.
-	const GamepadIcon();
+	const GamepadIcon(this.controller);
 
 	/// Returns a color representing the gamepad's battery level.
 	Color getColor(GamepadBatteryLevel battery) {
@@ -45,23 +49,28 @@ class GamepadIcon extends StatelessWidget {
 
 	/// Connects to a gamepad and gives visual + haptic feedback.
 	Future<void> connect() async {
-		final isConnected = await services.gamepad.connect();
-		if (!isConnected) {
+		await services.gamepad.connect();
+		if (!services.gamepad.gamepad1.isConnected) {
 			models.home.setMessage(severity: Severity.error, text: "No gamepad connected");
+		} else if (!services.gamepad.gamepad2.isConnected) {
+			models.home.setMessage(severity: Severity.warning, text: "Only one gamepad connected");
 		} else {
 			models.home.setMessage(severity: Severity.info, text: "Connected to gamepad");
 		}
 	}
 
 	@override
-	Widget build(BuildContext context) => Consumer<Rover>(
-		builder: (_, model, __) => IconButton(
-			icon: const Icon(Icons.sports_esports), 
-			color: services.gamepad.isConnected 
-				? getColor(services.gamepad.battery)
-				: Colors.black,
-			constraints: const BoxConstraints(maxWidth: 36),
-			onPressed: connect,
+	Widget build(BuildContext context) => ChangeNotifierProvider<Controller>.value(
+		value: controller, 
+		builder: (_, __) => Consumer<Controller>(
+			builder: (_, model, __) => IconButton(
+				icon: const Icon(Icons.sports_esports), 
+				color: model.gamepad.isConnected 
+					? getColor(model.gamepad.battery)
+					: Colors.black,
+				constraints: const BoxConstraints(maxWidth: 36),
+				onPressed: connect,
+			),
 		),
 	);
 }
@@ -174,7 +183,7 @@ class VideoFeedCounter extends StatelessWidget {
 					const Text("Feeds:"),
 					const SizedBox(width: 4),
 					DropdownButton<int>(
-						value: video.userLayout[home.mode]!.length,
+						value: video.feeds.length,
 						onChanged: (value) => video.setNumFeeds(value),
 						items: [
 							for (int i = 1; i <= 4; i++) DropdownMenuItem(
