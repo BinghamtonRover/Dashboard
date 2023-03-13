@@ -2,6 +2,8 @@ import "dart:async";
 import "dart:io";
 import "service.dart";
 
+export "dart:io" show InternetAddress;
+
 /// A callback to execute with raw Protobuf data.
 typedef RawDataHandler = void Function(List<int> data);
 

@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print
 
-import "dart:io";
 import "package:rover_dashboard/services.dart";
 
 const int remotePort = 8001;
