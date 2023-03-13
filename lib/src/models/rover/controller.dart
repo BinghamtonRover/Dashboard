@@ -46,7 +46,7 @@ class Controller extends Model {
 	OperatingMode get mode => controls.mode;
 
 	/// Whether this controller is ready to use.
-	bool get isConnected => mode == OperatingMode.drive;  // gamepad.isConnected;
+	bool get isConnected => gamepad.isConnected;
 
 	/// Changes the current mode this [gamepad] is controlling, and chooses a new [RoverControls].
 	void setMode(OperatingMode? mode) {
