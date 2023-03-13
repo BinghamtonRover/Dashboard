@@ -22,6 +22,8 @@ export "src/models/data/serial.dart";
 export "src/models/data/video.dart";
 
 // Rover models
+export "src/models/rover/controller.dart";
+export "src/models/rover/controls/controls.dart";
 export "src/models/rover/heartbeats.dart";
 export "src/models/rover/metrics.dart";
 export "src/models/rover/rover.dart";

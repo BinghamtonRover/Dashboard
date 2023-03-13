@@ -1,8 +1,9 @@
 import "dart:async";
 
+import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 
-import "controllers/controller.dart";
 import "settings.dart";
 
 /// The model to control the entire rover.
@@ -18,8 +19,11 @@ class Rover extends Model {
 	/// A model to adjust settings on the rover.
 	final settings = RoverSettings();
 
-	/// The [Controller] for the current mode.
-	late Controller controller;
+	/// The operating mode for [GamepadService.gamepad1].
+	final controller1 = Controller(services.gamepad.gamepad1, DriveControls());
+
+	/// The operating mode for [GamepadService.gamepad2].
+	final controller2 = Controller(services.gamepad.gamepad2, ArmControls());
 
 	/// Whether the rover is connected.
 	bool get isConnected => heartbeats.connectionStrength > 0;
@@ -32,10 +36,10 @@ class Rover extends Model {
 
 	@override
 	Future<void> init() async { 
-		controller = Controller.forMode(models.home.mode);
 		await heartbeats.init();
 		await metrics.init();
-		await controller.init();
+		await controller1.init();
+		await controller2.init();
 		await settings.init();
 
 		heartbeats.addListener(notifyListeners);
@@ -51,16 +55,9 @@ class Rover extends Model {
 
 		heartbeats.dispose();
 		metrics.dispose();
-		controller.dispose();
+		controller1.dispose();
+		controller2.dispose();
 		settings.dispose();
 		super.dispose();
-	}
-
-	/// Disposes the old [controller] and chooses a new one based on [mode].
-	Future<void> updateMode(OperatingMode mode) async {
-		controller.dispose();
-		controller = Controller.forMode(mode);
-		await controller.init();
-		notifyListeners();
 	}
 }
