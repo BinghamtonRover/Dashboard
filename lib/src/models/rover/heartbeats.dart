@@ -34,7 +34,7 @@ class RoverHeartbeats extends Model {
 
 	@override
 	Future<void> init() async {
-		services.messageReceiver.registerHandler<Connect>(
+		services.dataSocket.registerHandler<Connect>(
 			name: Connect().messageName,
 			decoder: Connect.fromBuffer,
 			handler: onHandshakeReceived,
@@ -65,11 +65,11 @@ class RoverHeartbeats extends Model {
 			case Device.DASHBOARD: 
 				return models.home.setMessage(severity: Severity.warning, text: "Trying to send a handshake message to ourself");
 			case Device.SUBSYSTEMS: 
-				return services.messageSender.sendMessage(message);  
+				return services.dataSocket.sendMessage(message);  
 			case Device.VIDEO: 
-				return services.messageSender.sendMessage(message, address: secondaryPiAddress, port: videoPort);
+				return services.dataSocket.sendMessage(message, address: secondaryPiAddress, port: videoPort);
 			case Device.AUTONOMY: 
-				return services.messageSender.sendMessage(message, address: secondaryPiAddress, port: autonomyPort);
+				return services.dataSocket.sendMessage(message, address: secondaryPiAddress, port: autonomyPort);
 		}
 	}
 

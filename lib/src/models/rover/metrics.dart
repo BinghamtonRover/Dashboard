@@ -23,12 +23,12 @@ class RoverMetrics extends Model {
 
 	@override
 	Future<void> init() async {
-		services.messageReceiver.registerHandler<ElectricalData>(
+		services.dataSocket.registerHandler<ElectricalData>(
 			name: ElectricalData().messageName, 
 			decoder: ElectricalData.fromBuffer,
 			handler: update(electrical),
 		);
-		services.messageReceiver.registerHandler<ScienceData>(
+		services.dataSocket.registerHandler<ScienceData>(
 			name: ScienceData().messageName, 
 			decoder: ScienceData.fromBuffer,
 			handler: update(science),
