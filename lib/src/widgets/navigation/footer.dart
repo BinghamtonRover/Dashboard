@@ -142,12 +142,13 @@ class StatusIcons extends StatelessWidget {
 				),
 				const SizedBox(width: 8),
 				PopupMenuButton(  // status
+					enabled: rover.isConnected,
+					tooltip: "Change mode",
+					onSelected: rover.settings.setStatus,
 					icon: Icon(
 						getStatusIcon(rover.status),
 						color: getStatusColor(rover.status),
 					),
-					tooltip: "Change mode",
-					onSelected: rover.settings.setStatus,
 					itemBuilder: (_) => [
 						for (final value in RoverStatus.values)
 							if (value != RoverStatus.DISCONNECTED)  // can't select this!
