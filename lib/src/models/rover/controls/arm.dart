@@ -1,7 +1,13 @@
-import "controller.dart";
+import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/services.dart";
 
-/// Controls the arm.
-class ArmController extends Controller {
+import "controls.dart";
+
+/// A [RoverControls] that controls the arm.
+class ArmControls extends RoverControls {
+	@override
+	OperatingMode get mode => OperatingMode.arm;
+
 	@override
 	List<Message> parseInputs(GamepadState state) => [
 		// ARM
@@ -30,7 +36,7 @@ class ArmController extends Controller {
 	];
 
 	@override
-	Map<String, String> get controls => {
+	Map<String, String> get buttonMapping => {
 		"Swivel": "Bumpers",
 		"Shoulder": "Left joystick (vertical)",
 		"Elbow": "Right joystick (vertical)",

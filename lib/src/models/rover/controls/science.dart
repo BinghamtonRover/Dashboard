@@ -1,7 +1,13 @@
-import "controller.dart";
+import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/services.dart";
 
-/// A [Controller] to control the science chamber. 
-class ScienceController extends Controller {
+import "controls.dart";
+
+/// A [RoverControls] that controls the science chamber.
+class ScienceControls extends RoverControls {
+	@override
+	OperatingMode get mode => OperatingMode.science;
+
 	@override
 	List<Message> parseInputs(GamepadState state) => [
 		if (state.normalLeftY != 0) ScienceCommand(vacuumLinearPosition: (state.normalLeftY*20).round()),
@@ -24,7 +30,7 @@ class ScienceController extends Controller {
 	List<Message> get onDispose => [];
 
 	@override
-	Map<String, String> get controls => {
+	Map<String, String> get buttonMapping => {
 		"Vacuum Linear": "Left Stick (vertical)",
 		"Science Linear": "Right Stick (vertical)",
 		"Dirt Linear": "D-pad left/right",
