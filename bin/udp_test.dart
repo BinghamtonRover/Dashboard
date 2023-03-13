@@ -3,26 +3,27 @@
 import "package:rover_dashboard/services.dart";
 
 const int receivePort = 8001;
-const int sendPort = 8002;
+final address = InternetAddress("192.168.1.20");
 
-class RawServer extends UdpServer {
-	RawServer() : super(port: receivePort);
+class TestSocket extends UdpSocket {
+	TestSocket({required super.port});
 
 	@override
 	void onData(List<int> bytes) => print("Received: $bytes");
 }
 
 void main() async {
-	final server = RawServer();
-	final client = UdpClient(listenPort: sendPort);
-	await server.init();
-	await client.init();
+	final socket = TestSocket(port: 8001);
+	await socket.init();
+	print("Listening on :$receivePort");
 
-	client.sendBytes(address: InternetAddress.loopbackIPv4, port: receivePort, bytes: [1, 2, 3]);
+	print("Sending messages");
+	socket.sendBytes(address: address, port: 8001, bytes: [1, 2, 3]);
+	await Future.delayed(const Duration(milliseconds: 200));
+	socket.sendBytes(address: address, port: 8001, bytes: [4, 5, 6]);
+	await Future.delayed(const Duration(milliseconds: 200));
+	socket.sendBytes(address: address, port: 8001, bytes: [7, 8, 9]);
 
-	await Future.delayed(const Duration(milliseconds: 500));
-
-	await server.dispose();
-	await client.dispose();
-	print("Done");
+	await Future.delayed(const Duration(seconds: 1));
+	await socket.dispose();
 }

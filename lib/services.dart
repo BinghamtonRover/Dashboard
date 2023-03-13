@@ -15,18 +15,17 @@ library services;
 
 import "src/services/files.dart";
 import "src/services/gamepad.dart";
-import "src/services/message_receiver.dart";
-import "src/services/message_sender.dart";
+import "src/services/proto_socket.dart";
 import "src/services/serial.dart";
 import "src/services/service.dart";
 
 export "src/services/files.dart";
 export "src/services/gamepad.dart";
-export "src/services/message_receiver.dart";
-export "src/services/message_sender.dart";
+export "src/services/proto_socket.dart";
 export "src/services/serial.dart";
-export "src/services/udp_client.dart";
-export "src/services/udp_server.dart";
+export "src/services/udp_socket.dart";
+// export "src/services/udp_client.dart";
+// export "src/services/udp_server.dart";
 
 /// A dependency injection service that manages the lifecycle of other services.
 ///
@@ -41,16 +40,11 @@ class Services extends Service {
 	/// This class has a private constructor since users should only use [services].
 	Services._();
 
-	/// A service that receives messages from the rover over the network.
-	final messageReceiver = MessageReceiver(port: 8008);
+	/// A UDP socket for sending and receiving Protobuf data.
+	final dataSocket = ProtoSocket(port: 8008);
 
-	/// A service to receive video frames.
-	/// 
-	/// This is on a separate port from [messageReceiver] to improve bandwidth.
-	final videoStreamer = MessageReceiver(port: 8009);
-
-	/// A service that sends messages to the rover over the network.
-	final messageSender = MessageSender();
+	/// A UDP socket for receiving video.
+	final videoSocket = ProtoSocket(port: 8009);
 
 	/// A service that handles controller inputs.
 	final gamepad = GamepadService();
@@ -63,9 +57,8 @@ class Services extends Service {
 
 	@override
 	Future<void> init() async {
-		await messageSender.init();
-		await messageReceiver.init();
-		await videoStreamer.init();
+		await dataSocket.init();
+		await videoSocket.init();
 		await gamepad.init();
 		await files.init();
 		await serial.init();
@@ -73,9 +66,8 @@ class Services extends Service {
 
 	@override
 	Future<void> dispose() async {
-		await messageSender.dispose();
-		await messageReceiver.dispose();
-		await videoStreamer.dispose();
+		await dataSocket.dispose();
+		await videoSocket.dispose();
 		await gamepad.dispose();
 		await files.dispose();
 		await serial.dispose();

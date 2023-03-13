@@ -1,21 +1,26 @@
 import "package:rover_dashboard/data.dart";
 
-import "udp_server.dart";
+import "udp_socket.dart";
 
 /// A callback to execute with a specific serialized Protobuf message.
 typedef MessageHandler<T extends Message> = void Function(T);
 
-/// A service that receives Protobuf messages over a UDP connection. 
+/// A service to send and receive Protobuf messages over a UDP socket.
 /// 
+/// /// All messages are first wrapped in a [WrappedMessage] to identify their type before being
+/// sent over the network. That means you'll need to call [registerHandler] to tell this class
+/// which type you're expecting to handle and how to decode then handle it. [sendMessage] will 
+/// automatically wrap your message for you. 
+///
 /// To listen to certain messages, call [registerHandler] with the type of message you want
 /// to receive, as well as a decoder and the handler callback itself. See the documentation
 /// on that function for usage. 
-class MessageReceiver extends UdpServer {
+class ProtoSocket extends UdpSocket {
 	/// Handlers for every possible type of Protobuf message in serialized form.
 	final Map<String, RawDataHandler> _handlers = {};
 
-	/// Listens for incoming data.
-	MessageReceiver({required super.port});
+	/// Opens a socket for sending and receiving Protobuf messages.
+	ProtoSocket({required super.port});
 
 	/// Runs every time data is received by the socket. 
 	/// 
@@ -58,5 +63,15 @@ class MessageReceiver extends UdpServer {
 		} else {
 			_handlers[name] = (List<int> data) => handler(decoder(data));
 		}
+	}
+
+	/// Wraps the [message] in a [WrappedMessage] container and sends it to the rover. 
+	/// 
+	/// You may pass in any IP address and port. The default target is the subsystems Pi.
+	void sendMessage(Message message, {InternetAddress? address, int? port}) {
+		// Have to use ??= instead of default parameters because addresses aren't const
+		address ??= subsystemsPiAddress;
+		port ??= subsystemsPort;
+		sendBytes(address: address, port: port, bytes: message.wrapped.writeToBuffer());
 	}
 }

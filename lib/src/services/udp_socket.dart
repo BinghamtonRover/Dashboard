@@ -1,7 +1,8 @@
 import "dart:async";
 import "dart:io";
-
 import "service.dart";
+
+export "dart:io" show InternetAddress;
 
 /// A callback to execute with raw Protobuf data.
 typedef RawDataHandler = void Function(List<int> data);
@@ -16,7 +17,7 @@ extension on RawDatagramSocket {
 	});
 }
 
-/// A UDP server that listens for incoming data. 
+/// A UDP client that sends data to a server. 
 /// 
 /// The dashboard uses a Local Area Network (LAN) to interface with the rover. 
 /// The dashboard receives data and video streams from the rover and sends 
@@ -26,31 +27,32 @@ extension on RawDatagramSocket {
 /// constantly sending data and commands every second, a few dropped packets here
 /// and there are okay, and should not hold up the connection, as TCP would.
 /// 
-/// This class uses `dart:io`'s [RawDatagramSocket] to open a UDP connection. Call
-/// [init] before using any methods, and call [dispose] when finished to close the 
-/// socket. Override [onData] to handle the incoming data, in the form of raw bytes.
+/// This class uses `dart:io`'s [RawDatagramSocket] to open a UDP connection.
+/// 
+/// - Call [init] before using any methods, and call [dispose] when finished
+/// - Use [sendBytes] to send raw data to a server. 
+/// - Override [onData] to handle incoming data 
+/// - Override this class to define custom methods, like `sendMessage` or `sendFrame`
 /// 
 /// See the [Network Address Assignments](https://docs.google.com/document/d/1U6GxcYGpqUpSgtXFbiOTlMihNqcg6RbCqQmewx7cXJE) document for IP address and ports. 
-abstract class UdpServer extends Service {
-	/// The port to listen on. 
+abstract class UdpSocket extends Service {
+	/// The port to send from and listen on.
 	/// 
-	/// This must be a field since the dashboard can have multiple connections open
-	/// at once while sharing the same backend. Each connection has its own port. 
+	/// Different ports are used for different purposes.
 	final int port;
 
-	/// The UDP socket to listen on. Backed by `dart:io`.
+	/// The UDP socket backed by `dart:io`.
 	/// 
-	/// This socket must be closed in [dispose]. 
+	/// This socket must be closed in [dispose].
 	late final RawDatagramSocket _socket;
 
-	/// The subscription that listens to [_socket]. 
+	/// The subscription that listens for incoming data.
 	/// 
-	/// This must be cancelled when the socket is closed, or else memory will leak
-	/// and the dashboard may not terminate properly. This happens in [dispose]. 
+	/// This must be cancelled in [dispose].
 	late final StreamSubscription _subscription;
 
-	/// Opens a UDP server on the given port. 
-	UdpServer({required this.port});
+	/// Opens a UDP socket on the given port.
+	UdpSocket({required this.port});
 
 	@override
 	Future<void> init() async {
@@ -72,4 +74,11 @@ abstract class UdpServer extends Service {
 	/// According to the documentation for [RawDatagramSocket.receive], the maximum size
 	/// of a packet is 65503 bytes, just shy of 2^16 bytes.
 	void onData(List<int> data);
+
+	/// Sends [bytes] to the given [address] at [port].
+	void sendBytes({
+		required InternetAddress address,
+		required int port,
+		required List<int> bytes
+	}) => _socket.send(bytes, address, port);
 }

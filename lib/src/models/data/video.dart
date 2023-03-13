@@ -34,7 +34,7 @@ class VideoModel extends Model {
 
 	@override
 	Future<void> init() async {
-		services.videoStreamer.registerHandler<VideoFrame>(
+		services.videoSocket.registerHandler<VideoFrame>(
 			name: VideoFrame().messageName,
 			decoder: VideoFrame.fromBuffer,
 			handler: updateFrame,

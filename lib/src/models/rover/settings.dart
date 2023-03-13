@@ -20,7 +20,7 @@ class RoverSettings extends Model {
 
 	@override
 	Future<void> init() async {
-		services.messageReceiver.registerHandler<UpdateSetting>(
+		services.dataSocket.registerHandler<UpdateSetting>(
 			name: UpdateSetting().messageName,
 			decoder: UpdateSetting.fromBuffer,
 			handler: (settings) => _confirmation = settings,
@@ -32,7 +32,7 @@ class RoverSettings extends Model {
 	/// See [RoverStatus] for details.
 	Future<void> setStatus(RoverStatus value) async {
 		final message = UpdateSetting(status: value);
-		services.messageSender.sendMessage(message);
+		services.dataSocket.sendMessage(message);
 		await Future.delayed(confirmationDelay);
 		if (message == _confirmation) {
 			models.home.setMessage(severity: Severity.info, text: "Set mode to ${value.humanName}");
