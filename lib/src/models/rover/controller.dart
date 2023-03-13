@@ -42,8 +42,16 @@ class Controller extends Model {
 		super.dispose();
 	}
 
+	/// The current operating mode.
+	OperatingMode get mode => controls.mode;
+
+	/// Whether this controller is ready to use.
+	bool get isConnected => mode == OperatingMode.drive;  // gamepad.isConnected;
+
 	/// Changes the current mode this [gamepad] is controlling, and chooses a new [RoverControls].
-	void setMode(OperatingMode mode) {
+	void setMode(OperatingMode? mode) {
+		if (mode == null) return;
+		controls.onDispose.forEach(sendMessage);
 		controls = RoverControls.forMode(mode);
 		gamepad.pulse();
 		notifyListeners();

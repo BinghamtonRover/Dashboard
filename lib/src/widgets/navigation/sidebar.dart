@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:provider/provider.dart";
 
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
@@ -11,7 +10,7 @@ class Sidebar extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) => Container(
-		width: 225, 
+		width: 250, 
 		color: Theme.of(context).colorScheme.surfaceVariant,
 		child: ListView(
 			padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -22,9 +21,8 @@ class Sidebar extends StatelessWidget {
 				Text("Controls", style: Theme.of(context).textTheme.displaySmall, textAlign: TextAlign.center),
 				const SizedBox(height: 4),
 				ControlsDisplay(controller: models.rover.controller1, gamepadNum: 1),
-				// const Divider(),
-				const SizedBox(height: 8),
-				ControlsDisplay(controller: models.rover.controller2, gamepadNum: 1),
+				const SizedBox(height: 16),
+				ControlsDisplay(controller: models.rover.controller2, gamepadNum: 2),
 			]
 		)
 	);
@@ -42,29 +40,27 @@ class ControlsDisplay extends StatelessWidget {
 	const ControlsDisplay({required this.controller, required this.gamepadNum});
 
 	@override
-	Widget build(BuildContext context) => ChangeNotifierProvider.value(
+	Widget build(BuildContext context) => ProviderConsumer.value(
 		value: controller,
-		builder: (_, __) => Consumer<Controller>(
-			builder: (_, __, ___) => Container(
-				padding: const EdgeInsets.symmetric(horizontal: 16),
-				child: Column(
-					crossAxisAlignment: CrossAxisAlignment.start,
-					children: [
-						Text(
-							"Gamepad $gamepadNum: ${controller.controls.mode.name}", 
-							style: Theme.of(context).textTheme.titleLarge,
-							textAlign: TextAlign.start,
-						),
-						const SizedBox(height: 4),
-						if (controller.gamepad.isConnected) ...[
-							for (final entry in controller.controls.buttonMapping.entries) ...[
-								Text(entry.key, style: Theme.of(context).textTheme.labelLarge),
-								Text("  ${entry.value}", style: Theme.of(context).textTheme.titleMedium),
-							]
+		builder: (model, __) => Container(
+			padding: const EdgeInsets.symmetric(horizontal: 16),
+			child: Column(
+				crossAxisAlignment: CrossAxisAlignment.start,
+				children: [
+					Text(
+						"Gamepad $gamepadNum: ${controller.controls.mode.name}", 
+						style: Theme.of(context).textTheme.titleLarge,
+						textAlign: TextAlign.start,
+					),
+					const SizedBox(height: 4),
+					if (controller.isConnected) ...[
+						for (final entry in controller.controls.buttonMapping.entries) ...[
+							Text(entry.key, style: Theme.of(context).textTheme.labelLarge),
+							Text("  ${entry.value}", style: Theme.of(context).textTheme.titleMedium),
 						]
-						else const Text("Gamepad is not connected"),
 					]
-				)
+					else const Text("Gamepad is not connected"),
+				]
 			)
 		)
 	);

@@ -4,6 +4,7 @@ import "package:provider/provider.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
+import "package:rover_dashboard/widgets.dart";
 
 /// The footer, responsible for showing vitals and logs. 
 class Footer extends StatelessWidget {
@@ -13,65 +14,18 @@ class Footer extends StatelessWidget {
 		color: Theme.of(context).colorScheme.secondary,
 		child: Row(
 			mainAxisAlignment: MainAxisAlignment.end,
-			children: [
-				const MessageDisplay(),
-				const Spacer(),
-				const VideoFeedCounter(),
-				const SerialButton(),
-				GamepadIcon(models.rover.controller1),
-				GamepadIcon(models.rover.controller2),
-				const SizedBox(width: 4),
-				const StatusIcons(),
-				const SizedBox(width: 12),
+			children: const [
+				MessageDisplay(),
+				Spacer(),
+				VideoFeedCounter(),
+				SizedBox(width: 8),
+				GamepadButtons(),
+				SerialButton(),
+				SizedBox(width: 4),
+				StatusIcons(),
+				SizedBox(width: 12),
 			]
 		)
-	);
-}
-
-/// An icon to indicate whether the gamepad is connected.
-class GamepadIcon extends StatelessWidget {
-	/// The rover controller for this gamepad.
-	final Controller controller;
-
-	/// Provides a const constructor for this widget.
-	const GamepadIcon(this.controller);
-
-	/// Returns a color representing the gamepad's battery level.
-	Color getColor(GamepadBatteryLevel battery) {
-		switch (battery) {
-			case GamepadBatteryLevel.empty: return Colors.red;
-			case GamepadBatteryLevel.low: return Colors.red;
-			case GamepadBatteryLevel.medium: return Colors.orange;
-			case GamepadBatteryLevel.full: return Colors.green;
-			case GamepadBatteryLevel.unknown: return Colors.black;
-		}
-	}
-
-	/// Connects to a gamepad and gives visual + haptic feedback.
-	Future<void> connect() async {
-		await services.gamepad.connect();
-		if (!services.gamepad.gamepad1.isConnected) {
-			models.home.setMessage(severity: Severity.error, text: "No gamepad connected");
-		} else if (!services.gamepad.gamepad2.isConnected) {
-			models.home.setMessage(severity: Severity.warning, text: "Only one gamepad connected");
-		} else {
-			models.home.setMessage(severity: Severity.info, text: "Connected to gamepad");
-		}
-	}
-
-	@override
-	Widget build(BuildContext context) => ChangeNotifierProvider<Controller>.value(
-		value: controller, 
-		builder: (_, __) => Consumer<Controller>(
-			builder: (_, model, __) => IconButton(
-				icon: const Icon(Icons.sports_esports), 
-				color: model.gamepad.isConnected 
-					? getColor(model.gamepad.battery)
-					: Colors.black,
-				constraints: const BoxConstraints(maxWidth: 36),
-				onPressed: connect,
-			),
-		),
 	);
 }
 
@@ -183,6 +137,7 @@ class VideoFeedCounter extends StatelessWidget {
 					const Text("Feeds:"),
 					const SizedBox(width: 4),
 					DropdownButton<int>(
+						iconEnabledColor: Colors.black,
 						value: video.feeds.length,
 						onChanged: (value) => video.setNumFeeds(value),
 						items: [
