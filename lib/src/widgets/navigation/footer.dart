@@ -3,7 +3,6 @@ import "package:provider/provider.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// The footer, responsible for showing vitals and logs. 

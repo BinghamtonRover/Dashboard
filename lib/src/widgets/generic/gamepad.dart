@@ -5,11 +5,19 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/widgets.dart";
 
+/// A widget to show the gamepad state and allow the user to switch its mode.
+/// 
+/// - Clicking on the icon connects to the gamepad
+/// - The icon shows the battery level/connection of the gamepad
+/// - The dropdown menu allows the user to switch [OperatingMode]s
 class GamepadButton extends StatelessWidget {
+	/// The controller being displayed.
 	final Controller controller;
 
+	/// The number to show next to the gamepad icon.
 	final int gamepadNumber;
 
+	/// A const constructor for this widget.
 	const GamepadButton({
 		required this.controller,
 		required this.gamepadNumber,
@@ -39,10 +47,7 @@ class GamepadButton extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<Controller>.value(
 		value: controller,
-		builder: (model, _) => Container(
-			// decoration: BoxDecoration(border: Border.all()),
-			// height: 40,
-			child: Row(
+		builder: (model, _) => Row(
 			children: [
 				IconButton(
 					icon: Stack(
@@ -73,7 +78,7 @@ class GamepadButton extends StatelessWidget {
 					],
 				),
 			]
-		))
+		)
 	);
 }
 

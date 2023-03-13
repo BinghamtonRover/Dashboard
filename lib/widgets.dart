@@ -18,9 +18,9 @@ library widgets;
 export "src/widgets/atomic/video_feed.dart";
 
 export "src/widgets/generic/feeds.dart";
+export "src/widgets/generic/gamepad.dart";
 export "src/widgets/generic/metrics_list.dart";
 export "src/widgets/generic/provider_consumer.dart";
-export "src/widgets/generic/gamepad.dart";
 
 export "src/widgets/navigation/footer.dart";
 export "src/widgets/navigation/sidebar.dart";

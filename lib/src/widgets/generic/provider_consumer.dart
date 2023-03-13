@@ -26,6 +26,7 @@ class ProviderConsumer<T extends ChangeNotifier> extends StatelessWidget {
 		this.cachedChild,
 	});
 
+	/// Analagous to [Provider.value].
 	ProviderConsumer.value({
 		required T value, 
 		required this.builder, 
