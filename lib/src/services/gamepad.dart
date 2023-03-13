@@ -23,7 +23,7 @@ extension GamepadNumbers on num {
 }
 
 /// More user-friendly values from [GamepadState].
-extension GamepadUtils on GamepadState {
+extension GamepadStateUtils on GamepadState {
   /// Returns a normalized value for the left trigger. See [GamepadNumbers.normalizeTrigger].
   double get normalLeftTrigger => leftTrigger.normalizeTrigger;
 
@@ -43,6 +43,24 @@ extension GamepadUtils on GamepadState {
   double get normalRightY => rightThumbstickY.normalizeJoystick;
 }
 
+/// Convenience methods on [Gamepad].
+extension GamepadUtils on Gamepad {
+  /// A shorthand to get the battery level of this controller.
+  GamepadBatteryLevel get battery => gamepadBatteryInfo.batteryLevel;
+
+  /// Makes the gamepad vibrate a small "pulse"
+  void pulse() async {  // ignore: avoid_void_async, because this should not be awaited
+    if (!isConnected) return;
+    vibrate(leftMotorSpeed: vibrateIntensity, rightMotorSpeed: vibrateIntensity);
+    await Future.delayed(const Duration(milliseconds: 300));
+    vibrate();  // default speed of 0
+    await Future.delayed(const Duration(milliseconds: 100));
+    vibrate(leftMotorSpeed: vibrateIntensity, rightMotorSpeed: vibrateIntensity);
+    await Future.delayed(const Duration(milliseconds: 300));
+    vibrate();  // default speed of 0
+  }
+}
+
 /// The maximum amount of gamepads a user can have.
 const maxGamepads = 4;
 
@@ -57,15 +75,12 @@ const vibrateIntensity = 65000;
 /// controller inputs, which works with XInput-compliant devices. At the time of writing, there
 /// are no gamepad plugins on pub.dev available for MacOS or Linux -- this uses Win32 libraries.
 ///
-/// To read the state of the controller, check [state]. Even if the controller is disconnected,
-/// [state] will be available, but all its fields will be zero. To check for a connection, use
-/// [isConnected] instead. No action is needed to check for a new gamepad, but you must call
-/// [update] to read any button presses, or else [state] will never update.
+/// To read the state of the controller, check [Gamepad.state], which will always be available, even
+/// when the controller is disconnected (all its fields will be zero). To check for a connection, use
+/// [Gamepad.isConnected]. No action is needed to check for a new gamepad, but you must call
+/// [update] to read any button presses, or else [Gamepad.state] will never update.
 class GamepadService extends Service {
   /// The first gamepad connected to the user's device.
-  ///
-  /// No action is needed to connect to a gamepad. Use [isConnected] to check if there is a
-  /// gamepad connected, and use [state] to read it.
   Gamepad gamepad1 = Gamepad(0);
 
   /// The second gamepad connected to the user's device.
@@ -77,36 +92,19 @@ class GamepadService extends Service {
   @override
   Future<void> dispose() async {}
 
-  /// Connects to a gamepad and calls [vibrate].
-  Future<bool> connect() async {
+  /// Connects to a gamepad and calls [GamepadUtils.pulse].
+  Future<void> connect() async {
     int i;
-    for (i = 0; i < maxGamepads; i++) {
+    for (i = 0; i < maxGamepads; i++) {  // connect [gamepad1]
       gamepad1 = Gamepad(i);
       if (gamepad1.isConnected) break;
     }
-    for (i = i + 1; i < maxGamepads; i++) {
+    for (i = i + 1; i < maxGamepads; i++) {  // connect [gamepad2]
       gamepad2 = Gamepad(i);
       if (gamepad2.isConnected) break;
     }
-    if (gamepad1.isConnected) await vibrate(gamepad1);
-    if (gamepad2.isConnected) await vibrate(gamepad2);
-    return isConnected1 || isConnected2;
-  }
-
-  /// Makes the gamepad vibrate a small "pulse"
-  Future<void> vibrate(Gamepad gamepad) async {
-    // ignore: avoid_void_async
-    // ^ because this should not be awaited
-    if (!gamepad.isConnected) return;
-    gamepad.vibrate(
-        leftMotorSpeed: vibrateIntensity, rightMotorSpeed: vibrateIntensity);
-    await Future.delayed(const Duration(milliseconds: 300));
-    gamepad.vibrate();
-    await Future.delayed(const Duration(milliseconds: 100));
-    gamepad.vibrate(
-        leftMotorSpeed: vibrateIntensity, rightMotorSpeed: vibrateIntensity);
-    await Future.delayed(const Duration(milliseconds: 300));
-    gamepad.vibrate();
+    gamepad1.pulse();
+    gamepad2.pulse();
   }
 
   /// The battery of the first controller.
