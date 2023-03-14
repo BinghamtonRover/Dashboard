@@ -65,7 +65,7 @@ class Controller extends Model {
 		if (models.serial.isConnected) {
 			await services.serial.sendMessage(message);
 		} else {
-			services.messageSender.sendMessage(message);
+			services.dataSocket.sendMessage(message);
 		}
 	}
 
