@@ -8,7 +8,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # For information on the generic Dart part of this file, see
 # https://dart.dev/tools/pub/pubspec
 
-version: 0.0.1-alpha
+version: 2023.3.13+1
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
@@ -24,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_libserialport: ^0.3.0
+  package_info_plus: ^1.4.2
   protobuf: ^2.1.0
   provider: ^6.0.5
   win32_gamepad: ^1.0.2
