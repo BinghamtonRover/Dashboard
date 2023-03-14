@@ -1,12 +1,18 @@
-import "controller.dart";
+import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/services.dart";
 
-/// A [Controller] to drive the rover in manual drive mode.
-class DriveController extends Controller {
+import "controls.dart";
+
+/// A [RoverControls] that drives the rover.
+class DriveControls extends RoverControls {
 	/// Increases the throttle by +/- 20%.
 	static const throttleIncrement = 0.1;
 
 	/// The current throttle, as a percentage of the rover's top speed.
 	double throttle = 0;
+
+	@override
+	OperatingMode get mode => OperatingMode.drive;
 
 	@override
 	List<Message> parseInputs(GamepadState state) => [
@@ -48,7 +54,7 @@ class DriveController extends Controller {
 	];
 
 	@override
-	Map<String, String> get controls => {
+	Map<String, String> get buttonMapping => {
 		"Left Throttle": "Left joystick (vertical)",
 		"Right Throttle": "Right joystick (vertical)",
 		"Drive Straight": "Triggers",

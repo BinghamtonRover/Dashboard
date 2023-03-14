@@ -18,12 +18,12 @@ enum OperatingMode {
 	/// Autonomy mode. 
 	/// 
 	/// Focus on helping the user understand the rover's decisions.
-	autonomy("Autonomous"), 
+	autonomy("Autonomy"), 
 
 	/// Drive mode. 
 	/// 
 	/// Focus on helping the user simply drive the rover.
-	drive("Manual Drive");
+	drive("Drive");
 
 	/// The name of this mode.
 	/// 
