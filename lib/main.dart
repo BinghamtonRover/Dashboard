@@ -11,9 +11,12 @@ library main;
 import "package:flutter/material.dart";
 
 import "app.dart";
+import "models.dart";
 import "services.dart";
 
 void main() async {
+	WidgetsFlutterBinding.ensureInitialized();
 	await services.init();
+	await models.init();
 	runApp(RoverControlDashboard());
 }

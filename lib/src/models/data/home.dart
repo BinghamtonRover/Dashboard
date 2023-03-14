@@ -1,4 +1,5 @@
 import "dart:async";
+import "package:package_info_plus/package_info_plus.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -11,8 +12,14 @@ class HomeModel extends Model {
 	/// The timer responsible for clearing the [message].
 	Timer? _messageTimer;
 
+	/// The dashboard's version from the `pubspec.yaml`. 
+	String? version;
+
 	@override
-	Future<void> init() async { }
+	Future<void> init() async { 
+		final info = await PackageInfo.fromPlatform();
+		version = info.version;
+	}
 
 	/// Sets a new message that will disappear in 5 seconds.
 	void setMessage({required Severity severity, required String text}) {

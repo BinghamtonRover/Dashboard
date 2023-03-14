@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
@@ -34,7 +35,7 @@ class HomePage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => Scaffold(
 		appBar: AppBar(
-			title: const Text("Dashboard"),
+			title: Text("Dashboard v${models.home.version ?? ''}"),
 			actions: [
 				IconButton(
 					icon: const Icon(Icons.settings),

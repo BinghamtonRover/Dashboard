@@ -88,4 +88,4 @@ class Models extends Model {
 /// This constant is here to provide easy access to the backend. But simply using this variable
 /// will not cause the UI to update. For that, you must place it in a `ChangeNotifierProvider`
 /// and use `Consumer` when needed.
-final models = Models()..init();
+final models = Models();
