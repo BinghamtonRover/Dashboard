@@ -46,13 +46,9 @@ class FilesService extends Service {
     final String yamlString = await settingsFile.readAsString();
     // An empty file means [loadYaml] returns null
     final Map yaml = loadYaml(yamlString) ?? {};
-    try { return Settings.fromYaml(yaml); }
-    catch (error) {
-      print("Error while parsing settings: $error");  // ignore: avoid_print
-      final settings = Settings();
-      await writeSettings(settings);  // for next time
-      return settings;
-    }
+    final settings = Settings.fromYaml(yaml);
+    await writeSettings(settings);  // re-save any default values
+    return settings;
   }
 
   /// Saves the current frame in the feed to the camera's output directory.
