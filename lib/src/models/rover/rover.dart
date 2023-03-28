@@ -19,6 +19,9 @@ class Rover extends Model {
 	/// A model to adjust settings on the rover.
 	final settings = RoverSettings();
 
+	/// Changes the sockets on the rover.
+	final sockets = Sockets();
+
 	/// The operating mode for [GamepadService.gamepad1].
 	final controller1 = Controller(services.gamepad.gamepad1, DriveControls());
 
@@ -41,10 +44,12 @@ class Rover extends Model {
 		await controller1.init();
 		await controller2.init();
 		await settings.init();
+		await sockets.init();
 
 		heartbeats.addListener(notifyListeners);
 		metrics.addListener(notifyListeners);
 		settings.addListener(notifyListeners);
+		sockets.addListener(notifyListeners);
 	}
 
 	@override
@@ -52,12 +57,14 @@ class Rover extends Model {
 		heartbeats.removeListener(notifyListeners);
 		metrics.removeListener(notifyListeners);
 		settings.removeListener(notifyListeners);
+		sockets.removeListener(notifyListeners);
 
 		heartbeats.dispose();
 		metrics.dispose();
 		controller1.dispose();
 		controller2.dispose();
 		settings.dispose();
+		sockets.dispose();
 		super.dispose();
 	}
 }

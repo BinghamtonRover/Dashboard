@@ -27,6 +27,7 @@ export "src/models/rover/controls/controls.dart";
 export "src/models/rover/heartbeats.dart";
 export "src/models/rover/metrics.dart";
 export "src/models/rover/rover.dart";
+export "src/models/rover/sockets.dart";
 
 // View models
 export "src/models/view/modes/mode.dart";

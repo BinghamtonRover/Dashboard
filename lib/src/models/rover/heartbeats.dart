@@ -34,12 +34,6 @@ class RoverHeartbeats extends Model {
 
 	@override
 	Future<void> init() async {
-		/// Set the right IP addresses
-		final settings = await services.files.readSettings();
-		services.dataSocket.destination = settings.subsystemsSocket;
-		services.videoSocket.destination = settings.videoSocket;
-		services.autonomySocket.destination = settings.autonomySocket;
-
 		services.dataSocket.registerHandler<Connect>(
 			name: Connect().messageName,
 			decoder: Connect.fromBuffer,
