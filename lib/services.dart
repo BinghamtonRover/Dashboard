@@ -60,6 +60,7 @@ class Services extends Service {
 	Future<void> init() async {
 		await dataSocket.init();
 		await videoSocket.init();
+		await autonomySocket.init();
 		await gamepad.init();
 		await files.init();
 		await serial.init();
@@ -69,6 +70,7 @@ class Services extends Service {
 	Future<void> dispose() async {
 		await dataSocket.dispose();
 		await videoSocket.dispose();
+		await autonomySocket.dispose();
 		await gamepad.dispose();
 		await files.dispose();
 		await serial.dispose();
