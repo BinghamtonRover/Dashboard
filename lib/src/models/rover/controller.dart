@@ -29,8 +29,9 @@ class Controller extends Model {
 	bool isStartPressed = false;
 
 	/// Map to figure out what device is connected
-	/// <Teensy, Command>
+	/// 
 	/// Used to send data to the correct teensy
+	/// <Command, Teensy>
 	Map<String, String> teensyCommands = {
 		"ArmCommand": "ARM",
 		"GripperCommand": "GRIPPER",
@@ -76,8 +77,7 @@ class Controller extends Model {
 
 	/// Sends a command over the network or over Serial.
 	Future<void> sendMessage(Message message) async {
-		if (models.serial.isConnected &&
-	(teensyCommands.containsKey(message.messageName))) {
+		if(models.serial.isConnected && (models.serial.connectedDevice == teensyCommands[message.messageName])){
 			await services.serial.sendMessage(message);
 		} else {
 			services.dataSocket.sendMessage(message);
