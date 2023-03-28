@@ -1,9 +1,7 @@
+import "dart:convert";
 import "dart:io";
 
 import "package:rover_dashboard/data.dart";
-
-import "package:yaml/yaml.dart";
-import "package:yaml_writer/yaml_writer.dart";
 
 import "service.dart";
 
@@ -18,18 +16,18 @@ class FilesService extends Service {
   /// should get their own subdirectory.
   static final outputDir = Directory("${Directory.current.path}/output");
 
-  /// The file containing the user's [Settings], in YAML form.
+  /// The file containing the user's [Settings], in JSON form.
   /// 
-  /// This file should contain the result of [Settings.toYaml], and loading settings
-  /// from the file should be done with [Settings.fromYaml].
-  static File get settingsFile => File("${outputDir.path}/settings.yaml");
+  /// This file should contain the result of [Settings.toJson], and loading settings
+  /// from the file should be done with [Settings.fromJson].
+  static File get settingsFile => File("${outputDir.path}/settings.json");
 
   /// Ensure that files and directories that are expected to be present actually
   /// exist on the system. If not, create them. 
   @override
   Future<void> init() async {
     await outputDir.create();
-    if (!settingsFile.existsSync()) await settingsFile.create();
+    if (!settingsFile.existsSync()) await settingsFile.writeAsString(jsonEncode({}));
   }
 
   @override
@@ -37,16 +35,14 @@ class FilesService extends Service {
 
   /// Saves the [settings] object to the [settingsFile], as YAML.
   Future<void> writeSettings(Settings settings) async {
-    final yamlString = YAMLWriter().write(settings.toYaml());
-    await settingsFile.writeAsString(yamlString);
+    final json = jsonEncode(settings.toJson());
+    await settingsFile.writeAsString(json);
   }
 
   /// Reads the user's settings from the [settingsFile].
   Future<Settings> readSettings() async {
-    final String yamlString = await settingsFile.readAsString();
-    // An empty file means [loadYaml] returns null
-    final Map yaml = loadYaml(yamlString) ?? {};
-    final settings = Settings.fromYaml(yaml);
+    final json = jsonDecode(await settingsFile.readAsString());
+    final settings = Settings.fromJson(json);
     await writeSettings(settings);  // re-save any default values
     return settings;
   }

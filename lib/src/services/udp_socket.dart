@@ -57,7 +57,7 @@ abstract class UdpSocket extends Service {
 
 	/// Opens a UDP socket on the given port.
 	UdpSocket({required this.listenPort, SocketConfig? destination})
-		: destination = destination ?? SocketConfig(InternetAddress.loopbackIPv4, listenPort);
+		: destination = destination ?? defaultSettings.subsystemsSocket;
 
 	@override
 	Future<void> init() async {

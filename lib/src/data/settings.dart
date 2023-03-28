@@ -1,15 +1,12 @@
 import "socket.dart";
 
-/// YAML data stored as a Map.
-typedef Yaml = Map;
-
 /// A collection of functions for parsing [Settings]. 
-extension SettingsParser on Yaml {
+extension SettingsParser on Json {
   /// Parses a [SocketConfig] that may not be present.
   SocketConfig? getSocket(String key) {
-    final Yaml? socket = this[key];
+    final Json? socket = this[key];
     if (socket == null) return null;
-    return SocketConfig.fromYaml(socket);
+    return SocketConfig.fromJson(socket);
   }
 }
 
@@ -46,19 +43,19 @@ class Settings {
     required this.connectionTimeout,
   });
 
-  /// Initialize settings from YAML.
-  Settings.fromYaml(Map yaml) : 
-    subsystemsSocket = yaml.getSocket("subsystemsSocket") ?? defaultSettings.subsystemsSocket,
-    videoSocket = yaml.getSocket("videoSocket") ?? defaultSettings.videoSocket,
-    autonomySocket = yaml.getSocket("autonomySocket") ?? defaultSettings.autonomySocket,
-    tankAddress = yaml["tankAddress"] ?? defaultSettings.tankAddress,
-    connectionTimeout = yaml["connectionTimeout"] ?? defaultSettings.connectionTimeout;
+  /// Initialize settings from Json.
+  Settings.fromJson(Json json) : 
+    subsystemsSocket = json.getSocket("subsystemsSocket") ?? defaultSettings.subsystemsSocket,
+    videoSocket = json.getSocket("videoSocket") ?? defaultSettings.videoSocket,
+    autonomySocket = json.getSocket("autonomySocket") ?? defaultSettings.autonomySocket,
+    tankAddress = json["tankAddress"] ?? defaultSettings.tankAddress,
+    connectionTimeout = json["connectionTimeout"] ?? defaultSettings.connectionTimeout;
 
-  /// Converts the data from the settings instance to YAML.
-  Map toYaml() => { 
-    "subsystemsSocket": subsystemsSocket,
-    "videoSocket": videoSocket,
-    "autonomySocket": autonomySocket,
+  /// Converts the data from the settings instance to Json.
+  Map toJson() => { 
+    "subsystemsSocket": subsystemsSocket.toJson(),
+    "videoSocket": videoSocket.toJson(),
+    "autonomySocket": autonomySocket.toJson(),
     "tankAddress": tankAddress,
     "connectionTimeout": connectionTimeout,
   };
@@ -66,7 +63,7 @@ class Settings {
 
 /// The defualt settings with default values.
 /// 
-/// Use this when the settings in the YAML file are invalid.
+/// Use this when the settings in the Json file are invalid.
 final defaultSettings = Settings(
   subsystemsSocket: SocketConfig.raw("192.168.1.20", 8000),
   videoSocket: SocketConfig.raw("192.168.1.30", 8000),

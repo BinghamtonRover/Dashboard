@@ -1,5 +1,8 @@
 import "dart:io";
 
+/// Json data stored as a Map.
+typedef Json = Map<String, dynamic>;
+
 /// Describes a UDP socket comprised of an IP address and a port.
 class SocketConfig {
   /// The IP address of the socket.
@@ -15,7 +18,13 @@ class SocketConfig {
   SocketConfig.raw(String host, this.port) : address = InternetAddress(host);
 
   /// Parses the socket data from a YAML map.
-  SocketConfig.fromYaml(Map yaml) : 
+  SocketConfig.fromJson(Json yaml) : 
     address = InternetAddress(yaml["host"]),
     port = yaml["port"];
+
+  /// This socket's configuration in JSON format.
+  Json toJson() => {
+    "host": address.address,
+    "port": port,
+  };
 }
