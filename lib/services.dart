@@ -24,8 +24,6 @@ export "src/services/gamepad.dart";
 export "src/services/proto_socket.dart";
 export "src/services/serial.dart";
 export "src/services/udp_socket.dart";
-// export "src/services/udp_client.dart";
-// export "src/services/udp_server.dart";
 
 /// A dependency injection service that manages the lifecycle of other services.
 ///
@@ -41,10 +39,13 @@ class Services extends Service {
 	Services._();
 
 	/// A UDP socket for sending and receiving Protobuf data.
-	final dataSocket = ProtoSocket(port: 8008);
+	final dataSocket = ProtoSocket(listenPort: 8001);
 
 	/// A UDP socket for receiving video.
-	final videoSocket = ProtoSocket(port: 8009);
+	final videoSocket = ProtoSocket(listenPort: 8002);
+
+	/// A UDP socket for controlling autonomy.
+	final autonomySocket = ProtoSocket(listenPort: 8003);
 
 	/// A service that handles controller inputs.
 	final gamepad = GamepadService();

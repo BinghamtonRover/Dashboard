@@ -20,7 +20,7 @@ class ProtoSocket extends UdpSocket {
 	final Map<String, RawDataHandler> _handlers = {};
 
 	/// Opens a socket for sending and receiving Protobuf messages.
-	ProtoSocket({required super.port});
+	ProtoSocket({required super.listenPort, super.destination});
 
 	/// Runs every time data is received by the socket. 
 	/// 
@@ -66,12 +66,5 @@ class ProtoSocket extends UdpSocket {
 	}
 
 	/// Wraps the [message] in a [WrappedMessage] container and sends it to the rover. 
-	/// 
-	/// You may pass in any IP address and port. The default target is the subsystems Pi.
-	void sendMessage(Message message, {InternetAddress? address, int? port}) {
-		// Have to use ??= instead of default parameters because addresses aren't const
-		address ??= subsystemsPiAddress;
-		port ??= subsystemsPort;
-		sendBytes(address: address, port: port, bytes: message.wrapped.writeToBuffer());
-	}
+	void sendMessage(Message message) => sendBytes(message.wrapped.writeToBuffer());
 }
