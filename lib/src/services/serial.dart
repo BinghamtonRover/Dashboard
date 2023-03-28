@@ -112,9 +112,8 @@ class Serial extends Service {
 	/// - If there is an IO error, this will throw a [SerialPortError].
 	Stream<Uint8List> get incomingData {
 		if (_reader == null) throw DeviceNotConnected();
-		try {
-			return _reader!.stream;
-		} on SerialPortError catch (error) {
+		try { return _reader!.stream; } 
+		on SerialPortError catch (error) {
 			disconnect();
 			throw SerialIOError(error);
 		}
