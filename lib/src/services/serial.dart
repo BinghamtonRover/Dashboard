@@ -61,10 +61,9 @@ class Serial extends Service {
 		}
 
 		// Send a handshake, expect one back
-		await sendMessage(
-			Connect(sender: Device.DASHBOARD, receiver: Device.FIRMWARE));
-			await Future.delayed(const Duration(seconds: 1));
-			final received = _writer!.read(4); // nice way to read X bytes at a time
+		await sendMessage(Connect(sender: Device.DASHBOARD, receiver: Device.FIRMWARE));
+		await Future.delayed(const Duration(seconds: 1));
+		final received = _writer!.read(4); // nice way to read X bytes at a time
 		try {
 			final message = Connect.fromBuffer(received);
 			final isValid = message.receiver == Device.DASHBOARD;
@@ -112,7 +111,7 @@ class Serial extends Service {
 	/// - If there is an IO error, this will throw a [SerialPortError].
 	Stream<Uint8List> get incomingData {
 		if (_reader == null) throw DeviceNotConnected();
-		try { return _reader!.stream; } 
+		try { return _reader!.stream; }
 		on SerialPortError catch (error) {
 			disconnect();
 			throw SerialIOError(error);
