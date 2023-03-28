@@ -29,11 +29,20 @@ class Settings {
   /// The address and port of the autonomy program.
   SocketConfig autonomySocket;
 
+  /// The IP address of the tank.
+  /// 
+  /// The Tank is a model rover that has all the same programs as the rover. This field does not
+  /// include port numbers because ports are specific to the program, and the tank will have many
+  /// programs running. Instead, the IP address of all the other programs should be swapped with
+  /// the tank when it's being used.
+  String tankAddress;
+
   /// A constructor for this class.
   Settings({
     required this.subsystemsSocket,
     required this.videoSocket,    
     required this.autonomySocket,    
+    required this.tankAddress,
     required this.connectionTimeout,
   });
 
@@ -42,6 +51,7 @@ class Settings {
     subsystemsSocket = yaml.getSocket("subsystemsSocket") ?? defaultSettings.subsystemsSocket,
     videoSocket = yaml.getSocket("videoSocket") ?? defaultSettings.videoSocket,
     autonomySocket = yaml.getSocket("autonomySocket") ?? defaultSettings.autonomySocket,
+    tankAddress = yaml["tankAddress"] ?? defaultSettings.tankAddress,
     connectionTimeout = yaml["connectionTimeout"] ?? defaultSettings.connectionTimeout;
 
   /// Converts the data from the settings instance to YAML.
@@ -49,6 +59,7 @@ class Settings {
     "subsystemsSocket": subsystemsSocket,
     "videoSocket": videoSocket,
     "autonomySocket": autonomySocket,
+    "tankAddress": tankAddress,
     "connectionTimeout": connectionTimeout,
   };
 }
@@ -60,5 +71,6 @@ final defaultSettings = Settings(
   subsystemsSocket: SocketConfig.raw("192.168.1.20", 8000),
   videoSocket: SocketConfig.raw("192.168.1.30", 8000),
   autonomySocket: SocketConfig.raw("192.168.1.30", 8000),
+  tankAddress: "192.168.1.40",
   connectionTimeout: 5,
 );
