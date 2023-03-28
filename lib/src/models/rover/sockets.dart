@@ -4,9 +4,22 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
-enum RoverType { rover, tank }
+/// Which rover-like system to communicate with.
+enum RoverType { 
+	/// The rover itself.
+	/// 
+	/// The rover has multiple computers with multiple IP addresses.
+	rover, 
 
+	/// The smaller rover used for autonomy.
+	/// 
+	/// The tank only has one computer with one static IP address (see [Settings.tankAddress]).
+	tank
+}
+
+/// Coordinates all the sockets to point to the right [RoverType].
 class Sockets extends Model {
+	/// The rover-like system currently in use.
 	RoverType rover = RoverType.rover;
 
 	@override
@@ -29,7 +42,8 @@ class Sockets extends Model {
 		}
 	}
 
-	void updateRover(RoverType rover) {
+	/// Change which rover is being used.
+	void setRover(RoverType rover) {
 		models.home.setMessage(severity: Severity.info, text: "Using rover: ${rover.name}");
 		notifyListeners();
 	}
