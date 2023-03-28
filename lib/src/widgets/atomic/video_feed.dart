@@ -132,6 +132,9 @@ class VideoFeedState extends State<VideoFeed> {
 					)
 				]
 			),
+			Positioned(left: 5, bottom: 5,
+				child: Text(feed.name),
+			),
 		]
 	);
 
