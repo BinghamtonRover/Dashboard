@@ -76,10 +76,9 @@ class Controller extends Model {
 
   /// Sends a command over the network or over Serial.
   Future<void> sendMessage(Message message) async {
-    if (models.serial.isConnected) {
-      if (teensyCommands.containsKey(message.messageName)) {
-        await services.serial.sendMessage(message);
-      }
+    if (models.serial.isConnected &&
+        (teensyCommands.containsKey(message.messageName))) {
+      await services.serial.sendMessage(message);
     } else {
       services.dataSocket.sendMessage(message);
     }
