@@ -88,7 +88,7 @@ class Controller extends Model {
 	Future<void> _update([_]) async {
 		services.gamepad.update();
 		if (gamepad.state.buttonStart) {
-	isStartPressed = true;
+			isStartPressed = true;
 		} else if (isStartPressed) {
 			// switch to the next mode
 			int index = controls.mode.index + 1;
