@@ -34,6 +34,12 @@ class RoverHeartbeats extends Model {
 
 	@override
 	Future<void> init() async {
+		/// Set the right IP addresses
+		final settings = await services.files.readSettings();
+		services.dataSocket.destination = settings.subsystemsSocket;
+		services.videoSocket.destination = settings.videoSocket;
+		services.autonomySocket.destination = settings.autonomySocket;
+
 		services.dataSocket.registerHandler<Connect>(
 			name: Connect().messageName,
 			decoder: Connect.fromBuffer,
@@ -67,9 +73,9 @@ class RoverHeartbeats extends Model {
 			case Device.SUBSYSTEMS: 
 				return services.dataSocket.sendMessage(message);  
 			case Device.VIDEO: 
-				return services.dataSocket.sendMessage(message, address: secondaryPiAddress, port: videoPort);
+				return services.videoSocket.sendMessage(message);
 			case Device.AUTONOMY: 
-				return services.dataSocket.sendMessage(message, address: secondaryPiAddress, port: autonomyPort);
+				return services.autonomySocket.sendMessage(message);
 		}
 	}
 
@@ -99,4 +105,12 @@ class RoverHeartbeats extends Model {
 		handshakeTimer = Timer(handshakeInterval, sendHandshakes);
 		notifyListeners();
 	}
+
+	// void enableTank() {
+	// 	// Flip all 
+	// 	final settings = await services.files.readSettings();
+	// 	final tankSocket = settings.tankSocket;
+	// 	services.dataSocket.destination = tankSocket;
+
+	// }
 }

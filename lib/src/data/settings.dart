@@ -1,4 +1,4 @@
-import "dart:io";
+import "socket.dart";
 
 /// YAML data stored as a Map.
 typedef Yaml = Map;
@@ -11,26 +11,6 @@ extension SettingsParser on Yaml {
     if (socket == null) return null;
     return SocketConfig.fromYaml(socket);
   }
-}
-
-/// Describes a UDP socket comprised of an IP address and a port.
-class SocketConfig {
-  /// The IP address of the socket.
-  String host;
-
-  /// The port of the socket.
-  int port;
-
-  /// A const constructor.
-  SocketConfig(this.host, this.port);
-
-  /// Parses the socket data from a YAML map.
-  SocketConfig.fromYaml(Yaml yaml) : 
-    host = yaml["host"],
-    port = yaml["port"];
-
-  /// The address of the host.
-  InternetAddress get address => InternetAddress(host);
 }
 
 /// Contains the settings for running the dashboard and the rover. 
@@ -49,15 +29,11 @@ class Settings {
   /// The address and port of the autonomy program.
   SocketConfig autonomySocket;
 
-  /// The address and port of the tank program.
-  SocketConfig tankSocket;
-
   /// A constructor for this class.
   Settings({
     required this.subsystemsSocket,
     required this.videoSocket,    
     required this.autonomySocket,    
-    required this.tankSocket,
     required this.connectionTimeout,
   });
 
@@ -66,11 +42,13 @@ class Settings {
     subsystemsSocket = yaml.getSocket("subsystemsSocket") ?? defaultSettings.subsystemsSocket,
     videoSocket = yaml.getSocket("videoSocket") ?? defaultSettings.videoSocket,
     autonomySocket = yaml.getSocket("autonomySocket") ?? defaultSettings.autonomySocket,
-    tankSocket = yaml.getSocket("tankSocket") ?? defaultSettings.tankSocket,
     connectionTimeout = yaml["connectionTimeout"] ?? defaultSettings.connectionTimeout;
 
   /// Converts the data from the settings instance to YAML.
   Map toYaml() => { 
+    "subsystemsSocket": subsystemsSocket,
+    "videoSocket": videoSocket,
+    "autonomySocket": autonomySocket,
     "connectionTimeout": connectionTimeout,
   };
 }
@@ -79,9 +57,8 @@ class Settings {
 /// 
 /// Use this when the settings in the YAML file are invalid.
 final defaultSettings = Settings(
-  subsystemsSocket: SocketConfig("192.168.1.20", 8000),
-  videoSocket: SocketConfig("192.168.1.30", 8000),
-  autonomySocket: SocketConfig("192.168.1.30", 8000),
-  tankSocket: SocketConfig("192.168.1.40", 8000),
+  subsystemsSocket: SocketConfig.raw("192.168.1.20", 8000),
+  videoSocket: SocketConfig.raw("192.168.1.30", 8000),
+  autonomySocket: SocketConfig.raw("192.168.1.30", 8000),
   connectionTimeout: 5,
 );
