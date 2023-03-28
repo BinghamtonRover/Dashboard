@@ -13,89 +13,89 @@ import "package:rover_dashboard/services.dart";
 /// call [RoverControls.parseInputs] to see what actions can be done. Each command is then sent
 /// via [sendMessage], which will either send them over the network or via USB ([SerialModel]).
 class Controller extends Model {
-  /// Reads the gamepad and controls the rover when triggered.
-  late final Timer gamepadTimer;
+	/// Reads the gamepad and controls the rover when triggered.
+	late final Timer gamepadTimer;
 
-  /// The gamepad to read from. Multiple gamepads may be connected.
-  final Gamepad gamepad;
+	/// The gamepad to read from. Multiple gamepads may be connected.
+	final Gamepad gamepad;
 
-  /// Defines what the current controls are for the current mode.
-  RoverControls controls;
+	/// Defines what the current controls are for the current mode.
+	RoverControls controls;
 
-  /// Whether the start button has been pressed.
-  ///
-  /// When the start button is released, the dashboard will switch to the next mode.
-  bool isStartPressed = false;
+	/// Whether the start button has been pressed.
+	///
+	/// When the start button is released, the dashboard will switch to the next mode.
 
-  /// Map to figure out what device is connected
-  /// <Teensy, Command>
-  /// Used to send data to the correct teensy
-  Map<String, String> teensyCommands = {
-    //"VideoCommand" : "VIDEO"
-    "ArmCommand": "ARM",
-    "GripperCommand": "GRIPPER",
-    "ScienceCommand": "SCIENCE",
-    "ElecticalCommand": "ELECTRICAL",
-    "DriveCommand": "DRIVE",
-    "MarsCommand": "MARS",
-    "FirmwareCommand": "FIRMWARE"
-  };
+	bool isStartPressed = false;
 
-  /// Maps button presses on [gamepad] to [controls].
-  Controller(this.gamepad, this.controls);
+	/// Map to figure out what device is connected
+	/// <Teensy, Command>
+	/// Used to send data to the correct teensy
+	Map<String, String> teensyCommands = {
+		"ArmCommand": "ARM",
+		"GripperCommand": "GRIPPER",
+		"ScienceCommand": "SCIENCE",
+		"ElecticalCommand": "ELECTRICAL",
+		"DriveCommand": "DRIVE",
+		"MarsCommand": "MARS",
+		"FirmwareCommand": "FIRMWARE"
+	};
 
-  @override
-  Future<void> init() async {
-    gamepadTimer = Timer.periodic(gamepadDelay, _update);
-  }
+	/// Maps button presses on [gamepad] to [controls].
+	Controller(this.gamepad, this.controls);
 
-  @override
-  void dispose() {
-    gamepadTimer.cancel();
-    controls.onDispose.forEach(sendMessage);
-    super.dispose();
-  }
+	@override
+	Future<void> init() async {
+		gamepadTimer = Timer.periodic(gamepadDelay, _update);
+	}
 
-  /// The current operating mode.
-  OperatingMode get mode => controls.mode;
+	@override
+	void dispose() {
+		gamepadTimer.cancel();
+		controls.onDispose.forEach(sendMessage);
+		super.dispose();
+	}
 
-  /// Whether this controller is ready to use.
-  bool get isConnected => gamepad.isConnected;
+	/// The current operating mode.
+	OperatingMode get mode => controls.mode;
 
-  /// Changes the current mode this [gamepad] is controlling, and chooses a new [RoverControls].
-  void setMode(OperatingMode? mode) {
-    if (mode == null) return;
-    controls.onDispose.forEach(sendMessage);
-    controls = RoverControls.forMode(mode);
-    gamepad.pulse();
-    notifyListeners();
-  }
+	/// Whether this controller is ready to use.
+	bool get isConnected => gamepad.isConnected;
 
-  /// Same as [setMode], but uses [OperatingMode.index] instead.
-  void setModeIndex(int index) => setMode(OperatingMode.values[index]);
+	/// Changes the current mode this [gamepad] is controlling, and chooses a new [RoverControls].
+	void setMode(OperatingMode? mode) {
+		if (mode == null) return;
+		controls.onDispose.forEach(sendMessage);
+		controls = RoverControls.forMode(mode);
+		gamepad.pulse();
+		notifyListeners();
+	}
 
-  /// Sends a command over the network or over Serial.
-  Future<void> sendMessage(Message message) async {
-    if (models.serial.isConnected &&
-        (teensyCommands.containsKey(message.messageName))) {
-      await services.serial.sendMessage(message);
-    } else {
-      services.dataSocket.sendMessage(message);
-    }
-  }
+	/// Same as [setMode], but uses [OperatingMode.index] instead.
+	void setModeIndex(int index) => setMode(OperatingMode.values[index]);
 
-  /// Reads the gamepad, chooses commands, and sends them to the rover.
-  Future<void> _update([_]) async {
-    services.gamepad.update();
-    if (gamepad.state.buttonStart) {
-      isStartPressed = true;
-    } else if (isStartPressed) {
-      // switch to the next mode
-      int index = controls.mode.index + 1;
-      if (index == OperatingMode.values.length) index = 0;
-      setModeIndex(index);
-    }
-    final messages = controls.parseInputs(gamepad.state);
-    messages.forEach(sendMessage);
-  }
+	/// Sends a command over the network or over Serial.
+	Future<void> sendMessage(Message message) async {
+		if (models.serial.isConnected &&
+	(teensyCommands.containsKey(message.messageName))) {
+			await services.serial.sendMessage(message);
+		} else {
+			services.dataSocket.sendMessage(message);
+		}
+	}
+
+	/// Reads the gamepad, chooses commands, and sends them to the rover.
+	Future<void> _update([_]) async {
+		services.gamepad.update();
+		if (gamepad.state.buttonStart) {
+	isStartPressed = true;
+		} else if (isStartPressed) {
+			// switch to the next mode
+			int index = controls.mode.index + 1;
+			if (index == OperatingMode.values.length) index = 0;
+			setModeIndex(index);
+		}
+		final messages = controls.parseInputs(gamepad.state);
+		messages.forEach(sendMessage);
+	}
 }
