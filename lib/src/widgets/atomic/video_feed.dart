@@ -129,7 +129,18 @@ class VideoFeedState extends State<VideoFeed> {
 								child: Text(other.name),
 							),
 						]
-					)
+					),
+					PopupMenuButton<AutonomyModel>(
+						tooltip: "Select a feed",
+						icon: const Text("UI"), //Icon(Icons.more_horiz),
+						//onSelected: ,
+						itemBuilder: (_) => [
+							for (final other in VideoModel.uiFeeds) PopupMenuItem(
+								value: other,
+								child: Text(other.name),
+							),
+						]
+					),
 				]
 			),
 		]

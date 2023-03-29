@@ -3,21 +3,31 @@ import "dart:async";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
+import "package:rover_dashboard/widgets.dart";
 
 /// A data model to stream video from the rover.
 class VideoModel extends Model {
 	/// list of the camera feeds
 	static final allFeeds = [
-		CameraFeed(id: CameraName.ROVER_FRONT, name: "Rover 1"),
-		CameraFeed(id: CameraName.ROVER_REAR, name: "Rover 2"), 
-		CameraFeed(id: CameraName.ARM_BASE, name: "Arm 1"), 
-		CameraFeed(id: CameraName.ARM_GRIPPER, name: "Arm 2"), 
-		CameraFeed(id: CameraName.SCIENCE_CAROUSEL, name: "Science"),
-		CameraFeed(id: CameraName.SCIENCE_MICROSCOPE, name: "Microscope"), 
+		Feed(cameraFeed: CameraFeed(id: CameraName.ROVER_FRONT, name: "Rover 1")),
+		Feed(cameraFeed: CameraFeed(id: CameraName.ROVER_REAR, name: "Rover 2")), 
+		Feed(cameraFeed: CameraFeed(id: CameraName.ARM_BASE, name: "Arm 1")), 
+		Feed(cameraFeed: CameraFeed(id: CameraName.ARM_GRIPPER, name: "Arm 2")), 
+		Feed(cameraFeed: CameraFeed(id: CameraName.SCIENCE_CAROUSEL, name: "Science")),
+		Feed(cameraFeed: CameraFeed(id: CameraName.SCIENCE_MICROSCOPE, name: "Microscope")), 
 	];
 
+	/// Add new feeds here for the UI's? Or make them part of allFeeds
+	static final uiFeeds = [
+		AutonomyModel(),
+		//CameraFeed(id: CameraName.ROVER_BASE /*this will need to change*/, name: "Autonomy")
+		// ArmFeed(),
+	];
+
+	//List<AutonomyFeed> autonomyFeeds = [uiFeeds[0]];
+
 	/// The current layout of video feeds.
-	List<CameraFeed> feeds = [
+	List<Feed> feeds = [
 		allFeeds[0], allFeeds[1], allFeeds[2], allFeeds[3],
 	];
 

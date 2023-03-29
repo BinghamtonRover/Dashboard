@@ -18,14 +18,14 @@ class VideoFeeds extends StatelessWidget {
 		children: [
 			Expanded(child: Row(
 				children: [
-					if (model.feeds.isNotEmpty) Expanded(child: VideoFeed(model.feeds[0])),
-					if (model.feeds.length >= 2) Expanded(child: VideoFeed(model.feeds[1])),
+					if (model.feeds.isNotEmpty) Expanded(child: Feed(model.feeds[0])),
+					if (model.feeds.length >= 2) Expanded(child: Feed(model.feeds[1])),
 				]
 			)),
 			if (model.feeds.length > 2) Expanded(child: Row(
 				children: [
-					if (model.feeds.length >= 3) Expanded(child: VideoFeed(model.feeds[2])),
-					if (model.feeds.length >= 4) Expanded(child: VideoFeed(model.feeds[3])),
+					if (model.feeds.length >= 3) Expanded(child: Feed(model.feeds[2])),
+					if (model.feeds.length >= 4) Expanded(child: Feed(model.feeds[3])),
 				],
 			)),
 		]
