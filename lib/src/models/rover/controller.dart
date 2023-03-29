@@ -32,14 +32,14 @@ class Controller extends Model {
 	/// 
 	/// Used to send data to the correct teensy
 	/// <Command, Teensy>
-	Map<String, String> teensyCommands = {
-		"ArmCommand": "ARM",
-		"GripperCommand": "GRIPPER",
-		"ScienceCommand": "SCIENCE",
-		"ElecticalCommand": "ELECTRICAL",
-		"DriveCommand": "DRIVE",
-		"MarsCommand": "MARS",
-		"FirmwareCommand": "FIRMWARE"
+	Map<String, Device> teensyCommands = {
+		"ArmCommand": Device.ARM,
+		"GripperCommand": Device.GRIPPER,
+		"ScienceCommand": Device.SCIENCE,
+		"ElecticalCommand": Device.ELECTRICAL,
+		"DriveCommand": Device.DRIVE,
+		"MarsCommand": Device.MARS,
+		"FirmwareCommand": Device.FIRMWARE
 	};
 
 	/// Maps button presses on [gamepad] to [controls].
@@ -77,7 +77,7 @@ class Controller extends Model {
 
 	/// Sends a command over the network or over Serial.
 	Future<void> sendMessage(Message message) async {
-		if(models.serial.isConnected && (models.serial.connectedDevice == teensyCommands[message.messageName])){
+		if(models.serial.isConnected && (services.serial.connectedDevice == teensyCommands[message.messageName])){
 			await services.serial.sendMessage(message);
 		} else {
 			services.dataSocket.sendMessage(message);
