@@ -1,3 +1,4 @@
+import "dart:io";
 import "package:win32_gamepad/win32_gamepad.dart";
 
 import "service.dart";
@@ -20,6 +21,36 @@ extension GamepadNumbers on num {
     final value = this / 256;
     return (value.abs() < epsilon) ? 0 : value.clamp(0, 1);
   }
+}
+
+/// An "implementation" of `package:win32_gamepad` for non-supported platforms.
+class MockGamepad implements Gamepad {
+  @override
+  void updateState() { }
+
+  @override
+  void vibrate({int? leftMotorSpeed, int? rightMotorSpeed}) { }
+
+  @override
+  int get controller => 0;
+
+  @override
+  GamepadBatteryInfo get gamepadBatteryInfo => GamepadBatteryInfo(0, GamepadDeviceType.controller);
+
+  @override
+  GamepadBatteryInfo get headsetBatteryInfo => GamepadBatteryInfo(0, GamepadDeviceType.headset);
+
+  @override
+  bool get isConnected => false;
+
+  @override
+  GamepadState get state => GamepadState.disconnected();
+
+  @override
+  set appHasFocus(bool value) { }  // ignore: avoid_setters_without_getters
+
+  @override
+  set state(GamepadState value) { }
 }
 
 /// More user-friendly values from [GamepadState].
@@ -81,10 +112,10 @@ const vibrateIntensity = 65000;
 /// [update] to read any button presses, or else [Gamepad.state] will never update.
 class GamepadService extends Service {
   /// The first gamepad connected to the user's device.
-  Gamepad gamepad1 = Gamepad(0);
+  Gamepad gamepad1 = Platform.isWindows ? Gamepad(0) : MockGamepad();
 
   /// The second gamepad connected to the user's device.
-  Gamepad gamepad2 = Gamepad(1);
+  Gamepad gamepad2 = Platform.isWindows ? Gamepad(1) : MockGamepad();
 
   @override
   Future<void> init() async => connect();
@@ -94,6 +125,7 @@ class GamepadService extends Service {
 
   /// Connects to a gamepad and calls [GamepadUtils.pulse].
   Future<void> connect() async {
+    if (!Platform.isWindows) return;
     int i;
     for (i = 0; i < maxGamepads; i++) {  // connect [gamepad1]
       gamepad1 = Gamepad(i);
