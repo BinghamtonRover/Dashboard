@@ -37,6 +37,13 @@ class HomePage extends StatelessWidget {
 		appBar: AppBar(
 			title: Text("Dashboard v${models.home.version ?? ''}"),
 			actions: [
+				ProviderConsumer<Sockets>.value(
+					value: models.rover.sockets,
+					builder: (model, _) => Switch(
+						value: model.rover == RoverType.rover, 
+						onChanged: (value) => model.setRover(value ? RoverType.rover : RoverType.tank),
+					)
+				),
 				IconButton(
 					icon: const Icon(Icons.settings),
 					onPressed: () => Navigator.of(context).pushNamed(Routes.settings),

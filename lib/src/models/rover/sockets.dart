@@ -43,8 +43,10 @@ class Sockets extends Model {
 	}
 
 	/// Change which rover is being used.
-	void setRover(RoverType rover) {
+	Future<void> setRover(RoverType value) async {
 		models.home.setMessage(severity: Severity.info, text: "Using rover: ${rover.name}");
+		rover = value;
+		await updateSockets();
 		notifyListeners();
 	}
 }
