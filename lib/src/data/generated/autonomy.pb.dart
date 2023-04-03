@@ -74,6 +74,53 @@ class GpsCoordinates extends $pb.GeneratedMessage {
   void clearLongitude() => clearField(2);
 }
 
+class AutonomyCommand extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AutonomyCommand', createEmptyInstance: create)
+    ..aOB(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'enable')
+    ..hasRequiredFields = false
+  ;
+
+  AutonomyCommand._() : super();
+  factory AutonomyCommand({
+    $core.bool? enable,
+  }) {
+    final _result = create();
+    if (enable != null) {
+      _result.enable = enable;
+    }
+    return _result;
+  }
+  factory AutonomyCommand.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory AutonomyCommand.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  AutonomyCommand clone() => AutonomyCommand()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  AutonomyCommand copyWith(void Function(AutonomyCommand) updates) => super.copyWith((message) => updates(message as AutonomyCommand)) as AutonomyCommand; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static AutonomyCommand create() => AutonomyCommand._();
+  AutonomyCommand createEmptyInstance() => create();
+  static $pb.PbList<AutonomyCommand> createRepeated() => $pb.PbList<AutonomyCommand>();
+  @$core.pragma('dart2js:noInline')
+  static AutonomyCommand getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AutonomyCommand>(create);
+  static AutonomyCommand? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.bool get enable => $_getBF(0);
+  @$pb.TagNumber(1)
+  set enable($core.bool v) { $_setBool(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasEnable() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearEnable() => clearField(1);
+}
+
 class AutonomyData extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AutonomyData', createEmptyInstance: create)
     ..aOM<GpsCoordinates>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'coordinates', subBuilder: GpsCoordinates.create)
