@@ -27,4 +27,7 @@ class SocketConfig {
     "host": address.address,
     "port": port,
   };
+
+  @override
+  String toString() => "${address.address}:$port";
 }

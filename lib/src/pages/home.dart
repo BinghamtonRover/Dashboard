@@ -39,10 +39,27 @@ class HomePage extends StatelessWidget {
 			actions: [
 				ProviderConsumer<Sockets>.value(
 					value: models.rover.sockets,
-					builder: (model, _) => Switch(
-						value: model.rover == RoverType.rover, 
-						onChanged: (value) => model.setRover(value ? RoverType.rover : RoverType.tank),
-					)
+					builder: (model, _) => Row(children: [
+						TextButton(
+							onPressed: () { },
+							child: Text(
+								"Tank", 
+								style: TextStyle(color: model.rover == RoverType.tank ? Colors.black : Colors.white)
+							), 
+						),
+						Switch(
+							value: model.rover == RoverType.rover, 
+							onChanged: (value) => model.setRover(value ? RoverType.rover : RoverType.tank),
+							thumbColor: MaterialStateProperty.all(Theme.of(context).colorScheme.surface),
+						),
+						TextButton(
+							child: Text(
+								"Rover", 
+								style: TextStyle(color: model.rover == RoverType.rover ? Colors.black : Colors.white)
+							), 
+							onPressed: () { }
+						),
+					]),
 				),
 				IconButton(
 					icon: const Icon(Icons.settings),

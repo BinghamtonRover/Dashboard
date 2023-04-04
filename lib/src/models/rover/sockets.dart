@@ -40,12 +40,15 @@ class Sockets extends Model {
 			services.videoSocket.destination.address = tankAddress;
 			services.autonomySocket.destination.address = tankAddress;
 		}
+		print(services.dataSocket.destination);
+		print(services.videoSocket.destination);
+		print(services.autonomySocket.destination);
 	}
 
 	/// Change which rover is being used.
 	Future<void> setRover(RoverType value) async {
-		models.home.setMessage(severity: Severity.info, text: "Using rover: ${rover.name}");
 		rover = value;
+		models.home.setMessage(severity: Severity.info, text: "Using: ${rover.name}");
 		await updateSockets();
 		notifyListeners();
 	}
