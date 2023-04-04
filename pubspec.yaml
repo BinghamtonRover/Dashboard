@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   flutter_libserialport: ^0.3.0
   package_info_plus: ^1.4.2
+  path_provider: ^2.0.14
   protobuf: ^2.1.0
   provider: ^6.0.5
   win32_gamepad: ^1.0.2
@@ -39,9 +40,20 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   build_runner: ^2.3.2
   protoc_builder: ^0.3.0
+  msix: ^3.9.1
 
 dependency_overrides: 
   libserialport: 0.2.0+3
+
+msix_config:
+  display_name: Dashboard
+  publisher_display_name: Binghamton University Rover Team
+  identity_name: edu.binghamton.rover
+  # logo_path: path/to/logo.png
+  capabilities: internetClientServer, privateNetworkClientServer, usb, serialcommunication, lowLevel
+  output_name: Dashboard
+  certificate_path: C:\users\public\BURT\key\CERTIFICATE.pfx
+  certificate_password: rover
 
 # The following section is specific to Flutter packages.
 flutter:
