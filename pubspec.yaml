@@ -52,7 +52,7 @@ msix_config:
   # logo_path: path/to/logo.png
   capabilities: internetClientServer, privateNetworkClientServer, usb, serialcommunication, lowLevel
   output_name: Dashboard
-  certificate_path: C:\users\public\BURT\key\CERTIFICATE.pfx
+  certificate_path: windows_certificate.pfx
   certificate_password: rover
 
 # The following section is specific to Flutter packages.
