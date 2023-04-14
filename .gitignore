@@ -1,5 +1,7 @@
 # The Dashboard outputs files into the output/ directory
 /output
+# Windows certificate files
+*.pfx
 
 # Miscellaneous
 *.class
