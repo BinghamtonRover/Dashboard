@@ -13,6 +13,7 @@ class GpsCoordinates extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'GpsCoordinates', createEmptyInstance: create)
     ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'latitude', $pb.PbFieldType.OF)
     ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'longitude', $pb.PbFieldType.OF)
+    ..a<$core.double>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'altitude', $pb.PbFieldType.OF)
     ..hasRequiredFields = false
   ;
 
@@ -20,6 +21,7 @@ class GpsCoordinates extends $pb.GeneratedMessage {
   factory GpsCoordinates({
     $core.double? latitude,
     $core.double? longitude,
+    $core.double? altitude,
   }) {
     final _result = create();
     if (latitude != null) {
@@ -27,6 +29,9 @@ class GpsCoordinates extends $pb.GeneratedMessage {
     }
     if (longitude != null) {
       _result.longitude = longitude;
+    }
+    if (altitude != null) {
+      _result.altitude = altitude;
     }
     return _result;
   }
@@ -68,5 +73,14 @@ class GpsCoordinates extends $pb.GeneratedMessage {
   $core.bool hasLongitude() => $_has(1);
   @$pb.TagNumber(2)
   void clearLongitude() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.double get altitude => $_getN(2);
+  @$pb.TagNumber(3)
+  set altitude($core.double v) { $_setFloat(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasAltitude() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAltitude() => clearField(3);
 }
 

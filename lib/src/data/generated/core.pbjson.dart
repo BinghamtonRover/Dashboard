@@ -18,11 +18,17 @@ const Device$json = const {
     const {'1': 'VIDEO', '2': 3},
     const {'1': 'AUTONOMY', '2': 4},
     const {'1': 'FIRMWARE', '2': 5},
+    const {'1': 'ARM', '2': 6},
+    const {'1': 'GRIPPER', '2': 7},
+    const {'1': 'SCIENCE', '2': 8},
+    const {'1': 'ELECTRICAL', '2': 9},
+    const {'1': 'DRIVE', '2': 10},
+    const {'1': 'MARS', '2': 11},
   ],
 };
 
 /// Descriptor for `Device`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List deviceDescriptor = $convert.base64Decode('CgZEZXZpY2USFAoQREVWSUNFX1VOREVGSU5FRBAAEg0KCURBU0hCT0FSRBABEg4KClNVQlNZU1RFTVMQAhIJCgVWSURFTxADEgwKCEFVVE9OT01ZEAQSDAoIRklSTVdBUkUQBQ==');
+final $typed_data.Uint8List deviceDescriptor = $convert.base64Decode('CgZEZXZpY2USFAoQREVWSUNFX1VOREVGSU5FRBAAEg0KCURBU0hCT0FSRBABEg4KClNVQlNZU1RFTVMQAhIJCgVWSURFTxADEgwKCEFVVE9OT01ZEAQSDAoIRklSTVdBUkUQBRIHCgNBUk0QBhILCgdHUklQUEVSEAcSCwoHU0NJRU5DRRAIEg4KCkVMRUNUUklDQUwQCRIJCgVEUklWRRAKEggKBE1BUlMQCw==');
 @$core.Deprecated('Use roverStatusDescriptor instead')
 const RoverStatus$json = const {
   '1': 'RoverStatus',
