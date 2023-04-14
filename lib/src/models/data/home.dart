@@ -18,7 +18,7 @@ class HomeModel extends Model {
 	@override
 	Future<void> init() async { 
 		final info = await PackageInfo.fromPlatform();
-		version = info.version;
+		version = "${info.version}+${info.buildNumber}";
 	}
 
 	/// Sets a new message that will disappear in 5 seconds.

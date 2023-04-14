@@ -65,9 +65,9 @@ class Settings {
 /// 
 /// Use this when the settings in the Json file are invalid.
 final defaultSettings = Settings(
-  subsystemsSocket: SocketConfig.raw("192.168.1.20", 8000),
-  videoSocket: SocketConfig.raw("192.168.1.30", 8000),
-  autonomySocket: SocketConfig.raw("192.168.1.30", 8000),
+  subsystemsSocket: SocketConfig.raw("192.168.1.20", 8001),
+  videoSocket: SocketConfig.raw("192.168.1.30", 8002),
+  autonomySocket: SocketConfig.raw("192.168.1.30", 8003),
   tankAddress: "192.168.1.40",
   connectionTimeout: 5,
 );
