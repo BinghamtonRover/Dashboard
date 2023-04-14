@@ -10,8 +10,11 @@ class SocketEditor extends StatelessWidget {
 	/// Performs validation and tracks the text entered into the fields.
 	final SocketBuilder model;
 
+	/// Whether to edit the port as well.
+	final bool editPort;
+
 	/// Creates a widget to edit host and port data for a socket.
-	const SocketEditor(this.model);
+	const SocketEditor(this.model, {this.editPort = true});
 
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<SocketBuilder>.value(
@@ -23,21 +26,23 @@ class SocketEditor extends StatelessWidget {
 				const Spacer(flex: 2),
 				Expanded(child: TextField(
 					controller: model.addressController, 
-					onChanged: model.setAddress,
+					onChanged: model.validateAddress,
 					decoration: InputDecoration(errorText: model.addressError),
 				)),
-				const SizedBox(width: 12),
-				Expanded(child: TextField(
-					controller: model.portController, 
-					onChanged: model.setPort,
-					decoration: InputDecoration(errorText: model.portError),
-				)),
+				if (editPort) ...[
+					const SizedBox(width: 12),
+					Expanded(child: TextField(
+						controller: model.portController, 
+						onChanged: model.validatePort,
+						decoration: InputDecoration(errorText: model.portError),
+					)),
+				]
 			],
 		)
 	);
 }
 
-/// The settings page. 
+/// The settings page.
 class SettingsPage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => Scaffold(
@@ -52,15 +57,7 @@ class SettingsPage extends StatelessWidget {
 						SocketEditor(model.dataSocket),
 						SocketEditor(model.videoSocket),
 						SocketEditor(model.autonomySocket),
-						Row(children: [
-							const Text("Tank Address"),
-							const Spacer(flex: 2),
-							Expanded(child: TextField(
-								controller: model.tankAddressController, 
-								onChanged: model.setTankAddress,
-								decoration: InputDecoration(errorText: model.tankAddressError),
-							)),
-						]),
+						SocketEditor(model.tankSocket, editPort: false),
 					],
 				)),
 				Row(
@@ -72,7 +69,7 @@ class SettingsPage extends StatelessWidget {
 						),
 						const SizedBox(width: 4),
 						ElevatedButton.icon(
-							onPressed: () async {
+							onPressed: !model.isValid ? null : () async {
 								await model.save();
 								if (context.mounted) Navigator.of(context).pop();
 							},
