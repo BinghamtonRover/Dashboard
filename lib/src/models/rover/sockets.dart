@@ -40,9 +40,6 @@ class Sockets extends Model {
 			services.videoSocket.destination.address = tankAddress;
 			services.autonomySocket.destination.address = tankAddress;
 		}
-		print(services.dataSocket.destination);
-		print(services.videoSocket.destination);
-		print(services.autonomySocket.destination);
 	}
 
 	/// Change which rover is being used.
