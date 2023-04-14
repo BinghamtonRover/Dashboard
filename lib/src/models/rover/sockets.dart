@@ -22,14 +22,16 @@ class Sockets extends Model {
 	/// The rover-like system currently in use.
 	RoverType rover = RoverType.rover;
 
+	late final Settings settings;
+
 	@override
 	Future<void> init() async {
+		settings = await services.files.readSettings();
 		await updateSockets();
 	}
 
 	/// Set the right IP addresses for the rover or tank.
 	Future<void> updateSockets() async {
-		final settings = await services.files.readSettings();
 		services.dataSocket.destination = settings.subsystemsSocket;
 		services.videoSocket.destination = settings.videoSocket;
 		services.autonomySocket.destination = settings.autonomySocket;

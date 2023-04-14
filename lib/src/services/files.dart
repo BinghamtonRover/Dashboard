@@ -30,7 +30,7 @@ class FilesService extends Service {
   @override
   Future<void> init() async {
     final appDir = await getApplicationDocumentsDirectory();
-    outputDir = Directory("${appDir.path}/output");
+    outputDir = Directory("${appDir.path}/Dashboard");
     await outputDir.create();
     if (!settingsFile.existsSync()) await settingsFile.writeAsString(jsonEncode({}));
   }
