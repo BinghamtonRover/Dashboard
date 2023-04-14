@@ -22,7 +22,8 @@ class Sockets extends Model {
 	/// The rover-like system currently in use.
 	RoverType rover = RoverType.rover;
 
-	late final Settings settings;
+	/// The settings used by the dashboard.
+	late Settings settings;
 
 	@override
 	Future<void> init() async {
