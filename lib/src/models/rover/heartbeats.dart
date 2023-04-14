@@ -62,7 +62,7 @@ class RoverHeartbeats extends Model {
 		switch (device) {
 			case Device.DEVICE_UNDEFINED: return;
 			case Device.FIRMWARE: return;  // must be done manually through [SerialModel]
-			case Device.DASHBOARD: 
+			case Device.DASHBOARD:
 				return models.home.setMessage(severity: Severity.warning, text: "Trying to send a handshake message to ourself");
 			case Device.SUBSYSTEMS: 
 				return services.dataSocket.sendMessage(message);  
@@ -70,11 +70,18 @@ class RoverHeartbeats extends Model {
 				return services.videoSocket.sendMessage(message);
 			case Device.AUTONOMY: 
 				return services.autonomySocket.sendMessage(message);
+			// TODO: Send heartbeats to the firwmare Teensy's.
+			case Device.ARM: 
+			case Device.GRIPPER:
+			case Device.SCIENCE: 
+			case Device.ELECTRICAL: 
+			case Device.DRIVE: 
+			case Device.MARS:
 		}
 	}
 
 	/// Sends handshakes to every device and monitors the connection.
-	/// 
+	///
 	/// Each received/missed handshake is worth 20%, so 5 successful hadnshakes means
 	/// the rover has a 100% connection strength. We use this handshake protocol instead
 	/// of TCP to allow *some* packets to drop for up to 25 seconds before giving up.
@@ -86,12 +93,12 @@ class RoverHeartbeats extends Model {
 		}
 		await Future.delayed(handshakeWaitDelay);
 		for (final device in Device.values) {
-			if (_handshakes[device]! > 0) { 
+			if (_handshakes[device]! > 0) {
 				final int numHandshakes = _handshakes[device]!;
 				final double score = connectionIncrement * numHandshakes;
 				connections[device] = connections[device]! + score;
-			} else { 
-				connections[device] = connections[device]! - connectionIncrement; 
+			} else {
+				connections[device] = connections[device]! - connectionIncrement;
 			}
 			if (connections[device]! > 1) connections[device] = 1;
 			if (connections[device]! < 0) connections[device] = 0;
@@ -99,12 +106,4 @@ class RoverHeartbeats extends Model {
 		handshakeTimer = Timer(handshakeInterval, sendHandshakes);
 		notifyListeners();
 	}
-
-	// void enableTank() {
-	// 	// Flip all 
-	// 	final settings = await services.files.readSettings();
-	// 	final tankSocket = settings.tankSocket;
-	// 	services.dataSocket.destination = tankSocket;
-
-	// }
 }

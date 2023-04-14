@@ -1,5 +1,8 @@
+// ignore_for_file: directives_ordering
 import "dart:convert";
 import "dart:io";
+
+import "package:path_provider/path_provider.dart";
 
 import "package:rover_dashboard/data.dart";
 
@@ -14,18 +17,20 @@ class FilesService extends Service {
   /// This includes settings, data, images, and anything else the user or dashboard
   /// may want to keep between sessions. Categories of output, like screenshots, 
   /// should get their own subdirectory.
-  static final outputDir = Directory("${Directory.current.path}/output");
+  late final Directory outputDir;
 
   /// The file containing the user's [Settings], in JSON form.
   /// 
   /// This file should contain the result of [Settings.toJson], and loading settings
   /// from the file should be done with [Settings.fromJson].
-  static File get settingsFile => File("${outputDir.path}/settings.json");
+  File get settingsFile => File("${outputDir.path}/settings.json");
 
   /// Ensure that files and directories that are expected to be present actually
   /// exist on the system. If not, create them. 
   @override
   Future<void> init() async {
+    final appDir = await getApplicationDocumentsDirectory();
+    outputDir = Directory("${appDir.path}/output");
     await outputDir.create();
     if (!settingsFile.existsSync()) await settingsFile.writeAsString(jsonEncode({}));
   }

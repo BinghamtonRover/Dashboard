@@ -22,17 +22,6 @@ const AutonomyState$json = const {
 
 /// Descriptor for `AutonomyState`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List autonomyStateDescriptor = $convert.base64Decode('Cg1BdXRvbm9teVN0YXRlEhwKGEFVVE9OT01ZX1NUQVRFX1VOREVGSU5FRBAAEgcKA09GRhABEgsKB1BBVEhJTkcQAhIPCgtBUFBST0FDSElORxADEgsKB0FUX0dBVEUQBA==');
-@$core.Deprecated('Use gpsCoordinatesDescriptor instead')
-const GpsCoordinates$json = const {
-  '1': 'GpsCoordinates',
-  '2': const [
-    const {'1': 'latitude', '3': 1, '4': 1, '5': 2, '10': 'latitude'},
-    const {'1': 'longitude', '3': 2, '4': 1, '5': 2, '10': 'longitude'},
-  ],
-};
-
-/// Descriptor for `GpsCoordinates`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List gpsCoordinatesDescriptor = $convert.base64Decode('Cg5HcHNDb29yZGluYXRlcxIaCghsYXRpdHVkZRgBIAEoAlIIbGF0aXR1ZGUSHAoJbG9uZ2l0dWRlGAIgASgCUglsb25naXR1ZGU=');
 @$core.Deprecated('Use autonomyCommandDescriptor instead')
 const AutonomyCommand$json = const {
   '1': 'AutonomyCommand',

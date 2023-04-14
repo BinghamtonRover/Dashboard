@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   flutter_libserialport: ^0.3.0
   package_info_plus: ^3.0.3
+  path_provider: ^2.0.14
   protobuf: ^2.1.0
   provider: ^6.0.5
   win32_gamepad: ^1.0.3
@@ -39,13 +40,23 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   build_runner: ^2.3.2
   protoc_builder: ^0.3.0
+  msix: ^3.9.1
 
 dependency_overrides: 
-  # See https://github.com/timsneath/win32_gamepad/pull/3
-  win32_gamepad: 
-    git: 
-      url: https://github.com/Levi-Lesches/win32_gamepad.git
-      ref: upgrade
+  # win32_gamepad needs win32 ^4.0.0
+  # path_provider_windows needs win32 <4.0.0
+  # So, this is the latest version of win32 before 4.0.0
+  win32: 3.1.4
+
+msix_config:
+  display_name: Dashboard
+  publisher_display_name: Binghamton University Rover Team
+  identity_name: edu.binghamton.rover
+  # logo_path: path/to/logo.png
+  capabilities: internetClientServer, privateNetworkClientServer, usb, serialcommunication, lowLevel
+  output_name: Dashboard
+  certificate_path: windows_certificate.pfx
+  certificate_password: rover
 
 # The following section is specific to Flutter packages.
 flutter:

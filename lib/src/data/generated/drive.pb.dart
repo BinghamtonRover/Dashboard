@@ -14,9 +14,9 @@ class DriveCommand extends $pb.GeneratedMessage {
     ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'throttle', $pb.PbFieldType.OF)
     ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'left', $pb.PbFieldType.OF)
     ..a<$core.double>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'right', $pb.PbFieldType.OF)
-    ..aOB(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setThrottle')
-    ..aOB(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setLeft')
-    ..aOB(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setRight')
+    ..aOB(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setLeft')
+    ..aOB(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setRight')
+    ..aOB(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setThrottle')
     ..hasRequiredFields = false
   ;
 
@@ -25,9 +25,9 @@ class DriveCommand extends $pb.GeneratedMessage {
     $core.double? throttle,
     $core.double? left,
     $core.double? right,
-    $core.bool? setThrottle,
     $core.bool? setLeft,
     $core.bool? setRight,
+    $core.bool? setThrottle,
   }) {
     final _result = create();
     if (throttle != null) {
@@ -39,14 +39,14 @@ class DriveCommand extends $pb.GeneratedMessage {
     if (right != null) {
       _result.right = right;
     }
-    if (setThrottle != null) {
-      _result.setThrottle = setThrottle;
-    }
     if (setLeft != null) {
       _result.setLeft = setLeft;
     }
     if (setRight != null) {
       _result.setRight = setRight;
+    }
+    if (setThrottle != null) {
+      _result.setThrottle = setThrottle;
     }
     return _result;
   }
@@ -99,31 +99,31 @@ class DriveCommand extends $pb.GeneratedMessage {
   void clearRight() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.bool get setThrottle => $_getBF(3);
+  $core.bool get setLeft => $_getBF(3);
   @$pb.TagNumber(4)
-  set setThrottle($core.bool v) { $_setBool(3, v); }
+  set setLeft($core.bool v) { $_setBool(3, v); }
   @$pb.TagNumber(4)
-  $core.bool hasSetThrottle() => $_has(3);
+  $core.bool hasSetLeft() => $_has(3);
   @$pb.TagNumber(4)
-  void clearSetThrottle() => clearField(4);
+  void clearSetLeft() => clearField(4);
 
   @$pb.TagNumber(5)
-  $core.bool get setLeft => $_getBF(4);
+  $core.bool get setRight => $_getBF(4);
   @$pb.TagNumber(5)
-  set setLeft($core.bool v) { $_setBool(4, v); }
+  set setRight($core.bool v) { $_setBool(4, v); }
   @$pb.TagNumber(5)
-  $core.bool hasSetLeft() => $_has(4);
+  $core.bool hasSetRight() => $_has(4);
   @$pb.TagNumber(5)
-  void clearSetLeft() => clearField(5);
+  void clearSetRight() => clearField(5);
 
   @$pb.TagNumber(6)
-  $core.bool get setRight => $_getBF(5);
+  $core.bool get setThrottle => $_getBF(5);
   @$pb.TagNumber(6)
-  set setRight($core.bool v) { $_setBool(5, v); }
+  set setThrottle($core.bool v) { $_setBool(5, v); }
   @$pb.TagNumber(6)
-  $core.bool hasSetRight() => $_has(5);
+  $core.bool hasSetThrottle() => $_has(5);
   @$pb.TagNumber(6)
-  void clearSetRight() => clearField(6);
+  void clearSetThrottle() => clearField(6);
 }
 
 class DriveData extends $pb.GeneratedMessage {
@@ -131,6 +131,9 @@ class DriveData extends $pb.GeneratedMessage {
     ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'throttle', $pb.PbFieldType.OF)
     ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'left', $pb.PbFieldType.OF)
     ..a<$core.double>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'right', $pb.PbFieldType.OF)
+    ..aOB(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setLeft')
+    ..aOB(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setRight')
+    ..aOB(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setThrottle')
     ..hasRequiredFields = false
   ;
 
@@ -139,6 +142,9 @@ class DriveData extends $pb.GeneratedMessage {
     $core.double? throttle,
     $core.double? left,
     $core.double? right,
+    $core.bool? setLeft,
+    $core.bool? setRight,
+    $core.bool? setThrottle,
   }) {
     final _result = create();
     if (throttle != null) {
@@ -149,6 +155,15 @@ class DriveData extends $pb.GeneratedMessage {
     }
     if (right != null) {
       _result.right = right;
+    }
+    if (setLeft != null) {
+      _result.setLeft = setLeft;
+    }
+    if (setRight != null) {
+      _result.setRight = setRight;
+    }
+    if (setThrottle != null) {
+      _result.setThrottle = setThrottle;
     }
     return _result;
   }
@@ -199,5 +214,32 @@ class DriveData extends $pb.GeneratedMessage {
   $core.bool hasRight() => $_has(2);
   @$pb.TagNumber(3)
   void clearRight() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get setLeft => $_getBF(3);
+  @$pb.TagNumber(4)
+  set setLeft($core.bool v) { $_setBool(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasSetLeft() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearSetLeft() => clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.bool get setRight => $_getBF(4);
+  @$pb.TagNumber(5)
+  set setRight($core.bool v) { $_setBool(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasSetRight() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearSetRight() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.bool get setThrottle => $_getBF(5);
+  @$pb.TagNumber(6)
+  set setThrottle($core.bool v) { $_setBool(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasSetThrottle() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearSetThrottle() => clearField(6);
 }
 
