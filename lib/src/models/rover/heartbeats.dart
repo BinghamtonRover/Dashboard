@@ -70,6 +70,13 @@ class RoverHeartbeats extends Model {
 				return services.dataSocket.sendMessage(message, address: secondaryPiAddress, port: videoPort);
 			case Device.AUTONOMY:
 				return services.dataSocket.sendMessage(message, address: secondaryPiAddress, port: autonomyPort);
+			// TODO: Send heartbeats to the firwmare Teensy's.
+			case Device.ARM: 
+			case Device.GRIPPER:
+			case Device.SCIENCE: 
+			case Device.ELECTRICAL: 
+			case Device.DRIVE: 
+			case Device.MARS: 
 		}
 	}
 
