@@ -42,6 +42,11 @@ class RoverHeartbeats extends Model {
 		handshakeTimer = Timer(handshakeInterval, sendHandshakes);
 	}
 
+	/// Stops sending heartbeats to the old enpoints and begins sending heartbeats again.
+	/// 
+	/// Use this function whenever the endpoints to the rover programs have changed -- 
+	/// for example, when switching between the rover and the tank, you'll want to stop
+	/// all outgoing requests to the rover and begin sending heartbeats to the tank instead.
 	void reset() {
 		handshakeTimer.cancel();
 		handshakeTimer = Timer(handshakeInterval, sendHandshakes);
