@@ -33,9 +33,9 @@ class Sockets extends Model {
 
 	/// Set the right IP addresses for the rover or tank.
 	Future<void> updateSockets() async {
-		services.dataSocket.destination = settings.subsystemsSocket;
-		services.videoSocket.destination = settings.videoSocket;
-		services.autonomySocket.destination = settings.autonomySocket;
+		services.dataSocket.destination = settings.subsystemsSocket.copy();
+		services.videoSocket.destination = settings.videoSocket.copy();
+		services.autonomySocket.destination = settings.autonomySocket.copy();
 
 		if (rover == RoverType.tank) {
 			final tankAddress = InternetAddress(settings.tankAddress);
@@ -50,6 +50,7 @@ class Sockets extends Model {
 		rover = value;
 		models.home.setMessage(severity: Severity.info, text: "Using: ${rover.name}");
 		await updateSockets();
+		models.rover.heartbeats.reset();
 		notifyListeners();
 	}
 }

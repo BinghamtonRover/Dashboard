@@ -42,6 +42,11 @@ class RoverHeartbeats extends Model {
 		handshakeTimer = Timer(handshakeInterval, sendHandshakes);
 	}
 
+	void reset() {
+		handshakeTimer.cancel();
+		handshakeTimer = Timer(handshakeInterval, sendHandshakes);
+	}
+
 	@override
 	void dispose() {
 		handshakeTimer.cancel();

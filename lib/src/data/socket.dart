@@ -28,6 +28,9 @@ class SocketConfig {
     "port": port,
   };
 
+  /// A copy of this configuration, to avoid modifying the original.
+  SocketConfig copy() => SocketConfig(address, port);
+
   @override
   String toString() => "${address.address}:$port";
 }
