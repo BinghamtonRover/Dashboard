@@ -57,6 +57,7 @@ msix_config:
   output_name: Dashboard
   certificate_path: windows_certificate.pfx
   certificate_password: rover
+  install_certificate: false
 
 # The following section is specific to Flutter packages.
 flutter:
