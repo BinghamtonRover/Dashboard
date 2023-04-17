@@ -42,6 +42,16 @@ class RoverHeartbeats extends Model {
 		handshakeTimer = Timer(handshakeInterval, sendHandshakes);
 	}
 
+	/// Stops sending heartbeats to the old enpoints and begins sending heartbeats again.
+	/// 
+	/// Use this function whenever the endpoints to the rover programs have changed -- 
+	/// for example, when switching between the rover and the tank, you'll want to stop
+	/// all outgoing requests to the rover and begin sending heartbeats to the tank instead.
+	void reset() {
+		handshakeTimer.cancel();
+		handshakeTimer = Timer(handshakeInterval, sendHandshakes);
+	}
+
 	@override
 	void dispose() {
 		handshakeTimer.cancel();
@@ -64,19 +74,19 @@ class RoverHeartbeats extends Model {
 			case Device.FIRMWARE: return;  // must be done manually through [SerialModel]
 			case Device.DASHBOARD:
 				return models.home.setMessage(severity: Severity.warning, text: "Trying to send a handshake message to ourself");
-			case Device.SUBSYSTEMS:
-				return services.dataSocket.sendMessage(message);
-			case Device.VIDEO:
-				return services.dataSocket.sendMessage(message, address: secondaryPiAddress, port: videoPort);
-			case Device.AUTONOMY:
-				return services.dataSocket.sendMessage(message, address: secondaryPiAddress, port: autonomyPort);
+			case Device.SUBSYSTEMS: 
+				return services.dataSocket.sendMessage(message);  
+			case Device.VIDEO: 
+				return services.videoSocket.sendMessage(message);
+			case Device.AUTONOMY: 
+				return services.autonomySocket.sendMessage(message);
 			// TODO: Send heartbeats to the firwmare Teensy's.
 			case Device.ARM: 
 			case Device.GRIPPER:
 			case Device.SCIENCE: 
 			case Device.ELECTRICAL: 
 			case Device.DRIVE: 
-			case Device.MARS: 
+			case Device.MARS:
 		}
 	}
 

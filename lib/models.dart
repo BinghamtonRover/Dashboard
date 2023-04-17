@@ -27,6 +27,7 @@ export "src/models/rover/controls/controls.dart";
 export "src/models/rover/heartbeats.dart";
 export "src/models/rover/metrics.dart";
 export "src/models/rover/rover.dart";
+export "src/models/rover/sockets.dart";
 
 // View models
 export "src/models/view/modes/mode.dart";
@@ -34,6 +35,7 @@ export "src/models/view/modes/arm.dart";
 export "src/models/view/modes/autonomy.dart";
 export "src/models/view/modes/drive.dart";
 export "src/models/view/modes/science.dart";
+export "src/models/view/settings.dart";
 
 /// A wrapper model around all other data models used by the app.
 /// 

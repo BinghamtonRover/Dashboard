@@ -6,7 +6,7 @@ import FlutterMacOS
 import Foundation
 
 import flutter_libserialport
-import package_info_plus_macos
+import package_info_plus
 import path_provider_foundation
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {

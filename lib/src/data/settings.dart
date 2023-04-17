@@ -1,13 +1,13 @@
-import "modes.dart";
-
-/// YAML data stored as a Map.
-typedef Yaml = Map;
+import "socket.dart";
 
 /// A collection of functions for parsing [Settings]. 
-extension SettingsParser on Yaml {
-  /// Parses the list of camera IDs for a given operating mode.
-  List<int> getFeeds(OperatingMode mode) => 
-    List<int>.from(this["feeds"][mode.name]!);
+extension SettingsParser on Json {
+  /// Parses a [SocketConfig] that may not be present.
+  SocketConfig? getSocket(String key) {
+    final Json? socket = this[key];
+    if (socket == null) return null;
+    return SocketConfig.fromJson(socket);
+  }
 }
 
 /// Contains the settings for running the dashboard and the rover. 
@@ -17,31 +17,57 @@ class Settings {
   /// at least once per second. 
   int connectionTimeout;
 
-  /// The user's preferred layout for video feeds.
+  /// The address and port of the subsystems program.
+  SocketConfig subsystemsSocket;
+
+  /// The address and port of the video program.
+  SocketConfig videoSocket;
+
+  /// The address and port of the autonomy program.
+  SocketConfig autonomySocket;
+
+  /// The IP address of the tank.
   /// 
-  /// Each page has its own layout, and a layout is represented by a list of camera IDs.
-  Map<OperatingMode, List<int>> feeds;
+  /// The Tank is a model rover that has all the same programs as the rover. This field does not
+  /// include port numbers because ports are specific to the program, and the tank will have many
+  /// programs running. Instead, the IP address of all the other programs should be swapped with
+  /// the tank when it's being used.
+  String tankAddress;
 
-  /// The defualt constructor with default values.
-  /// 
-  /// Use this when the settings in the YAML file are invalid.
-  Settings() : 
-    connectionTimeout = 5,
-    feeds = {      
-      for (final mode in OperatingMode.values)
-        mode: []
-    };
+  /// A constructor for this class.
+  Settings({
+    required this.subsystemsSocket,
+    required this.videoSocket,    
+    required this.autonomySocket,    
+    required this.tankAddress,
+    required this.connectionTimeout,
+  });
 
-  /// Initialize settings from YAML.
-  Settings.fromYaml(Map yaml) : 
-    feeds = {
-      for (final mode in OperatingMode.values)
-        mode: yaml.getFeeds(mode),
-    },
-    connectionTimeout = yaml["connectionTimeout"]!;
+  /// Initialize settings from Json.
+  Settings.fromJson(Json json) : 
+    subsystemsSocket = json.getSocket("subsystemsSocket") ?? defaultSettings.subsystemsSocket,
+    videoSocket = json.getSocket("videoSocket") ?? defaultSettings.videoSocket,
+    autonomySocket = json.getSocket("autonomySocket") ?? defaultSettings.autonomySocket,
+    tankAddress = json["tankAddress"] ?? defaultSettings.tankAddress,
+    connectionTimeout = json["connectionTimeout"] ?? defaultSettings.connectionTimeout;
 
-  /// Converts the data from the settings instance to YAML.
-  Map toYaml() => { 
+  /// Converts the data from the settings instance to Json.
+  Map toJson() => { 
+    "subsystemsSocket": subsystemsSocket.toJson(),
+    "videoSocket": videoSocket.toJson(),
+    "autonomySocket": autonomySocket.toJson(),
+    "tankAddress": tankAddress,
     "connectionTimeout": connectionTimeout,
   };
 }
+
+/// The defualt settings with default values.
+/// 
+/// Use this when the settings in the Json file are invalid.
+final defaultSettings = Settings(
+  subsystemsSocket: SocketConfig.raw("192.168.1.20", 8001),
+  videoSocket: SocketConfig.raw("192.168.1.30", 8002),
+  autonomySocket: SocketConfig.raw("192.168.1.30", 8003),
+  tankAddress: "192.168.1.40",
+  connectionTimeout: 5,
+);
