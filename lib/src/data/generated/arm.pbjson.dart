@@ -55,11 +55,17 @@ const ArmCommand$json = const {
     const {'1': 'move_swivel', '3': 3, '4': 1, '5': 2, '10': 'moveSwivel'},
     const {'1': 'move_shoulder', '3': 4, '4': 1, '5': 2, '10': 'moveShoulder'},
     const {'1': 'move_elbow', '3': 5, '4': 1, '5': 2, '10': 'moveElbow'},
+    const {'1': 'move_x', '3': 6, '4': 1, '5': 2, '10': 'moveX'},
+    const {'1': 'move_y', '3': 7, '4': 1, '5': 2, '10': 'moveY'},
+    const {'1': 'move_z', '3': 8, '4': 1, '5': 2, '10': 'moveZ'},
+    const {'1': 'has_x', '3': 9, '4': 1, '5': 8, '10': 'hasX'},
+    const {'1': 'has_y', '3': 10, '4': 1, '5': 8, '10': 'hasY'},
+    const {'1': 'has_z', '3': 11, '4': 1, '5': 8, '10': 'hasZ'},
   ],
 };
 
 /// Descriptor for `ArmCommand`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List armCommandDescriptor = $convert.base64Decode('CgpBcm1Db21tYW5kEhIKBHN0b3AYASABKAhSBHN0b3ASHAoJY2FsaWJyYXRlGAIgASgIUgljYWxpYnJhdGUSHwoLbW92ZV9zd2l2ZWwYAyABKAJSCm1vdmVTd2l2ZWwSIwoNbW92ZV9zaG91bGRlchgEIAEoAlIMbW92ZVNob3VsZGVyEh0KCm1vdmVfZWxib3cYBSABKAJSCW1vdmVFbGJvdw==');
+final $typed_data.Uint8List armCommandDescriptor = $convert.base64Decode('CgpBcm1Db21tYW5kEhIKBHN0b3AYASABKAhSBHN0b3ASHAoJY2FsaWJyYXRlGAIgASgIUgljYWxpYnJhdGUSHwoLbW92ZV9zd2l2ZWwYAyABKAJSCm1vdmVTd2l2ZWwSIwoNbW92ZV9zaG91bGRlchgEIAEoAlIMbW92ZVNob3VsZGVyEh0KCm1vdmVfZWxib3cYBSABKAJSCW1vdmVFbGJvdxIVCgZtb3ZlX3gYBiABKAJSBW1vdmVYEhUKBm1vdmVfeRgHIAEoAlIFbW92ZVkSFQoGbW92ZV96GAggASgCUgVtb3ZlWhITCgVoYXNfeBgJIAEoCFIEaGFzWBITCgVoYXNfeRgKIAEoCFIEaGFzWRITCgVoYXNfehgLIAEoCFIEaGFzWg==');
 @$core.Deprecated('Use gripperDataDescriptor instead')
 const GripperData$json = const {
   '1': 'GripperData',

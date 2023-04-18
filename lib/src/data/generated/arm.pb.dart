@@ -279,6 +279,12 @@ class ArmCommand extends $pb.GeneratedMessage {
     ..a<$core.double>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveSwivel', $pb.PbFieldType.OF)
     ..a<$core.double>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveShoulder', $pb.PbFieldType.OF)
     ..a<$core.double>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveElbow', $pb.PbFieldType.OF)
+    ..a<$core.double>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveX', $pb.PbFieldType.OF)
+    ..a<$core.double>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveY', $pb.PbFieldType.OF)
+    ..a<$core.double>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'moveZ', $pb.PbFieldType.OF)
+    ..aOB(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'hasX')
+    ..aOB(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'hasY')
+    ..aOB(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'hasZ')
     ..hasRequiredFields = false
   ;
 
@@ -289,6 +295,12 @@ class ArmCommand extends $pb.GeneratedMessage {
     $core.double? moveSwivel,
     $core.double? moveShoulder,
     $core.double? moveElbow,
+    $core.double? moveX,
+    $core.double? moveY,
+    $core.double? moveZ,
+    $core.bool? hasX,
+    $core.bool? hasY,
+    $core.bool? hasZ,
   }) {
     final _result = create();
     if (stop != null) {
@@ -305,6 +317,24 @@ class ArmCommand extends $pb.GeneratedMessage {
     }
     if (moveElbow != null) {
       _result.moveElbow = moveElbow;
+    }
+    if (moveX != null) {
+      _result.moveX = moveX;
+    }
+    if (moveY != null) {
+      _result.moveY = moveY;
+    }
+    if (moveZ != null) {
+      _result.moveZ = moveZ;
+    }
+    if (hasX != null) {
+      _result.hasX = hasX;
+    }
+    if (hasY != null) {
+      _result.hasY = hasY;
+    }
+    if (hasZ != null) {
+      _result.hasZ = hasZ;
     }
     return _result;
   }
@@ -373,6 +403,60 @@ class ArmCommand extends $pb.GeneratedMessage {
   $core.bool hasMoveElbow() => $_has(4);
   @$pb.TagNumber(5)
   void clearMoveElbow() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.double get moveX => $_getN(5);
+  @$pb.TagNumber(6)
+  set moveX($core.double v) { $_setFloat(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasMoveX() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearMoveX() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.double get moveY => $_getN(6);
+  @$pb.TagNumber(7)
+  set moveY($core.double v) { $_setFloat(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasMoveY() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearMoveY() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.double get moveZ => $_getN(7);
+  @$pb.TagNumber(8)
+  set moveZ($core.double v) { $_setFloat(7, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasMoveZ() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearMoveZ() => clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.bool get hasX => $_getBF(8);
+  @$pb.TagNumber(9)
+  set hasX($core.bool v) { $_setBool(8, v); }
+  @$pb.TagNumber(9)
+  $core.bool hasHasX() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearHasX() => clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.bool get hasY => $_getBF(9);
+  @$pb.TagNumber(10)
+  set hasY($core.bool v) { $_setBool(9, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasHasY() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearHasY() => clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.bool get hasZ => $_getBF(10);
+  @$pb.TagNumber(11)
+  set hasZ($core.bool v) { $_setBool(10, v); }
+  @$pb.TagNumber(11)
+  $core.bool hasHasZ() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearHasZ() => clearField(11);
 }
 
 class GripperData extends $pb.GeneratedMessage {
