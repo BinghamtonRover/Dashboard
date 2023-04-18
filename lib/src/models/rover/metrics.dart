@@ -11,6 +11,9 @@ class RoverMetrics extends Model {
 	/// Data from the science subsystem.
 	final science = ScienceMetrics();
 
+  /// Data from the GPS.
+  final gps = GpsMetrics();
+
 	/// A list of all the metrics to iterate over.
 	///
 	/// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
@@ -23,6 +26,11 @@ class RoverMetrics extends Model {
 		notifyListeners();
 	};
 
+  ///Have some variable to store incoming GPS coordinates
+  ///change the handler function to set the variable to the new value
+  ///
+  ///
+
 	@override
 	Future<void> init() async {
 		services.dataSocket.registerHandler<ElectricalData>(
@@ -34,6 +42,11 @@ class RoverMetrics extends Model {
 			name: ScienceData().messageName,
 			decoder: ScienceData.fromBuffer,
 			handler: update(science),
+		);
+    services.dataSocket.registerHandler<GpsCoordinates>(
+			name: GpsCoordinates().messageName,
+			decoder: GpsCoordinates.fromBuffer,
+			handler: update(gps),
 		);
 	}
 }

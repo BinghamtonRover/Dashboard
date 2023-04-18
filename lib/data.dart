@@ -14,11 +14,13 @@ export "src/data/generated/arm.pb.dart";
 export "src/data/generated/core.pb.dart";
 export "src/data/generated/drive.pb.dart";
 export "src/data/generated/electrical.pb.dart";
+export "src/data/generated/gps.pb.dart";
 export "src/data/generated/science.pb.dart";
 export "src/data/generated/video.pb.dart";
 export "src/data/generated/wrapper.pb.dart";
 
 export "src/data/metrics/electrical.dart";
+export "src/data/metrics/gps.dart";
 export "src/data/metrics/metrics.dart";
 export "src/data/metrics/protobuf.dart";
 export "src/data/metrics/science.dart";
