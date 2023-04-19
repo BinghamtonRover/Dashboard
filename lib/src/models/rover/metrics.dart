@@ -26,11 +26,6 @@ class RoverMetrics extends Model {
 		notifyListeners();
 	};
 
-  ///Have some variable to store incoming GPS coordinates
-  ///change the handler function to set the variable to the new value
-  ///
-  ///
-
 	@override
 	Future<void> init() async {
 		services.dataSocket.registerHandler<ElectricalData>(

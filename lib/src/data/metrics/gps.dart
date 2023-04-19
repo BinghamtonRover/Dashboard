@@ -21,5 +21,10 @@ class GpsMetrics extends Metrics<GpsCoordinates> {
 	];
   
   /// Calculate Euclidean distance between current coordinates and another set of coordinates
-  double distanceTo(GpsCoordinates other) => pow(pow(data.latitude - other.latitude, 2) + pow(data.longitude - other.longitude, 2) + pow(data.altitude - other.altitude, 2), 0.5).toDouble();
+  num distanceTo(GpsCoordinates other) => pow(
+    pow(data.latitude - other.latitude, 2) 
+      + pow(data.longitude - other.longitude, 2) 
+      + pow(data.altitude - other.altitude, 2),
+    0.5
+  );
 }
