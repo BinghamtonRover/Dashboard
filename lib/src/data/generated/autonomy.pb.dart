@@ -9,7 +9,7 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'gps.pb.dart' as $0;
+import 'gps.pb.dart' as $1;
 
 import 'autonomy.pbenum.dart';
 
@@ -64,7 +64,7 @@ class AutonomyCommand extends $pb.GeneratedMessage {
 
 class AutonomyData extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AutonomyData', createEmptyInstance: create)
-    ..aOM<$0.GpsCoordinates>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'coordinates', subBuilder: $0.GpsCoordinates.create)
+    ..aOM<$1.GpsCoordinates>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'coordinates', subBuilder: $1.GpsCoordinates.create)
     ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'heading', $pb.PbFieldType.OF)
     ..e<AutonomyState>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'state', $pb.PbFieldType.OE, defaultOrMaker: AutonomyState.AUTONOMY_STATE_UNDEFINED, valueOf: AutonomyState.valueOf, enumValues: AutonomyState.values)
     ..a<$core.double>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rawXOrientation', $pb.PbFieldType.OF)
@@ -76,7 +76,7 @@ class AutonomyData extends $pb.GeneratedMessage {
 
   AutonomyData._() : super();
   factory AutonomyData({
-    $0.GpsCoordinates? coordinates,
+    $1.GpsCoordinates? coordinates,
     $core.double? heading,
     AutonomyState? state,
     $core.double? rawXOrientation,
@@ -130,15 +130,15 @@ class AutonomyData extends $pb.GeneratedMessage {
   static AutonomyData? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $0.GpsCoordinates get coordinates => $_getN(0);
+  $1.GpsCoordinates get coordinates => $_getN(0);
   @$pb.TagNumber(1)
-  set coordinates($0.GpsCoordinates v) { setField(1, v); }
+  set coordinates($1.GpsCoordinates v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasCoordinates() => $_has(0);
   @$pb.TagNumber(1)
   void clearCoordinates() => clearField(1);
   @$pb.TagNumber(1)
-  $0.GpsCoordinates ensureCoordinates() => $_ensure(0);
+  $1.GpsCoordinates ensureCoordinates() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.double get heading => $_getN(1);
