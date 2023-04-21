@@ -1,0 +1,3 @@
+import "package:rover_dashboard/data.dart";
+
+void main() => print(DriveCommand.fromBuffer([0x1D, 0x00, 0xFE, 0x7E, 0x3F, 0x28, 0x01,]));

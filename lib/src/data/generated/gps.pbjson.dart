@@ -14,8 +14,9 @@ const GpsCoordinates$json = const {
   '2': const [
     const {'1': 'latitude', '3': 1, '4': 1, '5': 2, '10': 'latitude'},
     const {'1': 'longitude', '3': 2, '4': 1, '5': 2, '10': 'longitude'},
+    const {'1': 'altitude', '3': 3, '4': 1, '5': 2, '10': 'altitude'},
   ],
 };
 
 /// Descriptor for `GpsCoordinates`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List gpsCoordinatesDescriptor = $convert.base64Decode('Cg5HcHNDb29yZGluYXRlcxIaCghsYXRpdHVkZRgBIAEoAlIIbGF0aXR1ZGUSHAoJbG9uZ2l0dWRlGAIgASgCUglsb25naXR1ZGU=');
+final $typed_data.Uint8List gpsCoordinatesDescriptor = $convert.base64Decode('Cg5HcHNDb29yZGluYXRlcxIaCghsYXRpdHVkZRgBIAEoAlIIbGF0aXR1ZGUSHAoJbG9uZ2l0dWRlGAIgASgCUglsb25naXR1ZGUSGgoIYWx0aXR1ZGUYAyABKAJSCGFsdGl0dWRl');

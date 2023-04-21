@@ -6,7 +6,7 @@ import "controls.dart";
 /// A [RoverControls] that drives the rover.
 class DriveControls extends RoverControls {
 	/// Increases the throttle by +/- 20%.
-	static const throttleIncrement = 0.1;
+	static const throttleIncrement = 0.05;
 
 	/// The current throttle, as a percentage of the rover's top speed.
 	double throttle = 0;
@@ -50,7 +50,7 @@ class DriveControls extends RoverControls {
 	List<Message> get onDispose => [
 		DriveCommand(setThrottle: true, throttle: 0),
 		DriveCommand(setLeft: true, left: 0),
-		DriveCommand(setLeft: false, left: 0),
+		DriveCommand(setRight: true, right: 0),
 	];
 
 	@override

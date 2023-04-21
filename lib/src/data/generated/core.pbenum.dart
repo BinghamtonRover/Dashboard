@@ -16,6 +16,12 @@ class Device extends $pb.ProtobufEnum {
   static const Device VIDEO = Device._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'VIDEO');
   static const Device AUTONOMY = Device._(4, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'AUTONOMY');
   static const Device FIRMWARE = Device._(5, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'FIRMWARE');
+  static const Device ARM = Device._(6, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ARM');
+  static const Device GRIPPER = Device._(7, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'GRIPPER');
+  static const Device SCIENCE = Device._(8, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SCIENCE');
+  static const Device ELECTRICAL = Device._(9, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ELECTRICAL');
+  static const Device DRIVE = Device._(10, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'DRIVE');
+  static const Device MARS = Device._(11, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MARS');
 
   static const $core.List<Device> values = <Device> [
     DEVICE_UNDEFINED,
@@ -24,6 +30,12 @@ class Device extends $pb.ProtobufEnum {
     VIDEO,
     AUTONOMY,
     FIRMWARE,
+    ARM,
+    GRIPPER,
+    SCIENCE,
+    ELECTRICAL,
+    DRIVE,
+    MARS,
   ];
 
   static final $core.Map<$core.int, Device> _byValue = $pb.ProtobufEnum.initByValue(values);
