@@ -37,6 +37,7 @@ class Serial extends Service {
 
 	@override
 	Future<void> dispose() async {
+		_writer?.close();
 		_writer?.dispose();
 		_reader?.close();
 	}
@@ -64,6 +65,8 @@ class Serial extends Service {
 		await sendMessage(Connect(sender: Device.DASHBOARD, receiver: Device.FIRMWARE));
 		await Future.delayed(const Duration(seconds: 1));
 		final received = _writer!.read(4); // nice way to read X bytes at a time
+		print(received);
+		if (received.isEmpty) throw MalformedSerialPacket(packet: received);
 		try {
 			final message = Connect.fromBuffer(received);
 			final isValid = message.receiver == Device.DASHBOARD;

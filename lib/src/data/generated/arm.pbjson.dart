@@ -77,12 +77,15 @@ const ArmCommand$json = const {
     const {'1': 'shoulder', '3': 4, '4': 1, '5': 11, '6': '.MotorCommand', '10': 'shoulder'},
     const {'1': 'elbow', '3': 5, '4': 1, '5': 11, '6': '.MotorCommand', '10': 'elbow'},
     const {'1': 'gripper_lift', '3': 6, '4': 1, '5': 11, '6': '.MotorCommand', '10': 'gripperLift'},
-    const {'1': 'ik_target', '3': 7, '4': 1, '5': 11, '6': '.Coordinates', '10': 'ikTarget'},
+    const {'1': 'ik_x', '3': 7, '4': 1, '5': 2, '10': 'ikX'},
+    const {'1': 'ik_y', '3': 8, '4': 1, '5': 2, '10': 'ikY'},
+    const {'1': 'ik_z', '3': 9, '4': 1, '5': 2, '10': 'ikZ'},
+    const {'1': 'jab', '3': 10, '4': 1, '5': 8, '10': 'jab'},
   ],
 };
 
 /// Descriptor for `ArmCommand`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List armCommandDescriptor = $convert.base64Decode('CgpBcm1Db21tYW5kEhIKBHN0b3AYASABKAhSBHN0b3ASHAoJY2FsaWJyYXRlGAIgASgIUgljYWxpYnJhdGUSJQoGc3dpdmVsGAMgASgLMg0uTW90b3JDb21tYW5kUgZzd2l2ZWwSKQoIc2hvdWxkZXIYBCABKAsyDS5Nb3RvckNvbW1hbmRSCHNob3VsZGVyEiMKBWVsYm93GAUgASgLMg0uTW90b3JDb21tYW5kUgVlbGJvdxIwCgxncmlwcGVyX2xpZnQYBiABKAsyDS5Nb3RvckNvbW1hbmRSC2dyaXBwZXJMaWZ0EikKCWlrX3RhcmdldBgHIAEoCzIMLkNvb3JkaW5hdGVzUghpa1RhcmdldA==');
+final $typed_data.Uint8List armCommandDescriptor = $convert.base64Decode('CgpBcm1Db21tYW5kEhIKBHN0b3AYASABKAhSBHN0b3ASHAoJY2FsaWJyYXRlGAIgASgIUgljYWxpYnJhdGUSJQoGc3dpdmVsGAMgASgLMg0uTW90b3JDb21tYW5kUgZzd2l2ZWwSKQoIc2hvdWxkZXIYBCABKAsyDS5Nb3RvckNvbW1hbmRSCHNob3VsZGVyEiMKBWVsYm93GAUgASgLMg0uTW90b3JDb21tYW5kUgVlbGJvdxIwCgxncmlwcGVyX2xpZnQYBiABKAsyDS5Nb3RvckNvbW1hbmRSC2dyaXBwZXJMaWZ0EhEKBGlrX3gYByABKAJSA2lrWBIRCgRpa195GAggASgCUgNpa1kSEQoEaWtfehgJIAEoAlIDaWtaEhAKA2phYhgKIAEoCFIDamFi');
 @$core.Deprecated('Use gripperDataDescriptor instead')
 const GripperData$json = const {
   '1': 'GripperData',
@@ -104,8 +107,11 @@ const GripperCommand$json = const {
     const {'1': 'lift', '3': 3, '4': 1, '5': 11, '6': '.MotorCommand', '10': 'lift'},
     const {'1': 'rotate', '3': 4, '4': 1, '5': 11, '6': '.MotorCommand', '10': 'rotate'},
     const {'1': 'pinch', '3': 5, '4': 1, '5': 11, '6': '.MotorCommand', '10': 'pinch'},
+    const {'1': 'open', '3': 6, '4': 1, '5': 8, '10': 'open'},
+    const {'1': 'close', '3': 7, '4': 1, '5': 8, '10': 'close'},
+    const {'1': 'spin', '3': 8, '4': 1, '5': 8, '10': 'spin'},
   ],
 };
 
 /// Descriptor for `GripperCommand`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List gripperCommandDescriptor = $convert.base64Decode('Cg5HcmlwcGVyQ29tbWFuZBISCgRzdG9wGAEgASgIUgRzdG9wEhwKCWNhbGlicmF0ZRgCIAEoCFIJY2FsaWJyYXRlEiEKBGxpZnQYAyABKAsyDS5Nb3RvckNvbW1hbmRSBGxpZnQSJQoGcm90YXRlGAQgASgLMg0uTW90b3JDb21tYW5kUgZyb3RhdGUSIwoFcGluY2gYBSABKAsyDS5Nb3RvckNvbW1hbmRSBXBpbmNo');
+final $typed_data.Uint8List gripperCommandDescriptor = $convert.base64Decode('Cg5HcmlwcGVyQ29tbWFuZBISCgRzdG9wGAEgASgIUgRzdG9wEhwKCWNhbGlicmF0ZRgCIAEoCFIJY2FsaWJyYXRlEiEKBGxpZnQYAyABKAsyDS5Nb3RvckNvbW1hbmRSBGxpZnQSJQoGcm90YXRlGAQgASgLMg0uTW90b3JDb21tYW5kUgZyb3RhdGUSIwoFcGluY2gYBSABKAsyDS5Nb3RvckNvbW1hbmRSBXBpbmNoEhIKBG9wZW4YBiABKAhSBG9wZW4SFAoFY2xvc2UYByABKAhSBWNsb3NlEhIKBHNwaW4YCCABKAhSBHNwaW4=');

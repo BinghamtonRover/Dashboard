@@ -80,6 +80,8 @@ class SettingsBuilder with ChangeNotifier {
 	/// Since the tank runs multiple programs, the port is discarded and only the address is used.
 	final SocketBuilder tankSocket;
 
+	final ArmSettings arm;
+
 	/// Whether the page is loading.
 	bool isLoading = false;
 
@@ -88,7 +90,8 @@ class SettingsBuilder with ChangeNotifier {
 		dataSocket = SocketBuilder("Subsystems", settings.subsystemsSocket),
 		videoSocket = SocketBuilder("Video", settings.videoSocket),
 		autonomySocket = SocketBuilder("Autonomy", settings.autonomySocket),
-		tankSocket = SocketBuilder("Tank IP address", SocketConfig.raw(settings.tankAddress, 8000))
+		tankSocket = SocketBuilder("Tank IP address", SocketConfig.raw(settings.tankAddress, 8000)),
+		arm = settings.arm
 	{
 		dataSocket.addListener(notifyListeners);
 		videoSocket.addListener(notifyListeners);
@@ -103,6 +106,7 @@ class SettingsBuilder with ChangeNotifier {
 		autonomySocket: autonomySocket.socket,
 		tankAddress: tankSocket.socket.address.address,
 		connectionTimeout: 5,
+		arm: arm,
 	);
 
 	/// Whether these settings are valid.

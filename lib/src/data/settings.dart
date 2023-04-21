@@ -10,6 +10,22 @@ extension SettingsParser on Json {
   }
 }
 
+class ArmSettings {
+  double radianIncrement;
+  double stepIncrement;
+  double preciseIncrement;
+
+  double ikIncrement;
+  double ikPreciseIncrement;
+
+  ArmSettings.fromJson(Json? json) : 
+    radianIncrement = json?["radianIncrement"] ?? 0.2,
+    stepIncrement = json?["stepIncrement"] ?? 10000,
+    preciseIncrement = json?["preciseIncrement"] ?? 0.1,
+    ikIncrement = json?["ikIncrement"] ?? 100,
+    ikPreciseIncrement = json?["ikPreciseIncrement"] ?? 10;
+}
+
 /// Contains the settings for running the dashboard and the rover. 
 class Settings {
   /// The amount of time, in seconds, the dashboard should wait before determining it's
@@ -26,6 +42,9 @@ class Settings {
   /// The address and port of the autonomy program.
   SocketConfig autonomySocket;
 
+  /// Settings for the arm.
+  ArmSettings arm;
+
   /// The IP address of the tank.
   /// 
   /// The Tank is a model rover that has all the same programs as the rover. This field does not
@@ -41,6 +60,7 @@ class Settings {
     required this.autonomySocket,    
     required this.tankAddress,
     required this.connectionTimeout,
+    required this.arm,
   });
 
   /// Initialize settings from Json.
@@ -49,7 +69,8 @@ class Settings {
     videoSocket = json.getSocket("videoSocket") ?? defaultSettings.videoSocket,
     autonomySocket = json.getSocket("autonomySocket") ?? defaultSettings.autonomySocket,
     tankAddress = json["tankAddress"] ?? defaultSettings.tankAddress,
-    connectionTimeout = json["connectionTimeout"] ?? defaultSettings.connectionTimeout;
+    connectionTimeout = json["connectionTimeout"] ?? defaultSettings.connectionTimeout,
+    arm = ArmSettings.fromJson(json["arm"]);
 
   /// Converts the data from the settings instance to Json.
   Map toJson() => { 
@@ -70,4 +91,5 @@ final defaultSettings = Settings(
   autonomySocket: SocketConfig.raw("192.168.1.30", 8003),
   tankAddress: "192.168.1.40",
   connectionTimeout: 5,
+  arm: ArmSettings.fromJson(null),
 );

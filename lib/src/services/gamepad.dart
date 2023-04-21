@@ -41,6 +41,30 @@ extension GamepadStateUtils on GamepadState {
 
   /// Returns a normalized value for the right joystick's Y-axis. See [GamepadNumbers.normalizeJoystick].
   double get normalRightY => rightThumbstickY.normalizeJoystick;
+
+  double get normalShoulder {
+    if (leftShoulder) return -1;
+    if (rightShoulder) return 1;
+    return 0;
+  }
+
+  double get normalTrigger {
+    if (leftTrigger > 0) return -normalLeftTrigger;
+    if (rightTrigger > 0) return normalRightTrigger;
+    return 0;
+  }
+
+  double get normalDpadX {
+    if (dpadLeft) return -1;
+    if (dpadRight) return 1;
+    return 0;
+  }
+
+  double get normalDpadY {
+    if (dpadUp) return 1;
+    if (dpadDown) return -1;
+    return 0;
+  }
 }
 
 /// Convenience methods on [Gamepad].

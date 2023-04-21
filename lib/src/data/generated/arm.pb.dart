@@ -314,7 +314,10 @@ class ArmCommand extends $pb.GeneratedMessage {
     ..aOM<MotorCommand>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'shoulder', subBuilder: MotorCommand.create)
     ..aOM<MotorCommand>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'elbow', subBuilder: MotorCommand.create)
     ..aOM<MotorCommand>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'gripperLift', subBuilder: MotorCommand.create)
-    ..aOM<$0.Coordinates>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ikTarget', subBuilder: $0.Coordinates.create)
+    ..a<$core.double>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ikX', $pb.PbFieldType.OF)
+    ..a<$core.double>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ikY', $pb.PbFieldType.OF)
+    ..a<$core.double>(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ikZ', $pb.PbFieldType.OF)
+    ..aOB(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'jab')
     ..hasRequiredFields = false
   ;
 
@@ -326,7 +329,10 @@ class ArmCommand extends $pb.GeneratedMessage {
     MotorCommand? shoulder,
     MotorCommand? elbow,
     MotorCommand? gripperLift,
-    $0.Coordinates? ikTarget,
+    $core.double? ikX,
+    $core.double? ikY,
+    $core.double? ikZ,
+    $core.bool? jab,
   }) {
     final _result = create();
     if (stop != null) {
@@ -347,8 +353,17 @@ class ArmCommand extends $pb.GeneratedMessage {
     if (gripperLift != null) {
       _result.gripperLift = gripperLift;
     }
-    if (ikTarget != null) {
-      _result.ikTarget = ikTarget;
+    if (ikX != null) {
+      _result.ikX = ikX;
+    }
+    if (ikY != null) {
+      _result.ikY = ikY;
+    }
+    if (ikZ != null) {
+      _result.ikZ = ikZ;
+    }
+    if (jab != null) {
+      _result.jab = jab;
     }
     return _result;
   }
@@ -436,15 +451,40 @@ class ArmCommand extends $pb.GeneratedMessage {
   MotorCommand ensureGripperLift() => $_ensure(5);
 
   @$pb.TagNumber(7)
-  $0.Coordinates get ikTarget => $_getN(6);
+  $core.double get ikX => $_getN(6);
   @$pb.TagNumber(7)
-  set ikTarget($0.Coordinates v) { setField(7, v); }
+  set ikX($core.double v) { $_setFloat(6, v); }
   @$pb.TagNumber(7)
-  $core.bool hasIkTarget() => $_has(6);
+  $core.bool hasIkX() => $_has(6);
   @$pb.TagNumber(7)
-  void clearIkTarget() => clearField(7);
-  @$pb.TagNumber(7)
-  $0.Coordinates ensureIkTarget() => $_ensure(6);
+  void clearIkX() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.double get ikY => $_getN(7);
+  @$pb.TagNumber(8)
+  set ikY($core.double v) { $_setFloat(7, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasIkY() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearIkY() => clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.double get ikZ => $_getN(8);
+  @$pb.TagNumber(9)
+  set ikZ($core.double v) { $_setFloat(8, v); }
+  @$pb.TagNumber(9)
+  $core.bool hasIkZ() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearIkZ() => clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.bool get jab => $_getBF(9);
+  @$pb.TagNumber(10)
+  set jab($core.bool v) { $_setBool(9, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasJab() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearJab() => clearField(10);
 }
 
 class GripperData extends $pb.GeneratedMessage {
@@ -535,6 +575,9 @@ class GripperCommand extends $pb.GeneratedMessage {
     ..aOM<MotorCommand>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lift', subBuilder: MotorCommand.create)
     ..aOM<MotorCommand>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rotate', subBuilder: MotorCommand.create)
     ..aOM<MotorCommand>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pinch', subBuilder: MotorCommand.create)
+    ..aOB(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'open')
+    ..aOB(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'close')
+    ..aOB(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'spin')
     ..hasRequiredFields = false
   ;
 
@@ -545,6 +588,9 @@ class GripperCommand extends $pb.GeneratedMessage {
     MotorCommand? lift,
     MotorCommand? rotate,
     MotorCommand? pinch,
+    $core.bool? open,
+    $core.bool? close,
+    $core.bool? spin,
   }) {
     final _result = create();
     if (stop != null) {
@@ -561,6 +607,15 @@ class GripperCommand extends $pb.GeneratedMessage {
     }
     if (pinch != null) {
       _result.pinch = pinch;
+    }
+    if (open != null) {
+      _result.open = open;
+    }
+    if (close != null) {
+      _result.close = close;
+    }
+    if (spin != null) {
+      _result.spin = spin;
     }
     return _result;
   }
@@ -635,5 +690,32 @@ class GripperCommand extends $pb.GeneratedMessage {
   void clearPinch() => clearField(5);
   @$pb.TagNumber(5)
   MotorCommand ensurePinch() => $_ensure(4);
+
+  @$pb.TagNumber(6)
+  $core.bool get open => $_getBF(5);
+  @$pb.TagNumber(6)
+  set open($core.bool v) { $_setBool(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasOpen() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearOpen() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.bool get close => $_getBF(6);
+  @$pb.TagNumber(7)
+  set close($core.bool v) { $_setBool(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasClose() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearClose() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.bool get spin => $_getBF(7);
+  @$pb.TagNumber(8)
+  set spin($core.bool v) { $_setBool(7, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasSpin() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearSpin() => clearField(8);
 }
 
