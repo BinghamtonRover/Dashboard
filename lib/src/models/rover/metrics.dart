@@ -1,3 +1,4 @@
+import "dart:async";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 
@@ -18,7 +19,7 @@ class RoverMetrics extends Model {
 	///
 	/// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
 	/// when new data is received. As a getter, every time it is called it will use new data.
-	List<Metrics> get allMetrics => [electrical, science];
+	List<Metrics> get allMetrics => [electrical, science, gps];
 
 	/// Returns a function that updates a [Metrics] object and reloads the UI.
 	void Function(T) update<T extends Message>(Metrics<T> metrics) => (T data) {
@@ -26,13 +27,14 @@ class RoverMetrics extends Model {
 		notifyListeners();
 	};
 
-  ///Have some variable to store incoming GPS coordinates
-  ///change the handler function to set the variable to the new value
-  ///
-  ///
-
 	@override
 	Future<void> init() async {
+    Timer.periodic(
+      const Duration(seconds: 2), 
+      (refresh) {
+        //smth
+      }
+    );
 		services.dataSocket.registerHandler<ElectricalData>(
 			name: ElectricalData().messageName,
 			decoder: ElectricalData.fromBuffer,
