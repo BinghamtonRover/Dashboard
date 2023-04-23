@@ -18,7 +18,7 @@ class GpsMetrics extends Metrics<GpsCoordinates> {
     "Latitude: ${data.latitude}",
 		"Longitude: ${data.longitude}",
 		"Altitude: ${data.altitude}",
-    "Distance to base stattion: ${distanceTo(data.baseStation)}". 
+    "Distance to base stattion: ${distanceTo(data.baseStation)}",
 	];
   
   /// Calculate Euclidean distance between current coordinates and another set of coordinates
