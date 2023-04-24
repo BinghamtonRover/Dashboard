@@ -10,86 +10,124 @@ extension SettingsParser on Json {
   }
 }
 
+/// Settings relating to the arm.
 class ArmSettings {
+  /// How many radians to move every 10ms. 
   double radianIncrement;
+
+  /// How many steps to move every 10ms.
   double stepIncrement;
+
+  /// How many radians to move every 10ms in precision mode.
   double preciseIncrement;
 
+  /// How many mm to move every 10ms in IK mode.
   double ikIncrement;
+
+  /// How many mm to move every 10ms in precise IK mode.
   double ikPreciseIncrement;
 
+  /// Whether the arm is in manual or IK mode.
+  bool manualControl;
+
+  /// Whether to use steps or radians.
+  bool useSteps;
+
+  /// Parses arm settings from a JSON map.
   ArmSettings.fromJson(Json? json) : 
     radianIncrement = json?["radianIncrement"] ?? 0.2,
     stepIncrement = json?["stepIncrement"] ?? 10000,
     preciseIncrement = json?["preciseIncrement"] ?? 0.1,
     ikIncrement = json?["ikIncrement"] ?? 100,
-    ikPreciseIncrement = json?["ikPreciseIncrement"] ?? 10;
+    ikPreciseIncrement = json?["ikPreciseIncrement"] ?? 10,
+    manualControl = json?["manual"] ?? false,
+    useSteps = json?["useSteps"] ?? false;
+
+  /// Serializes these settings to a JSON map.
+  Json toJson() => {
+    "radianIncrement": radianIncrement,
+    "stepIncrement": stepIncrement,
+    "preciseIncrement": preciseIncrement,
+    "ikIncrement": ikIncrement,
+    "ikPreciseIncrement": ikPreciseIncrement,
+    "manualControl": manualControl,
+    "useSteps": useSteps,
+  };
 }
 
-/// Contains the settings for running the dashboard and the rover. 
-class Settings {
+/// Settings related to network configuration.
+class NetworkSettings {
   /// The amount of time, in seconds, the dashboard should wait before determining it's
   /// lost connection to the rover. For reference, the rover should be sending messages 
   /// at least once per second. 
-  int connectionTimeout;
+  final int connectionTimeout;
 
   /// The address and port of the subsystems program.
-  SocketConfig subsystemsSocket;
+  final SocketConfig subsystemsSocket;
 
   /// The address and port of the video program.
-  SocketConfig videoSocket;
+  final SocketConfig videoSocket;
 
   /// The address and port of the autonomy program.
-  SocketConfig autonomySocket;
+  final SocketConfig autonomySocket;
 
-  /// Settings for the arm.
-  ArmSettings arm;
-
-  /// The IP address of the tank.
+  /// The address of the tank. The port is ignored.
   /// 
   /// The Tank is a model rover that has all the same programs as the rover. This field does not
   /// include port numbers because ports are specific to the program, and the tank will have many
   /// programs running. Instead, the IP address of all the other programs should be swapped with
   /// the tank when it's being used.
-  String tankAddress;
+  final SocketConfig tankSocket;
 
-  /// A constructor for this class.
-  Settings({
+  /// A const constructor.
+  const NetworkSettings({
     required this.subsystemsSocket,
-    required this.videoSocket,    
-    required this.autonomySocket,    
-    required this.tankAddress,
+    required this.videoSocket,
+    required this.autonomySocket,
+    required this.tankSocket,
     required this.connectionTimeout,
+  });
+
+  /// Parses network settings from a JSON map.
+  NetworkSettings.fromJson(Json? json) : 
+    subsystemsSocket = json?.getSocket("subsystemsSocket") ?? SocketConfig.raw("192.168.1.20", 8001),
+    videoSocket = json?.getSocket("videoSocket") ?? SocketConfig.raw("192.168.1.30", 8002),
+    autonomySocket = json?.getSocket("autonomySocket") ?? SocketConfig.raw("192.168.1.30", 8003),
+    tankSocket = json?["tankAddress"] ?? SocketConfig.raw("192.168.1.40", 8000),
+    connectionTimeout = json?["connectionTimeout"] ?? 5;
+
+  /// Serializes these settings to JSON.
+  Json toJson() => {
+    "subsystemsSocket": subsystemsSocket.toJson(),
+    "videoSocket": videoSocket.toJson(),
+    "autonomySocket": autonomySocket.toJson(),
+    "tankSocket": tankSocket.toJson(),
+    "connectionTimeout": connectionTimeout,
+  };
+}
+
+/// Contains the settings for running the dashboard and the rover. 
+class Settings {
+  /// Settings for the network, like IP addresses and ports.
+  final NetworkSettings network;
+
+  /// Settings for the arm.
+  final ArmSettings arm;
+
+  /// A const constructor.
+  const Settings({
+    required this.network,
     required this.arm,
   });
 
   /// Initialize settings from Json.
   Settings.fromJson(Json json) : 
-    subsystemsSocket = json.getSocket("subsystemsSocket") ?? defaultSettings.subsystemsSocket,
-    videoSocket = json.getSocket("videoSocket") ?? defaultSettings.videoSocket,
-    autonomySocket = json.getSocket("autonomySocket") ?? defaultSettings.autonomySocket,
-    tankAddress = json["tankAddress"] ?? defaultSettings.tankAddress,
-    connectionTimeout = json["connectionTimeout"] ?? defaultSettings.connectionTimeout,
+    network = NetworkSettings.fromJson(json["network"]),
     arm = ArmSettings.fromJson(json["arm"]);
 
   /// Converts the data from the settings instance to Json.
   Map toJson() => { 
-    "subsystemsSocket": subsystemsSocket.toJson(),
-    "videoSocket": videoSocket.toJson(),
-    "autonomySocket": autonomySocket.toJson(),
-    "tankAddress": tankAddress,
-    "connectionTimeout": connectionTimeout,
+    "network": network.toJson(),
+    "arm": arm.toJson(),
   };
 }
-
-/// The defualt settings with default values.
-/// 
-/// Use this when the settings in the Json file are invalid.
-final defaultSettings = Settings(
-  subsystemsSocket: SocketConfig.raw("192.168.1.20", 8001),
-  videoSocket: SocketConfig.raw("192.168.1.30", 8002),
-  autonomySocket: SocketConfig.raw("192.168.1.30", 8003),
-  tankAddress: "192.168.1.40",
-  connectionTimeout: 5,
-  arm: ArmSettings.fromJson(null),
-);

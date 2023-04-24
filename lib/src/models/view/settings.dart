@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/services.dart";
 
 /// A regular expression representing a valid IP address.
 final ipAddressRegex = RegExp(r"\d{3}\.\d{3}\.\d{1}\.\d{1,3}");
@@ -80,18 +79,19 @@ class SettingsBuilder with ChangeNotifier {
 	/// Since the tank runs multiple programs, the port is discarded and only the address is used.
 	final SocketBuilder tankSocket;
 
+	/// The user's arm settings.
 	final ArmSettings arm;
 
 	/// Whether the page is loading.
 	bool isLoading = false;
 
 	/// Creates the view model based on the current [Settings].
-	SettingsBuilder(Settings settings) :
-		dataSocket = SocketBuilder("Subsystems", settings.subsystemsSocket),
-		videoSocket = SocketBuilder("Video", settings.videoSocket),
-		autonomySocket = SocketBuilder("Autonomy", settings.autonomySocket),
-		tankSocket = SocketBuilder("Tank IP address", SocketConfig.raw(settings.tankAddress, 8000)),
-		arm = settings.arm
+	SettingsBuilder() :
+		dataSocket = SocketBuilder("Subsystems", models.settings.network.subsystemsSocket),
+		videoSocket = SocketBuilder("Video", models.settings.network.videoSocket),
+		autonomySocket = SocketBuilder("Autonomy", models.settings.network.autonomySocket),
+		tankSocket = SocketBuilder("Tank IP address", models.settings.network.tankSocket),
+		arm = models.settings.arm
 	{
 		dataSocket.addListener(notifyListeners);
 		videoSocket.addListener(notifyListeners);
@@ -101,11 +101,13 @@ class SettingsBuilder with ChangeNotifier {
 
 	/// The [Settings] object inputted by the user.
 	Settings get settings => Settings(
-		subsystemsSocket: dataSocket.socket,
-		videoSocket: videoSocket.socket,
-		autonomySocket: autonomySocket.socket,
-		tankAddress: tankSocket.socket.address.address,
-		connectionTimeout: 5,
+		network: NetworkSettings(
+			subsystemsSocket: dataSocket.socket,
+			videoSocket: videoSocket.socket,
+			autonomySocket: autonomySocket.socket,
+			tankSocket: tankSocket.socket,
+			connectionTimeout: 5,
+		),
 		arm: arm,
 	);
 
@@ -122,7 +124,7 @@ class SettingsBuilder with ChangeNotifier {
 		isLoading = true;
 		notifyListeners();
 		await Future.delayed(const Duration(milliseconds: 500));
-		await services.files.writeSettings(settings);
+		await models.settings.update(settings);
 		await models.rover.sockets.init();
 		isLoading = false;
 		notifyListeners();
