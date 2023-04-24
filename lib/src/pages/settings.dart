@@ -48,7 +48,7 @@ class SettingsPage extends StatelessWidget {
 	Widget build(BuildContext context) => Scaffold(
 		appBar: AppBar(title: const Text("Settings")),
 		body: ProviderConsumer<SettingsBuilder>(
-			create: () => SettingsBuilder(models.rover.sockets.settings),
+			create: SettingsBuilder.new,
 			builder: (model, child) => Column(children: [
 				Expanded(child: ListView(
 					padding: const EdgeInsets.all(8),
