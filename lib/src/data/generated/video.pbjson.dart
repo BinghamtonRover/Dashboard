@@ -58,6 +58,17 @@ const VideoData$json = const {
 
 /// Descriptor for `VideoData`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List videoDataDescriptor = $convert.base64Decode('CglWaWRlb0RhdGESJwoHY2FtZXJhcxgBIAMoCzINLkNhbWVyYVN0YXR1c1IHY2FtZXJhcw==');
+@$core.Deprecated('Use videoCommandDescriptor instead')
+const VideoCommand$json = const {
+  '1': 'VideoCommand',
+  '2': const [
+    const {'1': 'compression', '3': 1, '4': 1, '5': 5, '10': 'compression'},
+    const {'1': 'framerate', '3': 2, '4': 1, '5': 2, '10': 'framerate'},
+  ],
+};
+
+/// Descriptor for `VideoCommand`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List videoCommandDescriptor = $convert.base64Decode('CgxWaWRlb0NvbW1hbmQSIAoLY29tcHJlc3Npb24YASABKAVSC2NvbXByZXNzaW9uEhwKCWZyYW1lcmF0ZRgCIAEoAlIJZnJhbWVyYXRl');
 @$core.Deprecated('Use videoFrameDescriptor instead')
 const VideoFrame$json = const {
   '1': 'VideoFrame',
