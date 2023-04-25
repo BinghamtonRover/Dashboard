@@ -67,7 +67,7 @@ class Settings {
 final defaultSettings = Settings(
   subsystemsSocket: SocketConfig.raw("192.168.1.20", 8001),
   videoSocket: SocketConfig.raw("192.168.1.30", 8002),
-  autonomySocket: SocketConfig.raw("192.168.1.30", 8003),
+  autonomySocket: SocketConfig.raw("192.168.1.30", 8004),
   tankAddress: "192.168.1.40",
   connectionTimeout: 5,
 );
