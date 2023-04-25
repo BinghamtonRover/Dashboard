@@ -16,7 +16,7 @@ class ArmSettings {
   double radianIncrement;
 
   /// How many steps to move every 10ms.
-  double stepIncrement;
+  int stepIncrement;
 
   /// How many radians to move every 10ms in precision mode.
   double preciseIncrement;
@@ -32,6 +32,26 @@ class ArmSettings {
 
   /// Whether to use steps or radians.
   bool useSteps;
+
+  ArmSettings({
+    required this.radianIncrement,
+    required this.stepIncrement,
+    required this.preciseIncrement,
+    required this.ikIncrement,
+    required this.ikPreciseIncrement,
+    required this.manualControl,
+    required this.useSteps,
+ });
+
+  /// Copies settings from another instance.
+  ArmSettings.copy(ArmSettings other) : 
+    radianIncrement = other.radianIncrement,
+    stepIncrement = other.stepIncrement,
+    preciseIncrement = other.preciseIncrement,
+    ikIncrement = other.ikIncrement,
+    ikPreciseIncrement = other.ikPreciseIncrement,
+    manualControl = other.manualControl,
+    useSteps = other.useSteps;
 
   /// Parses arm settings from a JSON map.
   ArmSettings.fromJson(Json? json) : 
@@ -79,8 +99,7 @@ class NetworkSettings {
   /// the tank when it's being used.
   final SocketConfig tankSocket;
 
-  /// A const constructor.
-  const NetworkSettings({
+  NetworkSettings({
     required this.subsystemsSocket,
     required this.videoSocket,
     required this.autonomySocket,
@@ -88,12 +107,20 @@ class NetworkSettings {
     required this.connectionTimeout,
   });
 
+  /// Copies settings from another instance.
+  NetworkSettings.copy(NetworkSettings other) : 
+    subsystemsSocket = other.subsystemsSocket.copy(),
+    videoSocket = other.videoSocket.copy(),
+    autonomySocket = other.autonomySocket.copy(),
+    tankSocket = other.tankSocket.copy(),
+    connectionTimeout = other.connectionTimeout;
+
   /// Parses network settings from a JSON map.
   NetworkSettings.fromJson(Json? json) : 
     subsystemsSocket = json?.getSocket("subsystemsSocket") ?? SocketConfig.raw("192.168.1.20", 8001),
     videoSocket = json?.getSocket("videoSocket") ?? SocketConfig.raw("192.168.1.30", 8002),
     autonomySocket = json?.getSocket("autonomySocket") ?? SocketConfig.raw("192.168.1.30", 8003),
-    tankSocket = json?["tankAddress"] ?? SocketConfig.raw("192.168.1.40", 8000),
+    tankSocket = json?.getSocket("tankSocket") ?? SocketConfig.raw("192.168.1.40", 8000),
     connectionTimeout = json?["connectionTimeout"] ?? 5;
 
   /// Serializes these settings to JSON.
@@ -119,6 +146,10 @@ class Settings {
     required this.network,
     required this.arm,
   });
+
+  Settings.copy(Settings other) : 
+    network = NetworkSettings.copy(other.network),
+    arm = ArmSettings.copy(other.arm);
 
   /// Initialize settings from Json.
   Settings.fromJson(Json json) : 
