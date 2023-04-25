@@ -2,10 +2,10 @@
 import "dart:convert";
 import "dart:io";
 
-import "package:flutter/foundation.dart";
 import "package:path_provider/path_provider.dart";
 
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/services.dart";
 
 import "service.dart";
 
@@ -53,8 +53,7 @@ class FilesService extends Service {
       await writeSettings(settings);  // re-save any default values
       return settings;
     } catch (error) {
-      // TODO: Log this somewhere
-      debugPrint("[ERROR] Deleted settings because: $error");
+      services.error = "Settings were corrupted and reset back to defaults";
       await writeSettings(Settings.fromJson({}));  // delete corrupt settings
       if (retry) {
         return readSettings(retry: false);
