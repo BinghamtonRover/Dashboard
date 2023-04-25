@@ -1,10 +1,12 @@
 // ignore_for_file: directives_ordering
 import "dart:convert";
+import 'dart:ffi';
 import "dart:io";
 
 import "package:path_provider/path_provider.dart";
 
 import "package:rover_dashboard/data.dart";
+import 'package:rover_dashboard/src/widgets/navigation/footer.dart';
 
 import "service.dart";
 
@@ -19,11 +21,25 @@ class FilesService extends Service {
   /// should get their own subdirectory.
   late final Directory outputDir;
 
+  /// The directory where all logging data is outputted
+  /// 
+  /// This includes all the different operating modes with specified folders inside
+  late final Directory loggingDir;
+
   /// The file containing the user's [Settings], in JSON form.
   /// 
   /// This file should contain the result of [Settings.toJson], and loading settings
   /// from the file should be done with [Settings.fromJson].
   File get settingsFile => File("${outputDir.path}/settings.json");
+
+  Map<String, File> modes = { ///name better
+    "arm": File(""),
+    "gripper": File(""),
+    "science": File(""),
+    "electrical": File(""),
+    "autonomy": File(""),
+    "drive": File(""),
+  };
 
   /// Ensure that files and directories that are expected to be present actually
   /// exist on the system. If not, create them. 
@@ -33,6 +49,12 @@ class FilesService extends Service {
     outputDir = Directory("${appDir.path}/Dashboard");
     await outputDir.create();
     if (!settingsFile.existsSync()) await settingsFile.writeAsString(jsonEncode({}));
+    loggingDir = Directory("$outputDir/logs");
+    await loggingDir.create();
+    modes.forEach((mode, file) async {
+      await Directory("$loggingDir/$mode").create();
+      modes[mode] = await File("$loggingDir/$mode/${DateTime.now()}.csv").create();
+    });
   }
 
   @override
@@ -60,7 +82,14 @@ class FilesService extends Service {
     final number = files.isEmpty ? 1 : (int.parse(files.last.filename) + 1);
     await File("${dir.path}/$number.jpg").writeAsBytes(image); 
   }
+
+  Future<void> logData(Message message) async{
+    message.messageName;
+
+  }
 }
+
+
 
 extension on FileSystemEntity {
   String get filename => uri.pathSegments.last.split(".")[0];

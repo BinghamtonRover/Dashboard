@@ -25,6 +25,7 @@ class RoverMetrics extends Model {
 	void Function(T) update<T extends Message>(Metrics<T> metrics) => (T data) {
 		metrics.update(data);
 		notifyListeners();
+    services.files.logData(data);
 	};
 
 	@override
