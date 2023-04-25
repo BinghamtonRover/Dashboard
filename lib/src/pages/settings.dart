@@ -1,46 +1,36 @@
 import "package:flutter/material.dart";
 
+import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
-/// Creates a widget to edit host and port data for a socket.
-class SocketEditor extends StatelessWidget {
-	/// The [SocketBuilder] view model behind this widget.
-	/// 
-	/// Performs validation and tracks the text entered into the fields.
-	final SocketBuilder model;
+/// A widget to display all the settings in a [ValueBuilder].
+/// 
+/// Technically this class does not need to be used with [ValueBuilder], but it provides a heading
+/// and a list of children widgets to modify individual settings.
+class ValueEditor<T> extends StatelessWidget {
+	/// The name of the value being edited.
+	final String name;
 
-	/// Whether to edit the port as well.
-	final bool editPort;
+	/// Widgets to modify each individual setting.
+	final List<Widget> children;
 
-	/// Creates a widget to edit host and port data for a socket.
-	const SocketEditor(this.model, {this.editPort = true});
+	/// Creates a widget to modify a value.
+	const ValueEditor({required this.name, required this.children});
 
 	@override
-	Widget build(BuildContext context) => ProviderConsumer<SocketBuilder>.value(
-		value: model,
-		builder: (model, _) => Row(
-			children: [
-				const SizedBox(width: 12),
-				Expanded(child: Text(model.name)),
-				const Spacer(flex: 2),
-				Expanded(child: TextField(
-					controller: model.addressController, 
-					onChanged: model.validateAddress,
-					decoration: InputDecoration(errorText: model.addressError),
-				)),
-				if (editPort) ...[
-					const SizedBox(width: 12),
-					Expanded(child: TextField(
-						controller: model.portController, 
-						onChanged: model.validatePort,
-						decoration: InputDecoration(errorText: model.portError),
-					)),
-				]
-			],
-		)
+	Widget build(BuildContext context) => Column(
+		crossAxisAlignment: CrossAxisAlignment.start,
+		children: [
+			Text(
+				name,
+				style: Theme.of(context).textTheme.titleLarge,
+				textAlign: TextAlign.start,
+			),			
+			...children,
+		]
 	);
-}
+} 
 
 /// The settings page.
 class SettingsPage extends StatelessWidget {
@@ -48,16 +38,48 @@ class SettingsPage extends StatelessWidget {
 	Widget build(BuildContext context) => Scaffold(
 		appBar: AppBar(title: const Text("Settings")),
 		body: ProviderConsumer<SettingsBuilder>(
-			create: () => SettingsBuilder(models.rover.sockets.settings),
-			builder: (model, child) => Column(children: [
+			create: SettingsBuilder.new,
+			builder: (model, _) => Column(children: [
 				Expanded(child: ListView(
 					padding: const EdgeInsets.all(8),
 					children: [
-						Text("Network settings", style: Theme.of(context).textTheme.titleLarge),
-						SocketEditor(model.dataSocket),
-						SocketEditor(model.videoSocket),
-						SocketEditor(model.autonomySocket),
-						SocketEditor(model.tankSocket, editPort: false),
+						ValueEditor<NetworkSettings>(
+							name: "Network Settings",
+							children: [
+								SocketEditor(name: "Subsystems socket", model: model.network.dataSocket),
+								SocketEditor(name: "Video socket", model: model.network.videoSocket),
+								SocketEditor(name: "Autonomy socket", model: model.network.autonomySocket),
+								SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
+							]
+						),
+						ValueEditor<ArmSettings>(
+							name: "Arm Settings",
+							children: [
+								NumberEditor(name: "Radian increment", model: model.arm.radians),
+								NumberEditor(name: "Precise increment (radians)", model: model.arm.precise),
+								NumberEditor(name: "Step increment", model: model.arm.steps),
+								NumberEditor(name: "IK increment (mm)", model: model.arm.ik),
+								NumberEditor(name: "Precise IK increment (mm)", model: model.arm.ikPrecise),
+								SwitchListTile(
+									title: const Text("Use IK?"),
+									subtitle: const Text("Move in millimeters in 3D space instead of radians"),
+									value: model.arm.useIK,
+									onChanged: model.arm.updateIK,
+								),
+								SwitchListTile(
+									title: const Text("Move in steps?"),
+									subtitle: const Text("Move in steps rather than radians"),
+									value: model.arm.useSteps,
+									onChanged: model.arm.updateSteps,
+								),
+							]
+						),
+						const ValueEditor<EasterEggsSettings>(
+							name: "Easter eggs",
+							children: [
+								ListTile(title: Text("Coming soon!")),
+							]
+						),
 					],
 				)),
 				Row(

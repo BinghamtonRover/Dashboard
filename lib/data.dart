@@ -12,6 +12,7 @@ library data;
 
 export "src/data/generated/arm.pb.dart";
 export "src/data/generated/core.pb.dart";
+export "src/data/generated/coordinates.pb.dart";
 export "src/data/generated/drive.pb.dart";
 export "src/data/generated/electrical.pb.dart";
 export "src/data/generated/science.pb.dart";
