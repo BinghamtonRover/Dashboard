@@ -32,7 +32,7 @@ class SocketEditor extends StatelessWidget {
 			children: [
 				const SizedBox(width: 16),
 				Expanded(child: Text(name)),
-				const Spacer(flex: 4),
+				const Spacer(),
 				Expanded(child: TextField(
 					onChanged: model.address.update,
 					controller: model.address.controller,
@@ -68,7 +68,7 @@ class NumberEditor extends StatelessWidget {
 			children: [
 				const SizedBox(width: 16),
 				Expanded(child: Text(name)),
-				const Spacer(flex: 4),
+				const Spacer(),
 				Expanded(child: TextField(
 					onChanged: model.update,
 					decoration: InputDecoration(errorText: model.error),
@@ -82,12 +82,10 @@ class NumberEditor extends StatelessWidget {
 
 class PartialSettingsEditor<T> extends StatelessWidget {
 	final String name;
-	final ValueBuilder<T> model;
 	final List<Widget> children;
 
 	const PartialSettingsEditor({
 		required this.name,
-		required this.model,
 		required this.children,
 	});
 
@@ -118,7 +116,6 @@ class SettingsPage extends StatelessWidget {
 					children: [
 						PartialSettingsEditor<NetworkSettings>(
 							name: "Network Settings",
-							model: model.network,
 							children: [
 								SocketEditor(name: "Subsystems socket", model: model.network.dataSocket),
 								SocketEditor(name: "Video socket", model: model.network.videoSocket),
@@ -128,7 +125,6 @@ class SettingsPage extends StatelessWidget {
 						),
 						PartialSettingsEditor<ArmSettings>(
 							name: "Arm Settings",
-							model: model.arm,
 							children: [
 								NumberEditor(name: "Radian increment", model: model.arm.radians),
 								NumberEditor(name: "Precise increment (radians)", model: model.arm.precise),
@@ -148,7 +144,13 @@ class SettingsPage extends StatelessWidget {
 									onChanged: model.arm.updateSteps,
 								),
 							]
-						)
+						),
+						const PartialSettingsEditor<EasterEggsSettings>(
+							name: "Easter eggs",
+							children: [
+								ListTile(title: Text("Coming soon!")),
+							]
+						),
 					],
 				)),
 				Row(

@@ -117,6 +117,20 @@ class NetworkSettings {
   };
 }
 
+/// Settings relating to easter eggs.
+/// 
+/// TODO: Implement these.
+class EasterEggsSettings {
+  /// A const constructor.
+  const EasterEggsSettings();
+
+  /// Parses easter eggs settings from JSON.
+  EasterEggsSettings.fromJson(Json? json);  // ignore: avoid_unused_constructor_parameters
+
+  /// Serializes these settings to JSON.
+  Json toJson() => { };
+}
+
 /// Contains the settings for running the dashboard and the rover. 
 class Settings {
   /// Settings for the network, like IP addresses and ports.
