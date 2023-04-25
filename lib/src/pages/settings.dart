@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
+import "package:url_launcher/url_launcher.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A widget to display all the settings in a [ValueBuilder].
@@ -79,6 +81,12 @@ class SettingsPage extends StatelessWidget {
 							children: [
 								ListTile(title: Text("Coming soon!")),
 							]
+						),
+						Text("Misc", style: Theme.of(context).textTheme.titleLarge),
+						ListTile(
+							title: const Text("Open the output folder"),
+							trailing: const Icon(Icons.launch),
+							onTap: () => launchUrl(services.files.outputDir.uri),
 						),
 					],
 				)),
