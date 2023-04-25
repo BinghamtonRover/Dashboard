@@ -32,9 +32,28 @@ class RoverHeartbeats extends Model {
 	/// The connection strength, as a percentage, to the Subsystems Pi
 	double get connectionStrength => connections[Device.SUBSYSTEMS]!;
 
+	/// A rundown of the connection strength of each device.
+	String get connectionSummary {
+		final result = StringBuffer();
+		for (final MapEntry entry in connections.entries) {
+			result.write("${entry.key.name}: ${entry.value.toStringAsFixed(2)}\n");
+		}
+		return result.toString().trim();
+	}
+
 	@override
 	Future<void> init() async {
 		services.dataSocket.registerHandler<Connect>(
+			name: Connect().messageName,
+			decoder: Connect.fromBuffer,
+			handler: onHandshakeReceived,
+		);
+		services.videoSocket.registerHandler<Connect>(
+			name: Connect().messageName,
+			decoder: Connect.fromBuffer,
+			handler: onHandshakeReceived,
+		);
+		services.autonomySocket.registerHandler<Connect>(
 			name: Connect().messageName,
 			decoder: Connect.fromBuffer,
 			handler: onHandshakeReceived,

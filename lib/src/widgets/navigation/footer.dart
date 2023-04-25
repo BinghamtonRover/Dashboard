@@ -96,11 +96,14 @@ class StatusIcons extends StatelessWidget {
 					color: getColor(rover.metrics.electrical.battery)
 				),
 				const SizedBox(width: 4),
-				Icon(  // network strength
-					rover.isConnected
-						? getNetworkIcon(rover.heartbeats.connectionStrength)
-						: Icons.signal_wifi_off_outlined,
-					color: getColor(rover.heartbeats.connectionStrength),
+				Tooltip(
+					message: rover.heartbeats.connectionSummary,
+					child: Icon(  // network strength
+						rover.isConnected
+							? getNetworkIcon(rover.heartbeats.connectionStrength)
+							: Icons.signal_wifi_off_outlined,
+						color: getColor(rover.heartbeats.connectionStrength),
+					),
 				),
 				const SizedBox(width: 8),
 				PopupMenuButton(  // status
