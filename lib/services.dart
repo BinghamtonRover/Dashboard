@@ -56,6 +56,9 @@ class Services extends Service {
 	/// A service that communicates over a serial connection.
 	final serial = Serial();
 
+	/// The first error that occurred during startup.
+	String? error;
+
 	@override
 	Future<void> init() async {
 		await dataSocket.init();

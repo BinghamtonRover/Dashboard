@@ -40,3 +40,10 @@ extension HumanName on RoverStatus {
 		throw ArgumentError("Unrecognized rover status: $this");
 	}
 }
+
+/// Extensions for [Coordinates] messages.
+extension CoordinatesUtils on Coordinates {
+	/// Adds two coordinates.
+	Coordinates operator +(Coordinates other) => 
+		Coordinates(x: x + other.x, y: y + other.y, z: z + other.z);
+}

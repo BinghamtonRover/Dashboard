@@ -53,11 +53,10 @@ abstract class UdpSocket extends Service {
 	late final StreamSubscription _subscription;
 
 	/// The socket to send to.
-	SocketConfig destination;
+	SocketConfig? destination;
 
 	/// Opens a UDP socket on the given port.
-	UdpSocket({required this.listenPort, SocketConfig? destination})
-		: destination = destination ?? defaultSettings.subsystemsSocket;
+	UdpSocket({required this.listenPort, this.destination});
 
 	@override
 	Future<void> init() async {
@@ -81,5 +80,8 @@ abstract class UdpSocket extends Service {
 	void onData(List<int> data);
 
 	/// Sends [bytes] to the [destination].
-	void sendBytes(List<int> bytes) => _socket.send(bytes, destination.address, destination.port);
+	void sendBytes(List<int> bytes) {
+		// [!]: The [destination] field is updated in the Sockets model.
+		_socket.send(bytes, destination!.address, destination!.port);
+	}
 }
