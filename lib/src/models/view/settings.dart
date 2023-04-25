@@ -1,3 +1,4 @@
+import "dart:io";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -6,65 +7,106 @@ import "package:rover_dashboard/models.dart";
 /// A regular expression representing a valid IP address.
 final ipAddressRegex = RegExp(r"\d{3}\.\d{3}\.\d{1}\.\d{1,3}");
 
+abstract class ValueBuilder<T> with ChangeNotifier {
+	/// The value being updated in the UI.
+	T get value;
+
+	/// Whether the [value] in the UI is valid.
+	/// 
+	/// Do not try to access [value] if this is false.
+	bool get isValid;
+}
+
+abstract class TextBuilder<T> extends ValueBuilder<T> {
+	@override
+	T value;
+
+	final TextEditingController controller;
+
+	/// Creates a view model to update settings.
+	TextBuilder(this.value, {String? text}) : 
+		controller = TextEditingController(text: text ?? value.toString());
+
+	/// The error to display in the UI.
+	String? error;
+
+	/// Updates the [value] based on the user's input.
+	void update(String input);
+
+	@override
+	bool get isValid => error == null;
+}
+
+class NumberBuilder<T extends num> extends TextBuilder<T> {
+	bool get isDecimal => List<int> != List<T>;
+
+	NumberBuilder(super.value);
+
+	@override
+	void update(String input) {
+		if (input.isEmpty) {
+			error = "Must not be empty";
+		} else if (double.tryParse(input) == null) {
+			error = "Invalid number";
+		} else if (!isDecimal && int.tryParse(input) == null) {
+			error = "Must be an integer";
+		} else {
+			error = null;
+			if (isDecimal) {
+				value = double.parse(input) as T;
+			} else {
+				value = int.parse(input) as T;
+			}
+		}
+		notifyListeners();
+	}
+}
+
+class AddressBuilder extends TextBuilder<InternetAddress> {
+	AddressBuilder(InternetAddress value) : super(value, text: value.address.toString());
+
+	@override
+	void update(String input) {
+		if (input.isEmpty) {
+			error = "Must not be blank";
+		} else if (ipAddressRegex.stringMatch(input) != input || input.endsWith(".")) {
+			error = "Not a valid IP";
+		} else if (input.split(".").any((part) => int.parse(part) > 255)) {
+			error = "IP out of range";
+		} else {
+			error = null;
+			value = InternetAddress(input);
+		}
+		notifyListeners();
+	}
+}
+
 /// Modified and validates a [SocketConfig] in the UI. 
-class SocketBuilder with ChangeNotifier {
-	/// The text controller for the IP address.
-	final addressController = TextEditingController();
-
-	/// The text controller for the port.
-	final portController = TextEditingController();
-
+class SocketBuilder extends ValueBuilder<SocketConfig> {
 	/// The name of the socket being edited.
 	final String name;
 
+	final AddressBuilder address;
+	final NumberBuilder<int> port;
+
 	/// Creates a view model to modify a [SocketConfig].
-	SocketBuilder(this.name, SocketConfig config) {
-		addressController.text = config.address.address;
-		portController.text = config.port.toString();
+	SocketBuilder(this.name, SocketConfig initial) : 
+		address = AddressBuilder(initial.address),
+		port = NumberBuilder<int>(initial.port) 
+	{
+		address.addListener(notifyListeners);
+		port.addListener(notifyListeners);
 	}
 
-	/// The error while modifying the IP address, if any.
-	String? addressError;
+	@override
+	bool get isValid => address.isValid && port.isValid;
 
-	/// The error while modifying the port number, if any.
-	String? portError;
-
-	/// Validates the IP address.
-	void validateAddress(String? value) {
-		if (value == null) return;
-		if (ipAddressRegex.stringMatch(value) != value) {
-			addressError = "Not a valid IP";
-		} else {
-			addressError = null;
-		}
-		notifyListeners();
-	}
-
-	/// Validates the port number.
-	void validatePort(String? value) {
-		if (value == null) return;
-		final int? newPort = int.tryParse(value);
-		if (newPort == null) {
-			portError = "Not an integer";
-		} else if (newPort < 8000 || newPort >= 9000) {
-			portError = "Port must be in the 8000's";
-		} else {
-			portError = null;
-		}
-		notifyListeners();
-	}
-
-	/// Whether the [SocketConfig] in the UI is valid.
-	/// 
-	/// Do not try to access [socket] if this is false.
-	bool get isValid => addressError == null && portError == null;
-
-	/// The [SocketConfig] represented by this model.
-	SocketConfig get socket => SocketConfig.raw(addressController.text, int.parse(portController.text));
+	@override
+	SocketConfig get value => SocketConfig(address.value, port.value);
 }
 
 /// A view model representing a whole [Settings] object in the UI.
-class SettingsBuilder with ChangeNotifier {
+class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 	/// The view model representing the [SocketConfig] for the subsystems program.
 	final SocketBuilder dataSocket;
 
@@ -79,19 +121,12 @@ class SettingsBuilder with ChangeNotifier {
 	/// Since the tank runs multiple programs, the port is discarded and only the address is used.
 	final SocketBuilder tankSocket;
 
-	/// The user's arm settings.
-	final ArmSettings arm;
-
-	/// Whether the page is loading.
-	bool isLoading = false;
-
 	/// Creates the view model based on the current [Settings].
-	SettingsBuilder() :
-		dataSocket = SocketBuilder("Subsystems", models.settings.network.subsystemsSocket),
-		videoSocket = SocketBuilder("Video", models.settings.network.videoSocket),
-		autonomySocket = SocketBuilder("Autonomy", models.settings.network.autonomySocket),
-		tankSocket = SocketBuilder("Tank IP address", models.settings.network.tankSocket),
-		arm = models.settings.arm
+	NetworkSettingsBuilder(NetworkSettings initial) :
+		dataSocket = SocketBuilder("Subsystems", initial.subsystemsSocket),
+		videoSocket = SocketBuilder("Video", initial.videoSocket),
+		autonomySocket = SocketBuilder("Autonomy", initial.autonomySocket),
+		tankSocket = SocketBuilder("Tank IP address", initial.tankSocket)
 	{
 		dataSocket.addListener(notifyListeners);
 		videoSocket.addListener(notifyListeners);
@@ -99,32 +134,109 @@ class SettingsBuilder with ChangeNotifier {
 		tankSocket.addListener(notifyListeners);
 	}
 
-	/// The [Settings] object inputted by the user.
-	Settings get settings => Settings(
-		network: NetworkSettings(
-			subsystemsSocket: dataSocket.socket,
-			videoSocket: videoSocket.socket,
-			autonomySocket: autonomySocket.socket,
-			tankSocket: tankSocket.socket,
-			connectionTimeout: 5,
-		),
-		arm: arm,
-	);
+	@override
+	bool get isValid => dataSocket.isValid
+		&& videoSocket.isValid
+		&& autonomySocket.isValid
+		&& tankSocket.isValid;
 
-	/// Whether these settings are valid.
-	/// 
-	/// Do not try to access [settings] if this is not true.
-	bool get isValid {
-		final result = dataSocket.isValid && videoSocket.isValid && autonomySocket.isValid && tankSocket.isValid;
-		return result;
+	@override
+	NetworkSettings get value => NetworkSettings(
+		subsystemsSocket: dataSocket.value,
+		videoSocket: videoSocket.value,
+		autonomySocket: autonomySocket.value,
+		tankSocket: tankSocket.value,
+		connectionTimeout: 5,
+	);
+}
+
+class ArmSettingsBuilder extends ValueBuilder<ArmSettings>{
+	final TextBuilder<double> radians;
+	final TextBuilder<int> steps;
+	final TextBuilder<double> precise;
+	final TextBuilder<double> ik;
+	final TextBuilder<double> ikPrecise;
+
+	bool manualControl;
+	bool useSteps;
+
+	ArmSettingsBuilder(ArmSettings initial) : 
+		radians = NumberBuilder(initial.radianIncrement),
+		steps = NumberBuilder<int>(initial.stepIncrement),
+		precise = NumberBuilder(initial.preciseIncrement),
+		ik = NumberBuilder(initial.ikIncrement),
+		ikPrecise = NumberBuilder(initial.ikPreciseIncrement),
+		manualControl = initial.manualControl,
+		useSteps = initial.useSteps
+	{
+		radians.addListener(notifyListeners);
+		steps.addListener(notifyListeners);
+		precise.addListener(notifyListeners);
+		ik.addListener(notifyListeners);
+		ikPrecise.addListener(notifyListeners);
 	}
 
-	/// Saves the [settings] to the device.
+	@override
+	bool get isValid => radians.isValid
+		&& steps.isValid
+		&& precise.isValid
+		&& ik.isValid
+		&& ikPrecise.isValid;
+
+	// ignore: avoid_positional_boolean_parameters
+	void updateManual(bool input) {
+		manualControl = input;
+		notifyListeners();
+	}
+
+	// ignore: avoid_positional_boolean_parameters
+	void updateSteps(bool input) {
+		useSteps = input;
+		notifyListeners();
+	}
+
+	@override
+	ArmSettings get value => ArmSettings(
+		radianIncrement: radians.value,
+		stepIncrement: steps.value,
+		preciseIncrement: precise.value,
+		ikIncrement: ik.value,
+		ikPreciseIncrement: ikPrecise.value,
+		manualControl: manualControl,
+		useSteps: useSteps,
+	);
+}
+
+class SettingsBuilder extends ValueBuilder<Settings> {
+	final NetworkSettingsBuilder network;
+	final ArmSettingsBuilder arm;
+
+	/// Whether the page is loading.
+	bool isLoading = false;
+
+	SettingsBuilder() : 
+		network = NetworkSettingsBuilder(NetworkSettings.copy(models.settings.network)),
+		arm = ArmSettingsBuilder(ArmSettings.copy(models.settings.arm))
+	{
+		network.addListener(notifyListeners);
+		arm.addListener(notifyListeners);
+	}
+
+	@override
+	bool get isValid => network.isValid && arm.isValid;
+
+	@override
+	Settings get value => Settings(
+		network: network.value,
+		arm: arm.value,
+	);
+
+	/// Saves the settings to the device.
 	Future<void> save() async {
 		isLoading = true;
 		notifyListeners();
 		await Future.delayed(const Duration(milliseconds: 500));
-		await models.settings.update(settings);
+		await models.settings.update(value);
 		await models.rover.sockets.init();
 		isLoading = false;
 		notifyListeners();
