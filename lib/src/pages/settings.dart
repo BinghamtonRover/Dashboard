@@ -7,6 +7,9 @@ import "package:rover_dashboard/widgets.dart";
 
 /// Creates a widget to edit host and port data for a socket.
 class SocketEditor extends StatelessWidget {
+	/// The name of the socket being edited.
+	final String name;
+
 	/// The [SocketBuilder] view model behind this widget.
 	/// 
 	/// Performs validation and tracks the text entered into the fields.
@@ -16,31 +19,35 @@ class SocketEditor extends StatelessWidget {
 	final bool editPort;
 
 	/// Creates a widget to edit host and port data for a socket.
-	const SocketEditor(this.model, {this.editPort = true});
+	const SocketEditor({
+		required this.name,
+		required this.model, 
+		this.editPort = true
+	});
 
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<SocketBuilder>.value(
 		value: model,
 		builder: (model, _) => Row(
 			children: [
-				const SizedBox(width: 12),
-				Expanded(child: Text(model.name)),
-				const Spacer(flex: 2),
+				const SizedBox(width: 16),
+				Expanded(child: Text(name)),
+				const Spacer(flex: 4),
 				Expanded(child: TextField(
 					onChanged: model.address.update,
 					controller: model.address.controller,
 					decoration: InputDecoration(errorText: model.address.error),
 					inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"\d|\."))]
 				)),
+				const SizedBox(width: 12),
 				if (editPort) ...[
-					const SizedBox(width: 12),
 					Expanded(child: TextField(
 						onChanged: model.port.update,
 						controller: model.port.controller,
 						decoration: InputDecoration(errorText: model.port.error),
 						inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"\d"))],
 					)),
-				]
+				] else const Spacer()
 			],
 		)
 	);
@@ -59,9 +66,9 @@ class NumberEditor extends StatelessWidget {
 		value: model,
 		builder: (model, _) => Row(
 			children: [
-				const SizedBox(width: 12),
+				const SizedBox(width: 16),
 				Expanded(child: Text(name)),
-				const Spacer(flex: 2),
+				const Spacer(flex: 4),
 				Expanded(child: TextField(
 					onChanged: model.update,
 					decoration: InputDecoration(errorText: model.error),
@@ -113,10 +120,10 @@ class SettingsPage extends StatelessWidget {
 							name: "Network Settings",
 							model: model.network,
 							children: [
-								SocketEditor(model.network.dataSocket),
-								SocketEditor(model.network.videoSocket),
-								SocketEditor(model.network.autonomySocket),
-								SocketEditor(model.network.tankSocket, editPort: false),
+								SocketEditor(name: "Subsystems socket", model: model.network.dataSocket),
+								SocketEditor(name: "Video socket", model: model.network.videoSocket),
+								SocketEditor(name: "Autonomy socket", model: model.network.autonomySocket),
+								SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
 							]
 						),
 						PartialSettingsEditor<ArmSettings>(
@@ -128,6 +135,18 @@ class SettingsPage extends StatelessWidget {
 								NumberEditor(name: "Step increment", model: model.arm.steps),
 								NumberEditor(name: "IK increment (mm)", model: model.arm.ik),
 								NumberEditor(name: "Precise IK increment (mm)", model: model.arm.ikPrecise),
+								SwitchListTile(
+									title: const Text("Use IK?"),
+									subtitle: const Text("Move in millimeters in 3D space instead of radians"),
+									value: model.arm.useIK,
+									onChanged: model.arm.updateIK,
+								),
+								SwitchListTile(
+									title: const Text("Move in steps?"),
+									subtitle: const Text("Move in steps rather than radians"),
+									value: model.arm.useSteps,
+									onChanged: model.arm.updateSteps,
+								),
 							]
 						)
 					],
