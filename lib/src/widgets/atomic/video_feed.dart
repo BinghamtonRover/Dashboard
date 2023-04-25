@@ -26,13 +26,18 @@ class ImageLoader {
 	/// Whether this loader has been initialized.
 	bool get hasImage => image != null;
 
+	/// Whether an image is currently loading.
+	bool isLoading = false;
+
 	/// Processes the next frame and stores the result in [image].
 	Future<void> load(List<int> bytes) async {
-		// if (hasImage) dispose();
+		if (isLoading) return;
+		isLoading = true;
 		final ulist = Uint8List.fromList(bytes.toList());
 		codec = await ui.instantiateImageCodec(ulist);
 		final frame = await codec!.getNextFrame();
 		image = frame.image;
+		isLoading = false;
 	}
 
 	/// Disposes all the resources associated with the current frame.
@@ -151,7 +156,6 @@ class VideoFeedState extends State<VideoFeed> {
 	Future<void> selectNewFeed(CameraFeed newFeed) async {
 		await models.video.disableFeed(feed);
 		await models.video.enableFeed(newFeed);
-		imageLoader.dispose();
 		setState(() => feed = newFeed);
 		await updateImage();
 	}
