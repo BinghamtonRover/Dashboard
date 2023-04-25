@@ -53,13 +53,16 @@ class SocketEditor extends StatelessWidget {
 	);
 }
 
+/// A widget to edit a number, backed by [NumberBuilder].
 class NumberEditor extends StatelessWidget {
+	/// The value this number represents.
 	final String name;
-	final TextBuilder<num> model;
-	const NumberEditor({
-		required this.name,
-		required this.model,
-	});
+
+	/// The view model backing this value.
+	final NumberBuilder model;
+
+	/// Creates a widget to modify a number.
+	const NumberEditor({required this.name, required this.model});
 
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<TextBuilder<num>>.value(
@@ -80,14 +83,19 @@ class NumberEditor extends StatelessWidget {
 	);
 }
 
-class PartialSettingsEditor<T> extends StatelessWidget {
+/// A widget to display all the settings in a [ValueBuilder].
+/// 
+/// Technically this class does not need to be used with [ValueBuilder], but it provides a heading
+/// and a list of children widgets to modify individual settings.
+class ValueEditor<T> extends StatelessWidget {
+	/// The name of the value being edited.
 	final String name;
+
+	/// Widgets to modify each individual setting.
 	final List<Widget> children;
 
-	const PartialSettingsEditor({
-		required this.name,
-		required this.children,
-	});
+	/// Creates a widget to modify a value.
+	const ValueEditor({required this.name, required this.children});
 
 	@override
 	Widget build(BuildContext context) => Column(
@@ -114,7 +122,7 @@ class SettingsPage extends StatelessWidget {
 				Expanded(child: ListView(
 					padding: const EdgeInsets.all(8),
 					children: [
-						PartialSettingsEditor<NetworkSettings>(
+						ValueEditor<NetworkSettings>(
 							name: "Network Settings",
 							children: [
 								SocketEditor(name: "Subsystems socket", model: model.network.dataSocket),
@@ -123,7 +131,7 @@ class SettingsPage extends StatelessWidget {
 								SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
 							]
 						),
-						PartialSettingsEditor<ArmSettings>(
+						ValueEditor<ArmSettings>(
 							name: "Arm Settings",
 							children: [
 								NumberEditor(name: "Radian increment", model: model.arm.radians),
@@ -145,7 +153,7 @@ class SettingsPage extends StatelessWidget {
 								),
 							]
 						),
-						const PartialSettingsEditor<EasterEggsSettings>(
+						const ValueEditor<EasterEggsSettings>(
 							name: "Easter eggs",
 							children: [
 								ListTile(title: Text("Coming soon!")),

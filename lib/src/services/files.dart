@@ -41,8 +41,6 @@ class FilesService extends Service {
 
   /// Saves the [Settings] object to the [settingsFile], as JSON.
   Future<void> writeSettings(Settings value) async {
-    print("Backend: ${value.arm.useIK}");
-    print(value.toJson());
     final json = jsonEncode(value.toJson());
     await settingsFile.writeAsString(json);
   }
