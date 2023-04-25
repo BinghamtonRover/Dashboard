@@ -36,7 +36,7 @@ class RoverHeartbeats extends Model {
 	String get connectionSummary {
 		final result = StringBuffer();
 		for (final MapEntry entry in connections.entries) {
-			result.write("${entry.key.name}: ${entry.value.toStringAsFixed(2)}\n");
+			result.write("${entry.key.name}: ${(entry.value*100).toStringAsFixed(0)}%\n");
 		}
 		return result.toString().trim();
 	}

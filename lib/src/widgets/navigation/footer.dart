@@ -89,11 +89,14 @@ class StatusIcons extends StatelessWidget {
 	Widget build(BuildContext context) => Consumer<Rover>(
 		builder: (_, rover, __) => Row(
 			children: [
-				Icon(  // battery level
-					rover.isConnected 
-						? getBatteryIcon(rover.metrics.electrical.battery)
-						: Icons.battery_unknown,
-					color: getColor(rover.metrics.electrical.battery)
+				Tooltip(
+					message: "Battery: ${(rover.metrics.electrical.battery*100).toStringAsFixed(0)}%",
+					child: Icon(  // battery level
+						rover.isConnected 
+							? getBatteryIcon(rover.metrics.electrical.battery)
+							: Icons.battery_unknown,
+						color: getColor(rover.metrics.electrical.battery)
+					)
 				),
 				const SizedBox(width: 4),
 				Tooltip(
