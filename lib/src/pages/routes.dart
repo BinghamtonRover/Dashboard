@@ -4,4 +4,7 @@
 class Routes { 
 	/// The name of the settings page.
 	static const String settings = "settings"; 
+
+	/// The name of the home page.
+	static const String home = "home"; 
 }

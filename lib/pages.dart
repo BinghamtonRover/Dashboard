@@ -13,3 +13,4 @@ export "src/pages/operating_modes/manual.dart";
 export "src/pages/operating_modes/science.dart";
 export "src/pages/routes.dart";
 export "src/pages/settings.dart";
+export "src/pages/splash.dart";

@@ -5,7 +5,7 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
 /// A regular expression representing a valid IP address.
-final ipAddressRegex = RegExp(r"\d{3}\.\d{3}\.\d{1}\.\d{1,3}");
+final ipAddressRegex = RegExp(r"\d+\.\d+\.\d+\.\d+");
 
 /// Modified and validates a [SocketConfig] in the UI. 
 class SocketBuilder with ChangeNotifier {
