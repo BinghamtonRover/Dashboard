@@ -2,6 +2,7 @@
 import "dart:convert";
 import "dart:io";
 
+import "package:flutter/foundation.dart";
 import "package:path_provider/path_provider.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -38,9 +39,11 @@ class FilesService extends Service {
   @override
   Future<void> dispose() async { }
 
-  /// Saves the [settings] object to the [settingsFile], as JSON.
-  Future<void> writeSettings(Settings settings) async {
-    final json = jsonEncode(settings.toJson());
+  /// Saves the [Settings] object to the [settingsFile], as JSON.
+  Future<void> writeSettings(Settings value) async {
+    print("Backend: ${value.arm.useIK}");
+    print(value.toJson());
+    final json = jsonEncode(value.toJson());
     await settingsFile.writeAsString(json);
   }
 
@@ -53,6 +56,7 @@ class FilesService extends Service {
       return settings;
     } catch (error) {
       // TODO: Log this somewhere
+      debugPrint("[ERROR] Deleted settings because: $error");
       await writeSettings(Settings.fromJson({}));  // delete corrupt settings
       if (retry) {
         return readSettings(retry: false);

@@ -1,7 +1,6 @@
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
-
-import "../model.dart";
 
 /// Manages the user's settings.
 class SettingsModel extends Model {
@@ -21,10 +20,12 @@ class SettingsModel extends Model {
 
 	/// Replaces the current settings with the provided ones.
 	Future<void> update(Settings value) async {
-		await save();
-		all = value;
+		try {
+			await services.files.writeSettings(value);
+			all = value;
+			notifyListeners();
+		} catch (error) {
+			models.home.setMessage(severity: Severity.critical, text: "Could not save settings: $error");
+		}
 	}
-
-	/// Saves the user's settings after a modification.
-	Future<void> save() => services.files.writeSettings(all);
 }
