@@ -25,7 +25,11 @@ class ArmControls extends RoverControls {
 	@override
 	List<Message> parseInputs(GamepadState state) => [
 		// Arm
-		if (settings.manualControl) ...[
+		if (settings.useIK) ...[
+			// IK
+			...updateIK(state.normalRightX * settings.ikIncrement, state.normalShoulder * settings.ikIncrement, state.normalRightY * settings.ikIncrement),
+			...updateIK(state.normalDpadX * settings.ikPreciseIncrement, 0, state.normalRightY * settings.ikPreciseIncrement),
+		] else ...[
 			// Manual control
 			if (state.normalRightX != 0) ArmCommand(swivel: MotorCommand(moveRadians: state.normalRightX * settings.radianIncrement)),
 			if (state.normalRightY != 0) ArmCommand(shoulder: MotorCommand(moveRadians: state.normalRightY * settings.radianIncrement)),
@@ -37,10 +41,6 @@ class ArmControls extends RoverControls {
 				if (state.normalDpadX != 0) ArmCommand(swivel: MotorCommand(moveRadians: state.normalDpadX * settings.preciseIncrement)),
 				if (state.normalDpadY != 0) ArmCommand(elbow: MotorCommand(moveRadians: state.normalDpadY * settings.preciseIncrement)),
 			]
-		] else ...[
-			// IK
-			...updateIK(state.normalRightX * settings.ikIncrement, state.normalShoulder * settings.ikIncrement, state.normalRightY * settings.ikIncrement),
-			...updateIK(state.normalDpadX * settings.ikPreciseIncrement, 0, state.normalRightY * settings.ikPreciseIncrement),
 		],
 
 		// Gripper
@@ -68,18 +68,18 @@ class ArmControls extends RoverControls {
 	@override
 	Map<String, String> get buttonMapping => {
 		// Arm
-		if (settings.manualControl) ...{
+		if (settings.useIK) ...{
+			// IK
+			"IK control": "Right joystick",
+			"IK depth": "Bumpers",
+			"Precise IK": "D-pad",
+		} else ...{
 			// Manual control
 			"Swivel": "Right joystick (horizontal)",
 			"Shoulder": "Right joystick (vertical)",
 			"Elbow": "Bumpers",
 			"Precise swivel": "D-pad horizontal",
 			"Precise elbow": "D-pad vertical",
-		} else ...{
-			// IK
-			"IK control": "Right joystick",
-			"IK depth": "Bumpers",
-			"Precise IK": "D-pad",
 		},
 
 		// Gripper

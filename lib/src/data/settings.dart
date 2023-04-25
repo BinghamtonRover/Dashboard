@@ -13,45 +13,36 @@ extension SettingsParser on Json {
 /// Settings relating to the arm.
 class ArmSettings {
   /// How many radians to move every 10ms. 
-  double radianIncrement;
+  final double radianIncrement;
 
   /// How many steps to move every 10ms.
-  int stepIncrement;
+  final int stepIncrement;
 
   /// How many radians to move every 10ms in precision mode.
-  double preciseIncrement;
+  final double preciseIncrement;
 
   /// How many mm to move every 10ms in IK mode.
-  double ikIncrement;
+  final double ikIncrement;
 
   /// How many mm to move every 10ms in precise IK mode.
-  double ikPreciseIncrement;
+  final double ikPreciseIncrement;
 
   /// Whether the arm is in manual or IK mode.
-  bool manualControl;
+  final bool useIK;
 
   /// Whether to use steps or radians.
-  bool useSteps;
+  final bool useSteps;
 
-  ArmSettings({
+  /// A const constructor.
+  const ArmSettings({
     required this.radianIncrement,
     required this.stepIncrement,
     required this.preciseIncrement,
     required this.ikIncrement,
     required this.ikPreciseIncrement,
-    required this.manualControl,
+    required this.useIK,
     required this.useSteps,
  });
-
-  /// Copies settings from another instance.
-  ArmSettings.copy(ArmSettings other) : 
-    radianIncrement = other.radianIncrement,
-    stepIncrement = other.stepIncrement,
-    preciseIncrement = other.preciseIncrement,
-    ikIncrement = other.ikIncrement,
-    ikPreciseIncrement = other.ikPreciseIncrement,
-    manualControl = other.manualControl,
-    useSteps = other.useSteps;
 
   /// Parses arm settings from a JSON map.
   ArmSettings.fromJson(Json? json) : 
@@ -60,7 +51,7 @@ class ArmSettings {
     preciseIncrement = json?["preciseIncrement"] ?? 0.1,
     ikIncrement = json?["ikIncrement"] ?? 100,
     ikPreciseIncrement = json?["ikPreciseIncrement"] ?? 10,
-    manualControl = json?["manual"] ?? false,
+    useIK = json?["useIK"] ?? false,
     useSteps = json?["useSteps"] ?? false;
 
   /// Serializes these settings to a JSON map.
@@ -70,7 +61,7 @@ class ArmSettings {
     "preciseIncrement": preciseIncrement,
     "ikIncrement": ikIncrement,
     "ikPreciseIncrement": ikPreciseIncrement,
-    "manualControl": manualControl,
+    "useIK": useIK,
     "useSteps": useSteps,
   };
 }
@@ -99,6 +90,7 @@ class NetworkSettings {
   /// the tank when it's being used.
   final SocketConfig tankSocket;
 
+  /// Creates a new network settings object.
   NetworkSettings({
     required this.subsystemsSocket,
     required this.videoSocket,
@@ -106,14 +98,6 @@ class NetworkSettings {
     required this.tankSocket,
     required this.connectionTimeout,
   });
-
-  /// Copies settings from another instance.
-  NetworkSettings.copy(NetworkSettings other) : 
-    subsystemsSocket = other.subsystemsSocket.copy(),
-    videoSocket = other.videoSocket.copy(),
-    autonomySocket = other.autonomySocket.copy(),
-    tankSocket = other.tankSocket.copy(),
-    connectionTimeout = other.connectionTimeout;
 
   /// Parses network settings from a JSON map.
   NetworkSettings.fromJson(Json? json) : 
@@ -146,10 +130,6 @@ class Settings {
     required this.network,
     required this.arm,
   });
-
-  Settings.copy(Settings other) : 
-    network = NetworkSettings.copy(other.network),
-    arm = ArmSettings.copy(other.arm);
 
   /// Initialize settings from Json.
   Settings.fromJson(Json json) : 
