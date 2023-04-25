@@ -1,96 +1,16 @@
-import "dart:io";
-import "package:flutter/material.dart";
-
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
-/// A regular expression representing a valid IP address.
-final ipAddressRegex = RegExp(r"\d{3}\.\d{3}\.\d{1}\.\d{1,3}");
-
-abstract class ValueBuilder<T> with ChangeNotifier {
-	/// The value being updated in the UI.
-	T get value;
-
-	/// Whether the [value] in the UI is valid.
-	/// 
-	/// Do not try to access [value] if this is false.
-	bool get isValid;
-}
-
-abstract class TextBuilder<T> extends ValueBuilder<T> {
-	@override
-	T value;
-
-	final TextEditingController controller;
-
-	/// Creates a view model to update settings.
-	TextBuilder(this.value, {String? text}) : 
-		controller = TextEditingController(text: text ?? value.toString());
-
-	/// The error to display in the UI.
-	String? error;
-
-	/// Updates the [value] based on the user's input.
-	void update(String input);
-
-	@override
-	bool get isValid => error == null;
-}
-
-class NumberBuilder<T extends num> extends TextBuilder<T> {
-	bool get isDecimal => List<int> != List<T>;
-
-	NumberBuilder(super.value);
-
-	@override
-	void update(String input) {
-		if (input.isEmpty) {
-			error = "Must not be empty";
-		} else if (double.tryParse(input) == null) {
-			error = "Invalid number";
-		} else if (!isDecimal && int.tryParse(input) == null) {
-			error = "Must be an integer";
-		} else {
-			error = null;
-			if (isDecimal) {
-				value = double.parse(input) as T;
-			} else {
-				value = int.parse(input) as T;
-			}
-		}
-		notifyListeners();
-	}
-}
-
-class AddressBuilder extends TextBuilder<InternetAddress> {
-	AddressBuilder(InternetAddress value) : super(value, text: value.address.toString());
-
-	@override
-	void update(String input) {
-		if (input.isEmpty) {
-			error = "Must not be blank";
-		} else if (ipAddressRegex.stringMatch(input) != input || input.endsWith(".")) {
-			error = "Not a valid IP";
-		} else if (input.split(".").any((part) => int.parse(part) > 255)) {
-			error = "IP out of range";
-		} else {
-			error = null;
-			value = InternetAddress(input);
-		}
-		notifyListeners();
-	}
-}
-
-/// Modified and validates a [SocketConfig] in the UI. 
+/// A [ValueBuilder] that modifies a [SocketConfig].
 class SocketBuilder extends ValueBuilder<SocketConfig> {
-	/// The name of the socket being edited.
-	final String name;
-
+	/// The builder for the IP address.
 	final AddressBuilder address;
+
+	/// The builder for the port number.
 	final NumberBuilder<int> port;
 
-	/// Creates a view model to modify a [SocketConfig].
-	SocketBuilder(this.name, SocketConfig initial) : 
+	/// Creates a view model to modify the given [SocketConfig].
+	SocketBuilder(SocketConfig initial) : 
 		address = AddressBuilder(initial.address),
 		port = NumberBuilder<int>(initial.port) 
 	{
@@ -105,7 +25,7 @@ class SocketBuilder extends ValueBuilder<SocketConfig> {
 	SocketConfig get value => SocketConfig(address.value, port.value);
 }
 
-/// A view model representing a whole [Settings] object in the UI.
+/// A [ValueBuilder] representing a [NetworkSettings].
 class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 	/// The view model representing the [SocketConfig] for the subsystems program.
 	final SocketBuilder dataSocket;
@@ -123,10 +43,10 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 
 	/// Creates the view model based on the current [Settings].
 	NetworkSettingsBuilder(NetworkSettings initial) :
-		dataSocket = SocketBuilder("Subsystems", initial.subsystemsSocket),
-		videoSocket = SocketBuilder("Video", initial.videoSocket),
-		autonomySocket = SocketBuilder("Autonomy", initial.autonomySocket),
-		tankSocket = SocketBuilder("Tank IP address", initial.tankSocket)
+		dataSocket = SocketBuilder(initial.subsystemsSocket),
+		videoSocket = SocketBuilder(initial.videoSocket),
+		autonomySocket = SocketBuilder(initial.autonomySocket),
+		tankSocket = SocketBuilder(initial.tankSocket)
 	{
 		dataSocket.addListener(notifyListeners);
 		videoSocket.addListener(notifyListeners);
@@ -150,23 +70,37 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 	);
 }
 
+/// A [ValueBuilder] representing an [ArmSettings].
 class ArmSettingsBuilder extends ValueBuilder<ArmSettings>{
-	final TextBuilder<double> radians;
-	final TextBuilder<int> steps;
-	final TextBuilder<double> precise;
-	final TextBuilder<double> ik;
-	final TextBuilder<double> ikPrecise;
+	/// The builder for the radian increment.
+	final NumberBuilder<double> radians;
 
-	bool manualControl;
+	/// The builder for the steps increment.
+	final NumberBuilder<int> steps;
+
+	/// The builder for the precise radian increment.
+	final NumberBuilder<double> precise;
+
+	/// The builder for the IK increment.
+	final NumberBuilder<double> ik;
+
+	/// The builder for the precise IK increment.
+	final NumberBuilder<double> ikPrecise;
+
+	/// Whether to use manual control or IK.
+	bool useIK;
+
+	/// Whether to use steps instead of radians.
 	bool useSteps;
 
+	/// Modifies the given [ArmSettings].
 	ArmSettingsBuilder(ArmSettings initial) : 
 		radians = NumberBuilder(initial.radianIncrement),
-		steps = NumberBuilder<int>(initial.stepIncrement),
+		steps = NumberBuilder(initial.stepIncrement),
 		precise = NumberBuilder(initial.preciseIncrement),
 		ik = NumberBuilder(initial.ikIncrement),
 		ikPrecise = NumberBuilder(initial.ikPreciseIncrement),
-		manualControl = initial.manualControl,
+		useIK = initial.useIK,
 		useSteps = initial.useSteps
 	{
 		radians.addListener(notifyListeners);
@@ -183,14 +117,14 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings>{
 		&& ik.isValid
 		&& ikPrecise.isValid;
 
-	// ignore: avoid_positional_boolean_parameters
-	void updateManual(bool input) {
-		manualControl = input;
+	/// Updates the [useIK] variable.
+	void updateIK(bool input) {	// ignore: avoid_positional_boolean_parameters
+		useIK = input;
 		notifyListeners();
 	}
 
-	// ignore: avoid_positional_boolean_parameters
-	void updateSteps(bool input) {
+	/// Updates the [useSteps] variable.
+	void updateSteps(bool input) {	// ignore: avoid_positional_boolean_parameters
 		useSteps = input;
 		notifyListeners();
 	}
@@ -202,21 +136,26 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings>{
 		preciseIncrement: precise.value,
 		ikIncrement: ik.value,
 		ikPreciseIncrement: ikPrecise.value,
-		manualControl: manualControl,
+		useIK: useIK,
 		useSteps: useSteps,
 	);
 }
 
+/// A [ValueBuilder] representing an [ArmSettings].
 class SettingsBuilder extends ValueBuilder<Settings> {
+	/// The [NetworkSettings] view model.
 	final NetworkSettingsBuilder network;
+
+	/// The [ArmSettings] view model.
 	final ArmSettingsBuilder arm;
 
 	/// Whether the page is loading.
 	bool isLoading = false;
 
+	/// Modifies the user's settings.
 	SettingsBuilder() : 
-		network = NetworkSettingsBuilder(NetworkSettings.copy(models.settings.network)),
-		arm = ArmSettingsBuilder(ArmSettings.copy(models.settings.arm))
+		network = NetworkSettingsBuilder(models.settings.network),
+		arm = ArmSettingsBuilder(models.settings.arm)
 	{
 		network.addListener(notifyListeners);
 		arm.addListener(notifyListeners);
@@ -235,7 +174,6 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	Future<void> save() async {
 		isLoading = true;
 		notifyListeners();
-		await Future.delayed(const Duration(milliseconds: 500));
 		await models.settings.update(value);
 		await models.rover.sockets.init();
 		isLoading = false;
