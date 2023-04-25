@@ -6,25 +6,25 @@ import "../model.dart";
 /// Manages the user's settings.
 class SettingsModel extends Model {
 	/// The current settings.
-	late Settings settings;
+	late Settings all;
 
 	/// The user's network settings.
-	NetworkSettings get network => settings.network;
+	NetworkSettings get network => all.network;
 
 	/// The user's arm settings.
-	ArmSettings get arm => settings.arm;
+	ArmSettings get arm => all.arm;
 
 	@override
 	Future<void> init() async {
-		settings = await services.files.readSettings();
+		all = await services.files.readSettings();
 	}
 
 	/// Replaces the current settings with the provided ones.
 	Future<void> update(Settings value) async {
 		await save();
-		settings = value;
+		all = value;
 	}
 
 	/// Saves the user's settings after a modification.
-	Future<void> save() => services.files.writeSettings(settings);
+	Future<void> save() => services.files.writeSettings(all);
 }
