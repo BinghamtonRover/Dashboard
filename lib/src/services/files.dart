@@ -54,8 +54,8 @@ class FilesService extends Service {
     loggingDir = Directory("$outputDir/logs");
     await loggingDir.create();
     modes.forEach((mode, file) async {
-      await Directory("$loggingDir/$mode").create();
-      modes[mode] = await File("$loggingDir/$mode/${DateTime.now()}.csv").create();
+      await Directory("$loggingDir/${mode.messageName}").create();
+      modes[mode] = await File("$loggingDir/${mode.messageName}/${DateTime.now()}.csv").create();
     });
   }
 
