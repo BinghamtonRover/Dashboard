@@ -9,6 +9,25 @@
 import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+class CameraStatus extends $pb.ProtobufEnum {
+  static const CameraStatus CAMERA_STATUS_UNDEFINED = CameraStatus._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CAMERA_STATUS_UNDEFINED');
+  static const CameraStatus CAMERA_DISCONNECTED = CameraStatus._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CAMERA_DISCONNECTED');
+  static const CameraStatus CAMERA_ENABLED = CameraStatus._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CAMERA_ENABLED');
+  static const CameraStatus CAMERA_DISABLED = CameraStatus._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CAMERA_DISABLED');
+
+  static const $core.List<CameraStatus> values = <CameraStatus> [
+    CAMERA_STATUS_UNDEFINED,
+    CAMERA_DISCONNECTED,
+    CAMERA_ENABLED,
+    CAMERA_DISABLED,
+  ];
+
+  static final $core.Map<$core.int, CameraStatus> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static CameraStatus? valueOf($core.int value) => _byValue[value];
+
+  const CameraStatus._($core.int v, $core.String n) : super(v, n);
+}
+
 class CameraName extends $pb.ProtobufEnum {
   static const CameraName CAMERA_NAME_UNDEFINED = CameraName._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CAMERA_NAME_UNDEFINED');
   static const CameraName ROVER_FRONT = CameraName._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ROVER_FRONT');
