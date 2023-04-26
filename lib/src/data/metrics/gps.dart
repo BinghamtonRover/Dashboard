@@ -1,4 +1,3 @@
-import "dart:math";
 import "package:rover_dashboard/data.dart";
 
 
@@ -18,14 +17,6 @@ class GpsMetrics extends Metrics<GpsCoordinates> {
     "Latitude: ${data.latitude}",
 		"Longitude: ${data.longitude}",
 		"Altitude: ${data.altitude}",
-    "Distance to base stattion: ${distanceTo(data.baseStation)}",
+    // "Distance to base stattion: ${distanceTo(data.baseStation)}",
 	];
-  
-  /// Calculate Euclidean distance between current coordinates and another set of coordinates
-  num distanceTo(GpsCoordinates other) => pow(
-    pow(data.latitude - other.latitude, 2) 
-      + pow(data.longitude - other.longitude, 2) 
-      + pow(data.altitude - other.altitude, 2), 
-    0.5
-  );
 }

@@ -6,6 +6,7 @@ import "dart:io";
 import "package:path_provider/path_provider.dart";
 
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/src/data/generated/autonomy.pb.dart";
 import 'package:rover_dashboard/src/widgets/navigation/footer.dart';
 
 import "service.dart";
@@ -32,13 +33,14 @@ class FilesService extends Service {
   /// from the file should be done with [Settings.fromJson].
   File get settingsFile => File("${outputDir.path}/settings.json");
 
-  Map<String, File> modes = { ///name better
-    "arm": File(""),
-    "gripper": File(""),
-    "science": File(""),
-    "electrical": File(""),
-    "autonomy": File(""),
-    "drive": File(""),
+  Map<Message, File> modes = { ///name better
+    ArmData(): File(""),
+    GripperData(): File(""),
+    //GpsCoordinates(): File(""),
+    ElectricalData(): File(""),
+    AutonomyData(): File(""),
+    DriveData(): File(""),
+    // MarsData()
   };
 
   /// Ensure that files and directories that are expected to be present actually
@@ -83,8 +85,9 @@ class FilesService extends Service {
     await File("${dir.path}/$number.jpg").writeAsBytes(image); 
   }
 
+  /// Outputs log data to the correct file based on message
   Future<void> logData(Message message) async{
-    message.messageName;
+    final json = message.writeToJsonMap();
 
   }
 }
