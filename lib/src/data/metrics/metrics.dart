@@ -1,4 +1,4 @@
-import "protobuf.dart";
+import "../protobuf.dart";
 
 /// A readout of metrics reported by one of the rover's subsystems. 
 /// 
