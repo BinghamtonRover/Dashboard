@@ -23,7 +23,7 @@ void main() async {
 			if (error is SocketException && error.osError!.errorCode == 1234) {
 				models.home.setMessage(severity: Severity.critical, text: "Network error, please restart");
 			} else {
-				throw error;  // ignore: only_throw_errors
+				Error.throwWithStackTrace(error, stack);
 			}
 		}
 	);
