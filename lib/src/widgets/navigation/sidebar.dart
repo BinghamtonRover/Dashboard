@@ -21,7 +21,6 @@ class Sidebar extends StatelessWidget {
 				Text("Controls", style: Theme.of(context).textTheme.displaySmall, textAlign: TextAlign.center),
 				const SizedBox(height: 4),
 				ControlsDisplay(controller: models.rover.controller1, gamepadNum: 1),
-				const SizedBox(height: 16),
 				ControlsDisplay(controller: models.rover.controller2, gamepadNum: 2),
 			]
 		)
@@ -42,24 +41,22 @@ class ControlsDisplay extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ProviderConsumer.value(
 		value: controller,
-		builder: (model, __) => Container(
-			padding: const EdgeInsets.symmetric(horizontal: 16),
-			child: Column(
-				crossAxisAlignment: CrossAxisAlignment.start,
+		builder: (model, __) => ProviderConsumer<SettingsModel>.value(
+			value: models.settings,  // refresh controls when settings change
+			builder: (_, __) => ExpansionTile(
+				expandedCrossAxisAlignment: CrossAxisAlignment.start,
+				expandedAlignment: Alignment.centerLeft,
+				childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+				title: Text(
+					"Gamepad $gamepadNum: ${controller.controls.mode.name}", 
+					style: Theme.of(context).textTheme.titleLarge,
+					textAlign: TextAlign.start,
+				),
 				children: [
-					Text(
-						"Gamepad $gamepadNum: ${controller.controls.mode.name}", 
-						style: Theme.of(context).textTheme.titleLarge,
-						textAlign: TextAlign.start,
-					),
-					const SizedBox(height: 4),
-					if (controller.isConnected) ...[
-						for (final entry in controller.controls.buttonMapping.entries) ...[
-							Text(entry.key, style: Theme.of(context).textTheme.labelLarge),
-							Text("  ${entry.value}", style: Theme.of(context).textTheme.titleMedium),
-						]
-					]
-					else const Text("Gamepad is not connected"),
+					for (final entry in controller.controls.buttonMapping.entries) ...[
+						Text(entry.key, style: Theme.of(context).textTheme.labelLarge),
+						Text("  ${entry.value}", style: Theme.of(context).textTheme.titleMedium),
+					],
 				]
 			)
 		)

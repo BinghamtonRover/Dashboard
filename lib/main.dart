@@ -8,15 +8,23 @@
 /// be as simple as possible. 
 library main;
 
+import "dart:async";
+import "dart:io";
 import "package:flutter/material.dart";
 
 import "app.dart";
+import "data.dart";
 import "models.dart";
-import "services.dart";
 
 void main() async {
-	WidgetsFlutterBinding.ensureInitialized();
-	await services.init();
-	await models.init();
-	runApp(RoverControlDashboard());
+	runZonedGuarded(
+		() => runApp(RoverControlDashboard()),
+		(error, stack) async {
+			if (error is SocketException && error.osError!.errorCode == 1234) {
+				models.home.setMessage(severity: Severity.critical, text: "Network error, please restart");
+			} else {
+				throw error;  // ignore: only_throw_errors
+			}
+		}
+	);
 }

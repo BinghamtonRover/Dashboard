@@ -1,11 +1,12 @@
 import "dart:async";
-import "dart:math" as math;
 import "dart:typed_data";
 import "dart:ui" as ui;
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+
+import "camera_editor.dart";
 
 /// A helper class to load and manage resources used by a [ui.Image].
 /// 
@@ -26,49 +27,52 @@ class ImageLoader {
 	/// Whether this loader has been initialized.
 	bool get hasImage => image != null;
 
+	/// Whether an image is currently loading.
+	bool isLoading = false;
+
 	/// Processes the next frame and stores the result in [image].
 	Future<void> load(List<int> bytes) async {
-		// if (hasImage) dispose();
+		isLoading = true;
 		final ulist = Uint8List.fromList(bytes.toList());
 		codec = await ui.instantiateImageCodec(ulist);
 		final frame = await codec!.getNextFrame();
 		image = frame.image;
+		isLoading = false;
 	}
 
 	/// Disposes all the resources associated with the current frame.
 	void dispose() {
 		codec?.dispose();
 		image?.dispose();
+		image = null;
 	}
 }
 
-/// Displays frames of a [CameraFeed].
+/// Displays frames of a video feed.
 class VideoFeed extends StatefulWidget {
 	/// The feed to show in this widget.
-	/// 
-	/// May be changed by the user. See [VideoFeedState.feed] for the actual value.
-	final CameraFeed initialFeed;
+	final CameraName name;
 
-	/// Displays a [CameraFeed] on the screen.
-	const VideoFeed(this.initialFeed);
+	/// The index of this feed in the UI.
+	final int index;
+
+	/// Displays a video feed for the given camera.
+	const VideoFeed({required this.index, required this.name});
 
 	@override
 	VideoFeedState createState() => VideoFeedState();
 }
 
-/// The logic for updating for updating a [VideoFeed].
+/// The logic for updating a [VideoFeed].
 /// 
 /// This widget listens to [VideoModel.frameUpdater] to sync its framerate with other [VideoFeed]s.
-/// On every update, this widget grabs the frame from [CameraFeed.frame], decodes it, renders it, 
+/// On every update, this widget grabs the frame from [VideoData.frame], decodes it, renders it, 
 /// then replaces the old frame. The key is that all the image processing logic is done off-screen
-/// while the old frame remains on-screen. That way, the user sees one continuous video instead
-/// of a flickering image.
+/// while the old frame remains on-screen. When the frame is processed, it quickly replaces the old
+/// frame. That way, the user sees one continuous video instead of a flickering image.
 class VideoFeedState extends State<VideoFeed> {
-	/// The feed being streamed.
-	late CameraFeed feed;
-
-	/// Whether [feed] has a frame to show.
-	bool get hasFrame => feed.frame != null;
+	/// The data being streamed.
+	late VideoData data;
 
 	/// A helper class responsible for managing and loading an image.
 	final imageLoader = ImageLoader();
@@ -76,7 +80,7 @@ class VideoFeedState extends State<VideoFeed> {
 	@override
 	void initState() {
 		super.initState();
-		feed = widget.initialFeed;
+		data = models.video.feeds[widget.name]!;
 		models.video.addListener(updateImage);
 	}
 
@@ -89,8 +93,13 @@ class VideoFeedState extends State<VideoFeed> {
 
 	/// Grabs the new frame, renders it, and replaces the old frame.
 	Future<void> updateImage() async {
-		if (!hasFrame) return;
-		await imageLoader.load(feed.frame!);
+		data = models.video.feeds[widget.name]!;
+		if (data.details.status != CameraStatus.CAMERA_ENABLED) {
+			setState(() => imageLoader.image = null);
+		}
+		setState(() { });
+		if (!data.hasFrame() || imageLoader.isLoading) return;
+		await imageLoader.load(data.frame);
 		if (mounted) setState(() { });
 	}
 
@@ -102,54 +111,61 @@ class VideoFeedState extends State<VideoFeed> {
 				height: double.infinity,
 				width: double.infinity,
 				margin: const EdgeInsets.all(1),
+				padding: const EdgeInsets.all(4),
 				alignment: Alignment.center,
-				child: !imageLoader.hasImage ? Text(errorMessage) 
-					: Row(children: [
-						// Special case: ARM_BASE camera is flipped, let's unflip it in software
-						Expanded(child: feed.id == CameraName.ARM_BASE 
-							? Transform.rotate(angle: math.pi, child: RawImage(image: imageLoader.image, fit: BoxFit.fill))
-							: RawImage(image: imageLoader.image, fit: BoxFit.fill)
-						)
-					]),
+				child: imageLoader.hasImage && data.details.status == CameraStatus.CAMERA_ENABLED 
+					? Row(children: [
+							Expanded(child: RawImage(image: imageLoader.image, fit: BoxFit.contain))
+					])
+					: Text(errorMessage, textAlign: TextAlign.center) 
 			),
 			Row(
 				mainAxisAlignment: MainAxisAlignment.end,
 				children: [
-					if (feed.isActive) IconButton(
+					if (data.hasFrame()) IconButton(
 						icon: const Icon(Icons.camera_alt), 
-						onPressed: () => models.video.saveFrame(feed),
-					), 
-					PopupMenuButton<CameraFeed>(
+						onPressed: () => models.video.saveFrame(widget.name),
+					),
+					if (data.details.status != CameraStatus.CAMERA_DISCONNECTED) IconButton(
+						icon: const Icon(Icons.settings),
+						onPressed: () => showDialog(
+							context: context,
+							builder: (_) => CameraDetailsEditor(data),
+						),
+					),
+					PopupMenuButton<CameraName>(
 						tooltip: "Select a feed",
 						icon: const Icon(Icons.more_horiz),
-						onSelected: selectNewFeed,
+						onSelected: (name) => models.video.replaceFeed(widget.index, name),
 						itemBuilder: (_) => [
-							for (final other in VideoModel.allFeeds) PopupMenuItem(
-								value: other,
-								child: Text(other.name),
-							),
+							for (final name in CameraName.values) 
+								if (name != CameraName.CAMERA_NAME_UNDEFINED) PopupMenuItem(
+									value: name,
+									child: Text(name.humanName),
+								),
 						]
 					)
 				]
 			),
+			Positioned(left: 5, bottom: 5, child: Text(data.details.name.humanName)),
 		]
 	);
 
 	/// Displays an error message describing why `image == null`.
 	String get errorMessage {
-		final String name = feed.name;
-		if (hasFrame) { return "Loading feed for $name..."; }
-		else if (!feed.isActive) { return "Camera for $name is off"; }
-		else if (!feed.isConnected) { return "Camera $name is not connected"; }
-		else { return "Unknown error for camera $name"; }
-	}
-
-	/// Switches this widget to a new [CameraFeed].
-	Future<void> selectNewFeed(CameraFeed newFeed) async {
-		await models.video.disableFeed(feed);
-		await models.video.enableFeed(newFeed);
-		imageLoader.dispose();
-		setState(() => feed = newFeed);
-		await updateImage();
+		switch (data.details.status) {
+			case CameraStatus.CAMERA_LOADING: return "Camera is loading...";
+			case CameraStatus.CAMERA_STATUS_UNDEFINED: return "Unknown error";
+			case CameraStatus.CAMERA_DISCONNECTED: 
+				if (!models.rover.isConnected) return "The rover is not connected";
+				return "Camera is not connected";
+			case CameraStatus.CAMERA_DISABLED: return "Camera is disabled.\nClick the settings icon to enabled it.";
+			case CameraStatus.CAMERA_NOT_RESPONDING: return "Camera is not responding";
+			case CameraStatus.FRAME_TOO_LARGE: return "Camera is reading too much detail\nReduce the quality or resolution";
+			case CameraStatus.CAMERA_ENABLED: 
+				if (data.hasFrame()) { return "Loading feed..."; }
+				else { return "Starting camera..."; }
+		}
+		return "Unknown error";
 	}
 }

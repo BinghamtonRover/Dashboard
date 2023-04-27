@@ -1,8 +1,8 @@
 import "dart:async";
 import "dart:io";
-import "service.dart";
 
-export "dart:io" show InternetAddress;
+import "package:rover_dashboard/data.dart";
+import "service.dart";
 
 /// A callback to execute with raw Protobuf data.
 typedef RawDataHandler = void Function(List<int> data);
@@ -36,27 +36,31 @@ extension on RawDatagramSocket {
 /// 
 /// See the [Network Address Assignments](https://docs.google.com/document/d/1U6GxcYGpqUpSgtXFbiOTlMihNqcg6RbCqQmewx7cXJE) document for IP address and ports. 
 abstract class UdpSocket extends Service {
-	/// The port to send from and listen on.
+	/// The port to listen on and send to.
 	/// 
-	/// Different ports are used for different purposes.
-	final int port;
+	/// Each program gets its own port, so the dashboard socket that listens for autonomy data
+	/// uses the same port as the actual autonomy program running on the server.
+	final int listenPort;
 
 	/// The UDP socket backed by `dart:io`.
 	/// 
 	/// This socket must be closed in [dispose].
-	late final RawDatagramSocket _socket;
+	late RawDatagramSocket _socket;
 
 	/// The subscription that listens for incoming data.
 	/// 
 	/// This must be cancelled in [dispose].
-	late final StreamSubscription _subscription;
+	late StreamSubscription _subscription;
+
+	/// The socket to send to.
+	SocketConfig? destination;
 
 	/// Opens a UDP socket on the given port.
-	UdpSocket({required this.port});
+	UdpSocket({required this.listenPort, this.destination});
 
 	@override
 	Future<void> init() async {
-		_socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, port);
+		_socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, listenPort);
 		_subscription = _socket.listenForData(onData);
 	}
 
@@ -64,6 +68,12 @@ abstract class UdpSocket extends Service {
 	Future<void> dispose() async {
 		await _subscription.cancel();
 		_socket.close();
+	}
+
+	/// Resets the socket in case of an unrecoverable error.
+	Future<void> reset() async {
+		await dispose();
+		await init();
 	}
 
 	/// Runs when new data is received.
@@ -75,10 +85,9 @@ abstract class UdpSocket extends Service {
 	/// of a packet is 65503 bytes, just shy of 2^16 bytes.
 	void onData(List<int> data);
 
-	/// Sends [bytes] to the given [address] at [port].
-	void sendBytes({
-		required InternetAddress address,
-		required int port,
-		required List<int> bytes
-	}) => _socket.send(bytes, address, port);
+	/// Sends [bytes] to the [destination].
+	void sendBytes(List<int> bytes) {
+		// [!]: The [destination] field is updated in the Sockets model.
+		_socket.send(bytes, destination!.address, destination!.port);
+	}
 }

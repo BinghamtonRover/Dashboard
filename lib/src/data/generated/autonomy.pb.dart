@@ -9,74 +9,62 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'gps.pb.dart' as $1;
+
 import 'autonomy.pbenum.dart';
 
 export 'autonomy.pbenum.dart';
 
-class GpsCoordinates extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'GpsCoordinates', createEmptyInstance: create)
-    ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'latitude', $pb.PbFieldType.OF)
-    ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'longitude', $pb.PbFieldType.OF)
+class AutonomyCommand extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AutonomyCommand', createEmptyInstance: create)
+    ..aOB(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'enable')
     ..hasRequiredFields = false
   ;
 
-  GpsCoordinates._() : super();
-  factory GpsCoordinates({
-    $core.double? latitude,
-    $core.double? longitude,
+  AutonomyCommand._() : super();
+  factory AutonomyCommand({
+    $core.bool? enable,
   }) {
     final _result = create();
-    if (latitude != null) {
-      _result.latitude = latitude;
-    }
-    if (longitude != null) {
-      _result.longitude = longitude;
+    if (enable != null) {
+      _result.enable = enable;
     }
     return _result;
   }
-  factory GpsCoordinates.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory GpsCoordinates.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory AutonomyCommand.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory AutonomyCommand.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  GpsCoordinates clone() => GpsCoordinates()..mergeFromMessage(this);
+  AutonomyCommand clone() => AutonomyCommand()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  GpsCoordinates copyWith(void Function(GpsCoordinates) updates) => super.copyWith((message) => updates(message as GpsCoordinates)) as GpsCoordinates; // ignore: deprecated_member_use
+  AutonomyCommand copyWith(void Function(AutonomyCommand) updates) => super.copyWith((message) => updates(message as AutonomyCommand)) as AutonomyCommand; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static GpsCoordinates create() => GpsCoordinates._();
-  GpsCoordinates createEmptyInstance() => create();
-  static $pb.PbList<GpsCoordinates> createRepeated() => $pb.PbList<GpsCoordinates>();
+  static AutonomyCommand create() => AutonomyCommand._();
+  AutonomyCommand createEmptyInstance() => create();
+  static $pb.PbList<AutonomyCommand> createRepeated() => $pb.PbList<AutonomyCommand>();
   @$core.pragma('dart2js:noInline')
-  static GpsCoordinates getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<GpsCoordinates>(create);
-  static GpsCoordinates? _defaultInstance;
+  static AutonomyCommand getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AutonomyCommand>(create);
+  static AutonomyCommand? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.double get latitude => $_getN(0);
+  $core.bool get enable => $_getBF(0);
   @$pb.TagNumber(1)
-  set latitude($core.double v) { $_setFloat(0, v); }
+  set enable($core.bool v) { $_setBool(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasLatitude() => $_has(0);
+  $core.bool hasEnable() => $_has(0);
   @$pb.TagNumber(1)
-  void clearLatitude() => clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.double get longitude => $_getN(1);
-  @$pb.TagNumber(2)
-  set longitude($core.double v) { $_setFloat(1, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasLongitude() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearLongitude() => clearField(2);
+  void clearEnable() => clearField(1);
 }
 
 class AutonomyData extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AutonomyData', createEmptyInstance: create)
-    ..aOM<GpsCoordinates>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'coordinates', subBuilder: GpsCoordinates.create)
+    ..aOM<$1.GpsCoordinates>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'coordinates', subBuilder: $1.GpsCoordinates.create)
     ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'heading', $pb.PbFieldType.OF)
     ..e<AutonomyState>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'state', $pb.PbFieldType.OE, defaultOrMaker: AutonomyState.AUTONOMY_STATE_UNDEFINED, valueOf: AutonomyState.valueOf, enumValues: AutonomyState.values)
     ..a<$core.double>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rawXOrientation', $pb.PbFieldType.OF)
@@ -88,7 +76,7 @@ class AutonomyData extends $pb.GeneratedMessage {
 
   AutonomyData._() : super();
   factory AutonomyData({
-    GpsCoordinates? coordinates,
+    $1.GpsCoordinates? coordinates,
     $core.double? heading,
     AutonomyState? state,
     $core.double? rawXOrientation,
@@ -142,15 +130,15 @@ class AutonomyData extends $pb.GeneratedMessage {
   static AutonomyData? _defaultInstance;
 
   @$pb.TagNumber(1)
-  GpsCoordinates get coordinates => $_getN(0);
+  $1.GpsCoordinates get coordinates => $_getN(0);
   @$pb.TagNumber(1)
-  set coordinates(GpsCoordinates v) { setField(1, v); }
+  set coordinates($1.GpsCoordinates v) { setField(1, v); }
   @$pb.TagNumber(1)
   $core.bool hasCoordinates() => $_has(0);
   @$pb.TagNumber(1)
   void clearCoordinates() => clearField(1);
   @$pb.TagNumber(1)
-  GpsCoordinates ensureCoordinates() => $_ensure(0);
+  $1.GpsCoordinates ensureCoordinates() => $_ensure(0);
 
   @$pb.TagNumber(2)
   $core.double get heading => $_getN(1);

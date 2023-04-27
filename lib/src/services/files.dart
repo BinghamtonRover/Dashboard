@@ -1,9 +1,11 @@
+// ignore_for_file: directives_ordering
+import "dart:convert";
 import "dart:io";
 
-import "package:rover_dashboard/data.dart";
+import "package:path_provider/path_provider.dart";
 
-import "package:yaml/yaml.dart";
-import "package:yaml_writer/yaml_writer.dart";
+import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/services.dart";
 
 import "service.dart";
 
@@ -16,48 +18,60 @@ class FilesService extends Service {
   /// This includes settings, data, images, and anything else the user or dashboard
   /// may want to keep between sessions. Categories of output, like screenshots, 
   /// should get their own subdirectory.
-  static final outputDir = Directory("${Directory.current.path}/output");
+  late final Directory outputDir;
 
-  /// The file containing the user's [Settings], in YAML form.
+  /// The directory where screenshots are stored.
   /// 
-  /// This file should contain the result of [Settings.toYaml], and loading settings
-  /// from the file should be done with [Settings.fromYaml].
-  static File get settingsFile => File("${outputDir.path}/settings.yaml");
+  /// These are only screenshots of video feeds, not of the dashboard itself.
+  Directory get screenshotsDir => Directory("${outputDir.path}/screenshots");
+
+  /// The file containing the user's [Settings], in JSON form.
+  /// 
+  /// This file should contain the result of [Settings.toJson], and loading settings
+  /// from the file should be done with [Settings.fromJson].
+  File get settingsFile => File("${outputDir.path}/settings.json");
 
   /// Ensure that files and directories that are expected to be present actually
   /// exist on the system. If not, create them. 
   @override
   Future<void> init() async {
+    final appDir = await getApplicationDocumentsDirectory();
+    outputDir = Directory("${appDir.path}/Dashboard");
     await outputDir.create();
-    if (!settingsFile.existsSync()) await settingsFile.create();
+    await screenshotsDir.create();
+    if (!settingsFile.existsSync()) await settingsFile.writeAsString(jsonEncode({}));
   }
 
   @override
   Future<void> dispose() async { }
 
-  /// Saves the [settings] object to the [settingsFile], as YAML.
-  Future<void> writeSettings(Settings settings) async {
-    final yamlString = YAMLWriter().write(settings.toYaml());
-    await settingsFile.writeAsString(yamlString);
+  /// Saves the [Settings] object to the [settingsFile], as JSON.
+  Future<void> writeSettings(Settings value) async {
+    final json = jsonEncode(value.toJson());
+    await settingsFile.writeAsString(json);
   }
 
   /// Reads the user's settings from the [settingsFile].
-  Future<Settings> readSettings() async {
-    final String yamlString = await settingsFile.readAsString();
-    // An empty file means [loadYaml] returns null
-    final Map yaml = loadYaml(yamlString) ?? {};
-    try { return Settings.fromYaml(yaml); }
-    catch (error) {
-      print("Error while parsing settings: $error");  // ignore: avoid_print
-      final settings = Settings();
-      await writeSettings(settings);  // for next time
+  Future<Settings> readSettings({bool retry = true}) async {
+    final json = jsonDecode(await settingsFile.readAsString());
+    try {
+      final settings = Settings.fromJson(json);
+      await writeSettings(settings);  // re-save any default values
       return settings;
+    } catch (error) {
+      services.error = "Settings were corrupted and reset back to defaults";
+      await writeSettings(Settings.fromJson({}));  // delete corrupt settings
+      if (retry) {
+        return readSettings(retry: false);
+      } else {
+        rethrow;
+      }
     }
   }
 
   /// Saves the current frame in the feed to the camera's output directory.
   Future<void> writeImage(List<int> image, String cameraName) async {
-    final dir = Directory("${outputDir.path}/$cameraName");
+    final dir = Directory("${screenshotsDir.path}/$cameraName");
     if (!(await dir.exists())) await dir.create();    
     final files = dir.listSync();
     final number = files.isEmpty ? 1 : (int.parse(files.last.filename) + 1);

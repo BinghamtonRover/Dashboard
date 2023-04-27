@@ -24,8 +24,6 @@ export "src/services/gamepad.dart";
 export "src/services/proto_socket.dart";
 export "src/services/serial.dart";
 export "src/services/udp_socket.dart";
-// export "src/services/udp_client.dart";
-// export "src/services/udp_server.dart";
 
 /// A dependency injection service that manages the lifecycle of other services.
 ///
@@ -38,13 +36,16 @@ export "src/services/udp_socket.dart";
 /// To get an instance of this class, use [services].
 class Services extends Service {
 	/// This class has a private constructor since users should only use [services].
-	Services._();
+	// Services._();
 
 	/// A UDP socket for sending and receiving Protobuf data.
-	final dataSocket = ProtoSocket(port: 8008);
+	final dataSocket = ProtoSocket(listenPort: 8006);
 
 	/// A UDP socket for receiving video.
-	final videoSocket = ProtoSocket(port: 8009);
+	final videoSocket = ProtoSocket(listenPort: 8008);
+
+	/// A UDP socket for controlling autonomy.
+	final autonomySocket = ProtoSocket(listenPort: 8009);
 
 	/// A service that handles controller inputs.
 	final gamepad = GamepadService();
@@ -55,10 +56,14 @@ class Services extends Service {
 	/// A service that communicates over a serial connection.
 	final serial = Serial();
 
+	/// The first error that occurred during startup.
+	String? error;
+
 	@override
 	Future<void> init() async {
 		await dataSocket.init();
 		await videoSocket.init();
+		await autonomySocket.init();
 		await gamepad.init();
 		await files.init();
 		await serial.init();
@@ -68,6 +73,7 @@ class Services extends Service {
 	Future<void> dispose() async {
 		await dataSocket.dispose();
 		await videoSocket.dispose();
+		await autonomySocket.dispose();
 		await gamepad.dispose();
 		await files.dispose();
 		await serial.dispose();
@@ -77,4 +83,4 @@ class Services extends Service {
 /// The singleton instance of the [Services] class.
 ///
 /// This is the only instance of this class the app can guarantee is properly initialized.
-final services = Services._();
+final services = Services();

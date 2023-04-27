@@ -12,6 +12,7 @@ library models;
 import "src/models/model.dart";
 import "src/models/data/home.dart";
 import "src/models/data/serial.dart";
+import "src/models/data/settings.dart";
 import "src/models/data/video.dart";
 import "src/models/rover/rover.dart";
 export "src/models/model.dart";
@@ -19,6 +20,7 @@ export "src/models/model.dart";
 // Data models
 export "src/models/data/home.dart";
 export "src/models/data/serial.dart";
+export "src/models/data/settings.dart";
 export "src/models/data/video.dart";
 
 // Rover models
@@ -27,6 +29,7 @@ export "src/models/rover/controls/controls.dart";
 export "src/models/rover/heartbeats.dart";
 export "src/models/rover/metrics.dart";
 export "src/models/rover/rover.dart";
+export "src/models/rover/sockets.dart";
 
 // View models
 export "src/models/view/modes/mode.dart";
@@ -34,6 +37,10 @@ export "src/models/view/modes/arm.dart";
 export "src/models/view/modes/autonomy.dart";
 export "src/models/view/modes/drive.dart";
 export "src/models/view/modes/science.dart";
+
+export "src/models/view/builder.dart";
+export "src/models/view/settings_builder.dart";
+export "src/models/view/video_builder.dart";
 
 /// A wrapper model around all other data models used by the app.
 /// 
@@ -61,9 +68,13 @@ class Models extends Model {
 	/// Responsible for connecting to and monitoring Serial devices.
 	final serial = SerialModel();
 
+	/// Caches the settings and updates them to all listeners.
+	final settings = SettingsModel();
+
 	@override
 	Future<void> init() async {
 		// initialize all models here
+		await settings.init();
 		await home.init();
 		await video.init();
 		await rover.init();
@@ -75,6 +86,7 @@ class Models extends Model {
 
 	@override
 	void dispose() {
+		settings.dispose();
 		home.dispose();
 		video.dispose();
 		rover.dispose();

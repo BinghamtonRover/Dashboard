@@ -72,6 +72,34 @@ extension GamepadStateUtils on GamepadState {
 
   /// Returns a normalized value for the right joystick's Y-axis. See [GamepadNumbers.normalizeJoystick].
   double get normalRightY => rightThumbstickY.normalizeJoystick;
+
+  /// The signed value of the bumpers. The left bumper is negative, the right is positive.
+  double get normalShoulder {
+    if (leftShoulder) return -1;
+    if (rightShoulder) return 1;
+    return 0;
+  }
+
+  /// The signed value of the triggers. The left trigger is negative, the right is positive.
+  double get normalTrigger {
+    if (leftTrigger > 0) return -normalLeftTrigger;
+    if (rightTrigger > 0) return normalRightTrigger;
+    return 0;
+  }
+
+  /// The signed value of the D-pad's horizontal axis. Left is -1, right is +1.
+  double get normalDpadX {
+    if (dpadLeft) return -1;
+    if (dpadRight) return 1;
+    return 0;
+  }
+
+  /// The signed value of the D-pad's vertical axis. Up is +1, down is -1.
+  double get normalDpadY {
+    if (dpadUp) return 1;
+    if (dpadDown) return -1;
+    return 0;
+  }
 }
 
 /// Convenience methods on [Gamepad].

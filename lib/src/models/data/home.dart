@@ -3,6 +3,7 @@ import "package:package_info_plus/package_info_plus.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 
 /// The view model for the main page. 
 class HomeModel extends Model {
@@ -18,7 +19,8 @@ class HomeModel extends Model {
 	@override
 	Future<void> init() async { 
 		final info = await PackageInfo.fromPlatform();
-		version = info.version;
+		version = "${info.version}+${info.buildNumber}";
+		if (services.error != null) setMessage(severity: Severity.critical, text: services.error!);
 	}
 
 	/// Sets a new message that will disappear in 5 seconds.
