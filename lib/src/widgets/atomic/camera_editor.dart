@@ -4,10 +4,14 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
+/// A widget to modify [CameraDetails] for a given camera, backed by a [CameraDetailsBuilder].
 class CameraDetailsEditor extends StatelessWidget {
-	static const allowedStatuses = [CameraStatus.CAMERA_ENABLED, CameraStatus.CAMERA_DISABLED];
-
+	/// The data for the camera being modified.
+	/// 
+	/// This must be a [VideoData] and not a [CameraDetails] to get the camera's ID.
 	final VideoData data;
+
+	/// Creates a widget to modify a [CameraDetails].
 	const CameraDetailsEditor(this.data);
 
 	@override

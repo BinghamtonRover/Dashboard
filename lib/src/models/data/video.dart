@@ -104,4 +104,9 @@ class VideoModel extends Model {
 	}
 }
 
+/// An exception thrown when the rover does not respond to a handshake.
+/// 
+/// Certain changes require a handshake to ensure the rover has received and applied the change.
+/// If the rover fails to acknowledge or apply the change, a response will not be sent. Throw
+/// this error to indicate that. 
 class RequestNotAccepted implements Exception { }
