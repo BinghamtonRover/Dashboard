@@ -76,3 +76,20 @@ extension VideoDataUtils on VideoData {
 	/// A Protobuf `bytes` object is never null, only empty.
 	bool get hasFrame => frame.isNotEmpty;
 }
+
+/// Extensions for [CameraStatus] values.
+extension CameraStatusUtils on CameraStatus {
+	/// Gets a user-friendly name for a [CameraStatus].
+	String get humanName {
+		switch(this) {
+			case CameraStatus.CAMERA_STATUS_UNDEFINED: return "";
+			case CameraStatus.CAMERA_DISCONNECTED: return "Disconnected";
+			case CameraStatus.CAMERA_ENABLED: return "Enabled";
+			case CameraStatus.CAMERA_DISABLED: return "Disabled";
+			case CameraStatus.CAMERA_NOT_RESPONDING: return "Not responding";
+			case CameraStatus.CAMERA_LOADING: return "Loading";
+		}
+		// Do not use default or else you'll lose exhaustiveness checking.
+		throw ArgumentError("Unrecognized rover status: $this");
+	}
+}

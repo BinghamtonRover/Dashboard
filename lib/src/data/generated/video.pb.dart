@@ -15,23 +15,28 @@ export 'video.pbenum.dart';
 
 class CameraDetails extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CameraDetails', createEmptyInstance: create)
-    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resolutionWidth', $pb.PbFieldType.O3)
-    ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resolutionHeight', $pb.PbFieldType.O3)
-    ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'quality', $pb.PbFieldType.O3)
-    ..a<$core.double>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'framerate', $pb.PbFieldType.OF)
-    ..e<CameraStatus>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'status', $pb.PbFieldType.OE, defaultOrMaker: CameraStatus.CAMERA_STATUS_UNDEFINED, valueOf: CameraStatus.valueOf, enumValues: CameraStatus.values)
+    ..e<CameraName>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name', $pb.PbFieldType.OE, defaultOrMaker: CameraName.CAMERA_NAME_UNDEFINED, valueOf: CameraName.valueOf, enumValues: CameraName.values)
+    ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resolutionWidth', $pb.PbFieldType.O3)
+    ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resolutionHeight', $pb.PbFieldType.O3)
+    ..a<$core.int>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'quality', $pb.PbFieldType.O3)
+    ..a<$core.int>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fps', $pb.PbFieldType.O3)
+    ..e<CameraStatus>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'status', $pb.PbFieldType.OE, defaultOrMaker: CameraStatus.CAMERA_STATUS_UNDEFINED, valueOf: CameraStatus.valueOf, enumValues: CameraStatus.values)
     ..hasRequiredFields = false
   ;
 
   CameraDetails._() : super();
   factory CameraDetails({
+    CameraName? name,
     $core.int? resolutionWidth,
     $core.int? resolutionHeight,
     $core.int? quality,
-    $core.double? framerate,
+    $core.int? fps,
     CameraStatus? status,
   }) {
     final _result = create();
+    if (name != null) {
+      _result.name = name;
+    }
     if (resolutionWidth != null) {
       _result.resolutionWidth = resolutionWidth;
     }
@@ -41,8 +46,8 @@ class CameraDetails extends $pb.GeneratedMessage {
     if (quality != null) {
       _result.quality = quality;
     }
-    if (framerate != null) {
-      _result.framerate = framerate;
+    if (fps != null) {
+      _result.fps = fps;
     }
     if (status != null) {
       _result.status = status;
@@ -71,54 +76,63 @@ class CameraDetails extends $pb.GeneratedMessage {
   static CameraDetails? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get resolutionWidth => $_getIZ(0);
+  CameraName get name => $_getN(0);
   @$pb.TagNumber(1)
-  set resolutionWidth($core.int v) { $_setSignedInt32(0, v); }
+  set name(CameraName v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasResolutionWidth() => $_has(0);
+  $core.bool hasName() => $_has(0);
   @$pb.TagNumber(1)
-  void clearResolutionWidth() => clearField(1);
+  void clearName() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.int get resolutionHeight => $_getIZ(1);
+  $core.int get resolutionWidth => $_getIZ(1);
   @$pb.TagNumber(2)
-  set resolutionHeight($core.int v) { $_setSignedInt32(1, v); }
+  set resolutionWidth($core.int v) { $_setSignedInt32(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasResolutionHeight() => $_has(1);
+  $core.bool hasResolutionWidth() => $_has(1);
   @$pb.TagNumber(2)
-  void clearResolutionHeight() => clearField(2);
+  void clearResolutionWidth() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.int get quality => $_getIZ(2);
+  $core.int get resolutionHeight => $_getIZ(2);
   @$pb.TagNumber(3)
-  set quality($core.int v) { $_setSignedInt32(2, v); }
+  set resolutionHeight($core.int v) { $_setSignedInt32(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasQuality() => $_has(2);
+  $core.bool hasResolutionHeight() => $_has(2);
   @$pb.TagNumber(3)
-  void clearQuality() => clearField(3);
+  void clearResolutionHeight() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.double get framerate => $_getN(3);
+  $core.int get quality => $_getIZ(3);
   @$pb.TagNumber(4)
-  set framerate($core.double v) { $_setFloat(3, v); }
+  set quality($core.int v) { $_setSignedInt32(3, v); }
   @$pb.TagNumber(4)
-  $core.bool hasFramerate() => $_has(3);
+  $core.bool hasQuality() => $_has(3);
   @$pb.TagNumber(4)
-  void clearFramerate() => clearField(4);
+  void clearQuality() => clearField(4);
 
   @$pb.TagNumber(5)
-  CameraStatus get status => $_getN(4);
+  $core.int get fps => $_getIZ(4);
   @$pb.TagNumber(5)
-  set status(CameraStatus v) { setField(5, v); }
+  set fps($core.int v) { $_setSignedInt32(4, v); }
   @$pb.TagNumber(5)
-  $core.bool hasStatus() => $_has(4);
+  $core.bool hasFps() => $_has(4);
   @$pb.TagNumber(5)
-  void clearStatus() => clearField(5);
+  void clearFps() => clearField(5);
+
+  @$pb.TagNumber(6)
+  CameraStatus get status => $_getN(5);
+  @$pb.TagNumber(6)
+  set status(CameraStatus v) { setField(6, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasStatus() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearStatus() => clearField(6);
 }
 
 class VideoData extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'VideoData', createEmptyInstance: create)
-    ..e<CameraName>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name', $pb.PbFieldType.OE, defaultOrMaker: CameraName.CAMERA_NAME_UNDEFINED, valueOf: CameraName.valueOf, enumValues: CameraName.values)
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
     ..aOM<CameraDetails>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'details', subBuilder: CameraDetails.create)
     ..a<$core.List<$core.int>>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'frame', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
@@ -126,13 +140,13 @@ class VideoData extends $pb.GeneratedMessage {
 
   VideoData._() : super();
   factory VideoData({
-    CameraName? name,
+    $core.int? id,
     CameraDetails? details,
     $core.List<$core.int>? frame,
   }) {
     final _result = create();
-    if (name != null) {
-      _result.name = name;
+    if (id != null) {
+      _result.id = id;
     }
     if (details != null) {
       _result.details = details;
@@ -164,13 +178,13 @@ class VideoData extends $pb.GeneratedMessage {
   static VideoData? _defaultInstance;
 
   @$pb.TagNumber(1)
-  CameraName get name => $_getN(0);
+  $core.int get id => $_getIZ(0);
   @$pb.TagNumber(1)
-  set name(CameraName v) { setField(1, v); }
+  set id($core.int v) { $_setSignedInt32(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasName() => $_has(0);
+  $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearName() => clearField(1);
+  void clearId() => clearField(1);
 
   @$pb.TagNumber(2)
   CameraDetails get details => $_getN(1);
@@ -195,24 +209,19 @@ class VideoData extends $pb.GeneratedMessage {
 
 class VideoCommand extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'VideoCommand', createEmptyInstance: create)
-    ..e<CameraName>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name', $pb.PbFieldType.OE, defaultOrMaker: CameraName.CAMERA_NAME_UNDEFINED, valueOf: CameraName.valueOf, enumValues: CameraName.values)
-    ..e<CameraName>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rename', $pb.PbFieldType.OE, defaultOrMaker: CameraName.CAMERA_NAME_UNDEFINED, valueOf: CameraName.valueOf, enumValues: CameraName.values)
-    ..aOM<CameraDetails>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'details', subBuilder: CameraDetails.create)
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
+    ..aOM<CameraDetails>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'details', subBuilder: CameraDetails.create)
     ..hasRequiredFields = false
   ;
 
   VideoCommand._() : super();
   factory VideoCommand({
-    CameraName? name,
-    CameraName? rename,
+    $core.int? id,
     CameraDetails? details,
   }) {
     final _result = create();
-    if (name != null) {
-      _result.name = name;
-    }
-    if (rename != null) {
-      _result.rename = rename;
+    if (id != null) {
+      _result.id = id;
     }
     if (details != null) {
       _result.details = details;
@@ -241,32 +250,23 @@ class VideoCommand extends $pb.GeneratedMessage {
   static VideoCommand? _defaultInstance;
 
   @$pb.TagNumber(1)
-  CameraName get name => $_getN(0);
+  $core.int get id => $_getIZ(0);
   @$pb.TagNumber(1)
-  set name(CameraName v) { setField(1, v); }
+  set id($core.int v) { $_setSignedInt32(0, v); }
   @$pb.TagNumber(1)
-  $core.bool hasName() => $_has(0);
+  $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
-  void clearName() => clearField(1);
+  void clearId() => clearField(1);
 
   @$pb.TagNumber(2)
-  CameraName get rename => $_getN(1);
+  CameraDetails get details => $_getN(1);
   @$pb.TagNumber(2)
-  set rename(CameraName v) { setField(2, v); }
+  set details(CameraDetails v) { setField(2, v); }
   @$pb.TagNumber(2)
-  $core.bool hasRename() => $_has(1);
+  $core.bool hasDetails() => $_has(1);
   @$pb.TagNumber(2)
-  void clearRename() => clearField(2);
-
-  @$pb.TagNumber(3)
-  CameraDetails get details => $_getN(2);
-  @$pb.TagNumber(3)
-  set details(CameraDetails v) { setField(3, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasDetails() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearDetails() => clearField(3);
-  @$pb.TagNumber(3)
-  CameraDetails ensureDetails() => $_ensure(2);
+  void clearDetails() => clearField(2);
+  @$pb.TagNumber(2)
+  CameraDetails ensureDetails() => $_ensure(1);
 }
 
