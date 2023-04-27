@@ -17,7 +17,7 @@ class CameraDetailsEditor extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<CameraDetailsBuilder>(
 		create: () => CameraDetailsBuilder(data.details),
-		builder: (model, _) => AlertDialog(
+		builder: (model) => AlertDialog(
 			title: const Text("Modify camera"),
 			actions: [
 				TextButton(
