@@ -25,7 +25,7 @@ class CameraDetailsEditor extends StatelessWidget {
 					child: const Text("Cancel"),
 				),
 				ElevatedButton(
-					onPressed: model.error != null ? null : () async {
+					onPressed: !model.isValid ? null : () async {
 						final result = await model.saveSettings(data.id);
 						if (result && context.mounted) Navigator.of(context).pop();
 					},
@@ -35,25 +35,12 @@ class CameraDetailsEditor extends StatelessWidget {
 			content: SingleChildScrollView(
 				child: Column(
 					children: [
-						DropdownEditor<CameraName>(
-							name: "Name",
-							humanName: (value) => value.humanName,
-							value: model.name,
-							onChanged: model.updateName,
-							items: [
-								for (final item in CameraName.values)
-									if (item != CameraName.CAMERA_NAME_UNDEFINED) item
-							]
-						),
 						DropdownEditor<CameraStatus>(
 							name: "Status",
 							humanName: (value) => value.humanName,
 							value: model.status,
 							onChanged: model.updateStatus,
-							items: [
-								for (final item in CameraStatus.values)
-									if (item != CameraStatus.CAMERA_STATUS_UNDEFINED) item
-							]
+							items: CameraDetailsBuilder.okStatuses,
 						),
 						NumberEditor(
 							name: "Resolution height",
