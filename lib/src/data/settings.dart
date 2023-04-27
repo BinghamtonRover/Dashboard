@@ -10,17 +10,21 @@ extension SettingsParser on Json {
   }
 }
 
+/// Settings relating to video.
 class VideoSettings {
   /// How many frames to render per second.
   /// 
   /// This does not affect how many frames are sent by the rover per second.
   final int fps;
 
+  /// A const constructor.
   const VideoSettings({required this.fps});
 
+  /// Parses a [VideoSettings] from JSON.
   VideoSettings.fromJson(Json? json) : 
     fps = json?["fps"] ?? 60;
 
+  /// Serializes these settings in JSON format.
   Json toJson() => {
     "fps": fps,
   };
