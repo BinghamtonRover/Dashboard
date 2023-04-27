@@ -37,8 +37,10 @@ export "src/models/view/modes/arm.dart";
 export "src/models/view/modes/autonomy.dart";
 export "src/models/view/modes/drive.dart";
 export "src/models/view/modes/science.dart";
+
 export "src/models/view/builder.dart";
-export "src/models/view/settings.dart";
+export "src/models/view/settings_builder.dart";
+export "src/models/view/video_builder.dart";
 
 /// A wrapper model around all other data models used by the app.
 /// 
