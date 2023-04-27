@@ -16,12 +16,15 @@ class VideoFeeds extends StatelessWidget {
 			Expanded(child: Row(
 				children: [
 					if (model.feedsOnScreen.isNotEmpty) Expanded(child: VideoFeed(index: 0, name: model.feedsOnScreen[0])),
-					if (model.feedsOnScreen.length >= 3) Expanded(child: VideoFeed(index: 2, name: model.feedsOnScreen[2])),
+					if (model.feedsOnScreen.length >= 3) Expanded(child: VideoFeed(index: 1, name: model.feedsOnScreen[1])),
 				]
 			)),
 			if (model.feedsOnScreen.length > 1) Expanded(child: Row(
 				children: [
-					if (model.feedsOnScreen.length >= 2) Expanded(child: VideoFeed(index: 1, name: model.feedsOnScreen[1])),
+					if (model.feedsOnScreen.length >= 2) Expanded(child: model.feedsOnScreen.length >= 3
+						? VideoFeed(index: 2, name: model.feedsOnScreen[2])
+						: VideoFeed(index: 1, name: model.feedsOnScreen[1])
+					),
 					if (model.feedsOnScreen.length >= 4) Expanded(child: VideoFeed(index: 3, name: model.feedsOnScreen[3])),
 				],
 			)),
