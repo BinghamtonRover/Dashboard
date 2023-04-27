@@ -92,7 +92,7 @@ class VideoFeedState extends State<VideoFeed> {
 
 	/// Grabs the new frame, renders it, and replaces the old frame.
 	Future<void> updateImage() async {
-		data = models.video.feeds[data.details.name]!;
+		data = models.video.feeds[widget.name]!;
 		setState(() { });
 		if (!data.hasFrame() || imageLoader.isLoading) return;
 		await imageLoader.load(data.frame);
@@ -148,6 +148,7 @@ class VideoFeedState extends State<VideoFeed> {
 
 	/// Displays an error message describing why `image == null`.
 	String get errorMessage {
+		if (!models.rover.isConnected) return "The rover is not connected";
 		switch (data.details.status) {
 			case CameraStatus.CAMERA_LOADING: return "Camera is loading...";
 			case CameraStatus.CAMERA_STATUS_UNDEFINED: return "Unknown error";
