@@ -55,6 +55,19 @@ class SettingsPage extends StatelessWidget {
 								SocketEditor(name: "Video socket", model: model.network.videoSocket),
 								SocketEditor(name: "Autonomy socket", model: model.network.autonomySocket),
 								SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
+								ListTile(
+									title: const Text("Restart the network sockets"),
+									subtitle: const Text("This is only useful when connecting to localhost. Does not affect the rover"),
+									trailing: const Icon(Icons.refresh),
+									onTap: () async {
+										await models.rover.sockets.reset();
+										if (context.mounted) {
+											ScaffoldMessenger.of(context).showSnackBar(
+												const SnackBar(content: Text("Network reset"), duration: Duration(milliseconds: 500)),
+											);
+										}
+									}
+								)
 							]
 						),
 						ValueEditor<ArmSettings>(

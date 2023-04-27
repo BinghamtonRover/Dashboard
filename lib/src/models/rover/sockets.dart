@@ -39,6 +39,17 @@ class Sockets extends Model {
 			services.videoSocket.destination!.address = tankAddress;
 			services.autonomySocket.destination!.address = tankAddress;
 		}
+		models.rover.heartbeats.reset();
+	}
+
+	/// Resets all the sockets.
+	/// 
+	/// When working with localhost, even UDP sockets can throw errors when the remote is unreachable.
+	/// Resetting the sockets will bypass these errors.
+	Future<void> reset() async {
+		await services.dataSocket.reset();
+		await services.videoSocket.reset();
+		await services.autonomySocket.reset();
 	}
 
 	/// Change which rover is being used.
@@ -46,7 +57,6 @@ class Sockets extends Model {
 		rover = value;
 		models.home.setMessage(severity: Severity.info, text: "Using: ${rover.name}");
 		await updateSockets();
-		models.rover.heartbeats.reset();
 		notifyListeners();
 	}
 }
