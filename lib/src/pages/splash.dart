@@ -41,7 +41,7 @@ class SplashPageState extends State<SplashPage>{
 		}
 
 		if (mounted) {
-			await Navigator.of(context).pushNamed(Routes.home);
+			await Navigator.of(context).pushReplacementNamed(Routes.home);
 		}
 	}
 
