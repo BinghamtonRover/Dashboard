@@ -44,6 +44,7 @@ class ImageLoader {
 	void dispose() {
 		codec?.dispose();
 		image?.dispose();
+		image = null;
 	}
 }
 
@@ -93,6 +94,9 @@ class VideoFeedState extends State<VideoFeed> {
 	/// Grabs the new frame, renders it, and replaces the old frame.
 	Future<void> updateImage() async {
 		data = models.video.feeds[widget.name]!;
+		if (data.details.status != CameraStatus.CAMERA_ENABLED) {
+			setState(() => imageLoader.image = null);
+		}
 		setState(() { });
 		if (!data.hasFrame() || imageLoader.isLoading) return;
 		await imageLoader.load(data.frame);
@@ -107,10 +111,11 @@ class VideoFeedState extends State<VideoFeed> {
 				height: double.infinity,
 				width: double.infinity,
 				margin: const EdgeInsets.all(1),
+				padding: const EdgeInsets.all(4),
 				alignment: Alignment.center,
 				child: imageLoader.hasImage && data.details.status == CameraStatus.CAMERA_ENABLED 
 					? Row(children: [
-							Expanded(child: RawImage(image: imageLoader.image, fit: BoxFit.fill))
+							Expanded(child: RawImage(image: imageLoader.image, fit: BoxFit.contain))
 					])
 					: Text(errorMessage, textAlign: TextAlign.center) 
 			),

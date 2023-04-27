@@ -21,8 +21,6 @@ class VideoModel extends Model {
 	List<CameraName> feedsOnScreen = [
 		CameraName.ROVER_FRONT,
 		CameraName.ROVER_REAR,
-		CameraName.ARM_BASE,
-		CameraName.ARM_GRIPPER,
 	];
 
 	/// Triggers when it's time to update a new frame.
@@ -46,7 +44,7 @@ class VideoModel extends Model {
 			handler: (command) => _handshake = command,
 		);
 		frameUpdater = Timer.periodic(
-			const Duration(milliseconds: 60),  // 30 FPS
+			const Duration(milliseconds: 16),  // 60 FPS
 			(_) => notifyListeners()
 		);
 	}
@@ -55,6 +53,13 @@ class VideoModel extends Model {
 	void dispose() {
 		frameUpdater.cancel();
 		super.dispose();
+	}
+
+	/// Clears all video data. 
+	void clear() {
+		for (final name in CameraName.values) {
+			feeds[name]!.details.status = CameraStatus.CAMERA_DISCONNECTED;
+		}
 	}
 
 	/// Updates the data for a given camera.
