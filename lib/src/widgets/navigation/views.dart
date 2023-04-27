@@ -3,9 +3,12 @@ import "package:flutter/material.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
+/// A widget to render all the views the user selected.
 class ViewsWidget extends StatelessWidget {
+	/// A const constructor.
 	const ViewsWidget();
 
+	/// Renders the view at the given [index] in [ViewsModel.views].
 	Widget getView(int index) => Expanded(child: Container(
 		margin: const EdgeInsets.all(1),
 		decoration: BoxDecoration(border: Border.all(width: 3)),

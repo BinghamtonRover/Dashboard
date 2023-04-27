@@ -5,9 +5,12 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
-class GraphsRow extends StatelessWidget {
+/// A row of scrollable or non-scrollable widgets.
+class ScrollingRow extends StatelessWidget {
+	/// The widgets to display.
 	final List<Widget> children;
-	const GraphsRow({required this.children});
+	/// Renders a row of widgets.
+	const ScrollingRow({required this.children});
 
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<SettingsModel>.value(
@@ -24,6 +27,7 @@ class GraphsRow extends StatelessWidget {
 	);
 }
 
+/// The science analysis page.
 class SciencePage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<ScienceModel>(
@@ -48,7 +52,7 @@ class SciencePage extends StatelessWidget {
 					const SizedBox(height: 24),
 					Text("Details", style: context.textTheme.titleLarge),
 					const SizedBox(height: 12),
-					GraphsRow(children: [
+					ScrollingRow(children: [
 						for (final sensor in model.sensors) 
 							LineChart(sensor.details)
 					]),
@@ -56,7 +60,7 @@ class SciencePage extends StatelessWidget {
 					const SizedBox(height: 24),
 					Text("Summary", style: context.textTheme.titleLarge),
 					const SizedBox(height: 12),
-					GraphsRow(children: [
+					ScrollingRow(children: [
 						for (final sensor in model.sensors) 
 							BarChart(sensor.summary)
 					]),
@@ -64,7 +68,7 @@ class SciencePage extends StatelessWidget {
 					const SizedBox(height: 24),
 					Text("Results", style: context.textTheme.titleLarge),
 					const SizedBox(height: 12),
-					GraphsRow(children: [
+					ScrollingRow(children: [
 						for (final sensor in model.sensors) 
 							ResultsBox(sensor)
 					]),
@@ -74,14 +78,20 @@ class SciencePage extends StatelessWidget {
 	);
 }
 
+/// A box to display the final results for each sensor.
 class ResultsBox extends StatelessWidget {
+	/// The sensor being tested.
 	final ScienceSensor sensor;
+
+	/// The sensor's test.
 	ScienceTest get test => sensor.test;
 
+	/// Creates a widget to display the results of a science test.
 	const ResultsBox(this.sensor);
 
+	/// The color to render this box.
 	Color get color {
-		switch(test.result) {
+		switch(test.test(value1: test.value1)) {
 			case ScienceResult.extinct: return Colors.red;
 			case ScienceResult.extant: return Colors.green;
 			case ScienceResult.notPresent: return Colors.orange;
@@ -90,8 +100,9 @@ class ResultsBox extends StatelessWidget {
 		}
 	}
 
+	/// The text to display in this box.
 	String get text {
-		switch(test.result) {
+		switch(test.test(value1: test.value1)) {
 			case ScienceResult.extinct: return "Extinct";
 			case ScienceResult.extant: return "Extant";
 			case ScienceResult.notPresent: return "Not Present";
@@ -118,13 +129,13 @@ class ResultsBox extends StatelessWidget {
 				)
 			)),
 			SizedBox(height: 48, child: NumberEditor(
-				name: test.valueName1,
+				name: test.value1Name,
 				model: test.value1Builder,
 				spacerFlex: 1,
 			)),
 			if (test.value2 != null) 
 				SizedBox(height: 48, child: NumberEditor(
-					name: test.valueName2!,
+					name: test.value2Name!,
 					model: test.value2Builder,
 					spacerFlex: 1,
 				)),

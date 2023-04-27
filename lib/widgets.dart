@@ -28,7 +28,11 @@ export "src/widgets/navigation/footer.dart";
 export "src/widgets/navigation/sidebar.dart";
 export "src/widgets/navigation/views.dart";
 
+/// Convenience functions on [BuildContext].
 extension BuildContextUtils on BuildContext {
+	/// Gets the text theme of the app.
 	TextTheme get textTheme => Theme.of(this).textTheme;
+
+	/// Gets the color scheme of the app.
 	ColorScheme get colorScheme => Theme.of(this).colorScheme;
 }

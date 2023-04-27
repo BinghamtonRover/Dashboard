@@ -64,6 +64,7 @@ class NumberEditor extends StatelessWidget {
 	/// The view model backing this value.
 	final NumberBuilder model;
 
+	/// How much space to allocate in between the label and text field.
 	final int spacerFlex;
 
 	/// Creates a widget to modify a number.

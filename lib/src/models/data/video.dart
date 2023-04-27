@@ -86,6 +86,10 @@ class VideoModel extends Model {
 		if (_handshake == null) throw RequestNotAccepted();
 	}
 
+	/// Enables or disables the given camera.
+	/// 
+	/// This function is called automatically, so if the camera is not connected or otherwise available,
+	/// it'll fail silently. However, if the server simply doesn't respond, it'll show a warning.
 	Future<void> toggleCamera(CameraName name, {required bool enable}) async {
 		final details = feeds[name]!.details;
 		if (enable && details.status != CameraStatus.CAMERA_DISABLED) return;

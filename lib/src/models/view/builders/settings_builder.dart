@@ -176,6 +176,7 @@ class ScienceSettingsBuilder extends ValueBuilder<ScienceSettings> {
 		scrollableGraphs: scrollableGraphs,
 	);
 
+	/// Modifies [scrollableGraphs].
 	void updateScrollableGraphs(bool input) {  // ignore: avoid_positional_boolean_parameters
 		scrollableGraphs = input;
 		notifyListeners();

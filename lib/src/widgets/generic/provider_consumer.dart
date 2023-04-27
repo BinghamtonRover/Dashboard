@@ -27,6 +27,7 @@ class ProviderConsumer<T extends ChangeNotifier> extends StatelessWidget {
 		required this.builder, 
 	}) : create = null;
 
+	/// The [Consumer] for this model.
 	Widget get consumer => Consumer<T>(
 		builder: (context, model, _) => builder(model)
 	);
