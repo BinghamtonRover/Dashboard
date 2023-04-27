@@ -28,6 +28,7 @@ dependencies:
   path_provider: ^2.0.14
   protobuf: ^2.1.0
   provider: ^6.0.5
+  url_launcher: ^6.1.10
   win32_gamepad: ^1.0.3
   yaml: ^3.1.1
   yaml_writer: ^1.0.2

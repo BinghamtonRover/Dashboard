@@ -1,13 +1,10 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
-import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
-/// A view to contain all the video feeds for a given page. 
-/// 
-/// Each [CameraFeed] is represented by a [VideoFeed] widget.
+/// A view to contain all the video feeds for a given page using [VideoFeed] widgets.
 class VideoFeeds extends StatelessWidget {
 	/// Creates a grid of video feeds.
 	const VideoFeeds();
@@ -18,14 +15,14 @@ class VideoFeeds extends StatelessWidget {
 		children: [
 			Expanded(child: Row(
 				children: [
-					if (model.feeds.isNotEmpty) Expanded(child: VideoFeed(model.feeds[0])),
-					if (model.feeds.length >= 2) Expanded(child: VideoFeed(model.feeds[1])),
+					if (model.feedsOnScreen.isNotEmpty) Expanded(child: VideoFeed(index: 0, name: model.feedsOnScreen[0])),
+					if (model.feedsOnScreen.length >= 3) Expanded(child: VideoFeed(index: 2, name: model.feedsOnScreen[2])),
 				]
 			)),
-			if (model.feeds.length > 2) Expanded(child: Row(
+			if (model.feedsOnScreen.length > 1) Expanded(child: Row(
 				children: [
-					if (model.feeds.length >= 3) Expanded(child: VideoFeed(model.feeds[2])),
-					if (model.feeds.length >= 4) Expanded(child: VideoFeed(model.feeds[3])),
+					if (model.feedsOnScreen.length >= 2) Expanded(child: VideoFeed(index: 1, name: model.feedsOnScreen[1])),
+					if (model.feedsOnScreen.length >= 4) Expanded(child: VideoFeed(index: 3, name: model.feedsOnScreen[3])),
 				],
 			)),
 		]

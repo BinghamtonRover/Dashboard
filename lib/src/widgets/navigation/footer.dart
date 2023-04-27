@@ -89,18 +89,24 @@ class StatusIcons extends StatelessWidget {
 	Widget build(BuildContext context) => Consumer<Rover>(
 		builder: (_, rover, __) => Row(
 			children: [
-				Icon(  // battery level
-					rover.isConnected 
-						? getBatteryIcon(rover.metrics.electrical.battery)
-						: Icons.battery_unknown,
-					color: getColor(rover.metrics.electrical.battery)
+				Tooltip(
+					message: "Battery: ${(rover.metrics.electrical.battery*100).toStringAsFixed(0)}%",
+					child: Icon(  // battery level
+						rover.isConnected 
+							? getBatteryIcon(rover.metrics.electrical.battery)
+							: Icons.battery_unknown,
+						color: getColor(rover.metrics.electrical.battery)
+					)
 				),
 				const SizedBox(width: 4),
-				Icon(  // network strength
-					rover.isConnected
-						? getNetworkIcon(rover.heartbeats.connectionStrength)
-						: Icons.signal_wifi_off_outlined,
-					color: getColor(rover.heartbeats.connectionStrength),
+				Tooltip(
+					message: rover.heartbeats.connectionSummary,
+					child: Icon(  // network strength
+						rover.isConnected
+							? getNetworkIcon(rover.heartbeats.connectionStrength)
+							: Icons.signal_wifi_off_outlined,
+						color: getColor(rover.heartbeats.connectionStrength),
+					),
 				),
 				const SizedBox(width: 8),
 				PopupMenuButton(  // status
@@ -137,7 +143,7 @@ class VideoFeedCounter extends StatelessWidget {
 					const SizedBox(width: 4),
 					DropdownButton<int>(
 						iconEnabledColor: Colors.black,
-						value: video.feeds.length,
+						value: video.feedsOnScreen.length,
 						onChanged: (value) => video.setNumFeeds(value),
 						items: [
 							for (int i = 1; i <= 4; i++) DropdownMenuItem(

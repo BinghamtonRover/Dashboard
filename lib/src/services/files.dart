@@ -20,6 +20,11 @@ class FilesService extends Service {
   /// should get their own subdirectory.
   late final Directory outputDir;
 
+  /// The directory where screenshots are stored.
+  /// 
+  /// These are only screenshots of video feeds, not of the dashboard itself.
+  Directory get screenshotsDir => Directory("${outputDir.path}/screenshots");
+
   /// The file containing the user's [Settings], in JSON form.
   /// 
   /// This file should contain the result of [Settings.toJson], and loading settings
@@ -33,6 +38,7 @@ class FilesService extends Service {
     final appDir = await getApplicationDocumentsDirectory();
     outputDir = Directory("${appDir.path}/Dashboard");
     await outputDir.create();
+    await screenshotsDir.create();
     if (!settingsFile.existsSync()) await settingsFile.writeAsString(jsonEncode({}));
   }
 
@@ -65,7 +71,7 @@ class FilesService extends Service {
 
   /// Saves the current frame in the feed to the camera's output directory.
   Future<void> writeImage(List<int> image, String cameraName) async {
-    final dir = Directory("${outputDir.path}/$cameraName");
+    final dir = Directory("${screenshotsDir.path}/$cameraName");
     if (!(await dir.exists())) await dir.create();    
     final files = dir.listSync();
     final number = files.isEmpty ? 1 : (int.parse(files.last.filename) + 1);

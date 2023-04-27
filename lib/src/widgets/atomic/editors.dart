@@ -30,7 +30,6 @@ class SocketEditor extends StatelessWidget {
 		value: model,
 		builder: (model, _) => Row(
 			children: [
-				const SizedBox(width: 16),
 				Expanded(child: Text(name)),
 				const Spacer(),
 				Expanded(child: TextField(
@@ -68,8 +67,8 @@ class NumberEditor extends StatelessWidget {
 	Widget build(BuildContext context) => ProviderConsumer<TextBuilder<num>>.value(
 		value: model,
 		builder: (model, _) => Row(
+			mainAxisAlignment: MainAxisAlignment.spaceBetween,
 			children: [
-				const SizedBox(width: 16),
 				Expanded(child: Text(name)),
 				const Spacer(),
 				Expanded(child: TextField(
@@ -80,5 +79,53 @@ class NumberEditor extends StatelessWidget {
 				)),
 			]
 		)
+	);
+}
+
+/// A widget to choose a single value from a dropdown.
+class DropdownEditor<T> extends StatelessWidget {
+	/// The name to show when editing these settings.
+	final String name;
+
+	/// The chosen value in the dropdown.
+	final T value;
+
+	/// A callback for when a new value is selected. Is not called when the user cancels.
+	final ValueChanged<T> onChanged;
+
+	/// A list of items to choose from.
+	final List<T> items;
+
+	/// Converts a [T] item to a user-friendly string.
+	final String Function(T) humanName;
+
+	/// Creates a [DropdownButton] list to choose between items.
+	const DropdownEditor({
+		required this.name,
+		required this.value,
+		required this.onChanged,
+		required this.items,
+		required this.humanName,
+	});
+
+	@override
+	Widget build(BuildContext context) => Row(
+		mainAxisAlignment: MainAxisAlignment.spaceBetween,
+		children: [
+			Text(name),
+			DropdownButton<T>(
+				value: value,
+				onChanged: (input) { 
+					if (input == null) return;
+					onChanged(input);
+				},
+				items: [
+					for (final other in items) DropdownMenuItem<T>(
+						value: other,
+						child: Text(humanName(other)),
+					),
+				],
+			)
+		]
 	);
 }

@@ -45,12 +45,12 @@ abstract class UdpSocket extends Service {
 	/// The UDP socket backed by `dart:io`.
 	/// 
 	/// This socket must be closed in [dispose].
-	late final RawDatagramSocket _socket;
+	late RawDatagramSocket _socket;
 
 	/// The subscription that listens for incoming data.
 	/// 
 	/// This must be cancelled in [dispose].
-	late final StreamSubscription _subscription;
+	late StreamSubscription _subscription;
 
 	/// The socket to send to.
 	SocketConfig? destination;
@@ -68,6 +68,12 @@ abstract class UdpSocket extends Service {
 	Future<void> dispose() async {
 		await _subscription.cancel();
 		_socket.close();
+	}
+
+	/// Resets the socket in case of an unrecoverable error.
+	Future<void> reset() async {
+		await dispose();
+		await init();
 	}
 
 	/// Runs when new data is received.

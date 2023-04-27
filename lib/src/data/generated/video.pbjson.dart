@@ -8,6 +8,22 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
+@$core.Deprecated('Use cameraStatusDescriptor instead')
+const CameraStatus$json = const {
+  '1': 'CameraStatus',
+  '2': const [
+    const {'1': 'CAMERA_STATUS_UNDEFINED', '2': 0},
+    const {'1': 'CAMERA_DISCONNECTED', '2': 1},
+    const {'1': 'CAMERA_ENABLED', '2': 2},
+    const {'1': 'CAMERA_DISABLED', '2': 3},
+    const {'1': 'CAMERA_NOT_RESPONDING', '2': 4},
+    const {'1': 'CAMERA_LOADING', '2': 5},
+    const {'1': 'FRAME_TOO_LARGE', '2': 6},
+  ],
+};
+
+/// Descriptor for `CameraStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
+final $typed_data.Uint8List cameraStatusDescriptor = $convert.base64Decode('CgxDYW1lcmFTdGF0dXMSGwoXQ0FNRVJBX1NUQVRVU19VTkRFRklORUQQABIXChNDQU1FUkFfRElTQ09OTkVDVEVEEAESEgoOQ0FNRVJBX0VOQUJMRUQQAhITCg9DQU1FUkFfRElTQUJMRUQQAxIZChVDQU1FUkFfTk9UX1JFU1BPTkRJTkcQBBISCg5DQU1FUkFfTE9BRElORxAFEhMKD0ZSQU1FX1RPT19MQVJHRRAG');
 @$core.Deprecated('Use cameraNameDescriptor instead')
 const CameraName$json = const {
   '1': 'CameraName',
@@ -24,48 +40,41 @@ const CameraName$json = const {
 
 /// Descriptor for `CameraName`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List cameraNameDescriptor = $convert.base64Decode('CgpDYW1lcmFOYW1lEhkKFUNBTUVSQV9OQU1FX1VOREVGSU5FRBAAEg8KC1JPVkVSX0ZST05UEAESDgoKUk9WRVJfUkVBUhACEgwKCEFSTV9CQVNFEAMSDwoLQVJNX0dSSVBQRVIQBBIUChBTQ0lFTkNFX0NBUk9VU0VMEAUSFgoSU0NJRU5DRV9NSUNST1NDT1BFEAY=');
-@$core.Deprecated('Use adjustCameraDescriptor instead')
-const AdjustCamera$json = const {
-  '1': 'AdjustCamera',
+@$core.Deprecated('Use cameraDetailsDescriptor instead')
+const CameraDetails$json = const {
+  '1': 'CameraDetails',
   '2': const [
     const {'1': 'name', '3': 1, '4': 1, '5': 14, '6': '.CameraName', '10': 'name'},
-    const {'1': 'is_enabled', '3': 2, '4': 1, '5': 8, '10': 'isEnabled'},
-    const {'1': 'resolution', '3': 3, '4': 1, '5': 5, '10': 'resolution'},
+    const {'1': 'resolution_width', '3': 2, '4': 1, '5': 5, '10': 'resolutionWidth'},
+    const {'1': 'resolution_height', '3': 3, '4': 1, '5': 5, '10': 'resolutionHeight'},
+    const {'1': 'quality', '3': 4, '4': 1, '5': 5, '10': 'quality'},
+    const {'1': 'fps', '3': 5, '4': 1, '5': 5, '10': 'fps'},
+    const {'1': 'status', '3': 6, '4': 1, '5': 14, '6': '.CameraStatus', '10': 'status'},
   ],
 };
 
-/// Descriptor for `AdjustCamera`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List adjustCameraDescriptor = $convert.base64Decode('CgxBZGp1c3RDYW1lcmESHwoEbmFtZRgBIAEoDjILLkNhbWVyYU5hbWVSBG5hbWUSHQoKaXNfZW5hYmxlZBgCIAEoCFIJaXNFbmFibGVkEh4KCnJlc29sdXRpb24YAyABKAVSCnJlc29sdXRpb24=');
-@$core.Deprecated('Use cameraStatusDescriptor instead')
-const CameraStatus$json = const {
-  '1': 'CameraStatus',
-  '2': const [
-    const {'1': 'name', '3': 1, '4': 1, '5': 14, '6': '.CameraName', '10': 'name'},
-    const {'1': 'is_enabled', '3': 2, '4': 1, '5': 8, '10': 'isEnabled'},
-    const {'1': 'resolution', '3': 3, '4': 1, '5': 5, '10': 'resolution'},
-  ],
-};
-
-/// Descriptor for `CameraStatus`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List cameraStatusDescriptor = $convert.base64Decode('CgxDYW1lcmFTdGF0dXMSHwoEbmFtZRgBIAEoDjILLkNhbWVyYU5hbWVSBG5hbWUSHQoKaXNfZW5hYmxlZBgCIAEoCFIJaXNFbmFibGVkEh4KCnJlc29sdXRpb24YAyABKAVSCnJlc29sdXRpb24=');
+/// Descriptor for `CameraDetails`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List cameraDetailsDescriptor = $convert.base64Decode('Cg1DYW1lcmFEZXRhaWxzEh8KBG5hbWUYASABKA4yCy5DYW1lcmFOYW1lUgRuYW1lEikKEHJlc29sdXRpb25fd2lkdGgYAiABKAVSD3Jlc29sdXRpb25XaWR0aBIrChFyZXNvbHV0aW9uX2hlaWdodBgDIAEoBVIQcmVzb2x1dGlvbkhlaWdodBIYCgdxdWFsaXR5GAQgASgFUgdxdWFsaXR5EhAKA2ZwcxgFIAEoBVIDZnBzEiUKBnN0YXR1cxgGIAEoDjINLkNhbWVyYVN0YXR1c1IGc3RhdHVz');
 @$core.Deprecated('Use videoDataDescriptor instead')
 const VideoData$json = const {
   '1': 'VideoData',
   '2': const [
-    const {'1': 'cameras', '3': 1, '4': 3, '5': 11, '6': '.CameraStatus', '10': 'cameras'},
+    const {'1': 'id', '3': 1, '4': 1, '5': 5, '10': 'id'},
+    const {'1': 'details', '3': 2, '4': 1, '5': 11, '6': '.CameraDetails', '10': 'details'},
+    const {'1': 'frame', '3': 3, '4': 1, '5': 12, '10': 'frame'},
   ],
 };
 
 /// Descriptor for `VideoData`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List videoDataDescriptor = $convert.base64Decode('CglWaWRlb0RhdGESJwoHY2FtZXJhcxgBIAMoCzINLkNhbWVyYVN0YXR1c1IHY2FtZXJhcw==');
-@$core.Deprecated('Use videoFrameDescriptor instead')
-const VideoFrame$json = const {
-  '1': 'VideoFrame',
+final $typed_data.Uint8List videoDataDescriptor = $convert.base64Decode('CglWaWRlb0RhdGESDgoCaWQYASABKAVSAmlkEigKB2RldGFpbHMYAiABKAsyDi5DYW1lcmFEZXRhaWxzUgdkZXRhaWxzEhQKBWZyYW1lGAMgASgMUgVmcmFtZQ==');
+@$core.Deprecated('Use videoCommandDescriptor instead')
+const VideoCommand$json = const {
+  '1': 'VideoCommand',
   '2': const [
-    const {'1': 'name', '3': 4, '4': 1, '5': 14, '6': '.CameraName', '10': 'name'},
-    const {'1': 'frame', '3': 5, '4': 1, '5': 12, '10': 'frame'},
+    const {'1': 'id', '3': 1, '4': 1, '5': 5, '10': 'id'},
+    const {'1': 'details', '3': 2, '4': 1, '5': 11, '6': '.CameraDetails', '10': 'details'},
   ],
 };
 
-/// Descriptor for `VideoFrame`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List videoFrameDescriptor = $convert.base64Decode('CgpWaWRlb0ZyYW1lEh8KBG5hbWUYBCABKA4yCy5DYW1lcmFOYW1lUgRuYW1lEhQKBWZyYW1lGAUgASgMUgVmcmFtZQ==');
+/// Descriptor for `VideoCommand`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List videoCommandDescriptor = $convert.base64Decode('CgxWaWRlb0NvbW1hbmQSDgoCaWQYASABKAVSAmlkEigKB2RldGFpbHMYAiABKAsyDi5DYW1lcmFEZXRhaWxzUgdkZXRhaWxz');

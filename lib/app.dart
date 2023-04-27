@@ -27,7 +27,7 @@ class RoverControlDashboard extends StatelessWidget {
 		child: Consumer<Models>(
 			builder: (context, models, _) => MaterialApp(
 				title: "Binghamton University Rover Team",
-				home: models.isReady ? HomePage() : const Scaffold(body: Center(child: CircularProgressIndicator())),
+				home: SplashPage(),
 				debugShowCheckedModeBanner: false,
 				theme: ThemeData(
 					colorScheme: ColorScheme.fromSeed(
@@ -35,6 +35,7 @@ class RoverControlDashboard extends StatelessWidget {
 					)
 				),
 				routes: {
+					Routes.home: (_) => HomePage(),
 					Routes.settings: (_) => SettingsPage(),
 				}
 			)

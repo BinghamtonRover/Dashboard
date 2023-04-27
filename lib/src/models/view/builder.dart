@@ -77,7 +77,7 @@ class NumberBuilder<T extends num> extends TextBuilder<T> {
 /// A specialized [TextBuilder] to handle IP addresses.
 class AddressBuilder extends TextBuilder<InternetAddress> {
 	/// A regular expression representing a valid IP address.
-	static final regex = RegExp(r"\d{3}\.\d{3}\.\d{1}\.\d{1,3}");
+	static final regex = RegExp(r"\d+\.\d+\.\d+\.\d+");
 
 	/// Creates an IP address builder with the given initial value.
 	AddressBuilder(InternetAddress value) : 

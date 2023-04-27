@@ -13,52 +13,67 @@ import 'video.pbenum.dart';
 
 export 'video.pbenum.dart';
 
-class AdjustCamera extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AdjustCamera', createEmptyInstance: create)
+class CameraDetails extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CameraDetails', createEmptyInstance: create)
     ..e<CameraName>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name', $pb.PbFieldType.OE, defaultOrMaker: CameraName.CAMERA_NAME_UNDEFINED, valueOf: CameraName.valueOf, enumValues: CameraName.values)
-    ..aOB(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'isEnabled')
-    ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resolution', $pb.PbFieldType.O3)
+    ..a<$core.int>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resolutionWidth', $pb.PbFieldType.O3)
+    ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resolutionHeight', $pb.PbFieldType.O3)
+    ..a<$core.int>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'quality', $pb.PbFieldType.O3)
+    ..a<$core.int>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'fps', $pb.PbFieldType.O3)
+    ..e<CameraStatus>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'status', $pb.PbFieldType.OE, defaultOrMaker: CameraStatus.CAMERA_STATUS_UNDEFINED, valueOf: CameraStatus.valueOf, enumValues: CameraStatus.values)
     ..hasRequiredFields = false
   ;
 
-  AdjustCamera._() : super();
-  factory AdjustCamera({
+  CameraDetails._() : super();
+  factory CameraDetails({
     CameraName? name,
-    $core.bool? isEnabled,
-    $core.int? resolution,
+    $core.int? resolutionWidth,
+    $core.int? resolutionHeight,
+    $core.int? quality,
+    $core.int? fps,
+    CameraStatus? status,
   }) {
     final _result = create();
     if (name != null) {
       _result.name = name;
     }
-    if (isEnabled != null) {
-      _result.isEnabled = isEnabled;
+    if (resolutionWidth != null) {
+      _result.resolutionWidth = resolutionWidth;
     }
-    if (resolution != null) {
-      _result.resolution = resolution;
+    if (resolutionHeight != null) {
+      _result.resolutionHeight = resolutionHeight;
+    }
+    if (quality != null) {
+      _result.quality = quality;
+    }
+    if (fps != null) {
+      _result.fps = fps;
+    }
+    if (status != null) {
+      _result.status = status;
     }
     return _result;
   }
-  factory AdjustCamera.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory AdjustCamera.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory CameraDetails.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory CameraDetails.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  AdjustCamera clone() => AdjustCamera()..mergeFromMessage(this);
+  CameraDetails clone() => CameraDetails()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  AdjustCamera copyWith(void Function(AdjustCamera) updates) => super.copyWith((message) => updates(message as AdjustCamera)) as AdjustCamera; // ignore: deprecated_member_use
+  CameraDetails copyWith(void Function(CameraDetails) updates) => super.copyWith((message) => updates(message as CameraDetails)) as CameraDetails; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static AdjustCamera create() => AdjustCamera._();
-  AdjustCamera createEmptyInstance() => create();
-  static $pb.PbList<AdjustCamera> createRepeated() => $pb.PbList<AdjustCamera>();
+  static CameraDetails create() => CameraDetails._();
+  CameraDetails createEmptyInstance() => create();
+  static $pb.PbList<CameraDetails> createRepeated() => $pb.PbList<CameraDetails>();
   @$core.pragma('dart2js:noInline')
-  static AdjustCamera getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AdjustCamera>(create);
-  static AdjustCamera? _defaultInstance;
+  static CameraDetails getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CameraDetails>(create);
+  static CameraDetails? _defaultInstance;
 
   @$pb.TagNumber(1)
   CameraName get name => $_getN(0);
@@ -70,112 +85,74 @@ class AdjustCamera extends $pb.GeneratedMessage {
   void clearName() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.bool get isEnabled => $_getBF(1);
+  $core.int get resolutionWidth => $_getIZ(1);
   @$pb.TagNumber(2)
-  set isEnabled($core.bool v) { $_setBool(1, v); }
+  set resolutionWidth($core.int v) { $_setSignedInt32(1, v); }
   @$pb.TagNumber(2)
-  $core.bool hasIsEnabled() => $_has(1);
+  $core.bool hasResolutionWidth() => $_has(1);
   @$pb.TagNumber(2)
-  void clearIsEnabled() => clearField(2);
+  void clearResolutionWidth() => clearField(2);
 
   @$pb.TagNumber(3)
-  $core.int get resolution => $_getIZ(2);
+  $core.int get resolutionHeight => $_getIZ(2);
   @$pb.TagNumber(3)
-  set resolution($core.int v) { $_setSignedInt32(2, v); }
+  set resolutionHeight($core.int v) { $_setSignedInt32(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasResolution() => $_has(2);
+  $core.bool hasResolutionHeight() => $_has(2);
   @$pb.TagNumber(3)
-  void clearResolution() => clearField(3);
-}
+  void clearResolutionHeight() => clearField(3);
 
-class CameraStatus extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'CameraStatus', createEmptyInstance: create)
-    ..e<CameraName>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name', $pb.PbFieldType.OE, defaultOrMaker: CameraName.CAMERA_NAME_UNDEFINED, valueOf: CameraName.valueOf, enumValues: CameraName.values)
-    ..aOB(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'isEnabled')
-    ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'resolution', $pb.PbFieldType.O3)
-    ..hasRequiredFields = false
-  ;
+  @$pb.TagNumber(4)
+  $core.int get quality => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set quality($core.int v) { $_setSignedInt32(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasQuality() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearQuality() => clearField(4);
 
-  CameraStatus._() : super();
-  factory CameraStatus({
-    CameraName? name,
-    $core.bool? isEnabled,
-    $core.int? resolution,
-  }) {
-    final _result = create();
-    if (name != null) {
-      _result.name = name;
-    }
-    if (isEnabled != null) {
-      _result.isEnabled = isEnabled;
-    }
-    if (resolution != null) {
-      _result.resolution = resolution;
-    }
-    return _result;
-  }
-  factory CameraStatus.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory CameraStatus.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
-  'Will be removed in next major version')
-  CameraStatus clone() => CameraStatus()..mergeFromMessage(this);
-  @$core.Deprecated(
-  'Using this can add significant overhead to your binary. '
-  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
-  'Will be removed in next major version')
-  CameraStatus copyWith(void Function(CameraStatus) updates) => super.copyWith((message) => updates(message as CameraStatus)) as CameraStatus; // ignore: deprecated_member_use
-  $pb.BuilderInfo get info_ => _i;
-  @$core.pragma('dart2js:noInline')
-  static CameraStatus create() => CameraStatus._();
-  CameraStatus createEmptyInstance() => create();
-  static $pb.PbList<CameraStatus> createRepeated() => $pb.PbList<CameraStatus>();
-  @$core.pragma('dart2js:noInline')
-  static CameraStatus getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CameraStatus>(create);
-  static CameraStatus? _defaultInstance;
+  @$pb.TagNumber(5)
+  $core.int get fps => $_getIZ(4);
+  @$pb.TagNumber(5)
+  set fps($core.int v) { $_setSignedInt32(4, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasFps() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearFps() => clearField(5);
 
-  @$pb.TagNumber(1)
-  CameraName get name => $_getN(0);
-  @$pb.TagNumber(1)
-  set name(CameraName v) { setField(1, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasName() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearName() => clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.bool get isEnabled => $_getBF(1);
-  @$pb.TagNumber(2)
-  set isEnabled($core.bool v) { $_setBool(1, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasIsEnabled() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearIsEnabled() => clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.int get resolution => $_getIZ(2);
-  @$pb.TagNumber(3)
-  set resolution($core.int v) { $_setSignedInt32(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasResolution() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearResolution() => clearField(3);
+  @$pb.TagNumber(6)
+  CameraStatus get status => $_getN(5);
+  @$pb.TagNumber(6)
+  set status(CameraStatus v) { setField(6, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasStatus() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearStatus() => clearField(6);
 }
 
 class VideoData extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'VideoData', createEmptyInstance: create)
-    ..pc<CameraStatus>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'cameras', $pb.PbFieldType.PM, subBuilder: CameraStatus.create)
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
+    ..aOM<CameraDetails>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'details', subBuilder: CameraDetails.create)
+    ..a<$core.List<$core.int>>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'frame', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
   VideoData._() : super();
   factory VideoData({
-    $core.Iterable<CameraStatus>? cameras,
+    $core.int? id,
+    CameraDetails? details,
+    $core.List<$core.int>? frame,
   }) {
     final _result = create();
-    if (cameras != null) {
-      _result.cameras.addAll(cameras);
+    if (id != null) {
+      _result.id = id;
+    }
+    if (details != null) {
+      _result.details = details;
+    }
+    if (frame != null) {
+      _result.frame = frame;
     }
     return _result;
   }
@@ -201,67 +178,95 @@ class VideoData extends $pb.GeneratedMessage {
   static VideoData? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.List<CameraStatus> get cameras => $_getList(0);
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int v) { $_setSignedInt32(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  CameraDetails get details => $_getN(1);
+  @$pb.TagNumber(2)
+  set details(CameraDetails v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasDetails() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDetails() => clearField(2);
+  @$pb.TagNumber(2)
+  CameraDetails ensureDetails() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $core.List<$core.int> get frame => $_getN(2);
+  @$pb.TagNumber(3)
+  set frame($core.List<$core.int> v) { $_setBytes(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasFrame() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearFrame() => clearField(3);
 }
 
-class VideoFrame extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'VideoFrame', createEmptyInstance: create)
-    ..e<CameraName>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name', $pb.PbFieldType.OE, defaultOrMaker: CameraName.CAMERA_NAME_UNDEFINED, valueOf: CameraName.valueOf, enumValues: CameraName.values)
-    ..a<$core.List<$core.int>>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'frame', $pb.PbFieldType.OY)
+class VideoCommand extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'VideoCommand', createEmptyInstance: create)
+    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
+    ..aOM<CameraDetails>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'details', subBuilder: CameraDetails.create)
     ..hasRequiredFields = false
   ;
 
-  VideoFrame._() : super();
-  factory VideoFrame({
-    CameraName? name,
-    $core.List<$core.int>? frame,
+  VideoCommand._() : super();
+  factory VideoCommand({
+    $core.int? id,
+    CameraDetails? details,
   }) {
     final _result = create();
-    if (name != null) {
-      _result.name = name;
+    if (id != null) {
+      _result.id = id;
     }
-    if (frame != null) {
-      _result.frame = frame;
+    if (details != null) {
+      _result.details = details;
     }
     return _result;
   }
-  factory VideoFrame.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory VideoFrame.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  factory VideoCommand.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory VideoCommand.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  VideoFrame clone() => VideoFrame()..mergeFromMessage(this);
+  VideoCommand clone() => VideoCommand()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  VideoFrame copyWith(void Function(VideoFrame) updates) => super.copyWith((message) => updates(message as VideoFrame)) as VideoFrame; // ignore: deprecated_member_use
+  VideoCommand copyWith(void Function(VideoCommand) updates) => super.copyWith((message) => updates(message as VideoCommand)) as VideoCommand; // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static VideoFrame create() => VideoFrame._();
-  VideoFrame createEmptyInstance() => create();
-  static $pb.PbList<VideoFrame> createRepeated() => $pb.PbList<VideoFrame>();
+  static VideoCommand create() => VideoCommand._();
+  VideoCommand createEmptyInstance() => create();
+  static $pb.PbList<VideoCommand> createRepeated() => $pb.PbList<VideoCommand>();
   @$core.pragma('dart2js:noInline')
-  static VideoFrame getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<VideoFrame>(create);
-  static VideoFrame? _defaultInstance;
+  static VideoCommand getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<VideoCommand>(create);
+  static VideoCommand? _defaultInstance;
 
-  @$pb.TagNumber(4)
-  CameraName get name => $_getN(0);
-  @$pb.TagNumber(4)
-  set name(CameraName v) { setField(4, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasName() => $_has(0);
-  @$pb.TagNumber(4)
-  void clearName() => clearField(4);
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int v) { $_setSignedInt32(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => clearField(1);
 
-  @$pb.TagNumber(5)
-  $core.List<$core.int> get frame => $_getN(1);
-  @$pb.TagNumber(5)
-  set frame($core.List<$core.int> v) { $_setBytes(1, v); }
-  @$pb.TagNumber(5)
-  $core.bool hasFrame() => $_has(1);
-  @$pb.TagNumber(5)
-  void clearFrame() => clearField(5);
+  @$pb.TagNumber(2)
+  CameraDetails get details => $_getN(1);
+  @$pb.TagNumber(2)
+  set details(CameraDetails v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasDetails() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearDetails() => clearField(2);
+  @$pb.TagNumber(2)
+  CameraDetails ensureDetails() => $_ensure(1);
 }
 

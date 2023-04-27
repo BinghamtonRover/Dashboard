@@ -103,7 +103,7 @@ linter:
 
     # Have `dart:` first, then `package:` imports, then relative, then exports.
     # Each section should be alphabetized. 
-    directives_ordering: true
+    directives_ordering: false
 
     # Do not use `.fromEnvironment` as they obscure platform-specific bugs. 
     # Use hard-coded constants or runtime conditions instead. 
