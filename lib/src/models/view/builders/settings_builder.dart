@@ -159,6 +159,29 @@ class VideoSettingsBuilder extends ValueBuilder<VideoSettings> {
 	);
 }
 
+/// A [ValueBuilder] that modifies a [ScienceSettings].
+class ScienceSettingsBuilder extends ValueBuilder<ScienceSettings> {
+	/// Whether the graphs can scrolls. See [ScienceSettings.scrollableGraphs].
+	bool scrollableGraphs;
+
+	/// Modifies the given [ScienceSettings].
+	ScienceSettingsBuilder(ScienceSettings initial) : 
+		scrollableGraphs = initial.scrollableGraphs;
+
+	@override
+	bool get isValid => true;
+
+	@override
+	ScienceSettings get value => ScienceSettings(
+		scrollableGraphs: scrollableGraphs,
+	);
+
+	void updateScrollableGraphs(bool input) {  // ignore: avoid_positional_boolean_parameters
+		scrollableGraphs = input;
+		notifyListeners();
+	}
+}
+
 /// A [ValueBuilder] representing an [ArmSettings].
 class SettingsBuilder extends ValueBuilder<Settings> {
 	/// The [NetworkSettings] view model.
@@ -170,6 +193,9 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	/// The [VideoSettings] view model.
 	final VideoSettingsBuilder video;
 
+	/// The [ScienceSettings] view model.
+	final ScienceSettingsBuilder science;
+
 	/// Whether the page is loading.
 	bool isLoading = false;
 
@@ -177,10 +203,13 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	SettingsBuilder() : 
 		network = NetworkSettingsBuilder(models.settings.network),
 		arm = ArmSettingsBuilder(models.settings.arm),
-		video = VideoSettingsBuilder(models.settings.video)
+		video = VideoSettingsBuilder(models.settings.video),
+		science = ScienceSettingsBuilder(models.settings.science)
 	{
 		network.addListener(notifyListeners);
 		arm.addListener(notifyListeners);
+		video.addListener(notifyListeners);
+		science.addListener(notifyListeners);
 	}
 
 	@override
@@ -191,6 +220,7 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 		network: network.value,
 		video: video.value,
 		easterEggs: const EasterEggsSettings(),
+		science: science.value,
 		arm: arm.value,
 	);
 
