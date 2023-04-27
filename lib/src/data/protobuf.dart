@@ -88,6 +88,7 @@ extension CameraStatusUtils on CameraStatus {
 			case CameraStatus.CAMERA_DISABLED: return "Disabled";
 			case CameraStatus.CAMERA_NOT_RESPONDING: return "Not responding";
 			case CameraStatus.CAMERA_LOADING: return "Loading";
+			case CameraStatus.FRAME_TOO_LARGE: return "Frame too large";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized rover status: $this");

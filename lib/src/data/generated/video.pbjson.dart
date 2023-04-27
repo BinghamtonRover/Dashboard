@@ -18,11 +18,12 @@ const CameraStatus$json = const {
     const {'1': 'CAMERA_DISABLED', '2': 3},
     const {'1': 'CAMERA_NOT_RESPONDING', '2': 4},
     const {'1': 'CAMERA_LOADING', '2': 5},
+    const {'1': 'FRAME_TOO_LARGE', '2': 6},
   ],
 };
 
 /// Descriptor for `CameraStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List cameraStatusDescriptor = $convert.base64Decode('CgxDYW1lcmFTdGF0dXMSGwoXQ0FNRVJBX1NUQVRVU19VTkRFRklORUQQABIXChNDQU1FUkFfRElTQ09OTkVDVEVEEAESEgoOQ0FNRVJBX0VOQUJMRUQQAhITCg9DQU1FUkFfRElTQUJMRUQQAxIZChVDQU1FUkFfTk9UX1JFU1BPTkRJTkcQBBISCg5DQU1FUkFfTE9BRElORxAF');
+final $typed_data.Uint8List cameraStatusDescriptor = $convert.base64Decode('CgxDYW1lcmFTdGF0dXMSGwoXQ0FNRVJBX1NUQVRVU19VTkRFRklORUQQABIXChNDQU1FUkFfRElTQ09OTkVDVEVEEAESEgoOQ0FNRVJBX0VOQUJMRUQQAhITCg9DQU1FUkFfRElTQUJMRUQQAxIZChVDQU1FUkFfTk9UX1JFU1BPTkRJTkcQBBISCg5DQU1FUkFfTE9BRElORxAFEhMKD0ZSQU1FX1RPT19MQVJHRRAG');
 @$core.Deprecated('Use cameraNameDescriptor instead')
 const CameraName$json = const {
   '1': 'CameraName',

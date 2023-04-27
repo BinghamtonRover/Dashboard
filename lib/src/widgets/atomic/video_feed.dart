@@ -112,7 +112,7 @@ class VideoFeedState extends State<VideoFeed> {
 					? Row(children: [
 							Expanded(child: RawImage(image: imageLoader.image, fit: BoxFit.fill))
 					])
-					: Text(errorMessage) 
+					: Text(errorMessage, textAlign: TextAlign.center) 
 			),
 			Row(
 				mainAxisAlignment: MainAxisAlignment.end,
@@ -148,13 +148,15 @@ class VideoFeedState extends State<VideoFeed> {
 
 	/// Displays an error message describing why `image == null`.
 	String get errorMessage {
-		if (!models.rover.isConnected) return "The rover is not connected";
 		switch (data.details.status) {
 			case CameraStatus.CAMERA_LOADING: return "Camera is loading...";
 			case CameraStatus.CAMERA_STATUS_UNDEFINED: return "Unknown error";
-			case CameraStatus.CAMERA_DISCONNECTED: return "Camera is not connected";
+			case CameraStatus.CAMERA_DISCONNECTED: 
+				if (!models.rover.isConnected) return "The rover is not connected";
+				return "Camera is not connected";
 			case CameraStatus.CAMERA_DISABLED: return "Camera is disabled.\nClick the settings icon to enabled it.";
 			case CameraStatus.CAMERA_NOT_RESPONDING: return "Camera is not responding";
+			case CameraStatus.FRAME_TOO_LARGE: return "Camera is reading too much detail\nReduce the quality or resolution";
 			case CameraStatus.CAMERA_ENABLED: 
 				if (data.hasFrame()) { return "Loading feed..."; }
 				else { return "Starting camera..."; }
