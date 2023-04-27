@@ -30,6 +30,9 @@ class VideoModel extends Model {
 	/// This is kept here to ensure all widgets are in sync.
 	late final Timer frameUpdater;
 
+	/// The latest handshake received by the rover.
+	VideoCommand? _handshake;
+
 	@override
 	Future<void> init() async {
 		services.videoSocket.registerHandler<VideoData>(
@@ -37,8 +40,13 @@ class VideoModel extends Model {
 			decoder: VideoData.fromBuffer,
 			handler: handleData,
 		);
+		services.videoSocket.registerHandler<VideoCommand>(
+			name: VideoCommand().messageName,
+			decoder: VideoCommand.fromBuffer,
+			handler: (command) => _handshake = command,
+		);
 		frameUpdater = Timer.periodic(
-			const Duration(milliseconds: 33),  // 30 FPS
+			const Duration(milliseconds: 60),  // 30 FPS
 			(_) => notifyListeners()
 		);
 	}
@@ -80,11 +88,13 @@ class VideoModel extends Model {
 		models.home.setMessage(severity: Severity.info, text: "Screenshot saved");
 	}
 
-	/// Tells the rover to enable the given camera.
-	Future<void> updateCamera(CameraName name, CameraDetails details) async { 
-		final details = feeds[name]?.details.deepCopy() ?? CameraDetails();
-		final command = VideoCommand(name: name, details: details);
+	/// Updates settings for the given camera.
+	Future<void> updateCamera(int id, CameraDetails details) async { 
+		_handshake = null;
+		final command = VideoCommand(id: id, details: details);
 		services.videoSocket.sendMessage(command);
+		await Future.delayed(const Duration(seconds: 2));
+		if (_handshake == null) throw RequestNotAccepted();
 	}
 
 	/// Replaces a video feed in the UI.
@@ -93,3 +103,5 @@ class VideoModel extends Model {
 		notifyListeners();
 	}
 }
+
+class RequestNotAccepted implements Exception { }

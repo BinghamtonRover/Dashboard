@@ -6,6 +6,8 @@ import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
+import "camera_editor.dart";
+
 /// A helper class to load and manage resources used by a [ui.Image].
 /// 
 /// To use: 
@@ -69,7 +71,7 @@ class VideoFeed extends StatefulWidget {
 /// frame. That way, the user sees one continuous video instead of a flickering image.
 class VideoFeedState extends State<VideoFeed> {
 	/// The data being streamed.
-	late final VideoData data;
+	late VideoData data;
 
 	/// A helper class responsible for managing and loading an image.
 	final imageLoader = ImageLoader();
@@ -90,6 +92,8 @@ class VideoFeedState extends State<VideoFeed> {
 
 	/// Grabs the new frame, renders it, and replaces the old frame.
 	Future<void> updateImage() async {
+		data = models.video.feeds[data.details.name]!;
+		setState(() { });
 		if (!data.hasFrame() || imageLoader.isLoading) return;
 		await imageLoader.load(data.frame);
 		if (mounted) setState(() { });
@@ -104,10 +108,11 @@ class VideoFeedState extends State<VideoFeed> {
 				width: double.infinity,
 				margin: const EdgeInsets.all(1),
 				alignment: Alignment.center,
-				child: !imageLoader.hasImage ? Text(errorMessage) 
-					: Row(children: [
+				child: imageLoader.hasImage && data.details.status == CameraStatus.CAMERA_ENABLED 
+					? Row(children: [
 							Expanded(child: RawImage(image: imageLoader.image, fit: BoxFit.fill))
-					]),
+					])
+					: Text(errorMessage) 
 			),
 			Row(
 				mainAxisAlignment: MainAxisAlignment.end,
@@ -116,29 +121,39 @@ class VideoFeedState extends State<VideoFeed> {
 						icon: const Icon(Icons.camera_alt), 
 						onPressed: () => models.video.saveFrame(widget.name),
 					),
+					if (data.details.status != CameraStatus.CAMERA_DISCONNECTED) IconButton(
+						icon: const Icon(Icons.settings),
+						onPressed: () => showDialog(
+							context: context,
+							builder: (_) => CameraDetailsEditor(data),
+						),
+					),
 					PopupMenuButton<CameraName>(
 						tooltip: "Select a feed",
 						icon: const Icon(Icons.more_horiz),
 						onSelected: (name) => models.video.replaceFeed(widget.index, name),
 						itemBuilder: (_) => [
-							for (final name in CameraName.values) PopupMenuItem(
-								value: name,
-								child: Text(name.humanName),
-							),
+							for (final name in CameraName.values) 
+								if (name != CameraName.CAMERA_NAME_UNDEFINED) PopupMenuItem(
+									value: name,
+									child: Text(name.humanName),
+								),
 						]
 					)
 				]
 			),
-			Positioned(left: 5, bottom: 5, child: Text(widget.name.humanName)),
+			Positioned(left: 5, bottom: 5, child: Text(data.details.name.humanName)),
 		]
 	);
 
 	/// Displays an error message describing why `image == null`.
 	String get errorMessage {
 		switch (data.details.status) {
+			case CameraStatus.CAMERA_LOADING: return "Camera is loading...";
 			case CameraStatus.CAMERA_STATUS_UNDEFINED: return "Unknown error";
-			case CameraStatus.CAMERA_DISCONNECTED: return "Camera [${widget.name}] is off";
+			case CameraStatus.CAMERA_DISCONNECTED: return "Camera is not connected";
 			case CameraStatus.CAMERA_DISABLED: return "Camera is disabled.\nClick the settings icon to enabled it.";
+			case CameraStatus.CAMERA_NOT_RESPONDING: return "Camera is not responding";
 			case CameraStatus.CAMERA_ENABLED: 
 				if (data.hasFrame()) { return "Loading feed..."; }
 				else { return "Starting camera..."; }
