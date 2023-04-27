@@ -21,6 +21,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  fl_chart: ^0.62.0
   flutter:
     sdk: flutter
   flutter_libserialport: ^0.3.0
