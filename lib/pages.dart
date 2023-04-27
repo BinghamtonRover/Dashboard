@@ -7,10 +7,23 @@
 library pages;
 
 export "src/pages/home.dart";
-export "src/pages/operating_modes/arm.dart";
-export "src/pages/operating_modes/autonomy.dart";
-export "src/pages/operating_modes/manual.dart";
-export "src/pages/operating_modes/science.dart";
-export "src/pages/routes.dart";
+export "src/pages/science.dart";
 export "src/pages/settings.dart";
 export "src/pages/splash.dart";
+
+/// The names of all the pages available in the app.
+/// 
+/// These names are used to jump from page to page. They are equivalent to a URL. 
+class Routes { 
+	/// The name of the settings page.
+	static const String settings = "settings"; 
+
+	/// The name of the home page.
+	static const String home = "home"; 
+
+	/// The name of the science analysis page.
+	static const String science = "Science Analysis"; 
+
+	/// The name of the blank page.
+	static const String blank = "blank";
+}
