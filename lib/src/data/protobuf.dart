@@ -95,7 +95,9 @@ extension CameraStatusUtils on CameraStatus {
 	}
 }
 
+/// Extensions for [Device] values.
 extension DeviceUtils on Device {
+	/// Gets a user-friendly name for a [Device].
 	String get humanName {
 		switch(this) {
 			case Device.DEVICE_UNDEFINED: return "";
