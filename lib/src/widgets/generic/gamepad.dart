@@ -47,7 +47,7 @@ class GamepadButton extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<Controller>.value(
 		value: controller,
-		builder: (model, _) => Row(
+		builder: (model) => Row(
 			children: [
 				IconButton(
 					icon: Stack(

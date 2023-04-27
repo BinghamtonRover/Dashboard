@@ -18,12 +18,6 @@ class VideoModel extends Model {
 		)
 	};
 
-	/// The feeds on the screen.
-	List<CameraName> feedsOnScreen = [
-		CameraName.ROVER_FRONT,
-		CameraName.ROVER_REAR,
-	];
-
 	/// Triggers when it's time to update a new frame.
 	/// 
 	/// This is kept here to ensure all widgets are in sync.
@@ -75,20 +69,6 @@ class VideoModel extends Model {
 		if (newData.details.status != CameraStatus.CAMERA_ENABLED) data.frame = [];
 	}
 
-	/// Adds or subtracts a number of camera feeds to/from the UI
-	void setNumFeeds(int? value) {
-		if (value == null || value > 4 || value < 1) return;
-		final int currentNum = feedsOnScreen.length;
-		if (value < currentNum) {
-			feedsOnScreen = feedsOnScreen.sublist(0, value);
-		} else {
-			for (int i = currentNum; i < value; i++) {
-				feedsOnScreen.add(CameraName.ROVER_FRONT);
-			}
-		}
-		notifyListeners();
-	}
-
 	/// Takes a screenshot of the current frame.
 	Future<void> saveFrame(CameraName name) async {
 		final List<int>? cachedFrame = feeds[name]?.frame;
@@ -106,10 +86,26 @@ class VideoModel extends Model {
 		if (_handshake == null) throw RequestNotAccepted();
 	}
 
-	/// Replaces a video feed in the UI.
-	void replaceFeed(int index, CameraName name) {
-		feedsOnScreen[index] = name;
-		notifyListeners();
+	/// Enables or disables the given camera.
+	/// 
+	/// This function is called automatically, so if the camera is not connected or otherwise available,
+	/// it'll fail silently. However, if the server simply doesn't respond, it'll show a warning.
+	Future<void> toggleCamera(CameraName name, {required bool enable}) async {
+		final details = feeds[name]!.details;
+		if (enable && details.status != CameraStatus.CAMERA_DISABLED) return;
+		if (!enable && details.status == CameraStatus.CAMERA_DISCONNECTED) return;
+
+		_handshake = null;
+		details.status = enable ? CameraStatus.CAMERA_ENABLED : CameraStatus.CAMERA_DISABLED;
+		final command = VideoCommand(id: feeds[name]!.id, details: details);
+		services.videoSocket.sendMessage(command);
+		await Future.delayed(const Duration(seconds: 2));
+		if (_handshake == null) {
+			models.home.setMessage(
+				severity: Severity.warning, 
+				text: "Could not ${enable ? 'enable' : 'disable'} the ${name.humanName} camera",
+			);
+		}
 	}
 }
 

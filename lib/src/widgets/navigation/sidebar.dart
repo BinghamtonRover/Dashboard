@@ -39,26 +39,23 @@ class ControlsDisplay extends StatelessWidget {
 	const ControlsDisplay({required this.controller, required this.gamepadNum});
 
 	@override
-	Widget build(BuildContext context) => ProviderConsumer.value(
-		value: controller,
-		builder: (model, __) => ProviderConsumer<SettingsModel>.value(
-			value: models.settings,  // refresh controls when settings change
-			builder: (_, __) => ExpansionTile(
-				expandedCrossAxisAlignment: CrossAxisAlignment.start,
-				expandedAlignment: Alignment.centerLeft,
-				childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-				title: Text(
-					"Gamepad $gamepadNum: ${controller.controls.mode.name}", 
-					style: Theme.of(context).textTheme.titleLarge,
-					textAlign: TextAlign.start,
-				),
-				children: [
-					for (final entry in controller.controls.buttonMapping.entries) ...[
-						Text(entry.key, style: Theme.of(context).textTheme.labelLarge),
-						Text("  ${entry.value}", style: Theme.of(context).textTheme.titleMedium),
-					],
-				]
-			)
+	Widget build(BuildContext context) => ProviderConsumer<SettingsModel>.value(
+		value: models.settings,  // refresh controls when settings change
+		builder: (_) => ExpansionTile(
+			expandedCrossAxisAlignment: CrossAxisAlignment.start,
+			expandedAlignment: Alignment.centerLeft,
+			childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+			title: Text(
+				"Gamepad $gamepadNum: ${controller.controls.mode.name}", 
+				style: Theme.of(context).textTheme.titleLarge,
+				textAlign: TextAlign.start,
+			),
+			children: [
+				for (final entry in controller.controls.buttonMapping.entries) ...[
+					Text(entry.key, style: Theme.of(context).textTheme.labelLarge),
+					Text("  ${entry.value}", style: Theme.of(context).textTheme.titleMedium),
+				],
+			]
 		)
 	);
 }

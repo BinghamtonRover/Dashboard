@@ -30,6 +30,26 @@ class VideoSettings {
   };
 }
 
+/// Settings relating to science.
+class ScienceSettings {
+  /// How many frames to render per second.
+  /// 
+  /// This does not affect how many frames are sent by the rover per second.
+  final bool scrollableGraphs;
+
+  /// A const constructor.
+  const ScienceSettings({required this.scrollableGraphs});
+
+  /// Parses a [ScienceSettings] from JSON.
+  ScienceSettings.fromJson(Json? json) : 
+    scrollableGraphs = json?["scrollableGraphs"] ?? false;
+
+  /// Serializes these settings in JSON format.
+  Json toJson() => {
+    "scrollableGraphs": scrollableGraphs,
+  };
+}
+
 /// Settings relating to the arm.
 class ArmSettings {
   /// How many radians to move every 10ms. 
@@ -167,11 +187,15 @@ class Settings {
   /// Settings for the arm.
   final ArmSettings arm;
 
+  /// Settings for the science analysis.
+  final ScienceSettings science;
+
   /// A const constructor.
   const Settings({
     required this.network,
     required this.video,
     required this.easterEggs,
+    required this.science,
     required this.arm,
   });
 
@@ -180,6 +204,7 @@ class Settings {
     network = NetworkSettings.fromJson(json["network"]),
     video = VideoSettings.fromJson(json["video"]),
     easterEggs = EasterEggsSettings.fromJson(json["easterEggs"]),
+    science = ScienceSettings.fromJson(json["science"]),
     arm = ArmSettings.fromJson(json["arm"]);
 
   /// Converts the data from the settings instance to Json.
@@ -187,6 +212,7 @@ class Settings {
     "network": network.toJson(),
     "video": video.toJson(),
     "easterEggs": easterEggs.toJson(),
+    "science": science.toJson(),
     "arm": arm.toJson(),
   };
 }

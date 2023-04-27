@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
-import "package:provider/provider.dart";
 
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/widgets.dart";
 
 /// Displays metrics of all sorts in a collapsible list.
 class MetricsList extends StatelessWidget {
@@ -9,10 +9,11 @@ class MetricsList extends StatelessWidget {
 	const MetricsList();
 
 	@override
-	Widget build(BuildContext context) => Consumer<Rover>(
-		builder: (context, rover, _) => Column(
+	Widget build(BuildContext context) => ProviderConsumer<RoverMetrics>.value(
+		value: models.rover.metrics,
+		builder: (model) => Column(
 			children: [
-				for (final metrics in rover.metrics.allMetrics) ExpansionTile(
+				for (final metrics in model.allMetrics) ExpansionTile(
 					expandedCrossAxisAlignment: CrossAxisAlignment.start,
 					expandedAlignment: Alignment.centerLeft,
 					childrenPadding: const EdgeInsets.symmetric(horizontal: 16),

@@ -14,7 +14,9 @@ import "src/models/data/home.dart";
 import "src/models/data/serial.dart";
 import "src/models/data/settings.dart";
 import "src/models/data/video.dart";
+import "src/models/data/views.dart";
 import "src/models/rover/rover.dart";
+
 export "src/models/model.dart";
 
 // Data models
@@ -22,6 +24,7 @@ export "src/models/data/home.dart";
 export "src/models/data/serial.dart";
 export "src/models/data/settings.dart";
 export "src/models/data/video.dart";
+export "src/models/data/views.dart";
 
 // Rover models
 export "src/models/rover/controller.dart";
@@ -32,15 +35,12 @@ export "src/models/rover/rover.dart";
 export "src/models/rover/sockets.dart";
 
 // View models
-export "src/models/view/modes/mode.dart";
-export "src/models/view/modes/arm.dart";
-export "src/models/view/modes/autonomy.dart";
-export "src/models/view/modes/drive.dart";
-export "src/models/view/modes/science.dart";
+export "src/models/view/science.dart";
 
-export "src/models/view/builder.dart";
-export "src/models/view/settings_builder.dart";
-export "src/models/view/video_builder.dart";
+// Builder models
+export "src/models/view/builders/builder.dart";
+export "src/models/view/builders/settings_builder.dart";
+export "src/models/view/builders/video_builder.dart";
 
 /// A wrapper model around all other data models used by the app.
 /// 
@@ -71,6 +71,9 @@ class Models extends Model {
 	/// Caches the settings and updates them to all listeners.
 	final settings = SettingsModel();
 
+	/// The views data model.
+	final views = ViewsModel();
+
 	@override
 	Future<void> init() async {
 		// initialize all models here
@@ -79,6 +82,7 @@ class Models extends Model {
 		await video.init();
 		await rover.init();
 		await serial.init();
+		await views.init();
 
 		isReady = true;
 		notifyListeners();
@@ -91,6 +95,8 @@ class Models extends Model {
 		video.dispose();
 		rover.dispose();
 		serial.dispose();
+		views.dispose();
+
 		super.dispose();
 	}
 }

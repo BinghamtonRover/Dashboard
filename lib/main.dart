@@ -21,7 +21,7 @@ void main() async {
 		() => runApp(RoverControlDashboard()),
 		(error, stack) async {
 			if (error is SocketException && error.osError!.errorCode == 1234) {
-				models.home.setMessage(severity: Severity.critical, text: "Network error, please restart");
+				models.home.setMessage(severity: Severity.critical, text: "Network error, please restart sockets in the settings");
 			} else {
 				Error.throwWithStackTrace(error, stack);
 			}

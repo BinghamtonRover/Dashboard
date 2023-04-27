@@ -16,6 +16,9 @@ class SettingsModel extends Model {
 	/// The user's video settings.
 	VideoSettings get video => all.video;
 
+	/// The user's science settings.
+	ScienceSettings get science => all.science;
+
 	@override
 	Future<void> init() async {
 		all = await services.files.readSettings();

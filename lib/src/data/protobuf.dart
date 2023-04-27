@@ -101,16 +101,16 @@ extension DeviceUtils on Device {
 	String get humanName {
 		switch(this) {
 			case Device.DEVICE_UNDEFINED: return "";
-			case Device.DASHBOARD: return "dashboard";
-			case Device.SUBSYSTEMS: return "subsystems";
-			case Device.VIDEO: return "video";
-			case Device.AUTONOMY: return "autonomy";
-			case Device.FIRMWARE: return "firmware";
-			case Device.ARM: return "arm";
-			case Device.GRIPPER: return "gripper";
-			case Device.SCIENCE: return "science";
-			case Device.ELECTRICAL: return "electrical";
-			case Device.DRIVE: return "drive";
+			case Device.DASHBOARD: return "Dashboard";
+			case Device.SUBSYSTEMS: return "Subsystems";
+			case Device.VIDEO: return "Video";
+			case Device.AUTONOMY: return "Autonomy";
+			case Device.FIRMWARE: return "Firmware";
+			case Device.ARM: return "Arm";
+			case Device.GRIPPER: return "Gripper";
+			case Device.SCIENCE: return "Science";
+			case Device.ELECTRICAL: return "Electrical";
+			case Device.DRIVE: return "Drive";
 			case Device.MARS: return "MARS";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.

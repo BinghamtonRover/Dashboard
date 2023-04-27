@@ -28,7 +28,7 @@ class SocketEditor extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<SocketBuilder>.value(
 		value: model,
-		builder: (model, _) => Row(
+		builder: (model) => Row(
 			children: [
 				const SizedBox(width: 16),
 				Expanded(child: Text(name)),
@@ -64,17 +64,28 @@ class NumberEditor extends StatelessWidget {
 	/// The view model backing this value.
 	final NumberBuilder model;
 
+	/// How much space to allocate in between the label and text field.
+	final int spacerFlex;
+
 	/// Creates a widget to modify a number.
-	const NumberEditor({required this.name, required this.model, this.subtitle});
+	const NumberEditor({
+		required this.name, 
+		required this.model, 
+		this.subtitle,
+		this.spacerFlex = 4,
+	});
 
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<TextBuilder<num>>.value(
 		value: model,
-		builder: (model, _) => Row(
+		builder: (model) => Row(
 			mainAxisAlignment: MainAxisAlignment.spaceBetween,
 			children: [
-				Expanded(child: ListTile(title: Text(name), subtitle: subtitle == null ? null : Text(subtitle!))),
-				const Spacer(flex: 2),
+				Expanded(child: ListTile(
+					title: Text(name),
+					subtitle: Text(subtitle ?? ""),
+				)),
+				Spacer(flex: spacerFlex),
 				Expanded(child: TextField(
 					onChanged: model.update,
 					decoration: InputDecoration(errorText: model.error),
@@ -113,23 +124,20 @@ class DropdownEditor<T> extends StatelessWidget {
 	});
 
 	@override
-	Widget build(BuildContext context) => Row(
-		mainAxisAlignment: MainAxisAlignment.spaceBetween,
-		children: [
-			Text(name),
-			DropdownButton<T>(
-				value: value,
-				onChanged: (input) { 
-					if (input == null) return;
-					onChanged(input);
-				},
-				items: [
-					for (final other in items) DropdownMenuItem<T>(
-						value: other,
-						child: Text(humanName(other)),
-					),
-				],
-			)
-		]
+	Widget build(BuildContext context) => ListTile(
+		title: Text(name),
+		trailing: DropdownButton<T>(
+			value: value,
+			onChanged: (input) { 
+				if (input == null) return;
+				onChanged(input);
+			},
+			items: [
+				for (final other in items) DropdownMenuItem<T>(
+					value: other,
+					child: Text(humanName(other)),
+				),
+			],
+		)
 	);
 }

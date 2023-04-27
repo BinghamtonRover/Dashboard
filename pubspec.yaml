@@ -8,7 +8,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # For information on the generic Dart part of this file, see
 # https://dart.dev/tools/pub/pubspec
 
-version: 2023.4.27+2
+version: 2023.4.27+3
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
@@ -21,6 +21,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  fl_chart: ^0.62.0
   flutter:
     sdk: flutter
   flutter_libserialport: ^0.3.0

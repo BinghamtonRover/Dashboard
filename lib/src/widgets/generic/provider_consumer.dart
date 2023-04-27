@@ -4,40 +4,36 @@ import "package:provider/provider.dart";
 /// A [Provider] and a [Consumer], wrapped in one.
 /// 
 /// To use, pass in a [create] function to create a new [ChangeNotifier], then pass a [builder] to
-/// build the UI based on the data in the model. If you have a widget that does *not* depend on the 
-/// underlying data, you can pass it in the [cachedChild] parameter to ensure it is not rebuilt. 
+/// build the UI based on the data in the model. To not dispose, use the [value] constructror.
 class ProviderConsumer<T extends ChangeNotifier> extends StatelessWidget {
-	/// A function to create the [ChangeNotifier].
-	final T Function() create;
+	/// The value, if using [ChangeNotifierProvider.value].
+	final T? value;
+
+	/// A function to create the [ChangeNotifier]
+	final T Function()? create;
 
 	/// A function to build the UI based on the [ChangeNotifier].
-	final Widget Function(T, Widget) builder;
-
-	/// An optional [Widget] that does not depend on the model.
-	/// 
-	/// Large widget subtrees that don't depend on the model don't need to be rebuilt when the model
-	/// updates. Passing the subtree here will ensure it is only built once. 
-	final Widget? cachedChild;
+	final Widget Function(T) builder;
 
 	/// A widget that rebuilds when the underlying data changes.
 	const ProviderConsumer({
 		required this.create,
 		required this.builder,
-		this.cachedChild,
-	});
+	}) : value = null;
 
 	/// Analagous to [Provider.value].
-	ProviderConsumer.value({
-		required T value, 
+	const ProviderConsumer.value({
+		required this.value, 
 		required this.builder, 
-		this.cachedChild
-	}) : create = (() => value);
+	}) : create = null;
+
+	/// The [Consumer] for this model.
+	Widget get consumer => Consumer<T>(
+		builder: (context, model, _) => builder(model)
+	);
 
 	@override
-	Widget build(BuildContext context) => ChangeNotifierProvider<T>(
-		create: (_) => create(),
-		builder: (context, _) => Consumer<T>(
-			builder: (context, model, _) => builder(model, cachedChild ?? Container()),
-		)
-	);
+	Widget build(BuildContext context) => value == null 
+		? ChangeNotifierProvider<T>(create: (_) => create!(), child: consumer)
+		: ChangeNotifierProvider<T>.value(value: value!, child: consumer);
 }

@@ -44,7 +44,7 @@ class SettingsPage extends StatelessWidget {
 		appBar: AppBar(title: const Text("Settings")),
 		body: ProviderConsumer<SettingsBuilder>(
 			create: SettingsBuilder.new,
-			builder: (model, _) => Column(children: [
+			builder: (model) => Column(children: [
 				Expanded(child: ListView(
 					padding: const EdgeInsets.all(12),
 					children: [
@@ -70,6 +70,7 @@ class SettingsPage extends StatelessWidget {
 								)
 							]
 						),
+						const Divider(),
 						ValueEditor<ArmSettings>(
 							name: "Arm settings",
 							children: [
@@ -92,18 +93,33 @@ class SettingsPage extends StatelessWidget {
 								),
 							]
 						),
+						const Divider(),
 						ValueEditor<VideoSettings>(
 							name: "Video settings",
 							children: [
 								NumberEditor(name: "Frames per second", subtitle: "This does not affect the framerate of the rover's cameras, just how fast they will be processed by the dashboard", model: model.video.fps),
 							]
 						),
+						const Divider(),
+						ValueEditor<ScienceSettings>(
+							name: "Science settings",
+							children: [
+							SwitchListTile(
+								title: const Text("Scrollable graphs"),
+								subtitle: const Text("If enabled, graphs will scrolls horizontally. If disabled, they will fit to the page"),
+								value: model.science.scrollableGraphs,
+								onChanged: model.science.updateScrollableGraphs,
+							),
+							]
+						),
+						const Divider(),
 						const ValueEditor<EasterEggsSettings>(
 							name: "Easter eggs",
 							children: [
 								ListTile(title: Text("Coming soon!")),
 							]
 						),
+						const Divider(),
 						Text("Misc", style: Theme.of(context).textTheme.titleLarge),
 						ListTile(
 							title: const Text("Open the output folder"),
