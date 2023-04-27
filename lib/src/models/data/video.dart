@@ -10,11 +10,12 @@ import "package:rover_dashboard/services.dart";
 class VideoModel extends Model {
 	/// All the video feeds supported by the rover.
 	final Map<CameraName, VideoData> feeds = {
-		for (final name in CameraName.values)
-			name: VideoData(details: CameraDetails(
+		for (final name in CameraName.values) name: VideoData(
+			details: CameraDetails(
 				name: name,
 				status: CameraStatus.CAMERA_DISCONNECTED,
-			)),
+			)
+		)
 	};
 
 	/// The feeds on the screen.
@@ -26,7 +27,7 @@ class VideoModel extends Model {
 	/// Triggers when it's time to update a new frame.
 	/// 
 	/// This is kept here to ensure all widgets are in sync.
-	late final Timer frameUpdater;
+	Timer? frameUpdater;
 
 	/// The latest handshake received by the rover.
 	VideoCommand? _handshake;
@@ -43,23 +44,26 @@ class VideoModel extends Model {
 			decoder: VideoCommand.fromBuffer,
 			handler: (command) => _handshake = command,
 		);
-		frameUpdater = Timer.periodic(
-			const Duration(milliseconds: 16),  // 60 FPS
-			(_) => notifyListeners()
-		);
+		reset();
 	}
 
 	@override
 	void dispose() {
-		frameUpdater.cancel();
+		frameUpdater?.cancel();
 		super.dispose();
 	}
 
-	/// Clears all video data. 
-	void clear() {
+	/// Clears all video data and resets the timer.
+	void reset() {
 		for (final name in CameraName.values) {
 			feeds[name]!.details.status = CameraStatus.CAMERA_DISCONNECTED;
 		}
+
+		frameUpdater?.cancel();
+		frameUpdater = Timer.periodic(
+			Duration(milliseconds: (1000/models.settings.video.fps).round()),
+			(_) => notifyListeners(),
+		);
 	}
 
 	/// Updates the data for a given camera.

@@ -141,6 +141,24 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings>{
 	);
 }
 
+/// A [ValueBuilder] that modifies a [VideoSettings].
+class VideoSettingsBuilder extends ValueBuilder<VideoSettings> {
+	/// The builder for the FPS count.
+	final NumberBuilder<int> fps;
+
+	/// Modifies the given [VideoSettings].
+	VideoSettingsBuilder(VideoSettings initial) : 
+		fps = NumberBuilder(initial.fps);
+
+	@override
+	bool get isValid => fps.isValid;
+
+	@override
+	VideoSettings get value => VideoSettings(
+		fps: fps.value,
+	);
+}
+
 /// A [ValueBuilder] representing an [ArmSettings].
 class SettingsBuilder extends ValueBuilder<Settings> {
 	/// The [NetworkSettings] view model.
@@ -149,13 +167,17 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	/// The [ArmSettings] view model.
 	final ArmSettingsBuilder arm;
 
+	/// The [VideoSettings] view model.
+	final VideoSettingsBuilder video;
+
 	/// Whether the page is loading.
 	bool isLoading = false;
 
 	/// Modifies the user's settings.
 	SettingsBuilder() : 
 		network = NetworkSettingsBuilder(models.settings.network),
-		arm = ArmSettingsBuilder(models.settings.arm)
+		arm = ArmSettingsBuilder(models.settings.arm),
+		video = VideoSettingsBuilder(models.settings.video)
 	{
 		network.addListener(notifyListeners);
 		arm.addListener(notifyListeners);
@@ -167,6 +189,8 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	@override
 	Settings get value => Settings(
 		network: network.value,
+		video: video.value,
+		easterEggs: const EasterEggsSettings(),
 		arm: arm.value,
 	);
 
@@ -176,6 +200,7 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 		notifyListeners();
 		await models.settings.update(value);
 		await models.rover.sockets.init();
+		models.video.reset();
 		isLoading = false;
 		notifyListeners();
 	}

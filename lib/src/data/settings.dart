@@ -10,6 +10,22 @@ extension SettingsParser on Json {
   }
 }
 
+class VideoSettings {
+  /// How many frames to render per second.
+  /// 
+  /// This does not affect how many frames are sent by the rover per second.
+  final int fps;
+
+  const VideoSettings({required this.fps});
+
+  VideoSettings.fromJson(Json? json) : 
+    fps = json?["fps"] ?? 60;
+
+  Json toJson() => {
+    "fps": fps,
+  };
+}
+
 /// Settings relating to the arm.
 class ArmSettings {
   /// How many radians to move every 10ms. 
@@ -136,23 +152,37 @@ class Settings {
   /// Settings for the network, like IP addresses and ports.
   final NetworkSettings network;
 
+  /// Settings for video display.
+  final VideoSettings video;
+
+  /// Settings for easter eggs.
+  /// 
+  /// Please, please, please -- do not remove these (Levi Lesches, '25).
+  final EasterEggsSettings easterEggs;
+
   /// Settings for the arm.
   final ArmSettings arm;
 
   /// A const constructor.
   const Settings({
     required this.network,
+    required this.video,
+    required this.easterEggs,
     required this.arm,
   });
 
   /// Initialize settings from Json.
   Settings.fromJson(Json json) : 
     network = NetworkSettings.fromJson(json["network"]),
+    video = VideoSettings.fromJson(json["video"]),
+    easterEggs = EasterEggsSettings.fromJson(json["easterEggs"]),
     arm = ArmSettings.fromJson(json["arm"]);
 
   /// Converts the data from the settings instance to Json.
   Map toJson() => { 
     "network": network.toJson(),
+    "video": video.toJson(),
+    "easterEggs": easterEggs.toJson(),
     "arm": arm.toJson(),
   };
 }

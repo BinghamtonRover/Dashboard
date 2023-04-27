@@ -13,6 +13,9 @@ class SettingsModel extends Model {
 	/// The user's arm settings.
 	ArmSettings get arm => all.arm;
 
+	/// The user's video settings.
+	VideoSettings get video => all.video;
+
 	@override
 	Future<void> init() async {
 		all = await services.files.readSettings();

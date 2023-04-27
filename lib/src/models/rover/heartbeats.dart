@@ -95,7 +95,7 @@ class RoverHeartbeats extends Model {
 	/// Indicates that a device has disconnected.
 	void onDisconnect(Device device) {
 		models.home.setMessage(severity: Severity.critical, text: "The ${device.humanName} has disconnected");
-		if (device == Device.VIDEO) models.video.clear();
+		if (device == Device.VIDEO) models.video.reset();
 	}
 
 	/// Logs that a handshake has been received.

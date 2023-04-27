@@ -24,15 +24,15 @@ class ValueEditor<T> extends StatelessWidget {
 	Widget build(BuildContext context) => Column(
 		crossAxisAlignment: CrossAxisAlignment.start,
 		children: [
-			Text(
-				name,
-				style: Theme.of(context).textTheme.titleLarge,
-				textAlign: TextAlign.start,
-			),			
 			Padding(
 				padding: const EdgeInsets.symmetric(horizontal: 8),
-				child: Column(children: children),
-			)
+				child: Text(
+					name,
+					style: Theme.of(context).textTheme.titleLarge,
+					textAlign: TextAlign.start,
+				),			
+			),
+			...children,
 		]
 	);
 } 
@@ -49,7 +49,7 @@ class SettingsPage extends StatelessWidget {
 					padding: const EdgeInsets.all(12),
 					children: [
 						ValueEditor<NetworkSettings>(
-							name: "Network Settings",
+							name: "Network settings",
 							children: [
 								SocketEditor(name: "Subsystems socket", model: model.network.dataSocket),
 								SocketEditor(name: "Video socket", model: model.network.videoSocket),
@@ -71,7 +71,7 @@ class SettingsPage extends StatelessWidget {
 							]
 						),
 						ValueEditor<ArmSettings>(
-							name: "Arm Settings",
+							name: "Arm settings",
 							children: [
 								NumberEditor(name: "Radian increment", model: model.arm.radians),
 								NumberEditor(name: "Precise increment (radians)", model: model.arm.precise),
@@ -90,6 +90,12 @@ class SettingsPage extends StatelessWidget {
 									value: model.arm.useSteps,
 									onChanged: model.arm.updateSteps,
 								),
+							]
+						),
+						ValueEditor<VideoSettings>(
+							name: "Video settings",
+							children: [
+								NumberEditor(name: "Frames per second", subtitle: "This does not affect the framerate of the rover's cameras, just how fast they will be processed by the dashboard", model: model.video.fps),
 							]
 						),
 						const ValueEditor<EasterEggsSettings>(

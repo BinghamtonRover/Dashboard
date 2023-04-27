@@ -30,8 +30,9 @@ class SocketEditor extends StatelessWidget {
 		value: model,
 		builder: (model, _) => Row(
 			children: [
+				const SizedBox(width: 16),
 				Expanded(child: Text(name)),
-				const Spacer(),
+				const Spacer(flex: 2),
 				Expanded(child: TextField(
 					onChanged: model.address.update,
 					controller: model.address.controller,
@@ -57,11 +58,14 @@ class NumberEditor extends StatelessWidget {
 	/// The value this number represents.
 	final String name;
 
+	/// Shows extra details.
+	final String? subtitle;
+
 	/// The view model backing this value.
 	final NumberBuilder model;
 
 	/// Creates a widget to modify a number.
-	const NumberEditor({required this.name, required this.model});
+	const NumberEditor({required this.name, required this.model, this.subtitle});
 
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<TextBuilder<num>>.value(
@@ -69,8 +73,8 @@ class NumberEditor extends StatelessWidget {
 		builder: (model, _) => Row(
 			mainAxisAlignment: MainAxisAlignment.spaceBetween,
 			children: [
-				Expanded(child: Text(name)),
-				const Spacer(),
+				Expanded(child: ListTile(title: Text(name), subtitle: subtitle == null ? null : Text(subtitle!))),
+				const Spacer(flex: 2),
 				Expanded(child: TextField(
 					onChanged: model.update,
 					decoration: InputDecoration(errorText: model.error),
