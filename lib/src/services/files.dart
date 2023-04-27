@@ -3,6 +3,8 @@ import "dart:convert";
 import 'dart:ffi';
 import "dart:io";
 
+import "package:csv/csv.dart";
+
 import "package:path_provider/path_provider.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -27,12 +29,18 @@ class FilesService extends Service {
   /// This includes all the different operating modes with specified folders inside
   late final Directory loggingDir;
 
+  /// Object to convert list to Csv formatted strings 
+  final converter = const ListToCsvConverter();
+
   /// The file containing the user's [Settings], in JSON form.
   /// 
   /// This file should contain the result of [Settings.toJson], and loading settings
   /// from the file should be done with [Settings.fromJson].
   File get settingsFile => File("${outputDir.path}/settings.json");
 
+  /// Map the command to file the output should into 
+  /// 
+  /// Used for logging rover metrics
   Map<Message, File> modes = { ///name better
     ArmData(): File(""),
     GripperData(): File(""),
@@ -51,11 +59,13 @@ class FilesService extends Service {
     outputDir = Directory("${appDir.path}/Dashboard");
     await outputDir.create();
     if (!settingsFile.existsSync()) await settingsFile.writeAsString(jsonEncode({}));
-    loggingDir = Directory("$outputDir/logs");
-    await loggingDir.create();
+    loggingDir = await Directory("$outputDir/logs/${DateTime.now()}").create();
     modes.forEach((mode, file) async {
-      await Directory("$loggingDir/${mode.messageName}").create();
-      modes[mode] = await File("$loggingDir/${mode.messageName}/${DateTime.now()}.csv").create();
+      /// Create CSV file and add the header row from json keys
+      final jsonMap = mode.writeToJsonMap();
+      final List<String> keys = jsonMap.keys.toList();
+      keys.insert(0, "Time Stamp");
+      modes[mode] = await File("$loggingDir/${mode.messageName}.csv").writeAsString(converter.convertSingleRow(StringBuffer(), keys)!);
     });
   }
 
@@ -87,8 +97,13 @@ class FilesService extends Service {
 
   /// Outputs log data to the correct file based on message
   Future<void> logData(Message message) async{
-    final json = message.writeToJsonMap();
-
+    final Map<String, dynamic> jsonMap = message.writeToJsonMap();
+    final List<dynamic> values = jsonMap.values.toList();
+    /// Insert time at front of list so that it will be in first column 
+    values.insert(0, DateTime.now());
+    /// [!] Message will always be in modes map
+    /// [!] rowString will also never be null since convertSingleRow never returns null
+    await modes[message]!.writeAsString(converter.convertSingleRow(StringBuffer(), values)!, mode: FileMode.writeOnlyAppend);
   }
 }
 

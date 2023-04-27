@@ -21,6 +21,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  csv: ^5.0.2
   flutter:
     sdk: flutter
   flutter_libserialport: ^0.3.0
