@@ -29,7 +29,10 @@ class ValueEditor<T> extends StatelessWidget {
 				style: Theme.of(context).textTheme.titleLarge,
 				textAlign: TextAlign.start,
 			),			
-			...children,
+			Padding(
+				padding: const EdgeInsets.symmetric(horizontal: 8),
+				child: Column(children: children),
+			)
 		]
 	);
 } 
@@ -43,7 +46,7 @@ class SettingsPage extends StatelessWidget {
 			create: SettingsBuilder.new,
 			builder: (model, _) => Column(children: [
 				Expanded(child: ListView(
-					padding: const EdgeInsets.all(8),
+					padding: const EdgeInsets.all(12),
 					children: [
 						ValueEditor<NetworkSettings>(
 							name: "Network Settings",

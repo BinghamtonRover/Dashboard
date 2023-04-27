@@ -143,7 +143,7 @@ class VideoFeedCounter extends StatelessWidget {
 					const SizedBox(width: 4),
 					DropdownButton<int>(
 						iconEnabledColor: Colors.black,
-						value: video.feeds.length,
+						value: video.feedsOnScreen.length,
 						onChanged: (value) => video.setNumFeeds(value),
 						items: [
 							for (int i = 1; i <= 4; i++) DropdownMenuItem(

@@ -11,7 +11,10 @@ class VideoModel extends Model {
 	/// All the video feeds supported by the rover.
 	final Map<CameraName, VideoData> feeds = {
 		for (final name in CameraName.values)
-			name: VideoData(details: CameraDetails(status: CameraStatus.CAMERA_DISCONNECTED)),
+			name: VideoData(details: CameraDetails(
+				name: name,
+				status: CameraStatus.CAMERA_DISCONNECTED,
+			)),
 	};
 
 	/// The feeds on the screen.
@@ -47,7 +50,13 @@ class VideoModel extends Model {
 	}
 
 	/// Updates the data for a given camera.
-	void handleData(VideoData data) => feeds[data.name]!.mergeFromMessage(data);
+	void handleData(VideoData newData) {
+		final data = feeds[newData.details.name]!;
+		data.details = newData.details;
+		data.id = newData.id;
+		if (newData.frame.isNotEmpty) data.frame = newData.frame;
+		if (newData.details.status != CameraStatus.CAMERA_ENABLED) data.frame = [];
+	}
 
 	/// Adds or subtracts a number of camera feeds to/from the UI
 	void setNumFeeds(int? value) {
