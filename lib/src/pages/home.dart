@@ -54,7 +54,7 @@ class HomePage extends StatelessWidget {
 			children: [
 				Expanded(child: Row(
 					children: const [
-						Expanded(child: VideoFeeds()),
+						Expanded(child: ViewsWidget()),
 						Sidebar(),
 					]
 				)),

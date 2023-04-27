@@ -16,7 +16,7 @@ class Footer extends StatelessWidget {
 			children: const [
 				MessageDisplay(),
 				Spacer(),
-				VideoFeedCounter(),
+				ViewsCounter(),
 				SizedBox(width: 8),
 				GamepadButtons(),
 				SerialButton(),
@@ -129,31 +129,30 @@ class StatusIcons extends StatelessWidget {
 	);
 }
 
-/// A dropdown to select more or less video feeds.
-class VideoFeedCounter extends StatelessWidget {
+/// A dropdown to select more or less views.
+class ViewsCounter extends StatelessWidget {
 	/// Provides a const constructor for this widget.
-	const VideoFeedCounter();
+	const ViewsCounter();
 
 	@override
-	Widget build(BuildContext context) => Consumer<VideoModel>(
-		builder: (context, video, _) => Consumer<HomeModel>(
-			builder: (context, home, _) => Row(
-				children: [
-					const Text("Feeds:"),
-					const SizedBox(width: 4),
-					DropdownButton<int>(
-						iconEnabledColor: Colors.black,
-						value: video.feedsOnScreen.length,
-						onChanged: (value) => video.setNumFeeds(value),
-						items: [
-							for (int i = 1; i <= 4; i++) DropdownMenuItem(
-								value: i,
-								child: Center(child: Text(i.toString())),
-							)
-						]
-					)
-				]
-			)
+	Widget build(BuildContext context) => ProviderConsumer<ViewsModel>.value(
+		value: models.views,
+		builder: (model) => Row(
+			children: [
+				const Text("Views:"),
+				const SizedBox(width: 4),
+				DropdownButton<int>(
+					iconEnabledColor: Colors.black,
+					value: model.views.length,
+					onChanged: model.setNumViews,
+					items: [
+						for (int i = 1; i <= 4; i++) DropdownMenuItem(
+							value: i,
+							child: Center(child: Text(i.toString())),
+						)
+					]
+				)
+			]
 		)
 	);
 }

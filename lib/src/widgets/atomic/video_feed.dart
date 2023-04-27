@@ -53,11 +53,8 @@ class VideoFeed extends StatefulWidget {
 	/// The feed to show in this widget.
 	final CameraName name;
 
-	/// The index of this feed in the UI.
-	final int index;
-
 	/// Displays a video feed for the given camera.
-	const VideoFeed({required this.index, required this.name});
+	const VideoFeed({required this.name});
 
 	@override
 	VideoFeedState createState() => VideoFeedState();
@@ -81,12 +78,22 @@ class VideoFeedState extends State<VideoFeed> {
 	void initState() {
 		super.initState();
 		data = models.video.feeds[widget.name]!;
+		models.video.toggleCamera(widget.name, enable: true);
 		models.video.addListener(updateImage);
+	}
+
+	@override
+	void didUpdateWidget(VideoFeed oldWidget) {
+		super.didUpdateWidget(oldWidget);
+		if (oldWidget.name == widget.name) return;
+		models.video.toggleCamera(widget.name, enable: true);
+		models.video.toggleCamera(oldWidget.name, enable: false);
 	}
 
 	@override
 	void dispose() {
 		models.video.removeListener(updateImage);
+		models.video.toggleCamera(widget.name, enable: false);
 		imageLoader.dispose();
 		super.dispose();
 	}
@@ -110,7 +117,6 @@ class VideoFeedState extends State<VideoFeed> {
 				color: Colors.blueGrey, 
 				height: double.infinity,
 				width: double.infinity,
-				margin: const EdgeInsets.all(1),
 				padding: const EdgeInsets.all(4),
 				alignment: Alignment.center,
 				child: imageLoader.hasImage && data.details.status == CameraStatus.CAMERA_ENABLED 
@@ -123,7 +129,7 @@ class VideoFeedState extends State<VideoFeed> {
 				mainAxisAlignment: MainAxisAlignment.end,
 				children: [
 					if (data.hasFrame()) IconButton(
-						icon: const Icon(Icons.camera_alt), 
+						icon: const Icon(Icons.add_a_photo), 
 						onPressed: () => models.video.saveFrame(widget.name),
 					),
 					if (data.details.status != CameraStatus.CAMERA_DISCONNECTED) IconButton(
@@ -133,18 +139,7 @@ class VideoFeedState extends State<VideoFeed> {
 							builder: (_) => CameraDetailsEditor(data),
 						),
 					),
-					PopupMenuButton<CameraName>(
-						tooltip: "Select a feed",
-						icon: const Icon(Icons.more_horiz),
-						onSelected: (name) => models.video.replaceFeed(widget.index, name),
-						itemBuilder: (_) => [
-							for (final name in CameraName.values) 
-								if (name != CameraName.CAMERA_NAME_UNDEFINED) PopupMenuItem(
-									value: name,
-									child: Text(name.humanName),
-								),
-						]
-					)
+					ViewsSelector(currentView: widget.name.humanName),
 				]
 			),
 			Positioned(left: 5, bottom: 5, child: Text(data.details.name.humanName)),
