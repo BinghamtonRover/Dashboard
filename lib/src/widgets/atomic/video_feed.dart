@@ -132,7 +132,7 @@ class VideoFeedState extends State<VideoFeed> {
 						icon: const Icon(Icons.add_a_photo), 
 						onPressed: () => models.video.saveFrame(widget.name),
 					),
-					if (data.details.status != CameraStatus.CAMERA_DISCONNECTED) IconButton(
+					IconButton(
 						icon: const Icon(Icons.settings),
 						onPressed: () => showDialog(
 							context: context,
