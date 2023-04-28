@@ -1,20 +1,15 @@
 // ignore_for_file: directives_ordering
 import "dart:convert";
-import 'dart:ffi';
 import "dart:io";
-
-import "package:csv/csv.dart";
 
 import "package:path_provider/path_provider.dart";
 
 import "package:rover_dashboard/data.dart";
-import "package:rover_dashboard/src/data/generated/autonomy.pb.dart";
-import 'package:rover_dashboard/src/widgets/navigation/footer.dart';
 
 import "service.dart";
 
 extension on DateTime{
-  String timeStamp() => "$year-$month-$day-$hour-$minute"; 
+  String get timeStamp => "$year-$month-$day-$hour-$minute"; 
 }
 
 /// A service to read and write to the file system. 
@@ -33,44 +28,20 @@ class FilesService extends Service {
   /// This includes all the different operating modes with specified folders inside
   late final Directory loggingDir;
 
-  /// Object to convert list to Csv formatted strings 
-  final converter = const ListToCsvConverter();
-
   /// The file containing the user's [Settings], in JSON form.
   /// 
   /// This file should contain the result of [Settings.toJson], and loading settings
   /// from the file should be done with [Settings.fromJson].
   File get settingsFile => File("${outputDir.path}/settings.json");
 
-  /// Map the command to file the output should into 
-  /// 
-  /// Used for logging rover metrics
-  Map<String, File> modes = { ///name better
-    "ArmData": File(""),
-    "GripperData": File(""),
-    //GpsCoordinates(): File(""),
-    "ElectricalData": File(""),
-    "AutonomyData": File(""),
-    "DriveData": File(""),
-    // MarsData()
-  };
-
   /// Ensure that files and directories that are expected to be present actually
   /// exist on the system. If not, create them. 
   @override
   Future<void> init() async {
     final appDir = await getApplicationDocumentsDirectory();
-    outputDir = Directory("${appDir.path}/Dashboard");
-    await outputDir.create();
+    outputDir = await Directory("${appDir.path}/Dashboard").create();
     if (!settingsFile.existsSync()) await settingsFile.writeAsString(jsonEncode({}));
-    await Directory("${outputDir.path}/logs").create();
-    /// DateTime.now().toIso8601String() can be converted back to DateTime object using DateTime.parse()
-    loggingDir = await Directory("${outputDir.path}/logs/${DateTime.now().timeStamp()}").create();
-    modes.forEach((mode, file) async {
-      /// Create CSV file and add the header row from json keys
-      
-      modes[mode] = await File("${loggingDir.path}/$mode.csv").create();
-    });
+    loggingDir = await Directory("${outputDir.path}/logs/${DateTime.now().timeStamp}").create(recursive: true);
   }
 
   @override
@@ -101,17 +72,12 @@ class FilesService extends Service {
 
   /// Outputs log data to the correct file based on message
   Future<void> logData(Message message) async{
-    final Map<String, dynamic> jsonMap = message.writeToJsonMap();
-    final List<dynamic> values = jsonMap.values.toList();
-    /// Insert time at front of list so that it will be in first column 
-    values.insert(0, DateTime.now());
-    /// [!] Message will always be in modes map
-    /// [!] rowString will also never be null since convertSingleRow never returns null
-    await modes[message]!.writeAsString(converter.convertSingleRow(StringBuffer(), values)!, mode: FileMode.writeOnlyAppend);
+    final List<int> bytes = message.wrapped.writeToBuffer();
+    final String line = bytes.join(", ");
+    final file = File("${loggingDir.path}/${message.messageName}.log");
+    await file.writeAsString("$line\n", mode: FileMode.writeOnlyAppend, flush: true);
   }
 }
-
-
 
 extension on FileSystemEntity {
   String get filename => uri.pathSegments.last.split(".")[0];
