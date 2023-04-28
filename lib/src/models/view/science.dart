@@ -99,6 +99,18 @@ class ScienceSensor {
 
 /// The view model for the science analysis page.
 class ScienceModel with ChangeNotifier {
+	/// Loads data into the view model.
+	ScienceModel() { test(); }
+
+	/// A test function demonstrating how to make the page load.
+	Future<void> test() async {
+		isLoading = true;
+		notifyListeners();
+		await Future.delayed(const Duration(milliseconds: 500));
+		isLoading = false;
+		notifyListeners();
+	}
+
 	/// The being analyzed. Each sample gets its own list.
 	List<List<ScienceData>> data = [];
 
