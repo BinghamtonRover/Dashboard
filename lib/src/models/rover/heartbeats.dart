@@ -144,6 +144,7 @@ class RoverHeartbeats extends Model {
 		}
 		await Future.delayed(handshakeWaitDelay);
 		for (final device in Device.values) {
+			final oldConnection = connections[device];
 			if (_handshakes[device]! > 0) {
 				if (connections[device]! == 0) {
 					models.home.setMessage(severity: Severity.info, text: "The ${device.humanName} has connected");
@@ -156,7 +157,7 @@ class RoverHeartbeats extends Model {
 			}
 			if (connections[device]! > 1) connections[device] = 1;
 			if (connections[device]! < 0) connections[device] = 0;
-			if (_handshakes[device]! != 0 && connections[device]! == 0) onDisconnect(device);
+			if (oldConnection! > 0 && connections[device]! == 0) onDisconnect(device);
 		}
 		handshakeTimer = Timer(handshakeInterval, sendHandshakes);
 		notifyListeners();
