@@ -13,6 +13,10 @@ import 'package:rover_dashboard/src/widgets/navigation/footer.dart';
 
 import "service.dart";
 
+extension on DateTime{
+  String timeStamp() => "$year-$month-$day-$hour-$minute"; 
+}
+
 /// A service to read and write to the file system. 
 /// 
 /// The dashboard reads and writes to files in [outputDir].
@@ -41,13 +45,13 @@ class FilesService extends Service {
   /// Map the command to file the output should into 
   /// 
   /// Used for logging rover metrics
-  Map<Message, File> modes = { ///name better
-    ArmData(): File(""),
-    GripperData(): File(""),
+  Map<String, File> modes = { ///name better
+    "ArmData": File(""),
+    "GripperData": File(""),
     //GpsCoordinates(): File(""),
-    ElectricalData(): File(""),
-    AutonomyData(): File(""),
-    DriveData(): File(""),
+    "ElectricalData": File(""),
+    "AutonomyData": File(""),
+    "DriveData": File(""),
     // MarsData()
   };
 
@@ -59,13 +63,13 @@ class FilesService extends Service {
     outputDir = Directory("${appDir.path}/Dashboard");
     await outputDir.create();
     if (!settingsFile.existsSync()) await settingsFile.writeAsString(jsonEncode({}));
-    loggingDir = await Directory("$outputDir/logs/${DateTime.now()}").create();
+    await Directory("${outputDir.path}/logs").create();
+    /// DateTime.now().toIso8601String() can be converted back to DateTime object using DateTime.parse()
+    loggingDir = await Directory("${outputDir.path}/logs/${DateTime.now().timeStamp()}").create();
     modes.forEach((mode, file) async {
       /// Create CSV file and add the header row from json keys
-      final jsonMap = mode.writeToJsonMap();
-      final List<String> keys = jsonMap.keys.toList();
-      keys.insert(0, "Time Stamp");
-      modes[mode] = await File("$loggingDir/${mode.messageName}.csv").writeAsString(converter.convertSingleRow(StringBuffer(), keys)!);
+      
+      modes[mode] = await File("${loggingDir.path}/$mode.csv").create();
     });
   }
 
