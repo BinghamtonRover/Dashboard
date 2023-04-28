@@ -45,18 +45,22 @@ class CameraDetailsEditor extends StatelessWidget {
 						NumberEditor(
 							name: "Resolution height",
 							model: model.resolutionHeight,
+							titleFlex: 2,
 						),
 						NumberEditor(
 							name: "Resolution width",
 							model: model.resolutionWidth,
+							titleFlex: 2,
 						),
 						NumberEditor(
 							name: "Quality (0-100)",
 							model: model.quality,
+							titleFlex: 2,
 						),
 						NumberEditor(
 							name: "Frames per second",
 							model: model.fps,
+							titleFlex: 2,
 						),
 						const SizedBox(height: 24),
 						if (model.isLoading) const Text("Loading..."),

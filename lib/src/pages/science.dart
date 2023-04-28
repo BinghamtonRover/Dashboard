@@ -148,13 +148,11 @@ class ResultsBox extends StatelessWidget {
 			SizedBox(height: 48, child: NumberEditor(
 				name: test.value1Name,
 				model: test.value1Builder,
-				spacerFlex: 1,
 			)),
 			if (test.value2 != null) 
 				SizedBox(height: 48, child: NumberEditor(
 					name: test.value2Name!,
 					model: test.value2Builder,
-					spacerFlex: 1,
 				)),
 		]
 	);

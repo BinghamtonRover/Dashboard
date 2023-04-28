@@ -31,8 +31,8 @@ class SocketEditor extends StatelessWidget {
 		builder: (model) => Row(
 			children: [
 				const SizedBox(width: 16),
-				Expanded(child: Text(name)),
-				const Spacer(flex: 2),
+				Expanded(flex: 5, child: Text(name)),
+				const Spacer(),
 				Expanded(child: TextField(
 					onChanged: model.address.update,
 					controller: model.address.controller,
@@ -65,14 +65,14 @@ class NumberEditor extends StatelessWidget {
 	final NumberBuilder model;
 
 	/// How much space to allocate in between the label and text field.
-	final int spacerFlex;
+	final int titleFlex;
 
 	/// Creates a widget to modify a number.
 	const NumberEditor({
 		required this.name, 
 		required this.model, 
 		this.subtitle,
-		this.spacerFlex = 4,
+		this.titleFlex = 4,
 	});
 
 	@override
@@ -81,11 +81,11 @@ class NumberEditor extends StatelessWidget {
 		builder: (model) => Row(
 			mainAxisAlignment: MainAxisAlignment.spaceBetween,
 			children: [
-				Expanded(child: ListTile(
+				Expanded(flex: titleFlex, child: ListTile(
 					title: Text(name),
 					subtitle: Text(subtitle ?? ""),
 				)),
-				Spacer(flex: spacerFlex),
+				const Spacer(),
 				Expanded(child: TextField(
 					onChanged: model.update,
 					decoration: InputDecoration(errorText: model.error),
