@@ -1,9 +1,21 @@
 import "package:flutter/material.dart";
+import "package:flutter/gestures.dart";
 import "package:fl_chart/fl_chart.dart";
 
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
+
+/// Allows desktop users to scroll with their mouse or other device.
+class DesktopScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => { 
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.stylus,
+    PointerDeviceKind.trackpad,
+  };
+}
 
 /// A row of scrollable or non-scrollable widgets.
 class ScrollingRow extends StatelessWidget {
@@ -16,9 +28,12 @@ class ScrollingRow extends StatelessWidget {
 	Widget build(BuildContext context) => ProviderConsumer<SettingsModel>.value(
 		value: models.settings,
 		builder: (model) => SizedBox(height: 300, child: model.science.scrollableGraphs
-			? ListView(
-				scrollDirection: Axis.horizontal, 
-				children: [for (final child in children) SizedBox(width: 400, child: child)],
+			? ScrollConfiguration(
+			  behavior: DesktopScrollBehavior(),
+				child: ListView(
+					scrollDirection: Axis.horizontal, 
+					children: [for (final child in children) SizedBox(width: 400, child: child)],
+				)
 			)
 			: Row(
 				children: [for (final child in children) Expanded(child: child)]
@@ -32,11 +47,39 @@ class SciencePage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<ScienceModel>(
 		create: ScienceModel.new,
-		builder: (model) => ListView(
-			padding: const EdgeInsets.all(16),
+		builder: (model) => Stack(
 			children: [
+				ListView(
+					padding: const EdgeInsets.all(16),
+					children: model.isLoading ? [] : [
+						const SizedBox(height: 32),
+						Text("Details", style: context.textTheme.titleLarge),
+						const SizedBox(height: 12),
+						ScrollingRow(children: [
+							for (final sensor in model.sensors) 
+								LineChart(sensor.details)
+						]),
+
+						const SizedBox(height: 24),
+						Text("Summary", style: context.textTheme.titleLarge),
+						const SizedBox(height: 12),
+						ScrollingRow(children: [
+							for (final sensor in model.sensors) 
+								BarChart(sensor.summary)
+						]),
+						
+						const SizedBox(height: 24),
+						Text("Results", style: context.textTheme.titleLarge),
+						const SizedBox(height: 12),
+						ScrollingRow(children: [
+							for (final sensor in model.sensors) 
+								ResultsBox(sensor)
+						]),
+					]
+				),
 				Row(
 					children: [
+						const SizedBox(width: 8),
 						Text("Science Analysis", style: context.textTheme.headlineMedium), 
 						const SizedBox(width: 12),
 						if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
@@ -48,33 +91,7 @@ class SciencePage extends StatelessWidget {
 						const ViewsSelector(currentView: Routes.science),
 					]
 				),
-				if (!model.isLoading) ...[
-					const SizedBox(height: 24),
-					Text("Details", style: context.textTheme.titleLarge),
-					const SizedBox(height: 12),
-					ScrollingRow(children: [
-						for (final sensor in model.sensors) 
-							LineChart(sensor.details)
-					]),
-
-					const SizedBox(height: 24),
-					Text("Summary", style: context.textTheme.titleLarge),
-					const SizedBox(height: 12),
-					ScrollingRow(children: [
-						for (final sensor in model.sensors) 
-							BarChart(sensor.summary)
-					]),
-					
-					const SizedBox(height: 24),
-					Text("Results", style: context.textTheme.titleLarge),
-					const SizedBox(height: 12),
-					ScrollingRow(children: [
-						for (final sensor in model.sensors) 
-							ResultsBox(sensor)
-					]),
-				]
-			]
-		)
+])
 	);
 }
 
