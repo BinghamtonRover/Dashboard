@@ -8,7 +8,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # For information on the generic Dart part of this file, see
 # https://dart.dev/tools/pub/pubspec
 
-version: 2023.4.27+4
+version: 2023.4.27+5
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
@@ -51,6 +51,7 @@ dependency_overrides:
   win32: 3.1.4
 
 msix_config:
+  msix_version: 2023.4.27.5
   display_name: Dashboard
   publisher_display_name: Binghamton University Rover Team
   identity_name: edu.binghamton.rover

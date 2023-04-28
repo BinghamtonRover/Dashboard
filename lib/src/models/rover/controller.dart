@@ -17,7 +17,7 @@ class Controller extends Model {
 	late final Timer gamepadTimer;
 
 	/// The gamepad to read from. Multiple gamepads may be connected.
-	final Gamepad gamepad;
+	Gamepad gamepad;
 
 	/// Defines what the current controls are for the current mode.
 	RoverControls controls;
@@ -81,6 +81,8 @@ class Controller extends Model {
 	/// Reads the gamepad, chooses commands, and sends them to the rover.
 	Future<void> _update([_]) async {
 		services.gamepad.update();
+		if (!gamepad.isConnected) return;
+		gamepad = services.gamepad.gamepad1;
 		final messages = controls.parseInputs(gamepad.state);
 		messages.forEach(sendMessage);
 	}
