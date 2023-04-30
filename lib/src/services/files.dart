@@ -77,7 +77,23 @@ class FilesService extends Service {
     final file = File("${loggingDir.path}/${message.messageName}.log");
     await file.writeAsString("$line\n", mode: FileMode.writeOnlyAppend, flush: true);
   }
+
+  /// Reads log file based on a messageName string
+  Future<List<Message>> readData(String messageName) async{
+    final List<Message> res = [];
+    final file = File("${loggingDir.path}/$messageName.log");
+    final String fileContent =  await file.readAsString();
+    final List<String> rows = fileContent.split("\n"); 
+    for(final String row in rows){
+      final List<int> bytes = row.split(",").map(int.parse).toList();
+      final Message myMessage = WrappedMessage.fromBuffer(bytes);
+      res.add(myMessage);
+    }
+    return res;
+  }
+
 }
+
 
 extension on FileSystemEntity {
   String get filename => uri.pathSegments.last.split(".")[0];
