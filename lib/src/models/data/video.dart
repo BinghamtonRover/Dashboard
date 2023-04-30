@@ -18,10 +18,24 @@ class VideoModel extends Model {
 		)
 	};
 
+	/// How many frames came in the network in the past second.
+	/// 
+	/// This number is updated every frame. Use [networkFps] in the UI.
+	Map<CameraName, int> framesThisSecond = {
+		for (final name in CameraName.values) 
+			name: 0
+	};
+
+	/// How many frames came in the network in the past second.
+	Map<CameraName, int> networkFps = {};
+
 	/// Triggers when it's time to update a new frame.
 	/// 
 	/// This is kept here to ensure all widgets are in sync.
 	Timer? frameUpdater;
+
+	/// A timer to update the FPS counter.
+	late final Timer fpsTimer;
 
 	/// The latest handshake received by the rover.
 	VideoCommand? _handshake;
@@ -38,17 +52,30 @@ class VideoModel extends Model {
 			decoder: VideoCommand.fromBuffer,
 			handler: (command) => _handshake = command,
 		);
+		fpsTimer = Timer.periodic(const Duration(seconds: 1), resetNetworkFps);
 		reset();
+	}
+
+	/// Saves the frames in the past second ([framesThisSecond]) to [networkFps].
+	void resetNetworkFps([_]) {
+		networkFps = Map.from(framesThisSecond);
+		framesThisSecond = {
+			for (final name in CameraName.values) 
+				name: 0
+		};
+		notifyListeners();
 	}
 
 	@override
 	void dispose() {
 		frameUpdater?.cancel();
+		fpsTimer.cancel();
 		super.dispose();
 	}
 
 	/// Clears all video data and resets the timer.
 	void reset() {
+		resetNetworkFps();
 		for (final name in CameraName.values) {
 			feeds[name]!.details.status = CameraStatus.CAMERA_DISCONNECTED;
 		}
@@ -62,11 +89,17 @@ class VideoModel extends Model {
 
 	/// Updates the data for a given camera.
 	void handleData(VideoData newData) {
-		final data = feeds[newData.details.name]!;
+		final name = newData.details.name;
+		framesThisSecond[name] = (framesThisSecond[name] ?? 0) + 1;
+		final data = feeds[name]!;
 		data.details = newData.details;
 		data.id = newData.id;
-		if (newData.frame.isNotEmpty) data.frame = newData.frame;
-		if (newData.details.status != CameraStatus.CAMERA_ENABLED) data.frame = [];
+
+		// Some [VideoData] packets are just representing metadata, not an empty video frame.
+		// If this is one such packet (doesn't have a frame but status == enabled), don't save.
+		if (newData.hasFrame() && newData.details.status == CameraStatus.CAMERA_ENABLED) {
+			data.frame = newData.frame;
+		}
 	}
 
 	/// Takes a screenshot of the current frame.
