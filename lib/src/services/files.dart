@@ -80,16 +80,16 @@ class FilesService extends Service {
 
   /// Reads log file based on a messageName string
   Future<List<Message>> readData(String messageName) async{
-    final List<Message> res = [];
+    final List<Message> messages = [];
     final file = File("${loggingDir.path}/$messageName.log");
     final String fileContent =  await file.readAsString();
     final List<String> rows = fileContent.split("\n"); 
     for(final String row in rows){
       final List<int> bytes = row.split(",").map(int.parse).toList();
-      final Message myMessage = WrappedMessage.fromBuffer(bytes);
-      res.add(myMessage);
+      final Message newMessage = WrappedMessage.fromBuffer(bytes);
+      messages.add(newMessage);
     }
-    return res;
+    return messages;
   }
 
 }
