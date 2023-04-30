@@ -32,12 +32,47 @@ class RoverHeartbeats extends Model {
 	/// The connection strength, as a percentage, to the Subsystems Pi
 	double get connectionStrength => connections[Device.SUBSYSTEMS]!;
 
+	/// A rundown of the connection strength of each device.
+	String get connectionSummary {
+		final result = StringBuffer();
+		for (final MapEntry<Device, double> entry in connections.entries) {
+			if (entry.key == Device.DEVICE_UNDEFINED || entry.key == Device.FIRMWARE) continue;
+			result.write("${entry.key.humanName}: ${(entry.value*100).toStringAsFixed(0)}%\n");
+		}
+		return result.toString().trim();
+	}
+
 	@override
 	Future<void> init() async {
 		services.dataSocket.registerHandler<Connect>(
 			name: Connect().messageName,
 			decoder: Connect.fromBuffer,
 			handler: onHandshakeReceived,
+		);
+		services.videoSocket.registerHandler<Connect>(
+			name: Connect().messageName,
+			decoder: Connect.fromBuffer,
+			handler: onHandshakeReceived,
+		);
+		services.autonomySocket.registerHandler<Connect>(
+			name: Connect().messageName,
+			decoder: Connect.fromBuffer,
+			handler: onHandshakeReceived,
+		);
+		services.dataSocket.registerHandler<Disconnect>(
+			name: Disconnect().messageName,
+			decoder: Disconnect.fromBuffer,
+			handler: (data) => onDisconnect(data.sender),
+		);
+		services.videoSocket.registerHandler<Disconnect>(
+			name: Disconnect().messageName,
+			decoder: Disconnect.fromBuffer,
+			handler: (data) => onDisconnect(data.sender),
+		);
+		services.autonomySocket.registerHandler<Disconnect>(
+			name: Disconnect().messageName,
+			decoder: Disconnect.fromBuffer,
+			handler: (data) => onDisconnect(data.sender),
 		);
 		handshakeTimer = Timer(handshakeInterval, sendHandshakes);
 	}
@@ -56,6 +91,12 @@ class RoverHeartbeats extends Model {
 	void dispose() {
 		handshakeTimer.cancel();
 		super.dispose();
+	}
+
+	/// Indicates that a device has disconnected.
+	void onDisconnect(Device device) {
+		models.home.setMessage(severity: Severity.critical, text: "The ${device.humanName} has disconnected");
+		if (device == Device.VIDEO) models.video.reset();
 	}
 
 	/// Logs that a handshake has been received.
@@ -103,7 +144,11 @@ class RoverHeartbeats extends Model {
 		}
 		await Future.delayed(handshakeWaitDelay);
 		for (final device in Device.values) {
+			final oldConnection = connections[device];
 			if (_handshakes[device]! > 0) {
+				if (connections[device]! == 0) {
+					models.home.setMessage(severity: Severity.info, text: "The ${device.humanName} has connected");
+				}
 				final int numHandshakes = _handshakes[device]!;
 				final double score = connectionIncrement * numHandshakes;
 				connections[device] = connections[device]! + score;
@@ -112,6 +157,7 @@ class RoverHeartbeats extends Model {
 			}
 			if (connections[device]! > 1) connections[device] = 1;
 			if (connections[device]! < 0) connections[device] = 0;
+			if (oldConnection! > 0 && connections[device]! == 0) onDisconnect(device);
 		}
 		handshakeTimer = Timer(handshakeInterval, sendHandshakes);
 		notifyListeners();

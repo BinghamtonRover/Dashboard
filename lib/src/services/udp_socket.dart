@@ -45,19 +45,18 @@ abstract class UdpSocket extends Service {
 	/// The UDP socket backed by `dart:io`.
 	/// 
 	/// This socket must be closed in [dispose].
-	late final RawDatagramSocket _socket;
+	late RawDatagramSocket _socket;
 
 	/// The subscription that listens for incoming data.
 	/// 
 	/// This must be cancelled in [dispose].
-	late final StreamSubscription _subscription;
+	late StreamSubscription _subscription;
 
 	/// The socket to send to.
-	SocketConfig destination;
+	SocketConfig? destination;
 
 	/// Opens a UDP socket on the given port.
-	UdpSocket({required this.listenPort, SocketConfig? destination})
-		: destination = destination ?? defaultSettings.subsystemsSocket;
+	UdpSocket({required this.listenPort, this.destination});
 
 	@override
 	Future<void> init() async {
@@ -71,6 +70,12 @@ abstract class UdpSocket extends Service {
 		_socket.close();
 	}
 
+	/// Resets the socket in case of an unrecoverable error.
+	Future<void> reset() async {
+		await dispose();
+		await init();
+	}
+
 	/// Runs when new data is received.
 	/// 
 	/// Override this to do something with the incoming bytes. Typically you'd want to
@@ -81,5 +86,8 @@ abstract class UdpSocket extends Service {
 	void onData(List<int> data);
 
 	/// Sends [bytes] to the [destination].
-	void sendBytes(List<int> bytes) => _socket.send(bytes, destination.address, destination.port);
+	void sendBytes(List<int> bytes) {
+		// [!]: The [destination] field is updated in the Sockets model.
+		_socket.send(bytes, destination!.address, destination!.port);
+	}
 }

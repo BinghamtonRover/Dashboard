@@ -22,11 +22,12 @@ class RoverControlDashboard extends StatelessWidget {
 			ChangeNotifierProvider.value(value: models.home),
 			ChangeNotifierProvider.value(value: models.rover),
 			ChangeNotifierProvider.value(value: models.serial),
+			ChangeNotifierProvider.value(value: models.settings),
 		],
 		child: Consumer<Models>(
 			builder: (context, models, _) => MaterialApp(
 				title: "Binghamton University Rover Team",
-				home: models.isReady ? HomePage() : const Scaffold(body: Center(child: CircularProgressIndicator())),
+				home: SplashPage(),
 				debugShowCheckedModeBanner: false,
 				theme: ThemeData(
 					colorScheme: ColorScheme.fromSeed(
@@ -34,6 +35,7 @@ class RoverControlDashboard extends StatelessWidget {
 					)
 				),
 				routes: {
+					Routes.home: (_) => HomePage(),
 					Routes.settings: (_) => SettingsPage(),
 				}
 			)

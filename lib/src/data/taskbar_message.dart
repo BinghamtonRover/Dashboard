@@ -27,6 +27,6 @@ enum Severity {
 	/// Some operation did not work and requires manual intervention.
 	error,
 
-	/// The rover is in a critical state and emergency measaures must be taken.
+	/// Something went wrong and data or commands may be lost.
 	critical;
 }

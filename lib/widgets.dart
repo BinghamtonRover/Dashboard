@@ -15,12 +15,24 @@
 /// This library may depend on the data, services, and models library.   
 library widgets;
 
+import "package:flutter/material.dart";
+
+export "src/widgets/atomic/editors.dart";
 export "src/widgets/atomic/video_feed.dart";
 
-export "src/widgets/generic/feeds.dart";
 export "src/widgets/generic/gamepad.dart";
 export "src/widgets/generic/metrics_list.dart";
 export "src/widgets/generic/provider_consumer.dart";
 
 export "src/widgets/navigation/footer.dart";
 export "src/widgets/navigation/sidebar.dart";
+export "src/widgets/navigation/views.dart";
+
+/// Convenience functions on [BuildContext].
+extension BuildContextUtils on BuildContext {
+	/// Gets the text theme of the app.
+	TextTheme get textTheme => Theme.of(this).textTheme;
+
+	/// Gets the color scheme of the app.
+	ColorScheme get colorScheme => Theme.of(this).colorScheme;
+}

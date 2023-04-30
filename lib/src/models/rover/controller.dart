@@ -17,16 +17,10 @@ class Controller extends Model {
 	late final Timer gamepadTimer;
 
 	/// The gamepad to read from. Multiple gamepads may be connected.
-	final Gamepad gamepad;
+	Gamepad gamepad;
 
 	/// Defines what the current controls are for the current mode.
 	RoverControls controls;
-
-	/// Whether the start button has been pressed.
-	///
-	/// When the start button is released, the dashboard will switch to the next mode.
-
-	bool isStartPressed = false;
 
 	/// Map to figure out what device is connected
 	/// 
@@ -77,7 +71,7 @@ class Controller extends Model {
 
 	/// Sends a command over the network or over Serial.
 	Future<void> sendMessage(Message message) async {
-		if(models.serial.isConnected && (services.serial.connectedDevice == teensyCommands[message.messageName])){
+		if (models.serial.isConnected && (services.serial.connectedDevice == teensyCommands[message.messageName])) {
 			await services.serial.sendMessage(message);
 		} else {
 			services.dataSocket.sendMessage(message);
@@ -87,14 +81,8 @@ class Controller extends Model {
 	/// Reads the gamepad, chooses commands, and sends them to the rover.
 	Future<void> _update([_]) async {
 		services.gamepad.update();
-		if (gamepad.state.buttonStart) {
-			isStartPressed = true;
-		} else if (isStartPressed) {
-			// switch to the next mode
-			int index = controls.mode.index + 1;
-			if (index == OperatingMode.values.length) index = 0;
-			setModeIndex(index);
-		}
+		if (!gamepad.isConnected) return;
+		gamepad = services.gamepad.gamepad1;
 		final messages = controls.parseInputs(gamepad.state);
 		messages.forEach(sendMessage);
 	}

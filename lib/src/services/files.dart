@@ -5,6 +5,7 @@ import "dart:io";
 import "package:path_provider/path_provider.dart";
 
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/services.dart";
 
 import "service.dart";
 
@@ -28,6 +29,11 @@ class FilesService extends Service {
   /// This includes all the different operating modes with specified folders inside
   late final Directory loggingDir;
 
+  /// The directory where screenshots are stored.
+  /// 
+  /// These are only screenshots of video feeds, not of the dashboard itself.
+  Directory get screenshotsDir => Directory("${outputDir.path}/screenshots");
+  
   /// The file containing the user's [Settings], in JSON form.
   /// 
   /// This file should contain the result of [Settings.toJson], and loading settings
@@ -40,31 +46,40 @@ class FilesService extends Service {
   Future<void> init() async {
     final appDir = await getApplicationDocumentsDirectory();
     outputDir = await Directory("${appDir.path}/Dashboard").create();
-    if (!settingsFile.existsSync()) await settingsFile.writeAsString(jsonEncode({}));
     loggingDir = await Directory("${outputDir.path}/logs/${DateTime.now().timeStamp}").create(recursive: true);
+    if (!settingsFile.existsSync()) await writeSettings(null);
   }
 
   @override
   Future<void> dispose() async { }
 
-  /// Saves the [settings] object to the [settingsFile], as YAML.
-  Future<void> writeSettings(Settings settings) async {
-    final json = jsonEncode(settings.toJson());
+  /// Saves the [Settings] object to the [settingsFile], as JSON.
+  Future<void> writeSettings(Settings? value) async {
+    final json = jsonEncode(value?.toJson() ?? {});
     await settingsFile.writeAsString(json);
   }
 
   /// Reads the user's settings from the [settingsFile].
-  Future<Settings> readSettings() async {
+  Future<Settings> readSettings({bool retry = true}) async {
     final json = jsonDecode(await settingsFile.readAsString());
-    final settings = Settings.fromJson(json);
-    await writeSettings(settings);  // re-save any default values
-    return settings;
+    try {
+      final settings = Settings.fromJson(json);
+      await writeSettings(settings);  // re-save any default values
+      return settings;
+    } catch (error) {
+      services.error = "Settings were corrupted and reset back to defaults";
+      await writeSettings(Settings.fromJson({}));  // delete corrupt settings
+      if (retry) {
+        return readSettings(retry: false);
+      } else {
+        rethrow;
+      }
+    }
   }
 
   /// Saves the current frame in the feed to the camera's output directory.
   Future<void> writeImage(List<int> image, String cameraName) async {
-    final dir = Directory("${outputDir.path}/$cameraName");
-    if (!(await dir.exists())) await dir.create();    
+    final dir = await Directory("${screenshotsDir.path}/$cameraName").create(recursive: true); 
     final files = dir.listSync();
     final number = files.isEmpty ? 1 : (int.parse(files.last.filename) + 1);
     await File("${dir.path}/$number.jpg").writeAsBytes(image); 
@@ -79,21 +94,13 @@ class FilesService extends Service {
   }
 
   /// Reads log file based on a messageName string
-  Future<List<Message>> readData(String messageName) async{
-    final List<Message> messages = [];
-    final file = File("${loggingDir.path}/$messageName.log");
-    final String fileContent =  await file.readAsString();
-    final List<String> rows = fileContent.split("\n"); 
-    for(final String row in rows){
-      final List<int> bytes = row.split(",").map(int.parse).toList();
-      final Message newMessage = WrappedMessage.fromBuffer(bytes);
-      messages.add(newMessage);
-    }
-    return messages;
-  }
-
+  Future<List<WrappedMessage>> readData(File file) async => [
+    for (final line in (await file.readAsString()).split("\n"))
+      WrappedMessage.fromBuffer([
+        for (final byte in line.split(", ")) int.parse(byte)
+      ])
+  ];
 }
-
 
 extension on FileSystemEntity {
   String get filename => uri.pathSegments.last.split(".")[0];

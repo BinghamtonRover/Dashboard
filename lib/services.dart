@@ -36,16 +36,16 @@ export "src/services/udp_socket.dart";
 /// To get an instance of this class, use [services].
 class Services extends Service {
 	/// This class has a private constructor since users should only use [services].
-	Services._();
+	// Services._();
 
 	/// A UDP socket for sending and receiving Protobuf data.
-	final dataSocket = ProtoSocket(listenPort: 8001);
+	final dataSocket = ProtoSocket(listenPort: 8006);
 
 	/// A UDP socket for receiving video.
-	final videoSocket = ProtoSocket(listenPort: 8002);
+	final videoSocket = ProtoSocket(listenPort: 8008);
 
 	/// A UDP socket for controlling autonomy.
-	final autonomySocket = ProtoSocket(listenPort: 8003);
+	final autonomySocket = ProtoSocket(listenPort: 8009);
 
 	/// A service that handles controller inputs.
 	final gamepad = GamepadService();
@@ -55,6 +55,9 @@ class Services extends Service {
 
 	/// A service that communicates over a serial connection.
 	final serial = Serial();
+
+	/// The first error that occurred during startup.
+	String? error;
 
 	@override
 	Future<void> init() async {
@@ -80,4 +83,4 @@ class Services extends Service {
 /// The singleton instance of the [Services] class.
 ///
 /// This is the only instance of this class the app can guarantee is properly initialized.
-final services = Services._();
+final services = Services();
