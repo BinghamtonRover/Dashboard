@@ -7,28 +7,6 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/models.dart";
 
-/// The result of a science test.
-enum ScienceResult {
-	/// There was never life in this ecosystem.
-	extinct, 
-
-	/// There is currently life in this ecosystem.
-	extant, 
-
-	/// There used to be life in this ecosystem, but not anymore.
-	notPresent, 
-
-	/// This test cannot determine the precense of life.
-	inconclusive, 
-
-	/// This test is awaiting more data.
-	loading,
-}
-
-extension on Timestamp {
-	double operator -(Timestamp other) => (seconds - other.seconds).toDouble();
-}
-
 /// Gets titles for a graph.
 GetTitleWidgetFunction getTitles(List<String> titles) => 
 	(double value, TitleMeta meta) => SideTitleWidget(
@@ -37,184 +15,126 @@ GetTitleWidgetFunction getTitles(List<String> titles) =>
 		child: Text(titles[value.toInt()])
 	);
 
-/// A science test.
-/// 
-/// Consists of reading values off a graph and making a decision.
-class ScienceTest {
-	/// The first value used.
-	final double value1;
-	/// The name of the first value used.
-	final String value1Name;
+class ScienceTestBuilder with ChangeNotifier {
+	final min = NumberBuilder<double>(0);
+	final average = NumberBuilder<double>(0);
+	final max = NumberBuilder<double>(0);
 
-	/// The name of the second value used, if any.
-	final String? value2Name;
-
-	/// The second value used, if any.
-	final double? value2;
-
-	/// A function that determines the result of this test.
-	final ScienceResult Function({required double value1, double? value2}) test;
-
-	/// Provides a manual override for [value1].
-	final NumberBuilder<double> value1Builder;
-	/// Provides a manual override for [value2].
-	final NumberBuilder<double> value2Builder;
-
-	/// Creates a science test.
-	ScienceTest({
-		required this.test,
-		required this.value1Name,
-		required this.value1,
-		this.value2,
-		this.value2Name,
-	}) : 
-		value1Builder = NumberBuilder(value1),
-		value2Builder = NumberBuilder(value2 ?? 0);
-}
-
-class SensorReading {
-	final double time;
-	final double value;
-
-	const SensorReading(this.value, Timestamp timestamp, Timestamp firstTimestamp) : 
-		time = timestamp - firstTimestamp;
-}
-
-/// A sensor on the science chamber.
-class ScienceSensor {
-	static const numSamples = 3;
-
-	final String name;
-
-	Timestamp? firstTimestamp;
-
-	final List<List<SensorReading>> samples = [
-		for (int i = 0; i < numSamples; i++) []
-	];
-
-	/// The test for life based on this sensor's values.
-	final ScienceTest test;
-
-	/// A sensor on the science chamber and its test for life.
-	ScienceSensor({required this.name, required this.test});
-
-	void add(Timestamp timestamp, double value, int sample) {
-		firstTimestamp ??= firstTimestamp = timestamp;
-		samples[sample].add(SensorReading(value, timestamp, firstTimestamp!));
+	ScienceTestBuilder() {
+		min.addListener(notifyListeners);
+		average.addListener(notifyListeners);
+		max.addListener(notifyListeners);
 	}
 
-	final List<Color> colors = [Colors.red, Colors.green, Colors.blue];
-	final List<bool> shouldShowSample = [
-		for (int i = 0; i < numSamples; i++) true
-	];
+	@override
+	void dispose() {
+		min..removeListener(notifyListeners)..dispose();
+		average..removeListener(notifyListeners)..dispose();
+		max..removeListener(notifyListeners)..dispose();
+		super.dispose();
+	}
 
-	/// The individual data points for this sensor.
-	LineChartData get details => LineChartData(
-		lineBarsData: [
-			LineChartBarData(
-				spots: [
-					for (final SensorReading reading in samples[sample]) FlSpot(reading.time, reading.value)
-				], 
-				color: colors[sample],
-				preventCurveOverShooting: true,
-				isCurved: true,
-			),
-		], 
-		extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)], verticalLines: [VerticalLine(x: 0)]),
-		minX: 0, minY: 0,
-	);
+	void update(SampleData data) {
+		min.value = data.min ?? 0;
+		min.controller.text = min.value.toString();
+		average.value = data.average ?? 0;
+		average.controller.text = average.value.toString();
+		max.value = data.max ?? 0;
+		max.controller.text = max.value.toString();
+		notifyListeners();
+	}
+}
 
-	/// A comparison of important data points across all the samples.
-	BarChartData summary = BarChartData(
-		barGroups: [
-			BarChartGroupData(x: 0, barRods: [BarChartRodData(fromY: 0, toY: 15)]),
-			BarChartGroupData(x: 1, barRods: [BarChartRodData(fromY: 0, toY: 10)]),
-			BarChartGroupData(x: 2, barRods: [BarChartRodData(fromY: 0, toY: 20)]),
-		],
-		titlesData: FlTitlesData(show: true, bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: getTitles(["Min", "Average", "Max"])))),
-	);
+class SampleAnalysis {
+	final ScienceSensor sensor;
 
-	int sample = 0;
+	SampleAnalysis(this.sensor);
+
+	/// The view models for the test values.
+	final testBuilder = ScienceTestBuilder();
+
+	final SampleData data = SampleData();
+
+	// Overrides the min/average/max values.
+	ScienceResult get testResult => data.readings.isEmpty 
+		? ScienceResult.loading : sensor.test(SampleData()
+			..min = testBuilder.min.value
+			..average = testBuilder.average.value
+			..max = testBuilder.max.value
+		);
 
 	void clear() { 
-		for (final sample in samples) { sample.clear(); }
-		firstTimestamp = null;
+		data.clear();
+		testBuilder.update(data);
+	}
+
+	void addReading(Timestamp timestamp, double value) {
+		data.addReading(timestamp, value);
+		testBuilder.update(data);
 	}
 }
 
 /// The view model for the science analysis page.
 class ScienceModel with ChangeNotifier {
-	final temperature = ScienceSensor(
-		name: "Temperature", 
-		test: ScienceTest(
-			value1Name: "Average",
-			value1: 1.5,
-			test: ({required value1, value2}) => ScienceResult.extinct,
-		)
-	);
-	final humidity = ScienceSensor(
-		name: "Humidity", 
-		test: ScienceTest(
-			value1Name: "Average",
-			value1: 1.5,
-			test: ({required value1, value2}) => ScienceResult.extant,
-		)
-	);
-	final pH = ScienceSensor(
-		name: "pH", 
-		test: ScienceTest(
-			value1Name: "Average",
-			value1: 1.5,
-			test: ({required value1, value2}) => ScienceResult.notPresent,
-		)
-	);
-	final co2 = ScienceSensor(
-		name: "CO2", 
-		test: ScienceTest(
-			value1Name: "Average",
-			value1: 1.5,
-			test: ({required value1, value2}) => ScienceResult.inconclusive,
-		)
-	);
-	final methane = ScienceSensor(
-		name: "Methane", 
-		test: ScienceTest(
-			value1Name: "Min",
-			value1: 0,
-			value2: 2,
-			value2Name: "Max",
-		test: ({required value1, value2}) => ScienceResult.loading,
-	));
+	int get numSamples => models.settings.science.numSamples;
 
-	late final List<ScienceSensor> sensors = [temperature, humidity, pH, co2, methane];
+	Map<ScienceSensor, List<SampleAnalysis>> allSamples = {
+		for (final sensor in sensors) sensor: [
+			for (int i = 0; i < models.settings.science.numSamples; i++) 
+				SampleAnalysis(sensor)
+		]
+	};
+
+	List<SampleAnalysis> get analysesForSample => [
+		for (final sensor in sensors) allSamples[sensor]![sample]
+	];
 
 	/// The sample whose stats are being displayed.
 	int sample = 0;
 
-	int numSamples = 3;
+	@override
+	void dispose() {
+		for (final sample in analysesForSample) {
+			sample.testBuilder.dispose();
+		}
+		super.dispose();
+	}
 
 	void updateSample(int? input) {
 		if (input == null) return;
+		for (final sample in analysesForSample) {
+			sample.testBuilder.removeListener(notifyListeners);
+		}
 		sample = input;
-		for (final sensor in sensors) { sensor.sample = input; }
+		for (final sample in analysesForSample) {
+			sample.testBuilder.addListener(notifyListeners);
+		}
 		notifyListeners();
 	}
 
 	/// Whether the page is currently loading.
 	bool isLoading = false;
 
+	/// The error, if any, that occurred while loading the data.
 	String? errorText;
-
-	/// Adds one piece of data to the model.
-	void addData(ScienceData row) { }
 
 	void addMessage(WrappedMessage wrapper) {
 		final data = wrapper.decode(ScienceData.fromBuffer);
-		if (data.methane != 0) methane.add(wrapper.timestamp, data.methane, data.sample); 
-		if (data.co2 != 0) co2.add(wrapper.timestamp, data.co2, data.sample); 
-		if (data.humidity != 0) humidity.add(wrapper.timestamp, data.humidity, data.sample); 
-		if (data.temperature != 0) temperature.add(wrapper.timestamp, data.temperature, data.sample); 
-		if (data.pH != 0) pH.add(wrapper.timestamp, data.pH, data.sample); 
+		final sample = data.sample;
+		if (sample >= numSamples) throw RangeError("Got data for sample #${sample + 1}, but there are only $numSamples samples.\nChange the number of samples in the settings and reload.");
+		if (data.methane != 0) allSamples[methane]![sample].addReading(wrapper.timestamp, data.methane); 
+		if (data.co2 != 0) allSamples[co2]![sample].addReading(wrapper.timestamp, data.co2); 
+		if (data.humidity != 0) allSamples[humidity]![sample].addReading(wrapper.timestamp, data.humidity); 
+		if (data.temperature != 0) allSamples[temperature]![sample].addReading(wrapper.timestamp, data.temperature); 
+		if (data.pH != 0) allSamples[pH]![sample].addReading(wrapper.timestamp, data.pH); 
+	}
+
+	void clear() {
+		for (final sensor in sensors) {
+			for (final analysis in allSamples[sensor]!) {
+				analysis.clear();
+			}
+		}
 	}
 
 	/// Calls [addMessage] for each message in the picked file.
@@ -233,14 +153,18 @@ class ScienceModel with ChangeNotifier {
 		isLoading = true;
 		notifyListeners();
 		try {
-			for (final sensor in sensors) { sensor.clear(); }
+			clear();
 			final messages = await services.files.readLogs(file);
 			messages.forEach(addMessage);
+			updateSample(0);
 			errorText = null;
+			isLoading = false;
+			notifyListeners();
 		} catch (error) {
 			errorText = error.toString();
+			isLoading = false;
+			notifyListeners();
+			rethrow;
 		}
-		isLoading = false;
-		notifyListeners();
 	}
 }
