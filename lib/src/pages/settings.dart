@@ -104,12 +104,17 @@ class SettingsPage extends StatelessWidget {
 						ValueEditor<ScienceSettings>(
 							name: "Science settings",
 							children: [
-							SwitchListTile(
-								title: const Text("Scrollable graphs"),
-								subtitle: const Text("If enabled, graphs will scrolls horizontally. If disabled, they will fit to the page"),
-								value: model.science.scrollableGraphs,
-								onChanged: model.science.updateScrollableGraphs,
-							),
+								NumberEditor(
+									name: "Number of samples", 
+									subtitle: "Up to 5 samples are supported",
+									model: model.science.numSamples
+								),
+								SwitchListTile(
+									title: const Text("Scrollable graphs"),
+									subtitle: const Text("If enabled, graphs will scrolls horizontally. If disabled, they will fit to the page"),
+									value: model.science.scrollableGraphs,
+									onChanged: model.science.updateScrollableGraphs,
+								),
 							]
 						),
 						const Divider(),

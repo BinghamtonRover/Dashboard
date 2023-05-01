@@ -37,11 +37,15 @@ class ScienceSettings {
   /// This does not affect how many frames are sent by the rover per second.
   final bool scrollableGraphs;
 
+  /// The number of samples collected by the science subsystem.
+  final int numSamples;
+
   /// A const constructor.
-  const ScienceSettings({required this.scrollableGraphs});
+  const ScienceSettings({required this.scrollableGraphs, required this.numSamples});
 
   /// Parses a [ScienceSettings] from JSON.
   ScienceSettings.fromJson(Json? json) : 
+    numSamples = json?["numSamples"] ?? 3,
     scrollableGraphs = json?["scrollableGraphs"] ?? false;
 
   /// Serializes these settings in JSON format.
