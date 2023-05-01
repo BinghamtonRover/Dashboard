@@ -53,7 +53,7 @@ class SciencePage extends StatelessWidget {
 						),
 						IconButton(
 							icon: const Icon(Icons.upload_file),
-							onPressed: model.uploadLogs,
+							onPressed: model.loadFile,
 						),
 						const ViewsSelector(currentView: Routes.science),
 					]
