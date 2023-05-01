@@ -95,7 +95,7 @@ class FilesService extends Service {
 
   /// Reads logs from the given file.
   Future<List<WrappedMessage>> readLogs(File file) async => [
-    for (final line in (await file.readAsString()).split("\n"))
+    for (final line in (await file.readAsString()).trim().split("\n"))
       WrappedMessage.fromBuffer([
         for (final byte in line.split(", ")) int.parse(byte)
       ])
