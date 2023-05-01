@@ -163,6 +163,7 @@ class RoverPosition extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'RoverPosition', createEmptyInstance: create)
     ..aOM<GpsCoordinates>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'gps', subBuilder: GpsCoordinates.create)
     ..aOM<Orientation>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'orientation', subBuilder: Orientation.create)
+    ..aOM<GpsCoordinates>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'baseStation', subBuilder: GpsCoordinates.create)
     ..hasRequiredFields = false
   ;
 
@@ -170,6 +171,7 @@ class RoverPosition extends $pb.GeneratedMessage {
   factory RoverPosition({
     GpsCoordinates? gps,
     Orientation? orientation,
+    GpsCoordinates? baseStation,
   }) {
     final _result = create();
     if (gps != null) {
@@ -177,6 +179,9 @@ class RoverPosition extends $pb.GeneratedMessage {
     }
     if (orientation != null) {
       _result.orientation = orientation;
+    }
+    if (baseStation != null) {
+      _result.baseStation = baseStation;
     }
     return _result;
   }
@@ -222,5 +227,16 @@ class RoverPosition extends $pb.GeneratedMessage {
   void clearOrientation() => clearField(2);
   @$pb.TagNumber(2)
   Orientation ensureOrientation() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  GpsCoordinates get baseStation => $_getN(2);
+  @$pb.TagNumber(3)
+  set baseStation(GpsCoordinates v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasBaseStation() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBaseStation() => clearField(3);
+  @$pb.TagNumber(3)
+  GpsCoordinates ensureBaseStation() => $_ensure(2);
 }
 

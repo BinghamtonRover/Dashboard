@@ -14,8 +14,9 @@ const WrappedMessage$json = const {
   '2': const [
     const {'1': 'data', '3': 1, '4': 1, '5': 12, '10': 'data'},
     const {'1': 'name', '3': 2, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'timestamp', '3': 3, '4': 1, '5': 11, '6': '.google.protobuf.Timestamp', '10': 'timestamp'},
   ],
 };
 
 /// Descriptor for `WrappedMessage`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List wrappedMessageDescriptor = $convert.base64Decode('Cg5XcmFwcGVkTWVzc2FnZRISCgRkYXRhGAEgASgMUgRkYXRhEhIKBG5hbWUYAiABKAlSBG5hbWU=');
+final $typed_data.Uint8List wrappedMessageDescriptor = $convert.base64Decode('Cg5XcmFwcGVkTWVzc2FnZRISCgRkYXRhGAEgASgMUgRkYXRhEhIKBG5hbWUYAiABKAlSBG5hbWUSOAoJdGltZXN0YW1wGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJdGltZXN0YW1w');

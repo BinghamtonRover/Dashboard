@@ -1,5 +1,9 @@
+import "dart:math";
+
 import "package:protobuf/protobuf.dart" as proto;
 import "package:rover_dashboard/data.dart";
+
+import "generated/google/protobuf/timestamp.pb.dart";
 
 export "package:protobuf/protobuf.dart" show GeneratedMessageGenericExtensions;
 
@@ -20,6 +24,7 @@ extension MessageUtils on Message {
 	WrappedMessage get wrapped => WrappedMessage(
 		name: messageName,
 		data: writeToBuffer(),
+		timestamp: Timestamp.fromDateTime(DateTime.now()),
 	);
 }
 
@@ -116,4 +121,15 @@ extension DeviceUtils on Device {
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized rover status: $this");
 	}
+}
+
+/// Utilities for Gps Coordinates Data
+extension GpsUtils on GpsCoordinates {
+  /// Calculate Euclidean distance between current coordinates and another set of coordinates
+  num distanceTo(GpsCoordinates other) => pow(
+    pow(latitude - other.latitude, 2) 
+      + pow(longitude - other.longitude, 2) 
+      + pow(altitude - other.altitude, 2), 
+    0.5
+  );
 }
