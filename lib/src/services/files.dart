@@ -93,8 +93,8 @@ class FilesService extends Service {
     await file.writeAsString("$line\n", mode: FileMode.writeOnlyAppend, flush: true);
   }
 
-  /// Reads log file based on a messageName string
-  Future<List<WrappedMessage>> readData(File file) async => [
+  /// Reads logs from the given file.
+  Future<List<WrappedMessage>> readLogs(File file) async => [
     for (final line in (await file.readAsString()).split("\n"))
       WrappedMessage.fromBuffer([
         for (final byte in line.split(", ")) int.parse(byte)
