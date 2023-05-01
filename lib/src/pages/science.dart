@@ -15,7 +15,7 @@ class ScrollingRow extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<SettingsModel>.value(
 		value: models.settings,
-		builder: (model) => SizedBox(height: 300, child: model.science.scrollableGraphs
+		builder: (model) => SizedBox(height: 400, child: model.science.scrollableGraphs
 			? ListView(
 				scrollDirection: Axis.horizontal, 
 				children: [for (final child in children) SizedBox(width: 400, child: child)],
@@ -41,6 +41,16 @@ class SciencePage extends StatelessWidget {
 						const SizedBox(width: 12),
 						if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
 						const Spacer(),
+						DropdownButton(
+							value: model.sample,
+							onChanged: model.updateSample,
+							items: [
+								for (int i = 0; i < model.numSamples; i++) DropdownMenuItem(
+									value: i,
+									child: Text("Sample ${i + 1}"),
+								)
+							],
+						),
 						IconButton(
 							icon: const Icon(Icons.upload_file),
 							onPressed: model.uploadLogs,
@@ -48,13 +58,23 @@ class SciencePage extends StatelessWidget {
 						const ViewsSelector(currentView: Routes.science),
 					]
 				),
-				if (!model.isLoading) ...[
+				if (model.errorText != null) ...[
+					const SizedBox(height: 48),
+					Text("Error analyzing the logs", textAlign: TextAlign.center, style: context.textTheme.headlineLarge),
+					const SizedBox(height: 24),
+					Text("Here is the error:", textAlign: TextAlign.center, style: context.textTheme.titleLarge),
+					const SizedBox(height: 12),
+					Text(model.errorText!, textAlign: TextAlign.center, style: context.textTheme.titleMedium),
+				] else if (!model.isLoading) ...[
 					const SizedBox(height: 24),
 					Text("Details", style: context.textTheme.titleLarge),
 					const SizedBox(height: 12),
 					ScrollingRow(children: [
-						for (final sensor in model.sensors) 
-							LineChart(sensor.details)
+						for (final sensor in model.sensors) Column(children: [
+							Text(sensor.name, textAlign: TextAlign.center, style: context.textTheme.labelLarge),
+							Expanded(child: LineChart(sensor.details)
+							),
+						])
 					]),
 
 					const SizedBox(height: 24),

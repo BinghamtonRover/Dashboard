@@ -22,6 +22,10 @@ enum ScienceResult {
 	loading,
 }
 
+extension on Timestamp {
+	double operator -(Timestamp other) => (seconds - other.seconds).toDouble();
+}
+
 /// Gets titles for a graph.
 GetTitleWidgetFunction getTitles(List<String> titles) => 
 	(double value, TitleMeta meta) => SideTitleWidget(
@@ -41,6 +45,7 @@ class ScienceTest {
 
 	/// The name of the second value used, if any.
 	final String? value2Name;
+
 	/// The second value used, if any.
 	final double? value2;
 
@@ -64,23 +69,53 @@ class ScienceTest {
 		value2Builder = NumberBuilder(value2 ?? 0);
 }
 
+class SensorReading {
+	final double time;
+	final double value;
+
+	const SensorReading(this.value, Timestamp timestamp, Timestamp firstTimestamp) : 
+		time = timestamp - firstTimestamp;
+}
+
 /// A sensor on the science chamber.
 class ScienceSensor {
-	/// The name of this sensor.
+	static const numSamples = 3;
+
 	final String name;
+
+	Timestamp? firstTimestamp;
+
+	final List<List<SensorReading>> samples = [
+		for (int i = 0; i < numSamples; i++) []
+	];
 
 	/// The test for life based on this sensor's values.
 	final ScienceTest test;
 
 	/// A sensor on the science chamber and its test for life.
-	ScienceSensor(this.name, this.test);
+	ScienceSensor({required this.name, required this.test});
+
+	void add(Timestamp timestamp, double value, int sample) {
+		firstTimestamp ??= firstTimestamp = timestamp;
+		samples[sample].add(SensorReading(value, timestamp, firstTimestamp!));
+	}
+
+	final List<Color> colors = [Colors.red, Colors.green, Colors.blue];
+	final List<bool> shouldShowSample = [
+		for (int i = 0; i < numSamples; i++) true
+	];
 
 	/// The individual data points for this sensor.
-	LineChartData details = LineChartData(
+	LineChartData get details => LineChartData(
 		lineBarsData: [
-			LineChartBarData(spots: const [FlSpot(0, 0), FlSpot(1, 1), FlSpot(2, 3)], preventCurveOverShooting: true, isCurved: true),
-			LineChartBarData(spots: const [FlSpot(0, 0), FlSpot(1, 1), FlSpot(2, 1)], preventCurveOverShooting: true, isCurved: true),
-			LineChartBarData(spots: const [FlSpot(0, 0), FlSpot(1, 1), FlSpot(2, 2)], preventCurveOverShooting: true, isCurved: true),
+			LineChartBarData(
+				spots: [
+					for (final SensorReading reading in samples[sample]) FlSpot(reading.time, reading.value)
+				], 
+				color: colors[sample],
+				preventCurveOverShooting: true,
+				isCurved: true,
+			),
 		], 
 		extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)], verticalLines: [VerticalLine(x: 0)]),
 		minX: 0, minY: 0,
@@ -93,52 +128,116 @@ class ScienceSensor {
 			BarChartGroupData(x: 1, barRods: [BarChartRodData(fromY: 0, toY: 10)]),
 			BarChartGroupData(x: 2, barRods: [BarChartRodData(fromY: 0, toY: 20)]),
 		],
-		titlesData: FlTitlesData(show: true, bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: getTitles(["1", "2", "3"])))),
+		titlesData: FlTitlesData(show: true, bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: getTitles(["Min", "Average", "Max"])))),
 	);
+
+	int sample = 0;
+
+	void clear() { 
+		for (final sample in samples) { sample.clear(); }
+		firstTimestamp = null;
+	}
 }
 
 /// The view model for the science analysis page.
 class ScienceModel with ChangeNotifier {
-	/// The being analyzed. Each sample gets its own list.
-	List<List<ScienceData>> data = [];
-
-	/// The different sensors.
-	List<ScienceSensor> sensors = [
-		ScienceSensor("Temperature", ScienceTest(
+	final temperature = ScienceSensor(
+		name: "Temperature", 
+		test: ScienceTest(
 			value1Name: "Average",
 			value1: 1.5,
 			test: ({required value1, value2}) => ScienceResult.extinct,
-		)),
-		ScienceSensor("Humidity", ScienceTest(
+		)
+	);
+	final humidity = ScienceSensor(
+		name: "Humidity", 
+		test: ScienceTest(
 			value1Name: "Average",
 			value1: 1.5,
 			test: ({required value1, value2}) => ScienceResult.extant,
-		)),
-		ScienceSensor("pH", ScienceTest(
+		)
+	);
+	final pH = ScienceSensor(
+		name: "pH", 
+		test: ScienceTest(
 			value1Name: "Average",
 			value1: 1.5,
 			test: ({required value1, value2}) => ScienceResult.notPresent,
-		)),
-		ScienceSensor("CO2", ScienceTest(
+		)
+	);
+	final co2 = ScienceSensor(
+		name: "CO2", 
+		test: ScienceTest(
 			value1Name: "Average",
 			value1: 1.5,
 			test: ({required value1, value2}) => ScienceResult.inconclusive,
-		)),
-		ScienceSensor("Methane", ScienceTest(
+		)
+	);
+	final methane = ScienceSensor(
+		name: "Methane", 
+		test: ScienceTest(
 			value1Name: "Min",
 			value1: 0,
 			value2: 2,
 			value2Name: "Max",
-			test: ({required value1, value2}) => ScienceResult.loading,
-		)),
-	];
+		test: ({required value1, value2}) => ScienceResult.loading,
+	));
+
+	late final List<ScienceSensor> sensors = [temperature, humidity, pH, co2, methane];
+
+	/// The sample whose stats are being displayed.
+	int sample = 0;
+
+	int numSamples = 3;
+
+	void updateSample(int? input) {
+		if (input == null) return;
+		sample = input;
+		for (final sensor in sensors) { sensor.sample = input; }
+		notifyListeners();
+	}
 
 	/// Whether the page is currently loading.
 	bool isLoading = false;
 
-	/// Upload a CSV file using [addData].
-	void uploadLogs() { }
+	String? errorText;
 
 	/// Adds one piece of data to the model.
 	void addData(ScienceData row) { }
+
+	void addMessage(WrappedMessage wrapper) {
+		final data = wrapper.decode(ScienceData.fromBuffer);
+		if (data.methane != 0) methane.add(wrapper.timestamp, data.methane, data.sample); 
+		if (data.co2 != 0) co2.add(wrapper.timestamp, data.co2, data.sample); 
+		if (data.humidity != 0) humidity.add(wrapper.timestamp, data.humidity, data.sample); 
+		if (data.temperature != 0) temperature.add(wrapper.timestamp, data.temperature, data.sample); 
+		if (data.pH != 0) pH.add(wrapper.timestamp, data.pH, data.sample); 
+	}
+
+	/// Calls [addMessage] for each message in the picked file.
+	Future<void> loadFile() async {
+		// Pick a file
+		final result = await FilePicker.platform.pickFiles(
+			dialogTitle: "Choose science logs",
+			initialDirectory: services.files.loggingDir.path,
+			type: FileType.custom,
+			allowedExtensions: ["log"],
+		);
+		if (result == null || result.count == 0) return;
+		final file = File(result.paths.first!);
+
+		// Read the file
+		isLoading = true;
+		notifyListeners();
+		try {
+			for (final sensor in sensors) { sensor.clear(); }
+			final messages = await services.files.readLogs(file);
+			messages.forEach(addMessage);
+			errorText = null;
+		} catch (error) {
+			errorText = error.toString();
+		}
+		isLoading = false;
+		notifyListeners();
+	}
 }
