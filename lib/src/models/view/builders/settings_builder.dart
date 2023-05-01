@@ -164,16 +164,21 @@ class ScienceSettingsBuilder extends ValueBuilder<ScienceSettings> {
 	/// Whether the graphs can scrolls. See [ScienceSettings.scrollableGraphs].
 	bool scrollableGraphs;
 
+	/// The number of samples collected. See [ScienceSettings.numSamples].
+	NumberBuilder<int> numSamples;
+
 	/// Modifies the given [ScienceSettings].
 	ScienceSettingsBuilder(ScienceSettings initial) : 
+		numSamples = NumberBuilder(initial.numSamples),
 		scrollableGraphs = initial.scrollableGraphs;
 
 	@override
-	bool get isValid => true;
+	bool get isValid => numSamples.isValid;
 
 	@override
 	ScienceSettings get value => ScienceSettings(
 		scrollableGraphs: scrollableGraphs,
+		numSamples: numSamples.value,
 	);
 
 	/// Modifies [scrollableGraphs].
