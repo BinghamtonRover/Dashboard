@@ -25,7 +25,10 @@ WrappedMessage? updateData(WrappedMessage wrapper) {
 
 	// Make modifications to the data here.
 	// If you want to delete the data, return null instead.
-	return null;
+	// 
+	// For example, to delete messages with a pH over 14: 
+	// if (data.pH > 14) return null;
+	// else return data;
 
 	return WrappedMessage(
 		timestamp: timestamp.addDuration(const Duration(seconds: 1)), 
@@ -36,6 +39,7 @@ WrappedMessage? updateData(WrappedMessage wrapper) {
 List<WrappedMessage> addNewData() => [
 	for (int s = 0; s < 3; s++) 
 		for (int i = 0; i < 20; i++) WrappedMessage(
+			name: "ScienceData",
 			timestamp: Timestamp.fromDateTime(DateTime.now().add(Duration(seconds: i + 1))), 
 			data: ScienceData(
 				sample: s, 
@@ -45,7 +49,7 @@ List<WrappedMessage> addNewData() => [
 				humidity: i + s + (random.nextInt(13).toDouble()),
 				pH: i + s + (random.nextInt(15).toDouble()),
 			).writeToBuffer(),
-		)
+		),
 ];
 
 

@@ -11,12 +11,11 @@ class ScrollingRow extends StatelessWidget {
 	/// The widgets to display.
 	final List<Widget> children;
 
+	/// The height of this row.
 	final double height;
 
-	final double width;
-
 	/// Renders a row of widgets.
-	const ScrollingRow({required this.children, this.height = 300, this.width = 300});
+	const ScrollingRow({required this.children, this.height = 300});
 
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<SettingsModel>.value(
@@ -24,7 +23,7 @@ class ScrollingRow extends StatelessWidget {
 		builder: (model) => SizedBox(height: height, child: model.science.scrollableGraphs
 			? ListView(
 				scrollDirection: Axis.horizontal, 
-				children: [for (final child in children) SizedBox(width: width, child: child)],
+				children: [for (final child in children) SizedBox(width: 300, child: child)],
 			)
 			: Row(
 				children: [for (final child in children) Expanded(child: child)]
@@ -33,8 +32,17 @@ class ScrollingRow extends StatelessWidget {
 	);
 }
 
+/// Gets titles for a graph.
+GetTitleWidgetFunction getTitles(List<String> titles) => 
+	(double value, TitleMeta meta) => SideTitleWidget(
+		axisSide: AxisSide.bottom,
+		space: 2,
+		child: Text(titles[value.toInt()])
+	);
+
 /// The science analysis page.
 class SciencePage extends StatelessWidget {
+	/// The colors for the different samples. Only 5 samples are supported.
 	final List<Color> colors = [Colors.red, Colors.green, Colors.blue, Colors.yellow, Colors.purple];
 
 	@override

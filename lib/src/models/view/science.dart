@@ -1,25 +1,23 @@
 import "dart:io";
 import "package:flutter/material.dart";
 import "package:file_picker/file_picker.dart";
-import "package:fl_chart/fl_chart.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/models.dart";
 
-/// Gets titles for a graph.
-GetTitleWidgetFunction getTitles(List<String> titles) => 
-	(double value, TitleMeta meta) => SideTitleWidget(
-		axisSide: AxisSide.bottom,
-		space: 2,
-		child: Text(titles[value.toInt()])
-	);
-
+/// A view model to allow the user to override values supplied to [ScienceTest]s.
 class ScienceTestBuilder with ChangeNotifier {
+	/// An override for the minimum value.
 	final min = NumberBuilder<double>(0);
+
+	/// An override for the average value.
 	final average = NumberBuilder<double>(0);
+
+	/// An override for the maximum value.
 	final max = NumberBuilder<double>(0);
 
+	/// A constructor.
 	ScienceTestBuilder() {
 		min.addListener(notifyListeners);
 		average.addListener(notifyListeners);
@@ -34,6 +32,7 @@ class ScienceTestBuilder with ChangeNotifier {
 		super.dispose();
 	}
 
+	/// Updates the view models with the latest data.
 	void update(SampleData data) {
 		min.value = data.min ?? 0;
 		min.controller.text = min.value.toString();
@@ -45,17 +44,21 @@ class ScienceTestBuilder with ChangeNotifier {
 	}
 }
 
+/// Analysis for one sample and sensor.
 class SampleAnalysis {
+	/// The sensor being analyzed.
 	final ScienceSensor sensor;
 
+	/// A constructor.
 	SampleAnalysis(this.sensor);
 
 	/// The view models for the test values.
 	final testBuilder = ScienceTestBuilder();
 
+	/// The data being recorded.
 	final SampleData data = SampleData();
 
-	// Overrides the min/average/max values.
+	/// Passes the overriden data to the sensor's test to determine signs of life.
 	ScienceResult get testResult => data.readings.isEmpty 
 		? ScienceResult.loading : sensor.test(SampleData()
 			..min = testBuilder.min.value
@@ -63,11 +66,13 @@ class SampleAnalysis {
 			..max = testBuilder.max.value
 		);
 
+	/// Clears all readings from this analysis.
 	void clear() { 
 		data.clear();
 		testBuilder.update(data);
 	}
 
+	/// Adds a reading to this analysis.
 	void addReading(Timestamp timestamp, double value) {
 		data.addReading(timestamp, value);
 		testBuilder.update(data);
@@ -76,8 +81,10 @@ class SampleAnalysis {
 
 /// The view model for the science analysis page.
 class ScienceModel with ChangeNotifier {
+	/// How many samples to analyze. Can be changed in the settings.
 	int get numSamples => models.settings.science.numSamples;
 
+	/// A list of all the samples for all the sensors.
 	Map<ScienceSensor, List<SampleAnalysis>> allSamples = {
 		for (final sensor in sensors) sensor: [
 			for (int i = 0; i < models.settings.science.numSamples; i++) 
@@ -85,6 +92,14 @@ class ScienceModel with ChangeNotifier {
 		]
 	};
 
+	/// Listens to all the [ScienceTestBuilder]s in the UI.
+	ScienceModel() {
+		for (final sample in analysesForSample) {
+			sample.testBuilder.addListener(notifyListeners);
+		}
+	}
+
+	/// All the sensors for the current [sample].
 	List<SampleAnalysis> get analysesForSample => [
 		for (final sensor in sensors) allSamples[sensor]![sample]
 	];
@@ -100,15 +115,10 @@ class ScienceModel with ChangeNotifier {
 		super.dispose();
 	}
 
+	/// Updates the [sample] variable.
 	void updateSample(int? input) {
 		if (input == null) return;
-		for (final sample in analysesForSample) {
-			sample.testBuilder.removeListener(notifyListeners);
-		}
 		sample = input;
-		for (final sample in analysesForSample) {
-			sample.testBuilder.addListener(notifyListeners);
-		}
 		notifyListeners();
 	}
 
@@ -118,9 +128,12 @@ class ScienceModel with ChangeNotifier {
 	/// The error, if any, that occurred while loading the data.
 	String? errorText;
 
+	/// Adds a [WrappedMessage] containing a [ScienceData] to the UI.
 	void addMessage(WrappedMessage wrapper) {
 		final data = wrapper.decode(ScienceData.fromBuffer);
+		if (wrapper.name != ScienceData().messageName) throw ArgumentError("Incorrect log type: ${wrapper.name}");
 		final sample = data.sample;
+		if (!wrapper.hasTimestamp()) { throw ArgumentError("Data is missing a timestamp"); }
 		if (sample >= numSamples) throw RangeError("Got data for sample #${sample + 1}, but there are only $numSamples samples.\nChange the number of samples in the settings and reload.");
 		if (data.methane != 0) allSamples[methane]![sample].addReading(wrapper.timestamp, data.methane); 
 		if (data.co2 != 0) allSamples[co2]![sample].addReading(wrapper.timestamp, data.co2); 
@@ -129,6 +142,7 @@ class ScienceModel with ChangeNotifier {
 		if (data.pH != 0) allSamples[pH]![sample].addReading(wrapper.timestamp, data.pH); 
 	}
 
+	/// Clears all the readings from all the samples.
 	void clear() {
 		for (final sensor in sensors) {
 			for (final analysis in allSamples[sensor]!) {
