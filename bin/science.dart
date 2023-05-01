@@ -37,7 +37,14 @@ List<WrappedMessage> addNewData() => [
 	for (int s = 0; s < 3; s++) 
 		for (int i = 0; i < 20; i++) WrappedMessage(
 			timestamp: Timestamp.fromDateTime(DateTime.now().add(Duration(seconds: i + 1))), 
-			data: ScienceData(sample: s, temperature: i + (random.nextInt(10).toDouble()), methane: i + (random.nextInt(5).toDouble())).writeToBuffer(),
+			data: ScienceData(
+				sample: s, 
+				temperature: i + s + (random.nextInt(10).toDouble()),
+				methane: i + s + (random.nextInt(7).toDouble()),
+				co2: i + s + (random.nextInt(5).toDouble()),
+				humidity: i + s + (random.nextInt(13).toDouble()),
+				pH: i + s + (random.nextInt(15).toDouble()),
+			).writeToBuffer(),
 		)
 ];
 
