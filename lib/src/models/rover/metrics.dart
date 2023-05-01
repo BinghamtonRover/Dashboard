@@ -30,12 +30,6 @@ class RoverMetrics extends Model {
 
 	@override
 	Future<void> init() async {
-    Timer.periodic(
-      const Duration(seconds: 2), 
-      (refresh) {
-        //smth
-      }
-    );
 		services.dataSocket.registerHandler<ElectricalData>(
 			name: ElectricalData().messageName,
 			decoder: ElectricalData.fromBuffer,
