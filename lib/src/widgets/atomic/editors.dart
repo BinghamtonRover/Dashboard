@@ -81,9 +81,9 @@ class NumberEditor extends StatelessWidget {
 		builder: (model) => Row(
 			mainAxisAlignment: MainAxisAlignment.spaceBetween,
 			children: [
-				Expanded(child: ListTile(
+				Expanded(child: subtitle == null ? ListTile(title: Text(name)) : ListTile(
 					title: Text(name),
-					subtitle: Text(subtitle ?? ""),
+					subtitle: Text(subtitle!),
 				)),
 				Spacer(flex: spacerFlex),
 				Expanded(child: TextField(
