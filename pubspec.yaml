@@ -46,16 +46,17 @@ dev_dependencies:
   msix: ^3.9.1
   icons_launcher: ^2.1.0
 
+# Run using flutter pub run icons_launcher:create
 icons_launcher:
   image_path: "logo.png"
   platforms: 
     android:
-      adaptive_foreground_image: "logo.png"
-      adaptive_background_color: "#000000"
+      # adaptive_foreground_image: "logo.png"
+      # adaptive_background_color: "#000000"
+      # adaptive_monochrome_image: "logo.png"
       enable: true
     windows: 
       enable: true
-
 
 dependency_overrides: 
   # win32_gamepad needs win32 ^4.0.0
@@ -63,12 +64,13 @@ dependency_overrides:
   # So, this is the latest version of win32 before 4.0.0
   win32: 3.1.4
 
+# flutter pub run msix:create
 msix_config:
   msix_version: 2023.5.2.1
   display_name: Dashboard
   publisher_display_name: Binghamton University Rover Team
   identity_name: edu.binghamton.rover
-  # logo_path: path/to/logo.png
+  logo_path: logo.png
   capabilities: internetClientServer, privateNetworkClientServer, usb, serialcommunication, lowLevel
   output_name: Dashboard
   certificate_path: windows_certificate.pfx
