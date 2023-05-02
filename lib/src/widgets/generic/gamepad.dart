@@ -14,13 +14,9 @@ class GamepadButton extends StatelessWidget {
 	/// The controller being displayed.
 	final Controller controller;
 
-	/// The number to show next to the gamepad icon.
-	final int gamepadNumber;
-
 	/// A const constructor for this widget.
 	const GamepadButton({
 		required this.controller,
-		required this.gamepadNumber,
 	});
 
 	/// Returns a color representing the gamepad's battery level.
@@ -31,16 +27,6 @@ class GamepadButton extends StatelessWidget {
 			case GamepadBatteryLevel.medium: return Colors.orange;
 			case GamepadBatteryLevel.full: return Colors.green;
 			case GamepadBatteryLevel.unknown: return Colors.black;
-		}
-	}
-
-	/// Connects to a gamepad and gives visual + haptic feedback.
-	Future<void> connect() async {
-		await services.gamepad.connect();
-		if (!controller.isConnected) {
-			models.home.setMessage(severity: Severity.error, text: "No gamepad connected");
-		} else {
-			models.home.setMessage(severity: Severity.info, text: "Connected to gamepad");
 		}
 	}
 
@@ -56,7 +42,7 @@ class GamepadButton extends StatelessWidget {
 							Positioned(
 								bottom: -2,
 								right: -2,
-								child: Text(gamepadNumber.toString(), style: const TextStyle(fontSize: 12, color: Colors.white)),
+								child: Text("${controller.gamepadIndex + 1}", style: const TextStyle(fontSize: 12, color: Colors.white)),
 							),
 						]
 					),
@@ -64,7 +50,7 @@ class GamepadButton extends StatelessWidget {
 						? getColor(model.gamepad.battery)
 						: Colors.black,
 					constraints: const BoxConstraints(maxWidth: 36),
-					onPressed: connect,
+					onPressed: controller.connect,
 				),
 				DropdownButton<OperatingMode>(
 					iconEnabledColor: Colors.black,
@@ -90,9 +76,9 @@ class GamepadButtons extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => Row(
 		children: [
-			GamepadButton(controller: models.rover.controller1, gamepadNumber: 1),
+			GamepadButton(controller: models.rover.controller1),
 			const SizedBox(width: 8),
-			GamepadButton(controller: models.rover.controller2, gamepadNumber: 2),
+			GamepadButton(controller: models.rover.controller2),
 		]
 	);
 }

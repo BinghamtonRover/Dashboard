@@ -32,7 +32,7 @@ class MockGamepad implements Gamepad {
   void vibrate({int? leftMotorSpeed, int? rightMotorSpeed}) { }
 
   @override
-  int get controller => 0;
+  int get controller => -1;
 
   @override
   GamepadBatteryInfo get gamepadBatteryInfo => GamepadBatteryInfo(0, GamepadDeviceType.controller);
@@ -111,11 +111,11 @@ extension GamepadUtils on Gamepad {
   void pulse() async {  // ignore: avoid_void_async, because this should not be awaited
     if (!isConnected) return;
     vibrate(leftMotorSpeed: vibrateIntensity, rightMotorSpeed: vibrateIntensity);
-    await Future.delayed(const Duration(milliseconds: 300));
+    await Future.delayed(const Duration(milliseconds: 200));
     vibrate();  // default speed of 0
     await Future.delayed(const Duration(milliseconds: 100));
     vibrate(leftMotorSpeed: vibrateIntensity, rightMotorSpeed: vibrateIntensity);
-    await Future.delayed(const Duration(milliseconds: 300));
+    await Future.delayed(const Duration(milliseconds: 200));
     vibrate();  // default speed of 0
   }
 }
@@ -139,58 +139,46 @@ const vibrateIntensity = 65000;
 /// [Gamepad.isConnected]. No action is needed to check for a new gamepad, but you must call
 /// [update] to read any button presses, or else [Gamepad.state] will never update.
 class GamepadService extends Service {
-  /// The first gamepad connected to the user's device.
-  Gamepad gamepad1 = Platform.isWindows ? Gamepad(0) : MockGamepad();
+  static const int numGamepads = 2;
 
-  /// The second gamepad connected to the user's device.
-  Gamepad gamepad2 = Platform.isWindows ? Gamepad(1) : MockGamepad();
+  final List<Gamepad> gamepads = [
+    for (int i = 0; i < numGamepads; i++) MockGamepad()
+  ];
+
+  Set<int> get ids => {
+    for (final gamepad in gamepads) gamepad.controller
+  };
 
   @override
-  Future<void> init() async => connect();
+  Future<void> init() async {
+    for (int i = 0; i < numGamepads; i++) {
+      await connect(i);
+    }
+  }
 
   @override
   Future<void> dispose() async {}
 
   /// Connects to a gamepad and calls [GamepadUtils.pulse].
-  Future<void> connect() async {
+  Future<void> connect(int index) async {
     if (!Platform.isWindows) return;
-    int i;
-    for (i = 0; i < maxGamepads; i++) {  // connect [gamepad1]
-      gamepad1 = Gamepad(i);
-      if (gamepad1.isConnected) break;
+    gamepads[index] = MockGamepad();
+    for (int i = 0; i < maxGamepads; i++) {
+      final gamepad = Gamepad(i);
+      if (!gamepad.isConnected) continue;
+      if (ids.contains(i)) continue;
+      gamepads[index] = gamepad;
+      gamepad.pulse();
+      return;
     }
-    for (i = i + 1; i < maxGamepads; i++) {  // connect [gamepad2]
-      gamepad2 = Gamepad(i);
-      if (gamepad2.isConnected) break;
-    }
-    gamepad1.pulse();
-    gamepad2.pulse();
   }
-
-  /// The battery of the first controller.
-  GamepadBatteryLevel get battery1 => gamepad1.gamepadBatteryInfo.batteryLevel;
-
-  /// The battery of the second controller.
-  GamepadBatteryLevel get battery2 => gamepad2.gamepadBatteryInfo.batteryLevel;
-
-  /// Whether the first gamepad is connected to the user's device.
-  bool get isConnected1 => gamepad1.isConnected;
-
-  /// Whether the second gamepad is connected to the user's device.
-  bool get isConnected2 => gamepad2.isConnected;
-
-  /// The current state of the first gamepad, its buttons, and its connection state.
-  GamepadState get state1 => gamepad1.state;
-
-  /// The current state of the second gamepad, its buttons, and its connection state.
-  GamepadState get state2 => gamepad2.state;
-
-  /// Checks the state of the controller and updates [state1] and [state2].
+  /// Checks the state of the controller and updates each [Gamepad.state].
   ///
   /// New button presses will not be recorded until this is called, so you should try to do
   /// so in a way that it is called periodically, either via a timer or Flutter's build function.
   void update() {
-    gamepad1.updateState();
-    gamepad2.updateState();
+    for (final gamepad in gamepads) {
+      gamepad.updateState();
+    }
   }
 }
