@@ -36,12 +36,6 @@ extension on RawDatagramSocket {
 /// 
 /// See the [Network Address Assignments](https://docs.google.com/document/d/1U6GxcYGpqUpSgtXFbiOTlMihNqcg6RbCqQmewx7cXJE) document for IP address and ports. 
 abstract class UdpSocket extends Service {
-	/// The port to listen on and send to.
-	/// 
-	/// Each program gets its own port, so the dashboard socket that listens for autonomy data
-	/// uses the same port as the actual autonomy program running on the server.
-	final int listenPort;
-
 	/// The UDP socket backed by `dart:io`.
 	/// 
 	/// This socket must be closed in [dispose].
@@ -55,12 +49,13 @@ abstract class UdpSocket extends Service {
 	/// The socket to send to.
 	SocketConfig? destination;
 
-	/// Opens a UDP socket on the given port.
-	UdpSocket({required this.listenPort, this.destination});
+	/// Opens a UDP socket to send data to the given [SocketConfig].
+	UdpSocket({this.destination});
 
 	@override
 	Future<void> init() async {
-		_socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, listenPort);
+		// 0 means let the device choose a port. The Pis will respond to whichever port connects to it.
+		_socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 0);
 		_subscription = _socket.listenForData(onData);
 	}
 
