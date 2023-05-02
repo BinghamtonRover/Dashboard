@@ -128,6 +128,6 @@ extension GpsUtils on GpsCoordinates {
     pow(latitude - other.latitude, 2) 
       + pow(longitude - other.longitude, 2) 
       + pow(altitude - other.altitude, 2), 
-    0.5
+    0.5,
   );
 }

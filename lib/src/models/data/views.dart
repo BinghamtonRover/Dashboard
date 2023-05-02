@@ -28,7 +28,7 @@ class ViewsSelector extends StatelessWidget {
 				value: view,
 				child: Text(view.name),
 			),
-		]
+		],
 	);
 }
 
@@ -68,9 +68,9 @@ class View {
 					const Spacer(),
 					const Text("Choose a view"),
 					const Spacer(),
-				]
-			)
-		)
+				],
+			),
+		),
 	);
 }
 

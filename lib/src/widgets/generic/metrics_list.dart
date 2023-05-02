@@ -24,9 +24,9 @@ class MetricsList extends StatelessWidget {
 					children: [
 						for (final String metric in metrics.allMetrics) Text(metric),
 						const SizedBox(height: 4),
-					]
-				)
-			]
-		)
+					],
+				),
+			],
+		),
 	);
 }

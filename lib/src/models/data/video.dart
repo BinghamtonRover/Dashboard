@@ -12,8 +12,8 @@ class VideoModel extends Model {
 			details: CameraDetails(
 				name: name,
 				status: CameraStatus.CAMERA_DISCONNECTED,
-			)
-		)
+			),
+		),
 	};
 
 	/// How many frames came in the network in the past second.

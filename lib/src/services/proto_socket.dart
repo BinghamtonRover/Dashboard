@@ -56,7 +56,7 @@ class ProtoSocket extends UdpSocket {
 	void registerHandler<T extends Message>({
 		required String name, 
 		required MessageDecoder<T> decoder, 
-		required MessageHandler<T> handler
+		required MessageHandler<T> handler,
 	}) {
 		if (_handlers.containsKey(name)) {  // handler was already registered
 			throw ArgumentError("Message handler for type [$T] already registered");

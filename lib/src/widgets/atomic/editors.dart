@@ -22,7 +22,7 @@ class SocketEditor extends StatelessWidget {
 	const SocketEditor({
 		required this.name,
 		required this.model, 
-		this.editPort = true
+		this.editPort = true,
 	});
 
 	@override
@@ -37,8 +37,8 @@ class SocketEditor extends StatelessWidget {
 					onChanged: model.address.update,
 					controller: model.address.controller,
 					decoration: InputDecoration(errorText: model.address.error),
-					inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"\d|\."))]
-				)),
+					inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"\d|\."))],
+				),),
 				const SizedBox(width: 12),
 				if (editPort) ...[
 					Expanded(child: TextField(
@@ -46,10 +46,10 @@ class SocketEditor extends StatelessWidget {
 						controller: model.port.controller,
 						decoration: InputDecoration(errorText: model.port.error),
 						inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"\d"))],
-					)),
+					),),
 				] else const Spacer()
 			],
-		)
+		),
 	);
 }
 
@@ -86,7 +86,7 @@ class NumberEditor extends StatelessWidget {
 					child: subtitle == null ? ListTile(title: Text(name)) : ListTile(
 						title: Text(name),
 						subtitle: Text(subtitle!),
-					)
+					),
 				),
 				const Spacer(),
 				Expanded(child: TextField(
@@ -94,9 +94,9 @@ class NumberEditor extends StatelessWidget {
 					decoration: InputDecoration(errorText: model.error),
 					controller: model.controller,
 					inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"\d|\."))],
-				)),
-			]
-		)
+				),),
+			],
+		),
 	);
 }
 
@@ -141,6 +141,6 @@ class DropdownEditor<T> extends StatelessWidget {
 					child: Text(humanName(other)),
 				),
 			],
-		)
+		),
 	);
 }

@@ -7,8 +7,6 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
-import "camera_editor.dart";
-
 /// A helper class to load and manage resources used by a [ui.Image].
 /// 
 /// To use: 
@@ -125,8 +123,8 @@ class VideoFeedState extends State<VideoFeed> {
 				child: imageLoader.hasImage && data.details.status == CameraStatus.CAMERA_ENABLED 
 					? Row(children: [
 							Expanded(child: RawImage(image: imageLoader.image, fit: BoxFit.contain))
-					])
-					: Text(errorMessage, textAlign: TextAlign.center) 
+					],)
+					: Text(errorMessage, textAlign: TextAlign.center),
 			),
 			Row(
 				mainAxisAlignment: MainAxisAlignment.end,
@@ -144,10 +142,10 @@ class VideoFeedState extends State<VideoFeed> {
 						),
 					),
 					ViewsSelector(currentView: widget.name.humanName),
-				]
+				],
 			),
 			Positioned(left: 5, bottom: 5, child: Text(data.details.name.humanName)),
-		]
+		],
 	);
 
 	/// Displays an error message describing why `image == null`.

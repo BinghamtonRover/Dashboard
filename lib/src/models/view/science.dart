@@ -63,7 +63,7 @@ class ScienceAnalysis {
 		? ScienceResult.loading : sensor.test(SampleData()
 			..min = testBuilder.min.value
 			..average = testBuilder.average.value
-			..max = testBuilder.max.value
+			..max = testBuilder.max.value,
 		);
 
 	/// Clears all readings from this analysis.
