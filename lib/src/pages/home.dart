@@ -34,10 +34,19 @@ class TankSwitcher extends StatelessWidget {
 }
 
 
-/// The main dashboard page. 
+/// The main dashboard page.
 /// 
-/// TODO: Define what exactly will go here.
-class HomePage extends StatelessWidget {
+/// Each page the user could navigate to is embedded here, as a [View]. 
+class HomePage extends StatefulWidget {
+	@override
+	HomePageState createState() => HomePageState();
+}
+
+/// The state for the homepage. Handles showing and hiding the sidebar.
+class HomePageState extends State<HomePage>{
+	/// Whether to show the sidebar.
+	bool showSidebar = true;
+
 	@override
 	Widget build(BuildContext context) => Scaffold(
 		appBar: AppBar(
@@ -48,17 +57,21 @@ class HomePage extends StatelessWidget {
 					icon: const Icon(Icons.settings),
 					onPressed: () => Navigator.of(context).pushNamed(Routes.settings),
 				),
+				Builder(builder: (context) => IconButton(
+					icon: const Icon(Icons.menu),
+					onPressed: () => setState(() => showSidebar = !showSidebar),
+				))
 			]
 		),
-		body: Column(
+		bottomNavigationBar: Footer(),
+		body: Row(
 			children: [
-				Expanded(child: Row(
-					children: const [
-						Expanded(child: ViewsWidget()),
-						Sidebar(),
-					]
-				)),
-				Footer(),
+				const Expanded(child: ViewsWidget()),
+				// An AnimatedSize widget automatically shrinks the widget away
+				AnimatedSize(
+					duration: const Duration(milliseconds: 250),
+					child: showSidebar ? const Sidebar() : Container(),
+				)
 			]
 		),
 	);

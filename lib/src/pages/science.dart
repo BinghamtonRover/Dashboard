@@ -1,10 +1,22 @@
 import "package:flutter/material.dart";
+import "package:flutter/gestures.dart";
 import "package:fl_chart/fl_chart.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
+
+/// Allows desktop users to scroll with their mouse or other device.
+class DesktopScrollBehavior extends MaterialScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => { 
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.stylus,
+    PointerDeviceKind.trackpad,
+  };
+}
 
 /// A row of scrollable or non-scrollable widgets.
 class ScrollingRow extends StatelessWidget {
@@ -21,15 +33,54 @@ class ScrollingRow extends StatelessWidget {
 	Widget build(BuildContext context) => ProviderConsumer<SettingsModel>.value(
 		value: models.settings,
 		builder: (model) => SizedBox(height: height, child: model.science.scrollableGraphs
-			? ListView(
-				scrollDirection: Axis.horizontal, 
-				children: [for (final child in children) SizedBox(width: 300, child: child)],
+			? ScrollConfiguration(
+			  behavior: DesktopScrollBehavior(),
+				child: ListView(
+					scrollDirection: Axis.horizontal, 
+					children: [for (final child in children) SizedBox(width: 400, child: child)],
+				)
 			)
 			: Row(
 				children: [for (final child in children) Expanded(child: child)]
 			)
 		)
 	);
+}
+
+/// A [ScrollingRow] of charts, using [builder] on each [ScienceAnalysis] in [analyses].
+class ChartsRow extends StatelessWidget {
+	/// The title of these charts.
+	final String title;
+
+	/// The height of this row.
+	final double height;
+
+	/// The data for these charts. 
+	final List<ScienceAnalysis> analyses;
+
+	/// The chart to show for each piece of data.
+	final Widget Function(ScienceAnalysis) builder;
+
+	/// A const constructor.
+	const ChartsRow({
+		required this.title, 
+		required this.analyses, 
+		required this.builder, 
+		this.height = 300
+	});
+
+	@override
+	Widget build(BuildContext context) => Column(children: [
+		const SizedBox(height: 24),
+		Text(title, style: context.textTheme.titleLarge),
+		const SizedBox(height: 12),
+		ScrollingRow(height: height, children: [
+			for (final analysis in analyses) Column(children: [
+				Text(analysis.sensor.name, textAlign: TextAlign.center, style: context.textTheme.labelLarge),
+				Expanded(child: builder(analysis)),
+			])
+		]),
+	]);
 }
 
 /// Gets titles for a graph.
@@ -45,118 +96,109 @@ class SciencePage extends StatelessWidget {
 	/// The colors for the different samples. Only 5 samples are supported.
 	final List<Color> colors = [Colors.red, Colors.green, Colors.blue, Colors.yellow, Colors.purple];
 
+	/// The `package:fl_chart` helper class for the details charts.
+	LineChartData getDetailsData(ScienceAnalysis analysis, Color color) => LineChartData(
+		lineBarsData: [
+			LineChartBarData(
+				spots: [
+					for (final reading in analysis.data.readings) 
+						FlSpot(reading.time, reading.value)
+				], 
+				color: color,
+				preventCurveOverShooting: true,
+				isCurved: true,
+			),
+		], 
+		extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)], verticalLines: [VerticalLine(x: 0)]),
+		minX: 0, minY: 0,
+	);
+
+	/// The `package:fl_chart` helper class for the summary charts.
+	BarChartData getBarChartData(ScienceAnalysis analysis, Color color) => BarChartData(
+		barGroups: [
+			BarChartGroupData(x: 0, barRods: [BarChartRodData(color: color, fromY: 0, toY: analysis.data.min ?? 0)]),
+			BarChartGroupData(x: 1, barRods: [BarChartRodData(color: color, fromY: 0, toY: analysis.data.average ?? 0)]),
+			BarChartGroupData(x: 2, barRods: [BarChartRodData(color: color, fromY: 0, toY: analysis.data.max ?? 0)]),
+		],
+		titlesData: FlTitlesData(show: true, bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: getTitles(["Min", "Avg", "Max"])))),
+	);
+
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<ScienceModel>(
 		create: ScienceModel.new,
-		builder: (model) => ListView(
-			padding: const EdgeInsets.all(16),
-			children: [
-				Row(
-					children: [
-						Text("Science Analysis", style: context.textTheme.headlineMedium), 
-						const SizedBox(width: 12),
-						if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
-						const Spacer(),
-						DropdownButton(
-							value: model.sample,
-							onChanged: model.updateSample,
-							items: [
-								for (int i = 0; i < model.numSamples; i++) DropdownMenuItem(
-									value: i,
-									child: Text("Sample ${i + 1}"),
-								)
-							],
+		builder: (model) => Stack(children: [
+			ListView(  // The main content of the page
+				padding: const EdgeInsets.all(16),
+				children: [
+					if (model.errorText != null) ...[
+						const SizedBox(height: 48),
+						Text("Error analyzing the logs", textAlign: TextAlign.center, style: context.textTheme.headlineLarge),
+						const SizedBox(height: 24),
+						Text("Here is the error:", textAlign: TextAlign.center, style: context.textTheme.titleLarge),
+						const SizedBox(height: 12),
+						Text(model.errorText!, textAlign: TextAlign.center, style: context.textTheme.titleMedium),
+					] else if (!model.isLoading) ...[
+						ChartsRow(
+							title: "Details",
+							analyses: model.analysesForSample,
+							builder: (analysis) => LineChart(getDetailsData(analysis, colors[model.sample])),
 						),
-						IconButton(
-							icon: const Icon(Icons.upload_file),
-							onPressed: model.loadFile,
+						ChartsRow(
+							title: "Summary",
+							analyses: model.analysesForSample,
+							builder: (analysis) => BarChart(getBarChartData(analysis, colors[model.sample])),
 						),
-						const ViewsSelector(currentView: Routes.science),
+						ChartsRow(
+							title: "Results",
+							height: 425,
+							analyses: model.analysesForSample,
+							builder: ResultsBox.new,
+						)
 					]
+				],
+			),
+			Row(children: [  // The header at the top
+				const SizedBox(width: 8),
+				Text("Science Analysis", style: context.textTheme.headlineMedium), 
+				const SizedBox(width: 12),
+				if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
+				const Spacer(),
+				DropdownButton(
+					value: model.sample,
+					onChanged: model.updateSample,
+					items: [
+						for (int i = 0; i < model.numSamples; i++) DropdownMenuItem(
+							value: i,
+							child: Text("Sample ${i + 1}"),
+						)
+					],
 				),
-				if (model.errorText != null) ...[
-					const SizedBox(height: 48),
-					Text("Error analyzing the logs", textAlign: TextAlign.center, style: context.textTheme.headlineLarge),
-					const SizedBox(height: 24),
-					Text("Here is the error:", textAlign: TextAlign.center, style: context.textTheme.titleLarge),
-					const SizedBox(height: 12),
-					Text(model.errorText!, textAlign: TextAlign.center, style: context.textTheme.titleMedium),
-				] else if (!model.isLoading) ...[
-					const SizedBox(height: 24),
-					Text("Details", style: context.textTheme.titleLarge),
-					const SizedBox(height: 12),
-					ScrollingRow(children: [
-						for (final analysis in model.analysesForSample) Column(children: [
-							Text(analysis.sensor.name, textAlign: TextAlign.center, style: context.textTheme.labelLarge),
-							Expanded(child: LineChart(
-								LineChartData(
-									lineBarsData: [
-										LineChartBarData(
-											spots: [
-												for (final reading in analysis.data.readings) 
-													FlSpot(reading.time, reading.value)
-											], 
-											color: colors[model.sample],
-											preventCurveOverShooting: true,
-											isCurved: true,
-										),
-									], 
-									extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)], verticalLines: [VerticalLine(x: 0)]),
-									minX: 0, minY: 0,
-								)
-							)),
-						])
-					]),
-
-					const SizedBox(height: 24),
-					Text("Summary", style: context.textTheme.titleLarge),
-					const SizedBox(height: 12),
-					ScrollingRow(children: [
-						for (final analysis in model.analysesForSample) Column(children: [
-							Text(analysis.sensor.name, textAlign: TextAlign.center, style: context.textTheme.labelLarge),
-							Expanded(child: BarChart(BarChartData(
-								barGroups: [
-									BarChartGroupData(x: 0, barRods: [BarChartRodData(color: colors[model.sample], fromY: 0, toY: analysis.data.min ?? 0)]),
-									BarChartGroupData(x: 1, barRods: [BarChartRodData(color: colors[model.sample], fromY: 0, toY: analysis.data.average ?? 0)]),
-									BarChartGroupData(x: 2, barRods: [BarChartRodData(color: colors[model.sample], fromY: 0, toY: analysis.data.max ?? 0)]),
-								],
-								titlesData: FlTitlesData(show: true, bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: getTitles(["Min", "Avg", "Max"])))),
-							)))
-						])
-					]),
-					
-					const SizedBox(height: 24),
-					Text("Results", style: context.textTheme.titleLarge),
-					const SizedBox(height: 12),
-					ScrollingRow(
-						height: 425,
-						children: [
-							for (final analysis in model.analysesForSample) 
-								ResultsBox(analysis)
-						]
-					),
-				]
-			]
-		)
+				IconButton(
+					icon: const Icon(Icons.upload_file),
+					onPressed: model.loadFile,
+				),
+				const ViewsSelector(currentView: Routes.science),
+			]),
+		])
 	);
 }
 
 /// A box to display the final results for each sensor.
 class ResultsBox extends StatelessWidget {
 	/// The sensor being tested.
-	final SampleAnalysis analysis;
+	final ScienceAnalysis analysis;
 
 	/// Creates a widget to display the results of a science test.
 	const ResultsBox(this.analysis);
 
 	/// The color to render this box.
-	Color get color {
+	Color? get color {
 		switch(analysis.testResult) {
 			case ScienceResult.extinct: return Colors.red;
 			case ScienceResult.extant: return Colors.green;
 			case ScienceResult.notPresent: return Colors.orange;
 			case ScienceResult.inconclusive: return Colors.blueGrey;
-			case ScienceResult.loading: return Colors.white;
+			case ScienceResult.loading: return null;
 		}
 	}
 
@@ -177,12 +219,10 @@ class ResultsBox extends StatelessWidget {
 			margin: const EdgeInsets.all(8),
 			padding: const EdgeInsets.all(8),
 			width: double.infinity,
-			color: color,
+			color: color ?? context.colorScheme.surface,
 			child: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
-					Text(analysis.sensor.name, style: context.textTheme.titleLarge),
-					const SizedBox(height: 12),
 					Text(analysis.sensor.testDescription),
 					const Spacer(),
 					Center(child: Text(text, textAlign: TextAlign.center, style: context.textTheme.headlineLarge)),
@@ -193,17 +233,17 @@ class ResultsBox extends StatelessWidget {
 		NumberEditor(
 			name: "Min",
 			model: analysis.testBuilder.min,
-			spacerFlex: 1,
+			titleFlex: 1,
 		),
 		NumberEditor(
 			name: "Average",
 			model: analysis.testBuilder.average,
-			spacerFlex: 1,
+			titleFlex: 1,
 		),
 		NumberEditor(
 			name: "Max",
 			model: analysis.testBuilder.max,
-			spacerFlex: 1,
+			titleFlex: 1,
 		),
 	]);
 }

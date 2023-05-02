@@ -5,6 +5,7 @@ import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/widgets.dart";
 
 import "camera_editor.dart";
 
@@ -114,7 +115,9 @@ class VideoFeedState extends State<VideoFeed> {
 	Widget build(BuildContext context) => Stack(
 		children: [
 			Container(
-				color: Colors.blueGrey, 
+				color: context.colorScheme.brightness == Brightness.light
+					? Colors.blueGrey
+					: Colors.blueGrey[700], 
 				height: double.infinity,
 				width: double.infinity,
 				padding: const EdgeInsets.all(4),

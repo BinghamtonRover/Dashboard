@@ -45,12 +45,12 @@ class ScienceTestBuilder with ChangeNotifier {
 }
 
 /// Analysis for one sample and sensor.
-class SampleAnalysis {
+class ScienceAnalysis {
 	/// The sensor being analyzed.
 	final ScienceSensor sensor;
 
 	/// A constructor.
-	SampleAnalysis(this.sensor);
+	ScienceAnalysis(this.sensor);
 
 	/// The view models for the test values.
 	final testBuilder = ScienceTestBuilder();
@@ -85,10 +85,10 @@ class ScienceModel with ChangeNotifier {
 	int get numSamples => models.settings.science.numSamples;
 
 	/// A list of all the samples for all the sensors.
-	Map<ScienceSensor, List<SampleAnalysis>> allSamples = {
+	Map<ScienceSensor, List<ScienceAnalysis>> allSamples = {
 		for (final sensor in sensors) sensor: [
 			for (int i = 0; i < models.settings.science.numSamples; i++) 
-				SampleAnalysis(sensor)
+				ScienceAnalysis(sensor)
 		]
 	};
 
@@ -100,7 +100,7 @@ class ScienceModel with ChangeNotifier {
 	}
 
 	/// All the sensors for the current [sample].
-	List<SampleAnalysis> get analysesForSample => [
+	List<ScienceAnalysis> get analysesForSample => [
 		for (final sensor in sensors) allSamples[sensor]![sample]
 	];
 
@@ -154,18 +154,22 @@ class ScienceModel with ChangeNotifier {
 	/// Calls [addMessage] for each message in the picked file.
 	Future<void> loadFile() async {
 		// Pick a file
+		isLoading = true;
+		notifyListeners();
 		final result = await FilePicker.platform.pickFiles(
 			dialogTitle: "Choose science logs",
 			initialDirectory: services.files.loggingDir.path,
 			type: FileType.custom,
 			allowedExtensions: ["log"],
 		);
-		if (result == null || result.count == 0) return;
-		final file = File(result.paths.first!);
+		if (result == null || result.count == 0) {
+			isLoading = false;
+			notifyListeners();
+			return;
+		}
 
 		// Read the file
-		isLoading = true;
-		notifyListeners();
+		final file = File(result.paths.first!);
 		try {
 			clear();
 			final messages = await services.files.readLogs(file);

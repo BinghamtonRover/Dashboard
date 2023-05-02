@@ -174,6 +174,7 @@ class SerialButton extends StatelessWidget {
 			)
 			: PopupMenuButton(
 				icon: const Icon(Icons.usb),
+				color: context.colorScheme.onSecondary,
 				tooltip: "Select device",
 				onSelected: model.connect,
 				itemBuilder: (_) => [
@@ -219,12 +220,13 @@ class MessageDisplay extends StatelessWidget {
 			: Container(
 				height: double.infinity,
 				padding: const EdgeInsets.all(2),
-				margin: const EdgeInsets.all(2),
 				color: getColor(model.message!.severity),
 				child: Row(
 					children: [
 						Icon(getIcon(model.message!.severity)),
+						const SizedBox(width: 4),
 						Text(model.message!.text),
+						const SizedBox(width: 4),
 				]
 			)
 		)
