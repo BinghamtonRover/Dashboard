@@ -25,6 +25,7 @@ dependencies:
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
   build_runner: ^2.3.2
+  flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
   icons_launcher: ^2.1.0
@@ -52,6 +53,12 @@ icons_launcher:
     windows: 
       enable: true
 
+flutter_launcher_icons:
+  image_path: "logo.png"
+  android: true
+  windows: 
+    generate: true
+
 # Builds a Windows .msix App Installer file for the Dashboard.
 #   Run: flutter pub run msix:create
 msix_config:
@@ -60,6 +67,7 @@ msix_config:
   publisher_display_name: Binghamton University Rover Team
   identity_name: edu.binghamton.rover
   logo_path: logo.png
+  trim_logo: false
   capabilities: internetClientServer, privateNetworkClientServer, usb, serialcommunication, lowLevel
   output_name: Dashboard
   certificate_path: windows_certificate.pfx
