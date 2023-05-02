@@ -1,6 +1,6 @@
-import "package:flutter/material.dart";
-import "package:flutter/gestures.dart";
 import "package:fl_chart/fl_chart.dart";
+import "package:flutter/gestures.dart";
+import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -84,12 +84,11 @@ class ChartsRow extends StatelessWidget {
 }
 
 /// Gets titles for a graph.
-GetTitleWidgetFunction getTitles(List<String> titles) => 
-	(double value, TitleMeta meta) => SideTitleWidget(
-		axisSide: AxisSide.bottom,
-		space: 2,
-		child: Text(titles[value.toInt()])
-	);
+GetTitleWidgetFunction getTitles(List<String> titles) => (value, meta) => SideTitleWidget(
+	axisSide: AxisSide.bottom,
+	space: 2,
+	child: Text(titles[value.toInt()])
+);
 
 /// The science analysis page.
 class SciencePage extends StatelessWidget {

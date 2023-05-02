@@ -138,7 +138,7 @@ class VideoFeedState extends State<VideoFeed> {
 					),
 					IconButton(
 						icon: const Icon(Icons.settings),
-						onPressed: () => showDialog(
+						onPressed: () async => showDialog(
 							context: context,
 							builder: (_) => CameraDetailsEditor(data),
 						),

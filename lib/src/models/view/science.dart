@@ -1,10 +1,10 @@
 import "dart:io";
-import "package:flutter/material.dart";
 import "package:file_picker/file_picker.dart";
+import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
-import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 
 /// A view model to allow the user to override values supplied to [ScienceTest]s.
 class ScienceTestBuilder with ChangeNotifier {

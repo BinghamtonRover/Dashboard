@@ -392,6 +392,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0+1"
+  lint_hard:
+    dependency: "direct dev"
+    description:
+      name: lint_hard
+      sha256: "90883d02e753b89f7bdb83a69a52e6e1e2d729170af0ebc096e2fe22838ea510"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
   lints:
     dependency: transitive
     description:

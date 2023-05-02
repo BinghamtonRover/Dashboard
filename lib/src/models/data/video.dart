@@ -5,8 +5,6 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
 /// A data model to stream video from the rover.
-/// 
-/// TODO: Separate this from the view model logic.
 class VideoModel extends Model {
 	/// All the video feeds supported by the rover.
 	final Map<CameraName, VideoData> feeds = {
@@ -91,9 +89,9 @@ class VideoModel extends Model {
 	void handleData(VideoData newData) {
 		final name = newData.details.name;
 		framesThisSecond[name] = (framesThisSecond[name] ?? 0) + 1;
-		final data = feeds[name]!;
-		data.details = newData.details;
-		data.id = newData.id;
+		final data = feeds[name]!
+			..details = newData.details
+			..id = newData.id;
 
 		// Some [VideoData] packets are just representing metadata, not an empty video frame.
 		// If this is one such packet (doesn't have a frame but status == enabled), don't save.
@@ -104,7 +102,7 @@ class VideoModel extends Model {
 
 	/// Takes a screenshot of the current frame.
 	Future<void> saveFrame(CameraName name) async {
-		final List<int>? cachedFrame = feeds[name]?.frame;
+		final cachedFrame = feeds[name]?.frame;
 		if (cachedFrame == null) throw ArgumentError.notNull("Feed for $name"); 
 		await services.files.writeImage(cachedFrame, name.humanName);
 		models.home.setMessage(severity: Severity.info, text: "Screenshot saved");
@@ -115,7 +113,7 @@ class VideoModel extends Model {
 		_handshake = null;
 		final command = VideoCommand(id: id, details: details);
 		services.videoSocket.sendMessage(command);
-		await Future.delayed(const Duration(seconds: 2));
+		await Future<void>.delayed(const Duration(seconds: 2));
 		if (_handshake == null) throw RequestNotAccepted();
 	}
 
@@ -132,7 +130,7 @@ class VideoModel extends Model {
 		details.status = enable ? CameraStatus.CAMERA_ENABLED : CameraStatus.CAMERA_DISABLED;
 		final command = VideoCommand(id: feeds[name]!.id, details: details);
 		services.videoSocket.sendMessage(command);
-		await Future.delayed(const Duration(seconds: 2));
+		await Future<void>.delayed(const Duration(seconds: 2));
 		if (_handshake == null) {
 			models.home.setMessage(
 				severity: Severity.warning, 

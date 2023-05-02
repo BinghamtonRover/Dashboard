@@ -13,8 +13,8 @@ include: package:lint_hard/all.yaml
 
 analyzer:
   language:
-    # strict-casts: false
-    # strict-inference: false
+    strict-casts: false
+    strict-inference: false
     # strict-raw-types: false
   strong-mode:
     implicit-casts: true
@@ -259,12 +259,18 @@ linter:
 
     sort_constructors_first: false
 
-    implicit_dynamic_map_literal: false
-
     always_put_control_body_on_new_line: false
 
     avoid_relative_lib_imports: true
 
     prefer_relative_imports: false
 
-    prefer_using_mixins: false
+    diagnostic_describe_all_properties: false
+
+    avoid_catches_without_on_clauses: false
+
+    prefer_mixin: false
+
+    discarded_futures: false
+
+    flutter_style_todos: false
