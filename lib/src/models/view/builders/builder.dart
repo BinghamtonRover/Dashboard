@@ -80,8 +80,7 @@ class AddressBuilder extends TextBuilder<InternetAddress> {
 	static final regex = RegExp(r"\d+\.\d+\.\d+\.\d+");
 
 	/// Creates an IP address builder with the given initial value.
-	AddressBuilder(InternetAddress value) : 
-		super(value, text: value.address.toString());
+	AddressBuilder(super.value) : super(text: value.address);
 
 	@override
 	void update(String input) {

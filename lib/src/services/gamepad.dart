@@ -111,11 +111,11 @@ extension GamepadUtils on Gamepad {
   void pulse() async {  // ignore: avoid_void_async, because this should not be awaited
     if (!isConnected) return;
     vibrate(leftMotorSpeed: vibrateIntensity, rightMotorSpeed: vibrateIntensity);
-    await Future.delayed(const Duration(milliseconds: 300));
+    await Future<void>.delayed(const Duration(milliseconds: 300));
     vibrate();  // default speed of 0
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future<void>.delayed(const Duration(milliseconds: 100));
     vibrate(leftMotorSpeed: vibrateIntensity, rightMotorSpeed: vibrateIntensity);
-    await Future.delayed(const Duration(milliseconds: 300));
+    await Future<void>.delayed(const Duration(milliseconds: 300));
     vibrate();  // default speed of 0
   }
 }

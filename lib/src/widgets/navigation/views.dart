@@ -12,8 +12,8 @@ class ViewsWidget extends StatelessWidget {
 	Widget getView(int index) => Expanded(child: Container(
 		margin: const EdgeInsets.all(1),
 		decoration: BoxDecoration(border: Border.all(width: 3)),
-		child: models.views.views[index].builder()),
-	);
+		child: models.views.views[index].builder(),
+	),);
 
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<ViewsModel>.value(
@@ -24,15 +24,18 @@ class ViewsWidget extends StatelessWidget {
 					if (model.views.isNotEmpty) getView(0),
 					if (model.views.length >= 3) getView(1),
 				],
-			)),
+			),),
 			if (model.views.length >= 2) Expanded(
-				child: Row(children: [
-					if (model.views.length >= 2) 
-						// Put the 2nd view on the bottom row or the upper left corner
-						getView(model.views.length >= 3 ? 2 : 1),
-					if (model.views.length >= 4) getView(3)
-				])
-			)
-		])
+				child: Row(
+					children: [
+						if (model.views.length >= 2) 
+							// Put the 2nd view on the bottom row or the upper left corner
+							getView(model.views.length >= 3 ? 2 : 1),
+						if (model.views.length >= 4) 
+							getView(3),
+					],
+				),
+			),
+		],),
 	);
 }

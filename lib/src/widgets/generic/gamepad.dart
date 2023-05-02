@@ -58,7 +58,7 @@ class GamepadButton extends StatelessWidget {
 								right: -2,
 								child: Text(gamepadNumber.toString(), style: const TextStyle(fontSize: 12, color: Colors.white)),
 							),
-						]
+						],
 					),
 					color: model.isConnected 
 						? getColor(model.gamepad.battery)
@@ -77,8 +77,8 @@ class GamepadButton extends StatelessWidget {
 						)
 					],
 				),
-			]
-		)
+			],
+		),
 	);
 }
 
@@ -93,6 +93,6 @@ class GamepadButtons extends StatelessWidget {
 			GamepadButton(controller: models.rover.controller1, gamepadNumber: 1),
 			const SizedBox(width: 8),
 			GamepadButton(controller: models.rover.controller2, gamepadNumber: 2),
-		]
+		],
 	);
 }

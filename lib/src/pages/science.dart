@@ -1,6 +1,6 @@
-import "package:flutter/material.dart";
-import "package:flutter/gestures.dart";
 import "package:fl_chart/fl_chart.dart";
+import "package:flutter/gestures.dart";
+import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -38,12 +38,12 @@ class ScrollingRow extends StatelessWidget {
 				child: ListView(
 					scrollDirection: Axis.horizontal, 
 					children: [for (final child in children) SizedBox(width: 400, child: child)],
-				)
+				),
 			)
 			: Row(
-				children: [for (final child in children) Expanded(child: child)]
-			)
-		)
+				children: [for (final child in children) Expanded(child: child)],
+			),
+		),
 	);
 }
 
@@ -66,7 +66,7 @@ class ChartsRow extends StatelessWidget {
 		required this.title, 
 		required this.analyses, 
 		required this.builder, 
-		this.height = 300
+		this.height = 300,
 	});
 
 	@override
@@ -78,18 +78,17 @@ class ChartsRow extends StatelessWidget {
 			for (final analysis in analyses) Column(children: [
 				Text(analysis.sensor.name, textAlign: TextAlign.center, style: context.textTheme.labelLarge),
 				Expanded(child: builder(analysis)),
-			])
-		]),
-	]);
+			],),
+		],),
+	],);
 }
 
 /// Gets titles for a graph.
-GetTitleWidgetFunction getTitles(List<String> titles) => 
-	(double value, TitleMeta meta) => SideTitleWidget(
-		axisSide: AxisSide.bottom,
-		space: 2,
-		child: Text(titles[value.toInt()])
-	);
+GetTitleWidgetFunction getTitles(List<String> titles) => (value, meta) => SideTitleWidget(
+	axisSide: AxisSide.bottom,
+	space: 2,
+	child: Text(titles[value.toInt()]),
+);
 
 /// The science analysis page.
 class SciencePage extends StatelessWidget {
@@ -178,8 +177,8 @@ class SciencePage extends StatelessWidget {
 					onPressed: model.loadFile,
 				),
 				const ViewsSelector(currentView: Routes.science),
-			]),
-		])
+			],),
+		],),
 	);
 }
 
@@ -227,9 +226,9 @@ class ResultsBox extends StatelessWidget {
 					const Spacer(),
 					Center(child: Text(text, textAlign: TextAlign.center, style: context.textTheme.headlineLarge)),
 					const Spacer(),
-				]
-			)
-		)),
+				],
+			),
+		),),
 		NumberEditor(
 			name: "Min",
 			model: analysis.testBuilder.min,
@@ -245,5 +244,5 @@ class ResultsBox extends StatelessWidget {
 			model: analysis.testBuilder.max,
 			titleFlex: 1,
 		),
-	]);
+	],);
 }

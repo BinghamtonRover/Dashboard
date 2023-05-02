@@ -83,7 +83,6 @@ class Controller extends Model {
 		services.gamepad.update();
 		if (!gamepad.isConnected) return;
 		gamepad = services.gamepad.gamepad1;
-		final messages = controls.parseInputs(gamepad.state);
-		messages.forEach(sendMessage);
+		controls.parseInputs(gamepad.state).forEach(sendMessage);
 	}
 }

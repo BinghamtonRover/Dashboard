@@ -12,9 +12,9 @@ import "dart:async";
 import "dart:io";
 import "package:flutter/material.dart";
 
-import "app.dart";
-import "data.dart";
-import "models.dart";
+import "package:rover_dashboard/app.dart";
+import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 
 void main() async {
 	runZonedGuarded(

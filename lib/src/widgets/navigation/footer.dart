@@ -23,8 +23,8 @@ class Footer extends StatelessWidget {
 				SizedBox(width: 4),
 				StatusIcons(),
 				SizedBox(width: 12),
-			]
-		)
+			],
+		),
 	);
 }
 
@@ -95,8 +95,8 @@ class StatusIcons extends StatelessWidget {
 						rover.isConnected 
 							? getBatteryIcon(rover.metrics.electrical.battery)
 							: Icons.battery_unknown,
-						color: getColor(rover.metrics.electrical.battery)
-					)
+						color: getColor(rover.metrics.electrical.battery),
+					),
 				),
 				const SizedBox(width: 4),
 				Tooltip(
@@ -124,7 +124,7 @@ class StatusIcons extends StatelessWidget {
 					],
 				),
 				const SizedBox(width: 4),
-			]
+			],
 		),
 	);
 }
@@ -150,10 +150,10 @@ class ViewsCounter extends StatelessWidget {
 							value: i,
 							child: Center(child: Text(i.toString())),
 						)
-					]
-				)
-			]
-		)
+					],
+				),
+			],
+		),
 	);
 }
 
@@ -184,7 +184,7 @@ class SerialButton extends StatelessWidget {
 							child: Text(device),
 						)
 				],
-		)
+		),
 	);
 } 
 
@@ -227,8 +227,8 @@ class MessageDisplay extends StatelessWidget {
 						const SizedBox(width: 4),
 						Text(model.message!.text),
 						const SizedBox(width: 4),
-				]
-			)
-		)
+				],
+			),
+		),
 	);
 }

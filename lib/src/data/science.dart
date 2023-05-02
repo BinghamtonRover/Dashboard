@@ -48,7 +48,7 @@ class ScienceSensor {
 	const ScienceSensor({
 		required this.name, 
 		required this.test,
-		required this.testDescription
+		required this.testDescription,
 	});
 }
 
