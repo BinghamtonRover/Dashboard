@@ -18,7 +18,7 @@ class Footer extends StatelessWidget {
 					width: constraints.maxWidth, 
 					child: Row(
 						mainAxisSize: MainAxisSize.min,
-						children: [
+						children: const [
 							MessageDisplay(),
 							Spacer(),
 							ViewsCounter(),

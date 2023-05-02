@@ -77,7 +77,7 @@ class ChartsRow extends StatelessWidget {
 		ScrollingRow(height: height, children: [
 			for (final analysis in analyses) Column(children: [
 				Text(analysis.sensor.name, textAlign: TextAlign.center, style: context.textTheme.labelLarge),
-				SizedBox(height: 8),
+				const SizedBox(height: 8),
 				Expanded(child: builder(analysis)),
 			])
 		]),

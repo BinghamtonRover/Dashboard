@@ -8,12 +8,10 @@ final address = InternetAddress.loopbackIPv4;
 
 Future<void> main() async {
 	final server = ProtoSocket(
-		listenPort: 8000, 
 		destination: SocketConfig(InternetAddress.loopbackIPv4, 8001)
 	);
 
 	final client = ProtoSocket(
-		listenPort: 8001, 
 		destination: SocketConfig(address, 8000)
 	);
 
