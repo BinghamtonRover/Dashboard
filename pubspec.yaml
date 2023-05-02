@@ -43,6 +43,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   build_runner: ^2.3.2
   protoc_builder: ^0.3.0
+  lint_hard: ^2.1.1
   msix: ^3.9.1
 
 dependency_overrides: 
