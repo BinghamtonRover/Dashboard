@@ -11,19 +11,27 @@ class Footer extends StatelessWidget {
 	Widget build(BuildContext context) => Container(
 		height: 48,
 		color: Theme.of(context).colorScheme.secondary,
-		child: Row(
-			mainAxisAlignment: MainAxisAlignment.end,
-			children: const [
-				MessageDisplay(),
-				Spacer(),
-				ViewsCounter(),
-				SizedBox(width: 8),
-				GamepadButtons(),
-				SerialButton(),
-				SizedBox(width: 4),
-				StatusIcons(),
-				SizedBox(width: 12),
-			],
+		child: LayoutBuilder(
+			builder: (context, constraints) => SingleChildScrollView(
+				scrollDirection: Axis.horizontal, 
+				child: SizedBox(
+					width: constraints.maxWidth, 
+					child: Row(
+						mainAxisSize: MainAxisSize.min,
+						children: const [
+							MessageDisplay(),
+							Spacer(),
+							ViewsCounter(),
+							SizedBox(width: 8),
+							GamepadButtons(),
+							SerialButton(),
+							SizedBox(width: 4),
+							StatusIcons(),
+							SizedBox(width: 12),								
+						],
+					),
+				),
+			),
 		),
 	);
 }
@@ -138,6 +146,7 @@ class ViewsCounter extends StatelessWidget {
 	Widget build(BuildContext context) => ProviderConsumer<ViewsModel>.value(
 		value: models.views,
 		builder: (model) => Row(
+			mainAxisSize: MainAxisSize.min,
 			children: [
 				const Text("Views:"),
 				const SizedBox(width: 4),

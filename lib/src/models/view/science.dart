@@ -159,8 +159,6 @@ class ScienceModel with ChangeNotifier {
 		final result = await FilePicker.platform.pickFiles(
 			dialogTitle: "Choose science logs",
 			initialDirectory: services.files.loggingDir.path,
-			type: FileType.custom,
-			allowedExtensions: ["log"],
 		);
 		if (result == null || result.count == 0) {
 			isLoading = false;

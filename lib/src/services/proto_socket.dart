@@ -20,7 +20,7 @@ class ProtoSocket extends UdpSocket {
 	final Map<String, RawDataHandler> _handlers = {};
 
 	/// Opens a socket for sending and receiving Protobuf messages.
-	ProtoSocket({required super.listenPort, super.destination});
+	ProtoSocket({super.destination});
 
 	/// Runs every time data is received by the socket. 
 	/// 
