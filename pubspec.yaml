@@ -44,6 +44,18 @@ dev_dependencies:
   build_runner: ^2.3.2
   protoc_builder: ^0.3.0
   msix: ^3.9.1
+  icons_launcher: ^2.1.0
+
+icons_launcher:
+  image_path: "logo.png"
+  platforms: 
+    android:
+      adaptive_foreground_image: "logo.png"
+      adaptive_background_color: "#000000"
+      enable: true
+    windows: 
+      enable: true
+
 
 dependency_overrides: 
   # win32_gamepad needs win32 ^4.0.0
