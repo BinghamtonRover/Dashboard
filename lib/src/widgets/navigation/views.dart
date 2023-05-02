@@ -23,7 +23,7 @@ class ViewsWidget extends StatelessWidget {
 					if (model.views.isNotEmpty) getView(context, 0),
 					if (model.views.length >= 3) getView(context, 1),
 				],
-			)),
+			),),
 			if (model.views.length >= 2) Expanded(
 				child: Row(children: [
 					if (model.views.length >= 2) 

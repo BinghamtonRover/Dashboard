@@ -17,9 +17,9 @@ class SocketSwitcher extends StatelessWidget {
 				for (final type in RoverType.values) DropdownMenuItem(
 					value: type,
 					child: Text(type.humanName),
-				)
+				),
 			],
-		)
+		),
 	);
 }
 
@@ -49,8 +49,8 @@ class HomePageState extends State<HomePage>{
 				Builder(builder: (context) => IconButton(
 					icon: const Icon(Icons.menu),
 					onPressed: () => setState(() => showSidebar = !showSidebar),
-				))
-			]
+				),)
+			],
 		),
 		bottomNavigationBar: Footer(),
 		body: Row(
@@ -60,8 +60,8 @@ class HomePageState extends State<HomePage>{
 				AnimatedSize(
 					duration: const Duration(milliseconds: 250),
 					child: showSidebar ? const Sidebar() : Container(),
-				)
-			]
+				),
+			],
 		),
 	);
 }

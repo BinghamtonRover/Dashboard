@@ -29,7 +29,7 @@ class ProviderConsumer<T extends ChangeNotifier> extends StatelessWidget {
 
 	/// The [Consumer] for this model.
 	Widget get consumer => Consumer<T>(
-		builder: (context, model, _) => builder(model)
+		builder: (context, model, _) => builder(model),
 	);
 
 	@override

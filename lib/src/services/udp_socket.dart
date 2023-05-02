@@ -10,7 +10,7 @@ typedef RawDataHandler = void Function(List<int> data);
 /// Helper methods on raw data streams.
 extension on RawDatagramSocket {
 	/// Parses out empty data before handling it. 
-	StreamSubscription listenForData(RawDataHandler handler) => listen((event) {
+	StreamSubscription<RawSocketEvent> listenForData(RawDataHandler handler) => listen((event) {
 		final datagram = receive();
 		if (datagram == null) return; 
 		handler(datagram.data);
@@ -44,7 +44,7 @@ abstract class UdpSocket extends Service {
 	/// The subscription that listens for incoming data.
 	/// 
 	/// This must be cancelled in [dispose].
-	late StreamSubscription _subscription;
+	late StreamSubscription<RawSocketEvent> _subscription;
 
 	/// The socket to send to.
 	SocketConfig? destination;

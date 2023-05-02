@@ -22,7 +22,7 @@ class RoverMetrics extends Model {
 	List<Metrics> get allMetrics => [electrical, science, position];
 
 	/// Returns a function that updates a [Metrics] object and reloads the UI.
-	void Function(T) update<T extends Message>(Metrics<T> metrics) => (T data) {
+	void Function(T) update<T extends Message>(Metrics<T> metrics) => (data) {
 		metrics.update(data);
 		notifyListeners();
     services.files.logData(data);

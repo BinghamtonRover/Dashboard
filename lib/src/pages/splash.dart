@@ -63,8 +63,8 @@ class SplashPageState extends State<SplashPage>{
 					const SizedBox(height: 16),
 					Text(errorText!),
 					const Spacer(flex: 2),
-				]
-			)
-		)
+				],
+			),
+		),
 	);
 }

@@ -22,7 +22,7 @@ class VideoSettings {
 
   /// Parses a [VideoSettings] from JSON.
   VideoSettings.fromJson(Json? json) : 
-    fps = json?["fps"] ?? 60;
+    fps = (json?["fps"] ?? 60) as int;
 
   /// Serializes these settings in JSON format.
   Json toJson() => {
@@ -212,7 +212,7 @@ class Settings {
     arm = ArmSettings.fromJson(json["arm"]);
 
   /// Converts the data from the settings instance to Json.
-  Map toJson() => { 
+  Json toJson() => { 
     "network": network.toJson(),
     "video": video.toJson(),
     "easterEggs": easterEggs.toJson(),

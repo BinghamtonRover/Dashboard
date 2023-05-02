@@ -28,7 +28,7 @@ class ViewsSelector extends StatelessWidget {
 				value: view,
 				child: Text(view.name),
 			),
-		]
+		],
 	);
 }
 
@@ -60,7 +60,7 @@ class View {
 	/// A blank view.
 	static final blank = View(
 		name: Routes.blank,
-		builder: (context) => Container(
+		builder: (context) => ColoredBox(
 			color: context.colorScheme.brightness == Brightness.light
 				? Colors.blueGrey
 				: Colors.blueGrey[700], 
@@ -70,9 +70,9 @@ class View {
 					const Spacer(),
 					const Text("Choose a view"),
 					const Spacer(),
-				]
-			)
-		)
+				],
+			),
+		),
 	);
 }
 
@@ -92,7 +92,7 @@ class ViewsModel extends Model {
 			models.home.setMessage(severity: Severity.error, text: "That view is already on-screen");
 			return;
 		}
-		final int index = views.indexWhere((view) => view.name == oldView);
+		final index = views.indexWhere((view) => view.name == oldView);
 		views[index] = newView;
 		notifyListeners();
 	}
@@ -100,11 +100,11 @@ class ViewsModel extends Model {
 	/// Adds or subtracts a number of views to/from the UI
 	void setNumViews(int? value) {
 		if (value == null || value > 4 || value < 1) return;
-		final int currentNum = views.length;
+		final currentNum = views.length;
 		if (value < currentNum) {
 			views = views.sublist(0, value);
 		} else {
-			for (int i = currentNum; i < value; i++) {
+			for (var i = currentNum; i < value; i++) {
 				views.add(View.blank);
 			}
 		}

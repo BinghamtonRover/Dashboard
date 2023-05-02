@@ -17,6 +17,7 @@ library widgets;
 
 import "package:flutter/material.dart";
 
+export "src/widgets/atomic/camera_editor.dart";
 export "src/widgets/atomic/editors.dart";
 export "src/widgets/atomic/video_feed.dart";
 

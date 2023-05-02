@@ -61,7 +61,7 @@ class FilesService extends Service {
 
   /// Reads the user's settings from the [settingsFile].
   Future<Settings> readSettings({bool retry = true}) async {
-    final json = jsonDecode(await settingsFile.readAsString());
+    final Json json = jsonDecode(await settingsFile.readAsString());
     try {
       final settings = Settings.fromJson(json);
       await writeSettings(settings);  // re-save any default values
@@ -88,7 +88,7 @@ class FilesService extends Service {
   /// Outputs log data to the correct file based on message
   Future<void> logData(Message message) async{
     final List<int> bytes = message.wrapped.writeToBuffer();
-    final String line = bytes.join(", ");
+    final line = bytes.join(", ");
     final file = File("${loggingDir.path}/${message.messageName}.log");
     await file.writeAsString("$line\n", mode: FileMode.writeOnlyAppend, flush: true);
   }

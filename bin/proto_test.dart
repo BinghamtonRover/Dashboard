@@ -8,11 +8,11 @@ final address = InternetAddress.loopbackIPv4;
 
 Future<void> main() async {
 	final server = ProtoSocket(
-		destination: SocketConfig(InternetAddress.loopbackIPv4, 8001)
+		destination: SocketConfig(InternetAddress.loopbackIPv4, 8001),
 	);
 
 	final client = ProtoSocket(
-		destination: SocketConfig(address, 8000)
+		destination: SocketConfig(address, 8000),
 	);
 
 	await server.init();
@@ -24,7 +24,7 @@ Future<void> main() async {
 		handler: (data) {
 			print("Received a connect message from ${data.sender}");
 			server.sendMessage(Connect(sender: data.receiver, receiver: data.sender));
-		}
+		},
 	);
 
 	client.registerHandler<Connect>(
@@ -32,12 +32,12 @@ Future<void> main() async {
 		decoder: Connect.fromBuffer,
 		handler: (data) {
 			print("Received a response from ${data.sender}");
-		}
+		},
 	);
 
 	client.sendMessage(Connect(sender: Device.DASHBOARD, receiver: Device.SUBSYSTEMS));
 
-	await Future.delayed(const Duration(milliseconds: 500));
+	await Future<void>.delayed(const Duration(milliseconds: 500));
 	await server.dispose();
 	await client.dispose();
 }

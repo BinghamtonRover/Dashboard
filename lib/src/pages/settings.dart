@@ -1,3 +1,4 @@
+// ignore_for_file: directives_ordering
 import "package:flutter/material.dart";
 import "package:url_launcher/url_launcher.dart";
 
@@ -33,7 +34,7 @@ class ValueEditor<T> extends StatelessWidget {
 				),			
 			),
 			...children,
-		]
+		],
 	);
 } 
 
@@ -66,9 +67,9 @@ class SettingsPage extends StatelessWidget {
 												const SnackBar(content: Text("Network reset"), duration: Duration(milliseconds: 500)),
 											);
 										}
-									}
-								)
-							]
+									},
+								),
+							],
 						),
 						const Divider(),
 						ValueEditor<ArmSettings>(
@@ -91,7 +92,7 @@ class SettingsPage extends StatelessWidget {
 									value: model.arm.useSteps,
 									onChanged: model.arm.updateSteps,
 								),
-							]
+							],
 						),
 						const Divider(),
 						ValueEditor<VideoSettings>(
@@ -102,7 +103,7 @@ class SettingsPage extends StatelessWidget {
 									subtitle: "This does not affect the rover's cameras\nUseful for limiting the CPU of the dashboard",
 									model: model.video.fps,
 								),
-							]
+							],
 						),
 						const Divider(),
 						ValueEditor<ScienceSettings>(
@@ -110,7 +111,7 @@ class SettingsPage extends StatelessWidget {
 							children: [
 								NumberEditor(
 									name: "Number of samples", 
-									model: model.science.numSamples
+									model: model.science.numSamples,
 								),
 								SwitchListTile(
 									title: const Text("Scrollable graphs"),
@@ -118,14 +119,14 @@ class SettingsPage extends StatelessWidget {
 									value: model.science.scrollableGraphs,
 									onChanged: model.science.updateScrollableGraphs,
 								),
-							]
+							],
 						),
 						const Divider(),
 						const ValueEditor<EasterEggsSettings>(
 							name: "Easter eggs",
 							children: [
 								ListTile(title: Text("Coming soon!")),
-							]
+							],
 						),
 						const Divider(),
 						Text("Misc", style: Theme.of(context).textTheme.titleLarge),
@@ -135,7 +136,7 @@ class SettingsPage extends StatelessWidget {
 							onTap: () => launchUrl(services.files.outputDir.uri),
 						),
 					],
-				)),
+				),),
 				Row(
 					mainAxisAlignment: MainAxisAlignment.end, 
 					children: [
@@ -158,7 +159,7 @@ class SettingsPage extends StatelessWidget {
 					],
 				),
 				const SizedBox(height: 12),
-			])
-		)
+			],),
+		),
 	);
 }
