@@ -79,7 +79,6 @@ class ViewsModel extends Model {
 	/// The current views on the screen.
 	List<View> views = [
 		View.cameraViews[0],
-		View.cameraViews[1],
 	];
 
 	@override
