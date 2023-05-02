@@ -33,7 +33,7 @@ class RoverSettings extends Model {
 	Future<void> setStatus(RoverStatus value) async {
 		final message = UpdateSetting(status: value);
 		services.dataSocket.sendMessage(message);
-		await Future.delayed(confirmationDelay);
+		await Future<void>.delayed(confirmationDelay);
 		if (message == _confirmation) {
 			models.home.setMessage(severity: Severity.info, text: "Set mode to ${value.humanName}");
 			status = value;

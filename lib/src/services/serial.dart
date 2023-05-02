@@ -63,7 +63,7 @@ class Serial extends Service {
 
 		// Send a handshake, expect one back
 		await sendMessage(Connect(sender: Device.DASHBOARD, receiver: Device.FIRMWARE));
-		await Future.delayed(const Duration(seconds: 1));
+		await Future<void>.delayed(const Duration(seconds: 1));
 		final received = _writer!.read(4); // nice way to read X bytes at a time
 		if (received.isEmpty) throw MalformedSerialPacket(packet: received);
 		try {

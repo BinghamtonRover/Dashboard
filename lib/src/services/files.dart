@@ -61,7 +61,7 @@ class FilesService extends Service {
 
   /// Reads the user's settings from the [settingsFile].
   Future<Settings> readSettings({bool retry = true}) async {
-    final json = jsonDecode(await settingsFile.readAsString());
+    final Json json = jsonDecode(await settingsFile.readAsString());
     try {
       final settings = Settings.fromJson(json);
       await writeSettings(settings);  // re-save any default values

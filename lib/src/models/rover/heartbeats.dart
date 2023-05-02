@@ -142,7 +142,7 @@ class RoverHeartbeats extends Model {
 			_handshakes[device] = 0;
 			await _sendHandshakeTo(device);
 		}
-		await Future.delayed(handshakeWaitDelay);
+		await Future<void>.delayed(handshakeWaitDelay);
 		for (final device in Device.values) {
 			final oldConnection = connections[device];
 			if (_handshakes[device]! > 0) {
