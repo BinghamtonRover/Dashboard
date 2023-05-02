@@ -39,8 +39,9 @@ const ScienceData$json = const {
     const {'1': 'methane', '3': 3, '4': 1, '5': 2, '10': 'methane'},
     const {'1': 'pH', '3': 4, '4': 1, '5': 2, '10': 'pH'},
     const {'1': 'temperature', '3': 5, '4': 1, '5': 2, '10': 'temperature'},
+    const {'1': 'sample', '3': 6, '4': 1, '5': 5, '10': 'sample'},
   ],
 };
 
 /// Descriptor for `ScienceData`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List scienceDataDescriptor = $convert.base64Decode('CgtTY2llbmNlRGF0YRIQCgNjbzIYASABKAJSA2NvMhIaCghodW1pZGl0eRgCIAEoAlIIaHVtaWRpdHkSGAoHbWV0aGFuZRgDIAEoAlIHbWV0aGFuZRIOCgJwSBgEIAEoAlICcEgSIAoLdGVtcGVyYXR1cmUYBSABKAJSC3RlbXBlcmF0dXJl');
+final $typed_data.Uint8List scienceDataDescriptor = $convert.base64Decode('CgtTY2llbmNlRGF0YRIQCgNjbzIYASABKAJSA2NvMhIaCghodW1pZGl0eRgCIAEoAlIIaHVtaWRpdHkSGAoHbWV0aGFuZRgDIAEoAlIHbWV0aGFuZRIOCgJwSBgEIAEoAlICcEgSIAoLdGVtcGVyYXR1cmUYBSABKAJSC3RlbXBlcmF0dXJlEhYKBnNhbXBsZRgGIAEoBVIGc2FtcGxl');

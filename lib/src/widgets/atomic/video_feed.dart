@@ -128,6 +128,7 @@ class VideoFeedState extends State<VideoFeed> {
 			Row(
 				mainAxisAlignment: MainAxisAlignment.end,
 				children: [
+					Text("${models.video.networkFps[data.details.name]!} FPS"),
 					if (data.hasFrame()) IconButton(
 						icon: const Icon(Icons.add_a_photo), 
 						onPressed: () => models.video.saveFrame(widget.name),

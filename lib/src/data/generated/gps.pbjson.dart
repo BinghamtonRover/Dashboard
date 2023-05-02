@@ -38,8 +38,9 @@ const RoverPosition$json = const {
   '2': const [
     const {'1': 'gps', '3': 1, '4': 1, '5': 11, '6': '.GpsCoordinates', '10': 'gps'},
     const {'1': 'orientation', '3': 2, '4': 1, '5': 11, '6': '.Orientation', '10': 'orientation'},
+    const {'1': 'base_station', '3': 3, '4': 1, '5': 11, '6': '.GpsCoordinates', '10': 'baseStation'},
   ],
 };
 
 /// Descriptor for `RoverPosition`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List roverPositionDescriptor = $convert.base64Decode('Cg1Sb3ZlclBvc2l0aW9uEiEKA2dwcxgBIAEoCzIPLkdwc0Nvb3JkaW5hdGVzUgNncHMSLgoLb3JpZW50YXRpb24YAiABKAsyDC5PcmllbnRhdGlvblILb3JpZW50YXRpb24=');
+final $typed_data.Uint8List roverPositionDescriptor = $convert.base64Decode('Cg1Sb3ZlclBvc2l0aW9uEiEKA2dwcxgBIAEoCzIPLkdwc0Nvb3JkaW5hdGVzUgNncHMSLgoLb3JpZW50YXRpb24YAiABKAsyDC5PcmllbnRhdGlvblILb3JpZW50YXRpb24SMgoMYmFzZV9zdGF0aW9uGAMgASgLMg8uR3BzQ29vcmRpbmF0ZXNSC2Jhc2VTdGF0aW9u');

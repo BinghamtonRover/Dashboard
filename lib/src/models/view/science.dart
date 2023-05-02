@@ -1,156 +1,184 @@
+import "dart:io";
 import "package:flutter/material.dart";
-import "package:fl_chart/fl_chart.dart";
+import "package:file_picker/file_picker.dart";
 
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/models.dart";
 
-/// The result of a science test.
-enum ScienceResult {
-	/// There was never life in this ecosystem.
-	extinct, 
+/// A view model to allow the user to override values supplied to [ScienceTest]s.
+class ScienceTestBuilder with ChangeNotifier {
+	/// An override for the minimum value.
+	final min = NumberBuilder<double>(0);
 
-	/// There is currently life in this ecosystem.
-	extant, 
+	/// An override for the average value.
+	final average = NumberBuilder<double>(0);
 
-	/// There used to be life in this ecosystem, but not anymore.
-	notPresent, 
+	/// An override for the maximum value.
+	final max = NumberBuilder<double>(0);
 
-	/// This test cannot determine the precense of life.
-	inconclusive, 
+	/// A constructor.
+	ScienceTestBuilder() {
+		min.addListener(notifyListeners);
+		average.addListener(notifyListeners);
+		max.addListener(notifyListeners);
+	}
 
-	/// This test is awaiting more data.
-	loading,
+	@override
+	void dispose() {
+		min..removeListener(notifyListeners)..dispose();
+		average..removeListener(notifyListeners)..dispose();
+		max..removeListener(notifyListeners)..dispose();
+		super.dispose();
+	}
+
+	/// Updates the view models with the latest data.
+	void update(SampleData data) {
+		min.value = data.min ?? 0;
+		min.controller.text = min.value.toString();
+		average.value = data.average ?? 0;
+		average.controller.text = average.value.toString();
+		max.value = data.max ?? 0;
+		max.controller.text = max.value.toString();
+		notifyListeners();
+	}
 }
 
-/// Gets titles for a graph.
-GetTitleWidgetFunction getTitles(List<String> titles) => 
-	(double value, TitleMeta meta) => SideTitleWidget(
-		axisSide: AxisSide.bottom,
-		space: 2,
-		child: Text(titles[value.toInt()])
-	);
+/// Analysis for one sample and sensor.
+class SampleAnalysis {
+	/// The sensor being analyzed.
+	final ScienceSensor sensor;
 
-/// A science test.
-/// 
-/// Consists of reading values off a graph and making a decision.
-class ScienceTest {
-	/// The first value used.
-	final double value1;
-	/// The name of the first value used.
-	final String value1Name;
+	/// A constructor.
+	SampleAnalysis(this.sensor);
 
-	/// The name of the second value used, if any.
-	final String? value2Name;
-	/// The second value used, if any.
-	final double? value2;
+	/// The view models for the test values.
+	final testBuilder = ScienceTestBuilder();
 
-	/// A function that determines the result of this test.
-	final ScienceResult Function({required double value1, double? value2}) test;
+	/// The data being recorded.
+	final SampleData data = SampleData();
 
-	/// Provides a manual override for [value1].
-	final NumberBuilder<double> value1Builder;
-	/// Provides a manual override for [value2].
-	final NumberBuilder<double> value2Builder;
+	/// Passes the overriden data to the sensor's test to determine signs of life.
+	ScienceResult get testResult => data.readings.isEmpty 
+		? ScienceResult.loading : sensor.test(SampleData()
+			..min = testBuilder.min.value
+			..average = testBuilder.average.value
+			..max = testBuilder.max.value
+		);
 
-	/// Creates a science test.
-	ScienceTest({
-		required this.test,
-		required this.value1Name,
-		required this.value1,
-		this.value2,
-		this.value2Name,
-	}) : 
-		value1Builder = NumberBuilder(value1),
-		value2Builder = NumberBuilder(value2 ?? 0);
-}
+	/// Clears all readings from this analysis.
+	void clear() { 
+		data.clear();
+		testBuilder.update(data);
+	}
 
-/// A sensor on the science chamber.
-class ScienceSensor {
-	/// The name of this sensor.
-	final String name;
-
-	/// The test for life based on this sensor's values.
-	final ScienceTest test;
-
-	/// A sensor on the science chamber and its test for life.
-	ScienceSensor(this.name, this.test);
-
-	/// The individual data points for this sensor.
-	LineChartData details = LineChartData(
-		lineBarsData: [
-			LineChartBarData(spots: const [FlSpot(0, 0), FlSpot(1, 1), FlSpot(2, 3)], preventCurveOverShooting: true, isCurved: true),
-			LineChartBarData(spots: const [FlSpot(0, 0), FlSpot(1, 1), FlSpot(2, 1)], preventCurveOverShooting: true, isCurved: true),
-			LineChartBarData(spots: const [FlSpot(0, 0), FlSpot(1, 1), FlSpot(2, 2)], preventCurveOverShooting: true, isCurved: true),
-		], 
-		extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)], verticalLines: [VerticalLine(x: 0)]),
-		minX: 0, minY: 0,
-	);
-
-	/// A comparison of important data points across all the samples.
-	BarChartData summary = BarChartData(
-		barGroups: [
-			BarChartGroupData(x: 0, barRods: [BarChartRodData(fromY: 0, toY: 15)]),
-			BarChartGroupData(x: 1, barRods: [BarChartRodData(fromY: 0, toY: 10)]),
-			BarChartGroupData(x: 2, barRods: [BarChartRodData(fromY: 0, toY: 20)]),
-		],
-		titlesData: FlTitlesData(show: true, bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: getTitles(["1", "2", "3"])))),
-	);
+	/// Adds a reading to this analysis.
+	void addReading(Timestamp timestamp, double value) {
+		data.addReading(timestamp, value);
+		testBuilder.update(data);
+	}
 }
 
 /// The view model for the science analysis page.
 class ScienceModel with ChangeNotifier {
-	/// Loads data into the view model.
-	ScienceModel() { test(); }
+	/// How many samples to analyze. Can be changed in the settings.
+	int get numSamples => models.settings.science.numSamples;
 
-	/// A test function demonstrating how to make the page load.
-	Future<void> test() async {
-		isLoading = true;
-		notifyListeners();
-		await Future.delayed(const Duration(milliseconds: 500));
-		isLoading = false;
-		notifyListeners();
+	/// A list of all the samples for all the sensors.
+	Map<ScienceSensor, List<SampleAnalysis>> allSamples = {
+		for (final sensor in sensors) sensor: [
+			for (int i = 0; i < models.settings.science.numSamples; i++) 
+				SampleAnalysis(sensor)
+		]
+	};
+
+	/// Listens to all the [ScienceTestBuilder]s in the UI.
+	ScienceModel() {
+		for (final sample in analysesForSample) {
+			sample.testBuilder.addListener(notifyListeners);
+		}
 	}
 
-	/// The being analyzed. Each sample gets its own list.
-	List<List<ScienceData>> data = [];
-
-	/// The different sensors.
-	List<ScienceSensor> sensors = [
-		ScienceSensor("Temperature", ScienceTest(
-			value1Name: "Average",
-			value1: 1.5,
-			test: ({required value1, value2}) => ScienceResult.extinct,
-		)),
-		ScienceSensor("Humidity", ScienceTest(
-			value1Name: "Average",
-			value1: 1.5,
-			test: ({required value1, value2}) => ScienceResult.extant,
-		)),
-		ScienceSensor("pH", ScienceTest(
-			value1Name: "Average",
-			value1: 1.5,
-			test: ({required value1, value2}) => ScienceResult.notPresent,
-		)),
-		ScienceSensor("CO2", ScienceTest(
-			value1Name: "Average",
-			value1: 1.5,
-			test: ({required value1, value2}) => ScienceResult.inconclusive,
-		)),
-		ScienceSensor("Methane", ScienceTest(
-			value1Name: "Min",
-			value1: 0,
-			value2: 2,
-			value2Name: "Max",
-			test: ({required value1, value2}) => ScienceResult.loading,
-		)),
+	/// All the sensors for the current [sample].
+	List<SampleAnalysis> get analysesForSample => [
+		for (final sensor in sensors) allSamples[sensor]![sample]
 	];
+
+	/// The sample whose stats are being displayed.
+	int sample = 0;
+
+	@override
+	void dispose() {
+		for (final sample in analysesForSample) {
+			sample.testBuilder.dispose();
+		}
+		super.dispose();
+	}
+
+	/// Updates the [sample] variable.
+	void updateSample(int? input) {
+		if (input == null) return;
+		sample = input;
+		notifyListeners();
+	}
 
 	/// Whether the page is currently loading.
 	bool isLoading = false;
 
-	/// Upload a CSV file using [addData].
-	void uploadLogs() { }
+	/// The error, if any, that occurred while loading the data.
+	String? errorText;
 
-	/// Adds one piece of data to the model.
-	void addData(ScienceData row) { }
+	/// Adds a [WrappedMessage] containing a [ScienceData] to the UI.
+	void addMessage(WrappedMessage wrapper) {
+		final data = wrapper.decode(ScienceData.fromBuffer);
+		if (wrapper.name != ScienceData().messageName) throw ArgumentError("Incorrect log type: ${wrapper.name}");
+		final sample = data.sample;
+		if (!wrapper.hasTimestamp()) { throw ArgumentError("Data is missing a timestamp"); }
+		if (sample >= numSamples) throw RangeError("Got data for sample #${sample + 1}, but there are only $numSamples samples.\nChange the number of samples in the settings and reload.");
+		if (data.methane != 0) allSamples[methane]![sample].addReading(wrapper.timestamp, data.methane); 
+		if (data.co2 != 0) allSamples[co2]![sample].addReading(wrapper.timestamp, data.co2); 
+		if (data.humidity != 0) allSamples[humidity]![sample].addReading(wrapper.timestamp, data.humidity); 
+		if (data.temperature != 0) allSamples[temperature]![sample].addReading(wrapper.timestamp, data.temperature); 
+		if (data.pH != 0) allSamples[pH]![sample].addReading(wrapper.timestamp, data.pH); 
+	}
+
+	/// Clears all the readings from all the samples.
+	void clear() {
+		for (final sensor in sensors) {
+			for (final analysis in allSamples[sensor]!) {
+				analysis.clear();
+			}
+		}
+	}
+
+	/// Calls [addMessage] for each message in the picked file.
+	Future<void> loadFile() async {
+		// Pick a file
+		final result = await FilePicker.platform.pickFiles(
+			dialogTitle: "Choose science logs",
+			initialDirectory: services.files.loggingDir.path,
+			type: FileType.custom,
+			allowedExtensions: ["log"],
+		);
+		if (result == null || result.count == 0) return;
+		final file = File(result.paths.first!);
+
+		// Read the file
+		isLoading = true;
+		notifyListeners();
+		try {
+			clear();
+			final messages = await services.files.readLogs(file);
+			messages.forEach(addMessage);
+			updateSample(0);
+			errorText = null;
+			isLoading = false;
+			notifyListeners();
+		} catch (error) {
+			errorText = error.toString();
+			isLoading = false;
+			notifyListeners();
+			rethrow;
+		}
+	}
 }
