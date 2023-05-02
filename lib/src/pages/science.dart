@@ -47,12 +47,27 @@ class ScrollingRow extends StatelessWidget {
 	);
 }
 
+/// A [ScrollingRow] of charts, using [builder] on each [ScienceAnalysis] in [analyses].
 class ChartsRow extends StatelessWidget {
+	/// The title of these charts.
 	final String title;
-	final List<ScienceAnalysis> analyses;
-	final Widget Function(ScienceAnalysis) builder;
+
+	/// The height of this row.
 	final double height;
-	const ChartsRow({required this.title, required this.analyses, required this.builder, this.height = 300});
+
+	/// The data for these charts. 
+	final List<ScienceAnalysis> analyses;
+
+	/// The chart to show for each piece of data.
+	final Widget Function(ScienceAnalysis) builder;
+
+	/// A const constructor.
+	const ChartsRow({
+		required this.title, 
+		required this.analyses, 
+		required this.builder, 
+		this.height = 300
+	});
 
 	@override
 	Widget build(BuildContext context) => Column(children: [
@@ -81,6 +96,7 @@ class SciencePage extends StatelessWidget {
 	/// The colors for the different samples. Only 5 samples are supported.
 	final List<Color> colors = [Colors.red, Colors.green, Colors.blue, Colors.yellow, Colors.purple];
 
+	/// The `package:fl_chart` helper class for the details charts.
 	LineChartData getDetailsData(ScienceAnalysis analysis, Color color) => LineChartData(
 		lineBarsData: [
 			LineChartBarData(
@@ -97,6 +113,7 @@ class SciencePage extends StatelessWidget {
 		minX: 0, minY: 0,
 	);
 
+	/// The `package:fl_chart` helper class for the summary charts.
 	BarChartData getBarChartData(ScienceAnalysis analysis, Color color) => BarChartData(
 		barGroups: [
 			BarChartGroupData(x: 0, barRods: [BarChartRodData(color: color, fromY: 0, toY: analysis.data.min ?? 0)]),
