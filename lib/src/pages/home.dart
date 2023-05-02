@@ -5,34 +5,23 @@ import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A widget to switch between tank and rover modes.
-class TankSwitcher extends StatelessWidget {
+class SocketSwitcher extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<Sockets>.value(
 		value: models.rover.sockets,
-		builder: (model) => Row(children: [
-			TextButton(
-				child: Text(
-					"Rover", 
-					style: TextStyle(color: model.rover == RoverType.rover ? Colors.black : Colors.grey)
-				), 
-				onPressed: () { }
-			),
-			Switch(
-				value: model.rover == RoverType.tank, 
-				onChanged: (value) => model.setRover(value ? RoverType.tank : RoverType.rover),
-				thumbColor: MaterialStateProperty.all(Theme.of(context).colorScheme.surface),
-			),
-			TextButton(
-				onPressed: () { },
-				child: Text(
-					"Tank", 
-					style: TextStyle(color: model.rover == RoverType.tank ? Colors.black : Colors.grey)
-				), 
-			),
-		]),
+		builder: (model) => DropdownButton<RoverType>(
+			value: model.rover,
+			onChanged: model.setRover,
+			focusNode: FocusNode(),
+			items: [
+				for (final type in RoverType.values) DropdownMenuItem(
+					value: type,
+					child: Text(type.humanName),
+				)
+			],
+		)
 	);
 }
-
 
 /// The main dashboard page.
 /// 
@@ -52,7 +41,7 @@ class HomePageState extends State<HomePage>{
 		appBar: AppBar(
 			title: Text("Dashboard v${models.home.version ?? ''}"),
 			actions: [
-				TankSwitcher(),
+				SocketSwitcher(),
 				IconButton(
 					icon: const Icon(Icons.settings),
 					onPressed: () => Navigator.of(context).pushNamed(Routes.settings),
