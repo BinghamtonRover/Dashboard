@@ -77,6 +77,7 @@ class ChartsRow extends StatelessWidget {
 		ScrollingRow(height: height, children: [
 			for (final analysis in analyses) Column(children: [
 				Text(analysis.sensor.name, textAlign: TextAlign.center, style: context.textTheme.labelLarge),
+				SizedBox(height: 8),
 				Expanded(child: builder(analysis)),
 			])
 		]),
@@ -115,6 +116,20 @@ class SciencePage extends StatelessWidget {
 				isCurved: true,
 			),
 		], 
+		titlesData: FlTitlesData(
+			show: true, 
+			topTitles: AxisTitles(), 
+			bottomTitles: AxisTitles(
+				sideTitles: SideTitles(
+					showTitles: true, 
+					getTitlesWidget: (double value, TitleMeta meta) => SideTitleWidget(
+						axisSide: AxisSide.bottom,
+						space: 3,
+						child: Text(value.toString())
+					)
+				)
+			)
+		),
 		extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)], verticalLines: [VerticalLine(x: 0)]),
 		minX: 0, minY: 0,
 	);
@@ -126,7 +141,20 @@ class SciencePage extends StatelessWidget {
 			BarChartGroupData(x: 1, barRods: [BarChartRodData(color: color, fromY: 0, toY: analysis.data.average ?? 0)]),
 			BarChartGroupData(x: 2, barRods: [BarChartRodData(color: color, fromY: 0, toY: analysis.data.max ?? 0)]),
 		],
-		titlesData: FlTitlesData(show: true, bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: getTitles(["Min", "Avg", "Max"])))),
+		titlesData: FlTitlesData(
+			show: true, 
+			topTitles: AxisTitles(), 
+			bottomTitles: AxisTitles(
+				sideTitles: SideTitles(
+					showTitles: true, 
+					getTitlesWidget: (double value, TitleMeta meta) => SideTitleWidget(
+						axisSide: AxisSide.bottom,
+						space: 3,
+						child: Text(["Min", "Avg", "Max"][value.toInt()]),
+					)
+				)
+			)
+		),
 	);
 
 	@override
