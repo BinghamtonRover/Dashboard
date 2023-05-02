@@ -34,7 +34,7 @@ class HomePage extends StatefulWidget {
 /// The state for the homepage. Handles showing and hiding the sidebar.
 class HomePageState extends State<HomePage>{
 	/// Whether to show the sidebar.
-	bool showSidebar = true;
+	bool showSidebar = false;
 
 	@override
 	Widget build(BuildContext context) => Scaffold(

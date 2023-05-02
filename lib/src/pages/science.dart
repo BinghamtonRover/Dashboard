@@ -157,28 +157,32 @@ class SciencePage extends StatelessWidget {
 					]
 				],
 			),
-			Row(children: [  // The header at the top
-				const SizedBox(width: 8),
-				Text("Science Analysis", style: context.textTheme.headlineMedium), 
-				const SizedBox(width: 12),
-				if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
-				const Spacer(),
-				DropdownButton(
-					value: model.sample,
-					onChanged: model.updateSample,
-					items: [
-						for (int i = 0; i < model.numSamples; i++) DropdownMenuItem(
-							value: i,
-							child: Text("Sample ${i + 1}"),
-						)
-					],
-				),
-				IconButton(
-					icon: const Icon(Icons.upload_file),
-					onPressed: model.loadFile,
-				),
-				const ViewsSelector(currentView: Routes.science),
-			]),
+			Container(
+				color: context.colorScheme.surface, 
+				height: 48, 
+				child: Row(children: [  // The header at the top
+					const SizedBox(width: 8),
+					Text("Science Analysis", style: context.textTheme.headlineMedium), 
+					const SizedBox(width: 12),
+					if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
+					const Spacer(),
+					DropdownButton(
+						value: model.sample,
+						onChanged: model.updateSample,
+						items: [
+							for (int i = 0; i < model.numSamples; i++) DropdownMenuItem(
+								value: i,
+								child: Text("Sample ${i + 1}"),
+							)
+						],
+					),
+					IconButton(
+						icon: const Icon(Icons.upload_file),
+						onPressed: model.loadFile,
+					),
+					const ViewsSelector(currentView: Routes.science),
+				]),
+			)
 		])
 	);
 }

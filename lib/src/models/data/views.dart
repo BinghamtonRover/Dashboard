@@ -39,7 +39,7 @@ class View {
 	/// The name of the view.
 	final String name;
 	/// A function to build this view.
-	final Widget Function() builder;
+	final WidgetBuilder builder;
 	/// A const constructor.
 	const View({required this.name, required this.builder});
 
@@ -48,20 +48,22 @@ class View {
 		for (final name in CameraName.values) 
 			if (name != CameraName.CAMERA_NAME_UNDEFINED) View(
 				name: name.humanName,
-				builder: () => VideoFeed(name: name),
+				builder: (context) => VideoFeed(name: name),
 			)
 	];
 
 	/// A list of views that represent all non-camera feeds.
-	static const List<View> uiViews = [
-		View(name: Routes.science, builder: SciencePage.new),
+	static final List<View> uiViews = [
+		View(name: Routes.science, builder: (context) => SciencePage()),
 	];
 
 	/// A blank view.
 	static final blank = View(
 		name: Routes.blank,
-		builder: () => Container(
-			color: Colors.blueGrey,
+		builder: (context) => Container(
+			color: context.colorScheme.brightness == Brightness.light
+				? Colors.blueGrey
+				: Colors.blueGrey[700], 
 			child: Column(
 				children: [
 					Row(children: const [Spacer(), ViewsSelector(currentView: Routes.blank)]),
