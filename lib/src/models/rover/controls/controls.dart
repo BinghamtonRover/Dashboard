@@ -12,7 +12,7 @@ export "drive.dart";
 export "science.dart";
 
 /// How often to check the gamepad for new button presses.
-const gamepadDelay = Duration(milliseconds: 10);
+const gamepadDelay = Duration(milliseconds: 100);
 
 /// A class that controls one subsystem based on the gamepad state.
 /// 
@@ -36,7 +36,7 @@ abstract class RoverControls {
 	OperatingMode get mode;
 
 	/// Return a list of commands based on the current state of the gamepad.
-	Iterable<Message> parseInputs(GamepadState state);
+	Iterable<Message?> parseInputs(GamepadState state);
 
 	/// A list of commands that disables the subsystem.
 	/// 
