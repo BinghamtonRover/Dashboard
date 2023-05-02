@@ -51,14 +51,15 @@ class ChartsRow extends StatelessWidget {
 	final String title;
 	final List<ScienceAnalysis> analyses;
 	final Widget Function(ScienceAnalysis) builder;
-	const ChartsRow({required this.title, required this.analyses, required this.builder});
+	final double height;
+	const ChartsRow({required this.title, required this.analyses, required this.builder, this.height = 300});
 
 	@override
 	Widget build(BuildContext context) => Column(children: [
 		const SizedBox(height: 24),
 		Text(title, style: context.textTheme.titleLarge),
 		const SizedBox(height: 12),
-		ScrollingRow(children: [
+		ScrollingRow(height: height, children: [
 			for (final analysis in analyses) Column(children: [
 				Text(analysis.sensor.name, textAlign: TextAlign.center, style: context.textTheme.labelLarge),
 				Expanded(child: builder(analysis)),
@@ -132,20 +133,10 @@ class SciencePage extends StatelessWidget {
 						),
 						ChartsRow(
 							title: "Results",
+							height: 425,
 							analyses: model.analysesForSample,
 							builder: ResultsBox.new,
 						)
-						
-						// const SizedBox(height: 24),
-						// Text("Results", style: context.textTheme.titleLarge),
-						// const SizedBox(height: 12),
-						// ScrollingRow(
-						// 	height: 425,
-						// 	children: [
-						// 		for (final analysis in model.analysesForSample) 
-						// 			ResultsBox(analysis)
-						// 	]
-						// ),
 					]
 				],
 			),
@@ -215,8 +206,6 @@ class ResultsBox extends StatelessWidget {
 			child: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
-					Text(analysis.sensor.name, style: context.textTheme.titleLarge),
-					const SizedBox(height: 12),
 					Text(analysis.sensor.testDescription),
 					const Spacer(),
 					Center(child: Text(text, textAlign: TextAlign.center, style: context.textTheme.headlineLarge)),
@@ -227,17 +216,17 @@ class ResultsBox extends StatelessWidget {
 		NumberEditor(
 			name: "Min",
 			model: analysis.testBuilder.min,
-			spacerFlex: 1,
+			titleFlex: 1,
 		),
 		NumberEditor(
 			name: "Average",
 			model: analysis.testBuilder.average,
-			spacerFlex: 1,
+			titleFlex: 1,
 		),
 		NumberEditor(
 			name: "Max",
 			model: analysis.testBuilder.max,
-			spacerFlex: 1,
+			titleFlex: 1,
 		),
 	]);
 }

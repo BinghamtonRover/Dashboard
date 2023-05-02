@@ -174,6 +174,7 @@ class SerialButton extends StatelessWidget {
 			)
 			: PopupMenuButton(
 				icon: const Icon(Icons.usb),
+				color: context.colorScheme.onSecondary,
 				tooltip: "Select device",
 				onSelected: model.connect,
 				itemBuilder: (_) => [

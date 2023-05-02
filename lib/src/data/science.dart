@@ -124,7 +124,7 @@ ScienceResult methaneTest(SampleData data) => (data.max! > 0)
 const temperature = ScienceSensor(
 	name: "Temperature", 
 	test: temperatureTest,
-	testDescription: "Average temperature between -15°C and 122°C: Extinct",
+	testDescription: "Average between -15°C and 122°C: Extinct",
 );
 /// The humidity sensor.
 const humidity = ScienceSensor(

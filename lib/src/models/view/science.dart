@@ -154,18 +154,22 @@ class ScienceModel with ChangeNotifier {
 	/// Calls [addMessage] for each message in the picked file.
 	Future<void> loadFile() async {
 		// Pick a file
+		isLoading = true;
+		notifyListeners();
 		final result = await FilePicker.platform.pickFiles(
 			dialogTitle: "Choose science logs",
 			initialDirectory: services.files.loggingDir.path,
 			type: FileType.custom,
 			allowedExtensions: ["log"],
 		);
-		if (result == null || result.count == 0) return;
-		final file = File(result.paths.first!);
+		if (result == null || result.count == 0) {
+			isLoading = false;
+			notifyListeners();
+			return;
+		}
 
 		// Read the file
-		isLoading = true;
-		notifyListeners();
+		final file = File(result.paths.first!);
 		try {
 			clear();
 			final messages = await services.files.readLogs(file);

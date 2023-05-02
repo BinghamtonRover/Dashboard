@@ -12,6 +12,7 @@ import "package:provider/provider.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 
+/// The classic Binghamton green.
 const binghamtonGreen = Color(0xff005943);
 
 /// The main class for the app. 
