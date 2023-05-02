@@ -12,6 +12,8 @@ import "package:provider/provider.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 
+const binghamtonGreen = Color(0xff005943);
+
 /// The main class for the app. 
 class RoverControlDashboard extends StatelessWidget {
 	@override
@@ -30,9 +32,16 @@ class RoverControlDashboard extends StatelessWidget {
 				home: SplashPage(),
 				debugShowCheckedModeBanner: false,
 				theme: ThemeData(
-					colorScheme: ColorScheme.fromSeed(
-						seedColor: const Color(0xff005A43),  // Binghamton Green
+					colorScheme: const ColorScheme.light(
+						primary: binghamtonGreen,
+						secondary: binghamtonGreen,
 					)
+				),
+				darkTheme: ThemeData.from(
+					colorScheme: const ColorScheme.dark(
+						primary: binghamtonGreen,
+						secondary: binghamtonGreen,
+					),
 				),
 				routes: {
 					Routes.home: (_) => HomePage(),
