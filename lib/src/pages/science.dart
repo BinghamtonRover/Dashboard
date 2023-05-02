@@ -175,13 +175,13 @@ class ResultsBox extends StatelessWidget {
 	const ResultsBox(this.analysis);
 
 	/// The color to render this box.
-	Color get color {
+	Color? get color {
 		switch(analysis.testResult) {
 			case ScienceResult.extinct: return Colors.red;
 			case ScienceResult.extant: return Colors.green;
 			case ScienceResult.notPresent: return Colors.orange;
 			case ScienceResult.inconclusive: return Colors.blueGrey;
-			case ScienceResult.loading: return Colors.white;
+			case ScienceResult.loading: return null;
 		}
 	}
 
@@ -202,7 +202,7 @@ class ResultsBox extends StatelessWidget {
 			margin: const EdgeInsets.all(8),
 			padding: const EdgeInsets.all(8),
 			width: double.infinity,
-			color: color,
+			color: color ?? context.colorScheme.surface,
 			child: Column(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
