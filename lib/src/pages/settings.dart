@@ -110,7 +110,6 @@ class SettingsPage extends StatelessWidget {
 							children: [
 								NumberEditor(
 									name: "Number of samples", 
-									subtitle: "Up to 5 samples are supported",
 									model: model.science.numSamples
 								),
 								SwitchListTile(

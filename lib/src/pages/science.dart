@@ -93,8 +93,14 @@ GetTitleWidgetFunction getTitles(List<String> titles) =>
 
 /// The science analysis page.
 class SciencePage extends StatelessWidget {
-	/// The colors for the different samples. Only 5 samples are supported.
-	final List<Color> colors = [Colors.red, Colors.green, Colors.blue, Colors.yellow, Colors.purple];
+	/// Red, used as the color for the first sample.
+	static final red = HSVColor.fromColor(Colors.red);
+	/// Purple, used as the color for the last sample.
+	static final purple = HSVColor.fromColor(Colors.purple);
+	/// Gets a color between red and purple 
+	///
+	/// [value] must be between 0.0 and 1.0. 
+	Color getColor(double value) => HSVColor.lerp(red, purple, value)!.toColor();
 
 	/// The `package:fl_chart` helper class for the details charts.
 	LineChartData getDetailsData(ScienceAnalysis analysis, Color color) => LineChartData(
@@ -128,7 +134,7 @@ class SciencePage extends StatelessWidget {
 		create: ScienceModel.new,
 		builder: (model) => Stack(children: [
 			ListView(  // The main content of the page
-				padding: const EdgeInsets.all(16),
+				padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 32),
 				children: [
 					if (model.errorText != null) ...[
 						const SizedBox(height: 48),
@@ -141,12 +147,12 @@ class SciencePage extends StatelessWidget {
 						ChartsRow(
 							title: "Details",
 							analyses: model.analysesForSample,
-							builder: (analysis) => LineChart(getDetailsData(analysis, colors[model.sample])),
+							builder: (analysis) => LineChart(getDetailsData(analysis, getColor(model.sample / model.numSamples))),
 						),
 						ChartsRow(
 							title: "Summary",
 							analyses: model.analysesForSample,
-							builder: (analysis) => BarChart(getBarChartData(analysis, colors[model.sample])),
+							builder: (analysis) => BarChart(getBarChartData(analysis, getColor(model.sample / model.numSamples))),
 						),
 						ChartsRow(
 							title: "Results",
