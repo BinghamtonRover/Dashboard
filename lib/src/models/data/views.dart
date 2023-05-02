@@ -63,7 +63,7 @@ class View {
 		builder: (context) => ColoredBox(
 			color: context.colorScheme.brightness == Brightness.light
 				? Colors.blueGrey
-				: Colors.blueGrey[700], 
+				: Colors.blueGrey[700]!, 
 			child: Column(
 				children: [
 					Row(children: const [Spacer(), ViewsSelector(currentView: Routes.blank)]),

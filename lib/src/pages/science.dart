@@ -124,10 +124,10 @@ class SciencePage extends StatelessWidget {
 					getTitlesWidget: (double value, TitleMeta meta) => SideTitleWidget(
 						axisSide: AxisSide.bottom,
 						space: 3,
-						child: Text(value.toString())
-					)
-				)
-			)
+						child: Text(value.toString()),
+					),
+				),
+			),
 		),
 		extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)], verticalLines: [VerticalLine(x: 0)]),
 		minX: 0, minY: 0,
@@ -150,9 +150,9 @@ class SciencePage extends StatelessWidget {
 						axisSide: AxisSide.bottom,
 						space: 3,
 						child: Text(["Min", "Avg", "Max"][value.toInt()]),
-					)
-				)
-			)
+					),
+				),
+			),
 		),
 	);
 

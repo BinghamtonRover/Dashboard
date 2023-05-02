@@ -11,8 +11,8 @@ class ViewsWidget extends StatelessWidget {
 	/// Renders the view at the given [index] in [ViewsModel.views].
 	Widget getView(BuildContext context, int index) => Expanded(child: Container(
 		decoration: BoxDecoration(border: Border.all(width: 3)),
-		child: models.views.views[index].builder(context)),
-	);
+		child: models.views.views[index].builder(context),
+	),);
 
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<ViewsModel>.value(
@@ -31,8 +31,8 @@ class ViewsWidget extends StatelessWidget {
 						if (model.views.length >= 3) getView(context, 2)
 						else getView(context, 1),
 					if (model.views.length >= 4) getView(context, 3)
-				])
-			)
-		])
+				],),
+			),
+		],),
 	);
 }

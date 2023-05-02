@@ -28,11 +28,11 @@ class Footer extends StatelessWidget {
 							SizedBox(width: 4),
 							StatusIcons(),
 							SizedBox(width: 12),								
-						]
-					)
-				)
-			)
-		)
+						],
+					),
+				),
+			),
+		),
 	);
 }
 
