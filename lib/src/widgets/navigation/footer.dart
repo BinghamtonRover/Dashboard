@@ -11,20 +11,28 @@ class Footer extends StatelessWidget {
 	Widget build(BuildContext context) => Container(
 		height: 48,
 		color: Theme.of(context).colorScheme.secondary,
-		child: Row(
-			mainAxisAlignment: MainAxisAlignment.end,
-			children: const [
-				MessageDisplay(),
-				Spacer(),
-				ViewsCounter(),
-				SizedBox(width: 8),
-				GamepadButtons(),
-				SerialButton(),
-				SizedBox(width: 4),
-				StatusIcons(),
-				SizedBox(width: 12),
-			]
-		)
+		child: LayoutBuilder(
+			builder: (context, constraints) => SingleChildScrollView(
+				scrollDirection: Axis.horizontal, 
+				child: SizedBox(
+					width: constraints.maxWidth, 
+					child: Row(
+						mainAxisSize: MainAxisSize.min,
+						children: const [
+							MessageDisplay(),
+							Spacer(),
+							ViewsCounter(),
+							SizedBox(width: 8),
+							GamepadButtons(),
+							SerialButton(),
+							SizedBox(width: 4),
+							StatusIcons(),
+							SizedBox(width: 12),								
+						],
+					),
+				),
+			),
+		),
 	);
 }
 
@@ -95,8 +103,8 @@ class StatusIcons extends StatelessWidget {
 						rover.isConnected 
 							? getBatteryIcon(rover.metrics.electrical.battery)
 							: Icons.battery_unknown,
-						color: getColor(rover.metrics.electrical.battery)
-					)
+						color: getColor(rover.metrics.electrical.battery),
+					),
 				),
 				const SizedBox(width: 4),
 				Tooltip(
@@ -124,7 +132,7 @@ class StatusIcons extends StatelessWidget {
 					],
 				),
 				const SizedBox(width: 4),
-			]
+			],
 		),
 	);
 }
@@ -138,6 +146,7 @@ class ViewsCounter extends StatelessWidget {
 	Widget build(BuildContext context) => ProviderConsumer<ViewsModel>.value(
 		value: models.views,
 		builder: (model) => Row(
+			mainAxisSize: MainAxisSize.min,
 			children: [
 				const Text("Views:"),
 				const SizedBox(width: 4),
@@ -150,10 +159,10 @@ class ViewsCounter extends StatelessWidget {
 							value: i,
 							child: Center(child: Text(i.toString())),
 						)
-					]
-				)
-			]
-		)
+					],
+				),
+			],
+		),
 	);
 }
 
@@ -184,7 +193,7 @@ class SerialButton extends StatelessWidget {
 							child: Text(device),
 						)
 				],
-		)
+		),
 	);
 } 
 
@@ -227,8 +236,8 @@ class MessageDisplay extends StatelessWidget {
 						const SizedBox(width: 4),
 						Text(model.message!.text),
 						const SizedBox(width: 4),
-				]
-			)
-		)
+				],
+			),
+		),
 	);
 }

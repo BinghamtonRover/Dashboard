@@ -44,7 +44,7 @@ class GamepadButton extends StatelessWidget {
 								right: -2,
 								child: Text("${controller.gamepadIndex + 1}", style: const TextStyle(fontSize: 12, color: Colors.white)),
 							),
-						]
+						],
 					),
 					color: model.isConnected 
 						? getColor(model.gamepad.battery)
@@ -63,8 +63,8 @@ class GamepadButton extends StatelessWidget {
 						)
 					],
 				),
-			]
-		)
+			],
+		),
 	);
 }
 

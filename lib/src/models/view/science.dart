@@ -1,10 +1,10 @@
 import "dart:io";
-import "package:flutter/material.dart";
 import "package:file_picker/file_picker.dart";
+import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
-import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 
 /// A view model to allow the user to override values supplied to [ScienceTest]s.
 class ScienceTestBuilder with ChangeNotifier {
@@ -63,7 +63,7 @@ class ScienceAnalysis {
 		? ScienceResult.loading : sensor.test(SampleData()
 			..min = testBuilder.min.value
 			..average = testBuilder.average.value
-			..max = testBuilder.max.value
+			..max = testBuilder.max.value,
 		);
 
 	/// Clears all readings from this analysis.
@@ -159,8 +159,6 @@ class ScienceModel with ChangeNotifier {
 		final result = await FilePicker.platform.pickFiles(
 			dialogTitle: "Choose science logs",
 			initialDirectory: services.files.loggingDir.path,
-			type: FileType.custom,
-			allowedExtensions: ["log"],
 		);
 		if (result == null || result.count == 0) {
 			isLoading = false;

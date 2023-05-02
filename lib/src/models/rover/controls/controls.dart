@@ -48,4 +48,3 @@ abstract class RoverControls {
 	/// Keys are the actions, values are the buttons that trigger them.
 	Map<String, String> get buttonMapping;
 }
-

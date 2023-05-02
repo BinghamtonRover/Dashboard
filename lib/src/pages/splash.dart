@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
@@ -27,6 +28,7 @@ class SplashPageState extends State<SplashPage>{
 	/// Calls [Services.init] and [Models.init] while monitoring for errors. 
 	Future<void> init() async {
 		try {
+			await SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
 			current = "Flutter";
 			WidgetsFlutterBinding.ensureInitialized();
 
@@ -61,8 +63,8 @@ class SplashPageState extends State<SplashPage>{
 					const SizedBox(height: 16),
 					Text(errorText!),
 					const Spacer(flex: 2),
-				]
-			)
-		)
+				],
+			),
+		),
 	);
 }

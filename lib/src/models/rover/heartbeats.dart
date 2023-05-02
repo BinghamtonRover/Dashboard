@@ -35,7 +35,7 @@ class RoverHeartbeats extends Model {
 	/// A rundown of the connection strength of each device.
 	String get connectionSummary {
 		final result = StringBuffer();
-		for (final MapEntry<Device, double> entry in connections.entries) {
+		for (final entry in connections.entries) {
 			if (entry.key == Device.DEVICE_UNDEFINED || entry.key == Device.FIRMWARE) continue;
 			result.write("${entry.key.humanName}: ${(entry.value*100).toStringAsFixed(0)}%\n");
 		}
@@ -142,15 +142,15 @@ class RoverHeartbeats extends Model {
 			_handshakes[device] = 0;
 			await _sendHandshakeTo(device);
 		}
-		await Future.delayed(handshakeWaitDelay);
+		await Future<void>.delayed(handshakeWaitDelay);
 		for (final device in Device.values) {
 			final oldConnection = connections[device];
 			if (_handshakes[device]! > 0) {
 				if (connections[device]! == 0) {
 					models.home.setMessage(severity: Severity.info, text: "The ${device.humanName} has connected");
 				}
-				final int numHandshakes = _handshakes[device]!;
-				final double score = connectionIncrement * numHandshakes;
+				final numHandshakes = _handshakes[device]!;
+				final score = connectionIncrement * numHandshakes;
 				connections[device] = connections[device]! + score;
 			} else {
 				connections[device] = connections[device]! - connectionIncrement;

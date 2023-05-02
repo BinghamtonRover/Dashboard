@@ -36,7 +36,7 @@ class RoverControlDashboard extends StatelessWidget {
 					colorScheme: const ColorScheme.light(
 						primary: binghamtonGreen,
 						secondary: binghamtonGreen,
-					)
+					),
 				),
 				darkTheme: ThemeData.from(
 					colorScheme: const ColorScheme.dark(
@@ -47,8 +47,8 @@ class RoverControlDashboard extends StatelessWidget {
 				routes: {
 					Routes.home: (_) => HomePage(),
 					Routes.settings: (_) => SettingsPage(),
-				}
-			)
-		)
+				},
+			),
+		),
 	);
 }

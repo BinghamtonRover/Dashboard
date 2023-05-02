@@ -1,6 +1,6 @@
-import "package:flutter/material.dart";
-import "package:flutter/gestures.dart";
 import "package:fl_chart/fl_chart.dart";
+import "package:flutter/gestures.dart";
+import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -38,12 +38,12 @@ class ScrollingRow extends StatelessWidget {
 				child: ListView(
 					scrollDirection: Axis.horizontal, 
 					children: [for (final child in children) SizedBox(width: 400, child: child)],
-				)
+				),
 			)
 			: Row(
-				children: [for (final child in children) Expanded(child: child)]
-			)
-		)
+				children: [for (final child in children) Expanded(child: child)],
+			),
+		),
 	);
 }
 
@@ -66,7 +66,7 @@ class ChartsRow extends StatelessWidget {
 		required this.title, 
 		required this.analyses, 
 		required this.builder, 
-		this.height = 300
+		this.height = 300,
 	});
 
 	@override
@@ -77,24 +77,30 @@ class ChartsRow extends StatelessWidget {
 		ScrollingRow(height: height, children: [
 			for (final analysis in analyses) Column(children: [
 				Text(analysis.sensor.name, textAlign: TextAlign.center, style: context.textTheme.labelLarge),
+				const SizedBox(height: 8),
 				Expanded(child: builder(analysis)),
-			])
-		]),
-	]);
+			],),
+		],),
+	],);
 }
 
 /// Gets titles for a graph.
-GetTitleWidgetFunction getTitles(List<String> titles) => 
-	(double value, TitleMeta meta) => SideTitleWidget(
-		axisSide: AxisSide.bottom,
-		space: 2,
-		child: Text(titles[value.toInt()])
-	);
+GetTitleWidgetFunction getTitles(List<String> titles) => (value, meta) => SideTitleWidget(
+	axisSide: AxisSide.bottom,
+	space: 2,
+	child: Text(titles[value.toInt()]),
+);
 
 /// The science analysis page.
 class SciencePage extends StatelessWidget {
-	/// The colors for the different samples. Only 5 samples are supported.
-	final List<Color> colors = [Colors.red, Colors.green, Colors.blue, Colors.yellow, Colors.purple];
+	/// Red, used as the color for the first sample.
+	static final red = HSVColor.fromColor(Colors.red);
+	/// Purple, used as the color for the last sample.
+	static final purple = HSVColor.fromColor(Colors.purple);
+	/// Gets a color between red and purple 
+	///
+	/// [value] must be between 0.0 and 1.0. 
+	Color getColor(double value) => HSVColor.lerp(red, purple, value)!.toColor();
 
 	/// The `package:fl_chart` helper class for the details charts.
 	LineChartData getDetailsData(ScienceAnalysis analysis, Color color) => LineChartData(
@@ -109,6 +115,20 @@ class SciencePage extends StatelessWidget {
 				isCurved: true,
 			),
 		], 
+		titlesData: FlTitlesData(
+			show: true, 
+			topTitles: AxisTitles(), 
+			bottomTitles: AxisTitles(
+				sideTitles: SideTitles(
+					showTitles: true, 
+					getTitlesWidget: (double value, TitleMeta meta) => SideTitleWidget(
+						axisSide: AxisSide.bottom,
+						space: 3,
+						child: Text(value.toString()),
+					),
+				),
+			),
+		),
 		extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)], verticalLines: [VerticalLine(x: 0)]),
 		minX: 0, minY: 0,
 	);
@@ -120,7 +140,20 @@ class SciencePage extends StatelessWidget {
 			BarChartGroupData(x: 1, barRods: [BarChartRodData(color: color, fromY: 0, toY: analysis.data.average ?? 0)]),
 			BarChartGroupData(x: 2, barRods: [BarChartRodData(color: color, fromY: 0, toY: analysis.data.max ?? 0)]),
 		],
-		titlesData: FlTitlesData(show: true, bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: getTitles(["Min", "Avg", "Max"])))),
+		titlesData: FlTitlesData(
+			show: true, 
+			topTitles: AxisTitles(), 
+			bottomTitles: AxisTitles(
+				sideTitles: SideTitles(
+					showTitles: true, 
+					getTitlesWidget: (double value, TitleMeta meta) => SideTitleWidget(
+						axisSide: AxisSide.bottom,
+						space: 3,
+						child: Text(["Min", "Avg", "Max"][value.toInt()]),
+					),
+				),
+			),
+		),
 	);
 
 	@override
@@ -128,7 +161,7 @@ class SciencePage extends StatelessWidget {
 		create: ScienceModel.new,
 		builder: (model) => Stack(children: [
 			ListView(  // The main content of the page
-				padding: const EdgeInsets.all(16),
+				padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 32),
 				children: [
 					if (model.errorText != null) ...[
 						const SizedBox(height: 48),
@@ -141,12 +174,12 @@ class SciencePage extends StatelessWidget {
 						ChartsRow(
 							title: "Details",
 							analyses: model.analysesForSample,
-							builder: (analysis) => LineChart(getDetailsData(analysis, colors[model.sample])),
+							builder: (analysis) => LineChart(getDetailsData(analysis, getColor(model.sample / model.numSamples))),
 						),
 						ChartsRow(
 							title: "Summary",
 							analyses: model.analysesForSample,
-							builder: (analysis) => BarChart(getBarChartData(analysis, colors[model.sample])),
+							builder: (analysis) => BarChart(getBarChartData(analysis, getColor(model.sample / model.numSamples))),
 						),
 						ChartsRow(
 							title: "Results",
@@ -157,29 +190,33 @@ class SciencePage extends StatelessWidget {
 					]
 				],
 			),
-			Row(children: [  // The header at the top
-				const SizedBox(width: 8),
-				Text("Science Analysis", style: context.textTheme.headlineMedium), 
-				const SizedBox(width: 12),
-				if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
-				const Spacer(),
-				DropdownButton(
-					value: model.sample,
-					onChanged: model.updateSample,
-					items: [
-						for (int i = 0; i < model.numSamples; i++) DropdownMenuItem(
-							value: i,
-							child: Text("Sample ${i + 1}"),
-						)
-					],
-				),
-				IconButton(
-					icon: const Icon(Icons.upload_file),
-					onPressed: model.loadFile,
-				),
-				const ViewsSelector(currentView: Routes.science),
-			]),
-		])
+			Container(
+				color: context.colorScheme.surface, 
+				height: 48, 
+				child: Row(children: [  // The header at the top
+					const SizedBox(width: 8),
+					Text("Science Analysis", style: context.textTheme.headlineMedium), 
+					const SizedBox(width: 12),
+					if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
+					const Spacer(),
+					DropdownButton(
+						value: model.sample,
+						onChanged: model.updateSample,
+						items: [
+							for (int i = 0; i < model.numSamples; i++) DropdownMenuItem(
+								value: i,
+								child: Text("Sample ${i + 1}"),
+							)
+						],
+					),
+					IconButton(
+						icon: const Icon(Icons.upload_file),
+						onPressed: model.loadFile,
+					),
+					const ViewsSelector(currentView: Routes.science),
+				],),
+			),
+		],),
 	);
 }
 
@@ -227,9 +264,9 @@ class ResultsBox extends StatelessWidget {
 					const Spacer(),
 					Center(child: Text(text, textAlign: TextAlign.center, style: context.textTheme.headlineLarge)),
 					const Spacer(),
-				]
-			)
-		)),
+				],
+			),
+		),),
 		NumberEditor(
 			name: "Min",
 			model: analysis.testBuilder.min,
@@ -245,5 +282,5 @@ class ResultsBox extends StatelessWidget {
 			model: analysis.testBuilder.max,
 			titleFlex: 1,
 		),
-	]);
+	],);
 }

@@ -22,8 +22,8 @@ class Sidebar extends StatelessWidget {
 				const SizedBox(height: 4),
 				ControlsDisplay(controller: models.rover.controller1, gamepadNum: 1),
 				ControlsDisplay(controller: models.rover.controller2, gamepadNum: 2),
-			]
-		)
+			],
+		),
 	);
 }
 
@@ -55,7 +55,7 @@ class ControlsDisplay extends StatelessWidget {
 					Text(entry.key, style: Theme.of(context).textTheme.labelLarge),
 					Text("  ${entry.value}", style: Theme.of(context).textTheme.titleMedium),
 				],
-			]
-		)
+			],
+		),
 	);
 }

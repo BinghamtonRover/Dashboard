@@ -28,7 +28,7 @@ class ViewsSelector extends StatelessWidget {
 				value: view,
 				child: Text(view.name),
 			),
-		]
+		],
 	);
 }
 
@@ -39,7 +39,7 @@ class View {
 	/// The name of the view.
 	final String name;
 	/// A function to build this view.
-	final Widget Function() builder;
+	final WidgetBuilder builder;
 	/// A const constructor.
 	const View({required this.name, required this.builder});
 
@@ -48,29 +48,31 @@ class View {
 		for (final name in CameraName.values) 
 			if (name != CameraName.CAMERA_NAME_UNDEFINED) View(
 				name: name.humanName,
-				builder: () => VideoFeed(name: name),
+				builder: (context) => VideoFeed(name: name),
 			)
 	];
 
 	/// A list of views that represent all non-camera feeds.
-	static const List<View> uiViews = [
-		View(name: Routes.science, builder: SciencePage.new),
+	static final List<View> uiViews = [
+		View(name: Routes.science, builder: (context) => SciencePage()),
 	];
 
 	/// A blank view.
 	static final blank = View(
 		name: Routes.blank,
-		builder: () => Container(
-			color: Colors.blueGrey,
+		builder: (context) => ColoredBox(
+			color: context.colorScheme.brightness == Brightness.light
+				? Colors.blueGrey
+				: Colors.blueGrey[700]!, 
 			child: Column(
 				children: [
 					Row(children: const [Spacer(), ViewsSelector(currentView: Routes.blank)]),
 					const Spacer(),
 					const Text("Choose a view"),
 					const Spacer(),
-				]
-			)
-		)
+				],
+			),
+		),
 	);
 }
 
@@ -90,7 +92,7 @@ class ViewsModel extends Model {
 			models.home.setMessage(severity: Severity.error, text: "That view is already on-screen");
 			return;
 		}
-		final int index = views.indexWhere((view) => view.name == oldView);
+		final index = views.indexWhere((view) => view.name == oldView);
 		views[index] = newView;
 		notifyListeners();
 	}
@@ -98,11 +100,11 @@ class ViewsModel extends Model {
 	/// Adds or subtracts a number of views to/from the UI
 	void setNumViews(int? value) {
 		if (value == null || value > 4 || value < 1) return;
-		final int currentNum = views.length;
+		final currentNum = views.length;
 		if (value < currentNum) {
 			views = views.sublist(0, value);
 		} else {
-			for (int i = currentNum; i < value; i++) {
+			for (var i = currentNum; i < value; i++) {
 				views.add(View.blank);
 			}
 		}

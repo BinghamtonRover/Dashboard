@@ -39,13 +39,13 @@ class Services extends Service {
 	// Services._();
 
 	/// A UDP socket for sending and receiving Protobuf data.
-	final dataSocket = ProtoSocket(listenPort: 8006);
+	final dataSocket = ProtoSocket();
 
 	/// A UDP socket for receiving video.
-	final videoSocket = ProtoSocket(listenPort: 8008);
+	final videoSocket = ProtoSocket();
 
 	/// A UDP socket for controlling autonomy.
-	final autonomySocket = ProtoSocket(listenPort: 8009);
+	final autonomySocket = ProtoSocket();
 
 	/// A service that handles controller inputs.
 	final gamepad = GamepadService();
