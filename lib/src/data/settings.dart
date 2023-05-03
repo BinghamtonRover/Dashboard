@@ -134,12 +134,16 @@ class NetworkSettings {
   /// the tank when it's being used.
   final SocketConfig tankSocket;
 
+  /// The address and port of the Rover's GPS
+  final SocketConfig roverSocket;
+
   /// Creates a new network settings object.
   NetworkSettings({
     required this.subsystemsSocket,
     required this.videoSocket,
     required this.autonomySocket,
     required this.tankSocket,
+    required this.roverSocket,
     required this.connectionTimeout,
   });
 
@@ -149,6 +153,7 @@ class NetworkSettings {
     videoSocket = json?.getSocket("videoSocket") ?? SocketConfig.raw("192.168.1.30", 8002),
     autonomySocket = json?.getSocket("autonomySocket") ?? SocketConfig.raw("192.168.1.30", 8003),
     tankSocket = json?.getSocket("tankSocket") ?? SocketConfig.raw("192.168.1.40", 8000),
+    roverSocket = json?.getSocket("autonomySocket") ?? SocketConfig.raw("192.168.1.50", 8000),
     connectionTimeout = json?["connectionTimeout"] ?? 5;
 
   /// Serializes these settings to JSON.
@@ -157,6 +162,7 @@ class NetworkSettings {
     "videoSocket": videoSocket.toJson(),
     "autonomySocket": autonomySocket.toJson(),
     "tankSocket": tankSocket.toJson(),
+    "roverSocket": roverSocket.toJson(),
     "connectionTimeout": connectionTimeout,
   };
 }
