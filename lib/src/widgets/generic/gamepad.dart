@@ -79,6 +79,6 @@ class GamepadButtons extends StatelessWidget {
 			GamepadButton(controller: models.rover.controller1),
 			const SizedBox(width: 8),
 			GamepadButton(controller: models.rover.controller2),
-		]
+		],
 	);
 }

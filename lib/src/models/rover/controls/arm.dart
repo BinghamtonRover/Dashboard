@@ -23,9 +23,7 @@ class ArmControls extends RoverControls {
 	/// Updates the IK coordinates by the given offsets.
 	List<Message> updateIK(double x, double y, double z) {
 		if (x == 0 && y == 0 && z == 0) return [];
-		print("Before: $ik");
 		ik += Coordinates(x: x, y: y, z: z);
-		print("After: $ik\n");
 		return [ArmCommand(ikX: 1, ikY: ik.y, ikZ: ik.z)];
 	}
 
