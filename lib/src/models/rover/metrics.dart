@@ -22,10 +22,11 @@ class RoverMetrics extends Model {
 	List<Metrics> get allMetrics => [electrical, science, position];
 
 	/// Returns a function that updates a [Metrics] object and reloads the UI.
-	void Function(T) update<T extends Message>(Metrics<T> metrics) => (data) {
+	void Function(T) update<T extends Message>(Metrics<T> metrics, {bool sendToMars = false}) => (data) {
 		metrics.update(data);
 		notifyListeners();
     services.files.logData(data);
+    if (sendToMars) services.marsSocket.sendMessage(data);
 	};
 
 	@override
@@ -43,7 +44,7 @@ class RoverMetrics extends Model {
     services.dataSocket.registerHandler<RoverPosition>(
 			name: RoverPosition().messageName,
 			decoder: RoverPosition.fromBuffer,
-			handler: update(position),
+			handler: update(position, sendToMars: true),
 		);
 	}
 }
