@@ -1,3 +1,5 @@
+import "package:protobuf/protobuf.dart";
+
 import "package:rover_dashboard/data.dart";
 
 import "udp_socket.dart";
@@ -33,7 +35,7 @@ class ProtoSocket extends UdpSocket {
 		final wrapped = WrappedMessage.fromBuffer(data);
 		final rawHandler = _handlers[wrapped.name];
 		if (rawHandler == null) { /* TODO: Log in some meaningful way, through the UI */ }
-		else { rawHandler(wrapped.data); }
+		else { return rawHandler(wrapped.data); }
 	}
 
 	/// Adds a handler for a given type. 
@@ -61,7 +63,24 @@ class ProtoSocket extends UdpSocket {
 		if (_handlers.containsKey(name)) {  // handler was already registered
 			throw ArgumentError("Message handler for type [$T] already registered");
 		} else {
-			_handlers[name] = (data) => handler(decoder(data));
+			_handlers[name] = (data) {
+				try {
+					final decoded = decoder(data);
+					handler(decoded);
+				} on InvalidProtocolBufferException {
+					// Message was slightly corrupted by CAN or something
+					// TODO: Log this somehow
+					if (data.length <= 5) return; 
+					try {
+						data = data.sublist(5);
+						final decoded = decoder(data);
+						handler(decoded);
+						print("Fixed broken $name!");
+					} on InvalidProtocolBufferException { 
+						// This data is corrupted beyond repair
+					}						
+				}
+			};
 		}
 	}
 
