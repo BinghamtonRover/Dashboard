@@ -48,7 +48,7 @@ class Services extends Service {
 	final autonomySocket = ProtoSocket();
 
   /// A UDP socket for controlling rover position
-  final marsSocket = ProtoSocket(listenPort: 8010);
+  final marsSocket = ProtoSocket();
 
 	/// A service that handles controller inputs.
 	final gamepad = GamepadService();
