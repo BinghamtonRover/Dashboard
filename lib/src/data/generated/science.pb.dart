@@ -9,21 +9,26 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
+import 'science.pbenum.dart';
+
+export 'science.pbenum.dart';
+
 class ScienceCommand extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ScienceCommand', createEmptyInstance: create)
     ..aOB(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'dig')
     ..aOB(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'spinCarouselTube')
     ..aOB(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'spinCarouselSection')
     ..a<$core.double>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'vacuumSuck', $pb.PbFieldType.OF)
-    ..a<$core.int>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'carouselAngle', $pb.PbFieldType.O3)
-    ..a<$core.int>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'carouselLinearPosition', $pb.PbFieldType.O3)
-    ..a<$core.int>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'testLinearPosition', $pb.PbFieldType.O3)
-    ..a<$core.int>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'vacuumLinearPosition', $pb.PbFieldType.O3)
-    ..aOB(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pump1')
-    ..aOB(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pump2')
-    ..aOB(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pump3')
-    ..aOB(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pump4')
-    ..a<$core.int>(13, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'dirtRelease', $pb.PbFieldType.O3, protoName: 'dirtRelease')
+    ..a<$core.double>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'carouselAngle', $pb.PbFieldType.OF)
+    ..a<$core.double>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'carouselLinearPosition', $pb.PbFieldType.OF)
+    ..a<$core.double>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'testLinearPosition', $pb.PbFieldType.OF)
+    ..a<$core.double>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'vacuumLinearPosition', $pb.PbFieldType.OF)
+    ..e<PumpState>(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pump1', $pb.PbFieldType.OE, defaultOrMaker: PumpState.P_U, valueOf: PumpState.valueOf, enumValues: PumpState.values)
+    ..e<PumpState>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pump2', $pb.PbFieldType.OE, defaultOrMaker: PumpState.P_U, valueOf: PumpState.valueOf, enumValues: PumpState.values)
+    ..e<PumpState>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pump3', $pb.PbFieldType.OE, defaultOrMaker: PumpState.P_U, valueOf: PumpState.valueOf, enumValues: PumpState.values)
+    ..e<PumpState>(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pump4', $pb.PbFieldType.OE, defaultOrMaker: PumpState.P_U, valueOf: PumpState.valueOf, enumValues: PumpState.values)
+    ..e<DirtReleasePosition>(14, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'dirtRelease', $pb.PbFieldType.OE, protoName: 'dirtRelease', defaultOrMaker: DirtReleasePosition.TEMP_UNDEFINED, valueOf: DirtReleasePosition.valueOf, enumValues: DirtReleasePosition.values)
+    ..aOB(15, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setVacuum')
     ..hasRequiredFields = false
   ;
 
@@ -33,15 +38,16 @@ class ScienceCommand extends $pb.GeneratedMessage {
     $core.bool? spinCarouselTube,
     $core.bool? spinCarouselSection,
     $core.double? vacuumSuck,
-    $core.int? carouselAngle,
-    $core.int? carouselLinearPosition,
-    $core.int? testLinearPosition,
-    $core.int? vacuumLinearPosition,
-    $core.bool? pump1,
-    $core.bool? pump2,
-    $core.bool? pump3,
-    $core.bool? pump4,
-    $core.int? dirtRelease,
+    $core.double? carouselAngle,
+    $core.double? carouselLinearPosition,
+    $core.double? testLinearPosition,
+    $core.double? vacuumLinearPosition,
+    PumpState? pump1,
+    PumpState? pump2,
+    PumpState? pump3,
+    PumpState? pump4,
+    DirtReleasePosition? dirtRelease,
+    $core.bool? setVacuum,
   }) {
     final _result = create();
     if (dig != null) {
@@ -82,6 +88,9 @@ class ScienceCommand extends $pb.GeneratedMessage {
     }
     if (dirtRelease != null) {
       _result.dirtRelease = dirtRelease;
+    }
+    if (setVacuum != null) {
+      _result.setVacuum = setVacuum;
     }
     return _result;
   }
@@ -143,85 +152,94 @@ class ScienceCommand extends $pb.GeneratedMessage {
   void clearVacuumSuck() => clearField(4);
 
   @$pb.TagNumber(5)
-  $core.int get carouselAngle => $_getIZ(4);
+  $core.double get carouselAngle => $_getN(4);
   @$pb.TagNumber(5)
-  set carouselAngle($core.int v) { $_setSignedInt32(4, v); }
+  set carouselAngle($core.double v) { $_setFloat(4, v); }
   @$pb.TagNumber(5)
   $core.bool hasCarouselAngle() => $_has(4);
   @$pb.TagNumber(5)
   void clearCarouselAngle() => clearField(5);
 
   @$pb.TagNumber(6)
-  $core.int get carouselLinearPosition => $_getIZ(5);
+  $core.double get carouselLinearPosition => $_getN(5);
   @$pb.TagNumber(6)
-  set carouselLinearPosition($core.int v) { $_setSignedInt32(5, v); }
+  set carouselLinearPosition($core.double v) { $_setFloat(5, v); }
   @$pb.TagNumber(6)
   $core.bool hasCarouselLinearPosition() => $_has(5);
   @$pb.TagNumber(6)
   void clearCarouselLinearPosition() => clearField(6);
 
   @$pb.TagNumber(7)
-  $core.int get testLinearPosition => $_getIZ(6);
+  $core.double get testLinearPosition => $_getN(6);
   @$pb.TagNumber(7)
-  set testLinearPosition($core.int v) { $_setSignedInt32(6, v); }
+  set testLinearPosition($core.double v) { $_setFloat(6, v); }
   @$pb.TagNumber(7)
   $core.bool hasTestLinearPosition() => $_has(6);
   @$pb.TagNumber(7)
   void clearTestLinearPosition() => clearField(7);
 
   @$pb.TagNumber(8)
-  $core.int get vacuumLinearPosition => $_getIZ(7);
+  $core.double get vacuumLinearPosition => $_getN(7);
   @$pb.TagNumber(8)
-  set vacuumLinearPosition($core.int v) { $_setSignedInt32(7, v); }
+  set vacuumLinearPosition($core.double v) { $_setFloat(7, v); }
   @$pb.TagNumber(8)
   $core.bool hasVacuumLinearPosition() => $_has(7);
   @$pb.TagNumber(8)
   void clearVacuumLinearPosition() => clearField(8);
 
   @$pb.TagNumber(9)
-  $core.bool get pump1 => $_getBF(8);
+  PumpState get pump1 => $_getN(8);
   @$pb.TagNumber(9)
-  set pump1($core.bool v) { $_setBool(8, v); }
+  set pump1(PumpState v) { setField(9, v); }
   @$pb.TagNumber(9)
   $core.bool hasPump1() => $_has(8);
   @$pb.TagNumber(9)
   void clearPump1() => clearField(9);
 
   @$pb.TagNumber(10)
-  $core.bool get pump2 => $_getBF(9);
+  PumpState get pump2 => $_getN(9);
   @$pb.TagNumber(10)
-  set pump2($core.bool v) { $_setBool(9, v); }
+  set pump2(PumpState v) { setField(10, v); }
   @$pb.TagNumber(10)
   $core.bool hasPump2() => $_has(9);
   @$pb.TagNumber(10)
   void clearPump2() => clearField(10);
 
   @$pb.TagNumber(11)
-  $core.bool get pump3 => $_getBF(10);
+  PumpState get pump3 => $_getN(10);
   @$pb.TagNumber(11)
-  set pump3($core.bool v) { $_setBool(10, v); }
+  set pump3(PumpState v) { setField(11, v); }
   @$pb.TagNumber(11)
   $core.bool hasPump3() => $_has(10);
   @$pb.TagNumber(11)
   void clearPump3() => clearField(11);
 
   @$pb.TagNumber(12)
-  $core.bool get pump4 => $_getBF(11);
+  PumpState get pump4 => $_getN(11);
   @$pb.TagNumber(12)
-  set pump4($core.bool v) { $_setBool(11, v); }
+  set pump4(PumpState v) { setField(12, v); }
   @$pb.TagNumber(12)
   $core.bool hasPump4() => $_has(11);
   @$pb.TagNumber(12)
   void clearPump4() => clearField(12);
 
-  @$pb.TagNumber(13)
-  $core.int get dirtRelease => $_getIZ(12);
-  @$pb.TagNumber(13)
-  set dirtRelease($core.int v) { $_setSignedInt32(12, v); }
-  @$pb.TagNumber(13)
+  @$pb.TagNumber(14)
+  DirtReleasePosition get dirtRelease => $_getN(12);
+  @$pb.TagNumber(14)
+  set dirtRelease(DirtReleasePosition v) { setField(14, v); }
+  @$pb.TagNumber(14)
   $core.bool hasDirtRelease() => $_has(12);
-  @$pb.TagNumber(13)
-  void clearDirtRelease() => clearField(13);
+  @$pb.TagNumber(14)
+  void clearDirtRelease() => clearField(14);
+
+  @$pb.TagNumber(15)
+  $core.bool get setVacuum => $_getBF(13);
+  @$pb.TagNumber(15)
+  set setVacuum($core.bool v) { $_setBool(13, v); }
+  @$pb.TagNumber(15)
+  $core.bool hasSetVacuum() => $_has(13);
+  @$pb.TagNumber(15)
+  void clearSetVacuum() => clearField(15);
 }
 
 class ScienceData extends $pb.GeneratedMessage {

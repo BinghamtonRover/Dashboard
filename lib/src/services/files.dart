@@ -88,7 +88,7 @@ class FilesService extends Service {
   /// Outputs log data to the correct file based on message
   Future<void> logData(Message message) async{
     final List<int> bytes = message.wrapped.writeToBuffer();
-    final line = bytes.join(", ");
+    final line = base64.encode(bytes);
     final file = File("${loggingDir.path}/${message.messageName}.log");
     await file.writeAsString("$line\n", mode: FileMode.writeOnlyAppend, flush: true);
   }
@@ -96,9 +96,7 @@ class FilesService extends Service {
   /// Reads logs from the given file.
   Future<List<WrappedMessage>> readLogs(File file) async => [
     for (final line in (await file.readAsString()).trim().split("\n"))
-      WrappedMessage.fromBuffer([
-        for (final byte in line.split(", ")) int.parse(byte)
-      ])
+      WrappedMessage.fromBuffer(base64.decode(line))
   ];
 }
 
