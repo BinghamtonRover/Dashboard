@@ -46,7 +46,7 @@ linter:
   rules:
     # Rules NOT in package:lint
     prefer_double_quotes: true
-    # - library_private_types_in_public_api: true
+    public_member_api_docs: true
 
     # Rules to be disabled from package:lint
     always_use_package_imports: false

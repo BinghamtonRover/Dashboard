@@ -75,22 +75,18 @@ class SettingsPage extends StatelessWidget {
 						ValueEditor<ArmSettings>(
 							name: "Arm settings",
 							children: [
-								NumberEditor(name: "Radian increment", model: model.arm.radians),
-								NumberEditor(name: "Precise increment (radians)", model: model.arm.precise),
-								NumberEditor(name: "Step increment", model: model.arm.steps),
-								NumberEditor(name: "IK increment (mm)", model: model.arm.ik),
-								NumberEditor(name: "Precise IK increment (mm)", model: model.arm.ikPrecise),
+								NumberEditor(name: "Swivel increment", model: model.arm.swivel),
+								NumberEditor(name: "Shoulder increment", model: model.arm.shoulder),
+								NumberEditor(name: "Elbow increment", model: model.arm.elbow),
+								NumberEditor(name: "Wrist rotate increment", model: model.arm.rotate),
+								NumberEditor(name: "Wrist lift increment", model: model.arm.lift),
+								NumberEditor(name: "Pinch increment", model: model.arm.pinch),
+								NumberEditor(name: "IK increment", model: model.arm.ik),
 								SwitchListTile(
 									title: const Text("Use IK?"),
 									subtitle: const Text("Move in millimeters in 3D space instead of radians"),
 									value: model.arm.useIK,
 									onChanged: model.arm.updateIK,
-								),
-								SwitchListTile(
-									title: const Text("Move in steps?"),
-									subtitle: const Text("Move in steps rather than radians"),
-									value: model.arm.useSteps,
-									onChanged: model.arm.updateSteps,
 								),
 							],
 						),
@@ -111,7 +107,6 @@ class SettingsPage extends StatelessWidget {
 							children: [
 								NumberEditor(
 									name: "Number of samples", 
-									subtitle: "Up to 5 samples are supported",
 									model: model.science.numSamples,
 								),
 								SwitchListTile(

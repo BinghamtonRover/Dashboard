@@ -10,20 +10,23 @@ class ScienceControls extends RoverControls {
 
 	@override
 	List<Message> parseInputs(GamepadState state) => [
-		if (state.normalLeftY != 0) ScienceCommand(vacuumLinearPosition: (state.normalLeftY*20).round()),
-		if (state.normalRightY != 0) ScienceCommand(testLinearPosition: (state.normalRightY*20).round()),
-		if (state.dpadLeft) ScienceCommand(carouselLinearPosition: 20),
-		if (state.dpadRight) ScienceCommand(carouselLinearPosition: -20),
-		if (state.dpadDown) ScienceCommand(dirtRelease: -2),
-		if (state.dpadUp) ScienceCommand(dirtRelease: 2),
-		if (state.leftShoulder) ScienceCommand(carouselAngle: 1),
-		if (state.rightShoulder) ScienceCommand(carouselAngle: -1),
+		if (state.normalLeftY != 0) ScienceCommand(vacuumLinearPosition: state.normalLeftY*1000),
+		if (state.normalRightY != 0) ScienceCommand(testLinearPosition: state.normalRightY*-2000),
+		if (state.dpadLeft) ScienceCommand(carouselLinearPosition: -10000),
+		if (state.dpadRight) ScienceCommand(carouselLinearPosition: 10000),
+		if (state.dpadDown) ScienceCommand(dirtRelease: DirtReleasePosition.OPEN_DIRT),
+		if (state.dpadUp) ScienceCommand(dirtRelease: DirtReleasePosition.CLOSE_DIRT),
+		if (state.leftShoulder) ScienceCommand(carouselAngle: 500),
+		if (state.rightShoulder) ScienceCommand(carouselAngle: -500),
 		// These must be sent at all times to allow sending zero values
-		ScienceCommand(pump1: state.buttonA),
-		ScienceCommand(pump2: state.buttonB),
-		ScienceCommand(pump3: state.buttonX),
-		ScienceCommand(pump4: state.buttonY),
-		ScienceCommand(vacuumSuck: state.normalLeftTrigger),
+		if (state.buttonA) ScienceCommand(pump1: PumpState.PUMP_ON)
+		else ScienceCommand(pump1: PumpState.PUMP_OFF),
+		if (state.buttonB) ScienceCommand(pump2: PumpState.PUMP_ON)
+		else ScienceCommand(pump2: PumpState.PUMP_OFF),
+		if (state.buttonX) ScienceCommand(pump3: PumpState.PUMP_ON)
+		else ScienceCommand(pump3: PumpState.PUMP_OFF),
+		if (state.buttonY) ScienceCommand(pump4: PumpState.PUMP_ON)
+		else ScienceCommand(pump4: PumpState.PUMP_OFF),
 	];
 
 	@override

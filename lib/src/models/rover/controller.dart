@@ -16,8 +16,8 @@ class Controller extends Model {
 	/// Reads the gamepad and controls the rover when triggered.
 	late final Timer gamepadTimer;
 
-	/// The gamepad to read from. Multiple gamepads may be connected.
-	Gamepad gamepad;
+	/// The index of the gamepad to read from. Does not match [Gamepad.controller].
+	final int gamepadIndex;
 
 	/// Defines what the current controls are for the current mode.
 	RoverControls controls;
@@ -37,7 +37,10 @@ class Controller extends Model {
 	};
 
 	/// Maps button presses on [gamepad] to [controls].
-	Controller(this.gamepad, this.controls);
+	Controller(this.gamepadIndex, this.controls);
+
+	/// The gamepad to read from.
+	Gamepad get gamepad => services.gamepad.gamepads[gamepadIndex];
 
 	@override
 	Future<void> init() async {
@@ -66,6 +69,17 @@ class Controller extends Model {
 		notifyListeners();
 	}
 
+	/// Connects the [gamepad] to the user's device.
+	Future<void> connect() async { 
+		await services.gamepad.connect(gamepadIndex);
+		if (gamepad.isConnected) {
+			models.home.setMessage(severity: Severity.info, text: "Connected to gamepad");
+		} else {
+			models.home.setMessage(severity: Severity.error, text: "No gamepad connected");
+		}
+		notifyListeners();
+	}
+
 	/// Same as [setMode], but uses [OperatingMode.index] instead.
 	void setModeIndex(int index) => setMode(OperatingMode.values[index]);
 
@@ -82,7 +96,10 @@ class Controller extends Model {
 	Future<void> _update([_]) async {
 		services.gamepad.update();
 		if (!gamepad.isConnected) return;
-		gamepad = services.gamepad.gamepad1;
-		controls.parseInputs(gamepad.state).forEach(sendMessage);
+		controls.updateState(gamepad.state);
+		final messages = controls.parseInputs(gamepad.state);
+		for (final message in messages) {
+			if (message != null) await sendMessage(message);
+		}
 	}
 }
