@@ -72,14 +72,25 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 
 /// A [ValueBuilder] representing an [ArmSettings].
 class ArmSettingsBuilder extends ValueBuilder<ArmSettings>{
+	/// The view model for [ArmSettings.swivel].
 	final NumberBuilder<double> swivel;
+
+	/// The view model for [ArmSettings.shoulder].
 	final NumberBuilder<double> shoulder;
+
+	/// The view model for [ArmSettings.elbow].
 	final NumberBuilder<double> elbow;
+
+	/// The view model for [ArmSettings.lift].
 	final NumberBuilder<double> lift;
-	final NumberBuilder<double> rotate;
+
+	/// The view model for [ArmSettings.pinch].
 	final NumberBuilder<double> pinch;
 
-	/// The builder for the IK increment.
+	/// The view model for [ArmSettings.rotate].
+	final NumberBuilder<double> rotate;
+
+	/// The view model for [ArmSettings.ik].
 	final NumberBuilder<double> ik;
 
 	/// Whether to use manual control or IK.

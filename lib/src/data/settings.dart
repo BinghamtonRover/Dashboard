@@ -56,11 +56,22 @@ class ScienceSettings {
 
 /// Settings relating to the arm.
 class ArmSettings {
+  /// How many radians to move the shoulder joint each frame.
   final double shoulder;
+
+  /// How many radians to move the elbow joint each frame.
   final double elbow;
+
+  /// How many radians to move the swivel joint each frame.
   final double swivel;
+
+  /// How many radians to pinch each frame.
   final double pinch;
+
+  /// How many radians to lift the gripper each frame.
   final double lift;
+
+  /// How many radians to rotate the gripper each frame.
   final double rotate;
 
   /// How many mm to move every 10ms in IK mode.

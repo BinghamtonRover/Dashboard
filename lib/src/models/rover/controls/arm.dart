@@ -12,9 +12,16 @@ class ArmControls extends RoverControls {
 	/// The arm uses IK to move all the joints to stay at these coordinates.
 	Coordinates ik = Coordinates(x: 0.5, y: 0.5, z: 0.5);
 
+	/// Tracks whether the A button is pressed, so the action is only done once.
 	bool isAPressed = false;
+
+	/// Tracks whether the B button is pressed, so the action is only done once.
 	bool isBPressed = false;
+
+	/// Tracks whether the X button is pressed, so the action is only done once.
 	bool isXPressed = false;
+
+	/// Tracks whether the Y button is pressed, so the action is only done once.
 	bool isYPressed = false;
 
 	@override

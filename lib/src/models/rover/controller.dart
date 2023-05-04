@@ -69,12 +69,13 @@ class Controller extends Model {
 		notifyListeners();
 	}
 
+	/// Connects the [gamepad] to the user's device.
 	Future<void> connect() async { 
 		await services.gamepad.connect(gamepadIndex);
-		if (!gamepad.isConnected) {
-			models.home.setMessage(severity: Severity.error, text: "No gamepad connected");
-		} else {
+		if (gamepad.isConnected) {
 			models.home.setMessage(severity: Severity.info, text: "Connected to gamepad");
+		} else {
+			models.home.setMessage(severity: Severity.error, text: "No gamepad connected");
 		}
 		notifyListeners();
 	}
@@ -95,6 +96,7 @@ class Controller extends Model {
 	Future<void> _update([_]) async {
 		services.gamepad.update();
 		if (!gamepad.isConnected) return;
+		controls.updateState(gamepad.state);
 		final messages = controls.parseInputs(gamepad.state);
 		for (final message in messages) {
 			if (message != null) await sendMessage(message);

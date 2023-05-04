@@ -139,12 +139,18 @@ const vibrateIntensity = 65000;
 /// [Gamepad.isConnected]. No action is needed to check for a new gamepad, but you must call
 /// [update] to read any button presses, or else [Gamepad.state] will never update.
 class GamepadService extends Service {
+  /// The maximum number of gamepads we support.
   static const int numGamepads = 2;
 
+  /// A list of all the [Gamepad]s the user has connected.
+  /// 
+  /// Non-connected gamepads are represented with [MockGamepad]s, which has the nice benefit of
+  /// automatically handling the case where the user is on a non-supported platform.
   final List<Gamepad> gamepads = [
     for (int i = 0; i < numGamepads; i++) MockGamepad()
   ];
 
+  /// The set of all the [Gamepad.controller] IDs.
   Set<int> get ids => {
     for (final gamepad in gamepads) gamepad.controller
   };
