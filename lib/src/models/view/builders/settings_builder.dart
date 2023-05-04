@@ -41,24 +41,31 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 	/// Since the tank runs multiple programs, the port is discarded and only the address is used.
 	final SocketBuilder tankSocket;
 
+  /// The view model representing the [SocketConfig] for the rover.
+	final SocketBuilder marsSocket;
+
 	/// Creates the view model based on the current [Settings].
 	NetworkSettingsBuilder(NetworkSettings initial) :
 		dataSocket = SocketBuilder(initial.subsystemsSocket),
 		videoSocket = SocketBuilder(initial.videoSocket),
 		autonomySocket = SocketBuilder(initial.autonomySocket),
-		tankSocket = SocketBuilder(initial.tankSocket)
+		tankSocket = SocketBuilder(initial.tankSocket),
+    marsSocket = SocketBuilder(initial.marsSocket)
 	{
 		dataSocket.addListener(notifyListeners);
 		videoSocket.addListener(notifyListeners);
 		autonomySocket.addListener(notifyListeners);
 		tankSocket.addListener(notifyListeners);
+    marsSocket.addListener(notifyListeners);
 	}
 
 	@override
 	bool get isValid => dataSocket.isValid
 		&& videoSocket.isValid
 		&& autonomySocket.isValid
-		&& tankSocket.isValid;
+		&& tankSocket.isValid
+    && marsSocket.isValid;
+
 
 	@override
 	NetworkSettings get value => NetworkSettings(
@@ -66,6 +73,7 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 		videoSocket: videoSocket.value,
 		autonomySocket: autonomySocket.value,
 		tankSocket: tankSocket.value,
+    marsSocket: marsSocket.value,
 		connectionTimeout: 5,
 	);
 }

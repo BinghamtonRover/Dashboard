@@ -47,6 +47,9 @@ class Services extends Service {
 	/// A UDP socket for controlling autonomy.
 	final autonomySocket = ProtoSocket();
 
+  /// A UDP socket for controlling rover position
+  final marsSocket = ProtoSocket();
+
 	/// A service that handles controller inputs.
 	final gamepad = GamepadService();
 
@@ -64,6 +67,7 @@ class Services extends Service {
 		await dataSocket.init();
 		await videoSocket.init();
 		await autonomySocket.init();
+    await marsSocket.init();
 		await gamepad.init();
 		await files.init();
 		await serial.init();
@@ -74,6 +78,7 @@ class Services extends Service {
 		await dataSocket.dispose();
 		await videoSocket.dispose();
 		await autonomySocket.dispose();
+    await marsSocket.dispose();
 		await gamepad.dispose();
 		await files.dispose();
 		await serial.dispose();
