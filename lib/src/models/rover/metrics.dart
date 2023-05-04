@@ -22,27 +22,27 @@ class RoverMetrics extends Model {
 	///
 	/// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
 	/// when new data is received. As a getter, every time it is called it will use new data.
-	List<Metrics> get allMetrics => [electrical, drive, position, science];
+	List<Metrics> get allMetrics => [position, electrical, drive, science];
 
-	/// Returns a function that updates a [Metrics] object and reloads the UI.
-	void Function(T) update<T extends Message>(Metrics<T> metrics, {bool sendToMars = false}) => (data) {
+	/// Updates the [metrics] object, updates the UI, and saves [data] to a file.
+	void update<T extends Message>(Metrics<T> metrics, T data) {
 		metrics.update(data);
 		notifyListeners();
-    services.files.logData(data);
-    if (sendToMars) services.marsSocket.sendMessage(data);
-	};
+		services.files.logData(data);
+	}
 
 	@override
 	Future<void> init() async {
 		services.dataSocket.registerHandler<ElectricalData>(
 			name: ElectricalData().messageName,
 			decoder: ElectricalData.fromBuffer,
-			handler: update(electrical),
+			handler: (data) => update(electrical, data),
 		);
 		services.dataSocket.registerHandler<DriveData>(
 			name: DriveData().messageName,
 			decoder: DriveData.fromBuffer,
 			handler: (data) {
+				// Since the values are often zero, [Metrics.merge] won't work.
 				if (data.setLeft) drive.data.left = data.left;
 				if (data.setRight) drive.data.right = data.right;
 				if (data.setThrottle) drive.data.throttle = data.throttle;
@@ -52,12 +52,15 @@ class RoverMetrics extends Model {
 		services.dataSocket.registerHandler<ScienceData>(
 			name: ScienceData().messageName,
 			decoder: ScienceData.fromBuffer,
-			handler: update(science),
+			handler: (data) => update(science, data),
 		);
     services.dataSocket.registerHandler<RoverPosition>(
 			name: RoverPosition().messageName,
 			decoder: RoverPosition.fromBuffer,
-			handler: update(position, sendToMars: true),
+			handler: (data) {
+				update(position, data);
+				services.marsSocket.sendMessage(data);
+			},
 		);
 	}
 }
