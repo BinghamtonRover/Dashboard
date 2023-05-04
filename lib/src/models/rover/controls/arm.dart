@@ -28,30 +28,35 @@ class ArmControls extends RoverControls {
 	}
 
 	@override
+	void updateState(GamepadState state) {
+		if (!state.buttonA) isAPressed = false;
+		if (!state.buttonB) isBPressed = false;
+		if (!state.buttonX) isXPressed = false;
+		if (!state.buttonY) isYPressed = false;
+	}
+
+	@override
 	List<Message?> parseInputs(GamepadState state) => [
 		// Arm
 		if (settings.useIK) ...[
 			// IK
 			...updateIK(state.normalRightX * settings.ikIncrement, state.normalShoulder * settings.ikIncrement, state.normalRightY * settings.ikIncrement),
-			// ...updateIK(state.normalDpadX * settings.ikPreciseIncrement, 0, state.normalRightY * settings.ikPreciseIncrement),
 		] else ...[
 			// Manual control
-			if (state.normalRightX != 0) ArmCommand(swivel: MotorCommand(moveRadians: state.normalRightX * settings.radianIncrement)),
-			if (state.normalRightY != 0) ArmCommand(shoulder: MotorCommand(moveRadians: state.normalRightY * settings.radianIncrement)),
-			if (state.normalShoulder != 0) ArmCommand(elbow: MotorCommand(moveRadians: state.normalShoulder * settings.radianIncrement)),
-			if (settings.useSteps) ...[
-				if (state.normalDpadX != 0) ArmCommand(swivel: MotorCommand(moveSteps: (state.normalDpadX * settings.stepIncrement).round())),
-				if (state.normalDpadY != 0) ArmCommand(elbow: MotorCommand(moveSteps: (state.normalDpadY * settings.stepIncrement).round())),
-			] else ...[
-				if (state.normalDpadX != 0) ArmCommand(swivel: MotorCommand(moveRadians: state.normalDpadX * settings.preciseIncrement)),
-				if (state.normalDpadY != 0) ArmCommand(elbow: MotorCommand(moveRadians: state.normalDpadY * settings.preciseIncrement)),
-			]
+			ArmCommand(swivel: MotorCommand(moveRadians: state.normalRightX * settings.swivel)),
+			ArmCommand(shoulder: MotorCommand(moveRadians: state.normalRightY * settings.shoulder)),
+			ArmCommand(elbow: MotorCommand(moveRadians: state.normalLeftY * settings.elbow)),
+			// The bumpers should be pseudo-IK: Move the shoulder and elbow in sync. 
+			ArmCommand(
+				shoulder: MotorCommand(moveRadians: state.normalShoulder * settings.shoulder * -1),
+				elbow: MotorCommand(moveRadians: state.normalShoulder * settings.elbow),
+			)
 		],
 
 		// Gripper
-		if (state.normalTrigger != 0) GripperCommand(pinch: MotorCommand(moveRadians: state.normalTrigger * settings.radianIncrement * 10)),
-		if (state.normalLeftX != 0) GripperCommand(rotate: MotorCommand(moveRadians: state.normalLeftX * settings.radianIncrement)),
-		if (state.normalLeftY != 0) GripperCommand(lift: MotorCommand(moveRadians: state.normalLeftY * settings.radianIncrement)),
+		GripperCommand(lift: MotorCommand(moveRadians: state.normalLeftY * settings.lift)),
+		GripperCommand(rotate: MotorCommand(moveRadians: state.normalLeftX * settings.rotate)),
+		GripperCommand(pinch: MotorCommand(moveRadians: state.normalTrigger * settings.pinch)),
 
 		// Custom actions
 		if (state.buttonA && !isAPressed) () { isAPressed = true; return GripperCommand(open: true); }(),
@@ -59,21 +64,13 @@ class ArmControls extends RoverControls {
 		if (state.buttonX && !isXPressed) () { isXPressed = true; return ArmCommand(jab: true); }(),
 		if (state.buttonY && !isYPressed) () { isYPressed = true; return GripperCommand(spin: true); }(),
 
-		if (!state.buttonA) () { isAPressed = false; }(),
-		if (!state.buttonB) () { isBPressed = false; }(),
-		if (!state.buttonX) () { isXPressed = false; }(),
-		if (!state.buttonY) () { isYPressed = false; }(),
-
-		// General
+		// General commands
 		if (state.buttonBack) ...[ArmCommand(stop: true), GripperCommand(stop: true)],
 		if (state.buttonStart) ...[ArmCommand(calibrate: true), GripperCommand(calibrate: true)],
 	];
 
 	@override
-	List<Message> get onDispose => [
-		ArmCommand(stop: true),
-		GripperCommand(stop: true),
-	];
+	List<Message> get onDispose => [ ArmCommand(stop: true), GripperCommand(stop: true) ];
 
 	@override
 	Map<String, String> get buttonMapping => {
@@ -82,20 +79,18 @@ class ArmControls extends RoverControls {
 			// IK
 			"IK control": "Right joystick",
 			"IK depth": "Bumpers",
-			"Precise IK": "D-pad",
 		} else ...{
 			// Manual control
 			"Swivel": "Right joystick (horizontal)",
 			"Shoulder": "Right joystick (vertical)",
-			"Elbow": "Bumpers",
-			"Precise swivel": "D-pad horizontal",
-			"Precise elbow": "D-pad vertical",
+			"Elbow": "Left stick (vertical)",
+			"Pseudo-IK": "Bumpers",
 		},
 
 		// Gripper
+		"Lift gripper": "D-pad up/down",
+		"Rotate gripper": "D-pad left/right",
 		"Pinch": "Triggers",
-		"Rotate gripper": "Left joystick (horizontal)",
-		"Lift gripper": "Left joystick (vertical)",
 
 		// Custom actions
 		"Fully close": "A",

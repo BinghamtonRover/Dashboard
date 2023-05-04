@@ -35,6 +35,8 @@ abstract class RoverControls {
 	/// The [OperatingMode] for these controls.
 	OperatingMode get mode;
 
+	void updateState(GamepadState state);
+
 	/// Return a list of commands based on the current state of the gamepad.
 	Iterable<Message?> parseInputs(GamepadState state);
 

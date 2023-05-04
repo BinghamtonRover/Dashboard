@@ -56,57 +56,52 @@ class ScienceSettings {
 
 /// Settings relating to the arm.
 class ArmSettings {
-  /// How many radians to move every 10ms. 
-  final double radianIncrement;
-
-  /// How many steps to move every 10ms.
-  final int stepIncrement;
-
-  /// How many radians to move every 10ms in precision mode.
-  final double preciseIncrement;
+  final double shoulder;
+  final double elbow;
+  final double swivel;
+  final double pinch;
+  final double lift;
+  final double rotate;
 
   /// How many mm to move every 10ms in IK mode.
   final double ikIncrement;
 
-  /// How many mm to move every 10ms in precise IK mode.
-  final double ikPreciseIncrement;
-
   /// Whether the arm is in manual or IK mode.
   final bool useIK;
 
-  /// Whether to use steps or radians.
-  final bool useSteps;
-
   /// A const constructor.
   const ArmSettings({
-    required this.radianIncrement,
-    required this.stepIncrement,
-    required this.preciseIncrement,
+    required this.shoulder,
+    required this.elbow,
+    required this.swivel,
+    required this.pinch,
+    required this.lift,
+    required this.rotate,
     required this.ikIncrement,
-    required this.ikPreciseIncrement,
     required this.useIK,
-    required this.useSteps,
  });
 
   /// Parses arm settings from a JSON map.
   ArmSettings.fromJson(Json? json) : 
-    radianIncrement = json?["radianIncrement"] ?? 0.2,
-    stepIncrement = json?["stepIncrement"] ?? 10000,
-    preciseIncrement = json?["preciseIncrement"] ?? 0.1,
-    ikIncrement = json?["ikIncrement"] ?? 100,
-    ikPreciseIncrement = json?["ikPreciseIncrement"] ?? 10,
+    shoulder = json?["shoulder"] ?? 0.005,
+    elbow = json?["elbow"] ?? 0.005,
+    swivel = json?["swivel"] ?? 0.2,
+    pinch = json?["pinch"] ?? 0.002,
+    lift = json?["lift"] ?? 0.01,
+    rotate = json?["rotate"] ?? 0.01,
     useIK = json?["useIK"] ?? false,
-    useSteps = json?["useSteps"] ?? false;
+    ikIncrement = json?["ikIncrement"] ?? 10;
 
   /// Serializes these settings to a JSON map.
   Json toJson() => {
-    "radianIncrement": radianIncrement,
-    "stepIncrement": stepIncrement,
-    "preciseIncrement": preciseIncrement,
-    "ikIncrement": ikIncrement,
-    "ikPreciseIncrement": ikPreciseIncrement,
+    "shoulder": shoulder,
+    "elbow": elbow,
+    "swivel": swivel,
+    "pinch": pinch,
+    "lift": lift,
+    "rotate": rotate,
     "useIK": useIK,
-    "useSteps": useSteps,
+    "ikIncrement": ikIncrement,
   };
 }
 

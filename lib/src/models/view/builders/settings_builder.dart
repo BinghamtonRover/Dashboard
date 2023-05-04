@@ -72,50 +72,47 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 
 /// A [ValueBuilder] representing an [ArmSettings].
 class ArmSettingsBuilder extends ValueBuilder<ArmSettings>{
-	/// The builder for the radian increment.
-	final NumberBuilder<double> radians;
-
-	/// The builder for the steps increment.
-	final NumberBuilder<int> steps;
-
-	/// The builder for the precise radian increment.
-	final NumberBuilder<double> precise;
+	final NumberBuilder<double> swivel;
+	final NumberBuilder<double> shoulder;
+	final NumberBuilder<double> elbow;
+	final NumberBuilder<double> lift;
+	final NumberBuilder<double> rotate;
+	final NumberBuilder<double> pinch;
 
 	/// The builder for the IK increment.
 	final NumberBuilder<double> ik;
 
-	/// The builder for the precise IK increment.
-	final NumberBuilder<double> ikPrecise;
-
 	/// Whether to use manual control or IK.
 	bool useIK;
 
-	/// Whether to use steps instead of radians.
-	bool useSteps;
-
 	/// Modifies the given [ArmSettings].
 	ArmSettingsBuilder(ArmSettings initial) : 
-		radians = NumberBuilder(initial.radianIncrement),
-		steps = NumberBuilder(initial.stepIncrement),
-		precise = NumberBuilder(initial.preciseIncrement),
-		ik = NumberBuilder(initial.ikIncrement),
-		ikPrecise = NumberBuilder(initial.ikPreciseIncrement),
-		useIK = initial.useIK,
-		useSteps = initial.useSteps
+		swivel = NumberBuilder(initial.swivel),	
+		shoulder = NumberBuilder(initial.shoulder),		
+		elbow = NumberBuilder(initial.elbow),		
+		lift = NumberBuilder(initial.lift),		
+		rotate = NumberBuilder(initial.rotate),		
+		pinch = NumberBuilder(initial.pinch),		
+		ik = NumberBuilder(initial.ikIncrement),		
+		useIK = initial.useIK
 	{
-		radians.addListener(notifyListeners);
-		steps.addListener(notifyListeners);
-		precise.addListener(notifyListeners);
+		swivel.addListener(notifyListeners);
+		shoulder.addListener(notifyListeners);
+		elbow.addListener(notifyListeners);
+		lift.addListener(notifyListeners);
+		rotate.addListener(notifyListeners);
+		pinch.addListener(notifyListeners);
 		ik.addListener(notifyListeners);
-		ikPrecise.addListener(notifyListeners);
 	}
 
 	@override
-	bool get isValid => radians.isValid
-		&& steps.isValid
-		&& precise.isValid
-		&& ik.isValid
-		&& ikPrecise.isValid;
+	bool get isValid => swivel.isValid
+		&& shoulder.isValid
+		&& elbow.isValid
+		&& lift.isValid
+		&& rotate.isValid
+		&& pinch.isValid
+		&& ik.isValid;
 
 	/// Updates the [useIK] variable.
 	void updateIK(bool input) {	// ignore: avoid_positional_boolean_parameters
@@ -123,21 +120,16 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings>{
 		notifyListeners();
 	}
 
-	/// Updates the [useSteps] variable.
-	void updateSteps(bool input) {	// ignore: avoid_positional_boolean_parameters
-		useSteps = input;
-		notifyListeners();
-	}
-
 	@override
 	ArmSettings get value => ArmSettings(
-		radianIncrement: radians.value,
-		stepIncrement: steps.value,
-		preciseIncrement: precise.value,
+		shoulder: shoulder.value,
+		elbow: elbow.value,
+		swivel: swivel.value,
+		pinch: pinch.value,
+		lift: lift.value,
+		rotate: rotate.value,
 		ikIncrement: ik.value,
-		ikPreciseIncrement: ikPrecise.value,
 		useIK: useIK,
-		useSteps: useSteps,
 	);
 }
 
