@@ -22,8 +22,9 @@ export "src/data/generated/wrapper.pb.dart";
 
 export "src/data/generated/google/protobuf/timestamp.pb.dart";
 
-export "src/data/metrics/electrical.dart";
+export "src/data/metrics/drive.dart";
 export "src/data/metrics/position.dart";
+export "src/data/metrics/electrical.dart";
 export "src/data/metrics/metrics.dart";
 export "src/data/metrics/science.dart";
 
