@@ -15,7 +15,7 @@ class RoverMetrics extends Model {
   /// Data from the GPS.
   final position = PositionMetrics();
 
-  // Data from the drive subsystem.
+  /// Data from the drive subsystem.
   final drive = DriveMetrics();
 
 	/// A list of all the metrics to iterate over.
