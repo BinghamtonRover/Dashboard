@@ -2,7 +2,6 @@ import "dart:async";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/services.dart";
 
 import "settings.dart";
 
@@ -22,11 +21,11 @@ class Rover extends Model {
 	/// Changes the sockets on the rover.
 	final sockets = Sockets();
 
-	/// The operating mode for [GamepadService.gamepad1].
-	final controller1 = Controller(services.gamepad.gamepad1, DriveControls());
+	/// Listens for inputs on the first connected gamepad.
+	final controller1 = Controller(0, DriveControls());
 
-	/// The operating mode for [GamepadService.gamepad2].
-	final controller2 = Controller(services.gamepad.gamepad2, ArmControls());
+	/// Listens for inputs on the second connected gamepad.
+	final controller2 = Controller(1, ArmControls());
 
 	/// Whether the rover is connected.
 	bool get isConnected => heartbeats.connectionStrength > 0;
