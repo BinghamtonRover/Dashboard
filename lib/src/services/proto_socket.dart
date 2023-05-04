@@ -34,8 +34,17 @@ class ProtoSocket extends UdpSocket {
 	void onData(List<int> data) {
 		final wrapped = WrappedMessage.fromBuffer(data);
 		final rawHandler = _handlers[wrapped.name];
-		if (rawHandler == null) { /* TODO: Log in some meaningful way, through the UI */ }
-		else { return rawHandler(wrapped.data); }
+		if (rawHandler == null) throw StateError("No handler registered for ${wrapped.name}");
+		try { return rawHandler(wrapped.data); }
+		on InvalidProtocolBufferException {
+			// There is a bug where CAN messages are getting mutated over the wire.
+			// Since most of our data is 5 bytes, try truncating it and see if that helps.
+			// TODO: Log this somehow
+			if (wrapped.data.length <= 5) return;
+			final data = wrapped.data.sublist(5);
+			try { return rawHandler(data); }
+			on InvalidProtocolBufferException { /* Nothing we can do */ }
+		}
 	}
 
 	/// Adds a handler for a given type. 
@@ -61,26 +70,9 @@ class ProtoSocket extends UdpSocket {
 		required MessageHandler<T> handler,
 	}) {
 		if (_handlers.containsKey(name)) {  // handler was already registered
-			throw ArgumentError("Message handler for type [$T] already registered");
+			throw ArgumentError("There's already a message handler for $name.");
 		} else {
-			_handlers[name] = (data) {
-				try {
-					final decoded = decoder(data);
-					handler(decoded);
-				} on InvalidProtocolBufferException {
-					// Message was slightly corrupted by CAN or something
-					// TODO: Log this somehow
-					if (data.length <= 5) return; 
-					try {
-						data = data.sublist(5);
-						final decoded = decoder(data);
-						handler(decoded);
-						print("Fixed broken $name!");
-					} on InvalidProtocolBufferException { 
-						// This data is corrupted beyond repair
-					}						
-				}
-			};
+			_handlers[name] = (data) => handler(decoder(data));
 		}
 	}
 
