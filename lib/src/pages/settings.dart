@@ -55,6 +55,7 @@ class SettingsPage extends StatelessWidget {
 								SocketEditor(name: "Subsystems socket", model: model.network.dataSocket),
 								SocketEditor(name: "Video socket", model: model.network.videoSocket),
 								SocketEditor(name: "Autonomy socket", model: model.network.autonomySocket),
+								SocketEditor(name: "MARS socket", model: model.network.marsSocket),
 								SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
 								ListTile(
 									title: const Text("Restart the network sockets"),

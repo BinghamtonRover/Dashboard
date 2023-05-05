@@ -48,6 +48,7 @@ class Sockets extends Model {
 		services.dataSocket.destination = settings.subsystemsSocket.copy();
 		services.videoSocket.destination = settings.videoSocket.copy();
 		services.autonomySocket.destination = settings.autonomySocket.copy();
+		services.marsSocket.destination = settings.marsSocket.copy();
 
 		switch (rover) {
 			case RoverType.rover: break;  // IPs are already in the settings
@@ -57,6 +58,7 @@ class Sockets extends Model {
 				services.dataSocket.destination!.address = tankAddress;
 				services.videoSocket.destination!.address = tankAddress;
 				services.autonomySocket.destination!.address = tankAddress;
+				services.marsSocket.destination!.address = tankAddress;
 				break;
 			case RoverType.localhost: 
 				final localAddress = InternetAddress.loopbackIPv4;
@@ -64,6 +66,7 @@ class Sockets extends Model {
 				services.dataSocket.destination!.address = localAddress;
 				services.videoSocket.destination!.address = localAddress;
 				services.autonomySocket.destination!.address = localAddress;				
+				services.marsSocket.destination!.address = localAddress;				
 				break;
 		}
 		await reset();

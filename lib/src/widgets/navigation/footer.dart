@@ -66,6 +66,7 @@ class StatusIcons extends StatelessWidget {
 	IconData getStatusIcon(RoverStatus status) {
 		switch (status) {
 			case RoverStatus.DISCONNECTED: return Icons.power_off;
+			case RoverStatus.POWER_OFF: return Icons.power_off;
 			case RoverStatus.IDLE: return Icons.pause_circle;
 			case RoverStatus.MANUAL: return Icons.play_circle;
 			case RoverStatus.AUTONOMOUS: return Icons.smart_toy;
@@ -89,6 +90,7 @@ class StatusIcons extends StatelessWidget {
 			case RoverStatus.IDLE: return Colors.yellow;
 			case RoverStatus.MANUAL: return Colors.green;
 			case RoverStatus.AUTONOMOUS: return Colors.blueGrey;
+			case RoverStatus.POWER_OFF: return Colors.red;
 		}
 		throw ArgumentError("Unrecognized rover status: $status");
 	}

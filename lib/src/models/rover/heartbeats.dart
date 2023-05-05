@@ -121,6 +121,8 @@ class RoverHeartbeats extends Model {
 				return services.videoSocket.sendMessage(message);
 			case Device.AUTONOMY: 
 				return services.autonomySocket.sendMessage(message);
+			case Device.MARS_SERVER: 
+				return services.marsSocket.sendMessage(message);
 			// TODO: Send heartbeats to the firwmare Teensy's.
 			case Device.ARM: 
 			case Device.GRIPPER:
