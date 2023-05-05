@@ -22,6 +22,7 @@ class Device extends $pb.ProtobufEnum {
   static const Device ELECTRICAL = Device._(9, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ELECTRICAL');
   static const Device DRIVE = Device._(10, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'DRIVE');
   static const Device MARS = Device._(11, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MARS');
+  static const Device MARS_SERVER = Device._(12, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MARS_SERVER');
 
   static const $core.List<Device> values = <Device> [
     DEVICE_UNDEFINED,
@@ -36,6 +37,7 @@ class Device extends $pb.ProtobufEnum {
     ELECTRICAL,
     DRIVE,
     MARS,
+    MARS_SERVER,
   ];
 
   static final $core.Map<$core.int, Device> _byValue = $pb.ProtobufEnum.initByValue(values);
@@ -49,12 +51,14 @@ class RoverStatus extends $pb.ProtobufEnum {
   static const RoverStatus IDLE = RoverStatus._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'IDLE');
   static const RoverStatus MANUAL = RoverStatus._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MANUAL');
   static const RoverStatus AUTONOMOUS = RoverStatus._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'AUTONOMOUS');
+  static const RoverStatus POWER_OFF = RoverStatus._(4, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'POWER_OFF');
 
   static const $core.List<RoverStatus> values = <RoverStatus> [
     DISCONNECTED,
     IDLE,
     MANUAL,
     AUTONOMOUS,
+    POWER_OFF,
   ];
 
   static final $core.Map<$core.int, RoverStatus> _byValue = $pb.ProtobufEnum.initByValue(values);

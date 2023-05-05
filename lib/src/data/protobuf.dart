@@ -41,6 +41,7 @@ extension RoverStatusHumanName on RoverStatus {
 			case RoverStatus.IDLE: return "Idle";
 			case RoverStatus.MANUAL: return "Manual";
 			case RoverStatus.AUTONOMOUS: return "Autonomous";
+			case RoverStatus.POWER_OFF: return "Off";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized rover status: $this");
@@ -115,9 +116,10 @@ extension DeviceUtils on Device {
 			case Device.ELECTRICAL: return "Electrical";
 			case Device.DRIVE: return "Drive";
 			case Device.MARS: return "MARS";
+			case Device.MARS_SERVER: return "MARS Pi";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
-		throw ArgumentError("Unrecognized rover status: $this");
+		throw ArgumentError("Unrecognized device: $this");
 	}
 }
 

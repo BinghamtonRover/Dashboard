@@ -9,30 +9,13 @@
 import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
-class DirtReleasePosition extends $pb.ProtobufEnum {
-  static const DirtReleasePosition TEMP_UNDEFINED = DirtReleasePosition._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'TEMP_UNDEFINED');
-  static const DirtReleasePosition OPEN_DIRT = DirtReleasePosition._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'OPEN_DIRT');
-  static const DirtReleasePosition CLOSE_DIRT = DirtReleasePosition._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CLOSE_DIRT');
-
-  static const $core.List<DirtReleasePosition> values = <DirtReleasePosition> [
-    TEMP_UNDEFINED,
-    OPEN_DIRT,
-    CLOSE_DIRT,
-  ];
-
-  static final $core.Map<$core.int, DirtReleasePosition> _byValue = $pb.ProtobufEnum.initByValue(values);
-  static DirtReleasePosition? valueOf($core.int value) => _byValue[value];
-
-  const DirtReleasePosition._($core.int v, $core.String n) : super(v, n);
-}
-
 class PumpState extends $pb.ProtobufEnum {
-  static const PumpState P_U = PumpState._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'P_U');
+  static const PumpState PUMP_STATE_UNDEFINED = PumpState._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'PUMP_STATE_UNDEFINED');
   static const PumpState PUMP_ON = PumpState._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'PUMP_ON');
   static const PumpState PUMP_OFF = PumpState._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'PUMP_OFF');
 
   static const $core.List<PumpState> values = <PumpState> [
-    P_U,
+    PUMP_STATE_UNDEFINED,
     PUMP_ON,
     PUMP_OFF,
   ];
@@ -41,5 +24,22 @@ class PumpState extends $pb.ProtobufEnum {
   static PumpState? valueOf($core.int value) => _byValue[value];
 
   const PumpState._($core.int v, $core.String n) : super(v, n);
+}
+
+class DirtReleaseState extends $pb.ProtobufEnum {
+  static const DirtReleaseState DIRT_RELEASE_STATE_UNDEFINED = DirtReleaseState._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'DIRT_RELEASE_STATE_UNDEFINED');
+  static const DirtReleaseState OPEN_DIRT = DirtReleaseState._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'OPEN_DIRT');
+  static const DirtReleaseState CLOSE_DIRT = DirtReleaseState._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CLOSE_DIRT');
+
+  static const $core.List<DirtReleaseState> values = <DirtReleaseState> [
+    DIRT_RELEASE_STATE_UNDEFINED,
+    OPEN_DIRT,
+    CLOSE_DIRT,
+  ];
+
+  static final $core.Map<$core.int, DirtReleaseState> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static DirtReleaseState? valueOf($core.int value) => _byValue[value];
+
+  const DirtReleaseState._($core.int v, $core.String n) : super(v, n);
 }
 

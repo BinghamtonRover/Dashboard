@@ -9,23 +9,21 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'electrical.pbenum.dart';
-
-export 'electrical.pbenum.dart';
+import 'core.pbenum.dart' as $2;
 
 class ElectricalCommand extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ElectricalCommand', createEmptyInstance: create)
-    ..e<LedButtonColor>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'ledButtonColor', $pb.PbFieldType.OE, defaultOrMaker: LedButtonColor.LED_COLOR_UNDEFINED, valueOf: LedButtonColor.valueOf, enumValues: LedButtonColor.values)
+    ..e<$2.RoverStatus>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'status', $pb.PbFieldType.OE, defaultOrMaker: $2.RoverStatus.DISCONNECTED, valueOf: $2.RoverStatus.valueOf, enumValues: $2.RoverStatus.values)
     ..hasRequiredFields = false
   ;
 
   ElectricalCommand._() : super();
   factory ElectricalCommand({
-    LedButtonColor? ledButtonColor,
+    $2.RoverStatus? status,
   }) {
     final _result = create();
-    if (ledButtonColor != null) {
-      _result.ledButtonColor = ledButtonColor;
+    if (status != null) {
+      _result.status = status;
     }
     return _result;
   }
@@ -50,14 +48,14 @@ class ElectricalCommand extends $pb.GeneratedMessage {
   static ElectricalCommand getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ElectricalCommand>(create);
   static ElectricalCommand? _defaultInstance;
 
-  @$pb.TagNumber(1)
-  LedButtonColor get ledButtonColor => $_getN(0);
-  @$pb.TagNumber(1)
-  set ledButtonColor(LedButtonColor v) { setField(1, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasLedButtonColor() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearLedButtonColor() => clearField(1);
+  @$pb.TagNumber(10)
+  $2.RoverStatus get status => $_getN(0);
+  @$pb.TagNumber(10)
+  set status($2.RoverStatus v) { setField(10, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasStatus() => $_has(0);
+  @$pb.TagNumber(10)
+  void clearStatus() => clearField(10);
 }
 
 class PowerSourceStatus extends $pb.GeneratedMessage {
