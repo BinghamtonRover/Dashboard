@@ -5,8 +5,8 @@ import "dart:convert";
 import "package:rover_dashboard/data.dart";
 
 /// Change these paths as needed
-const oldPath = r"C:\Users\llesche1\Documents\Dashboard\logs\2023-5-5-1-7\ScienceData.log";
-const newPath = r"C:\Users\llesche1\Documents\Dashboard\logs\2023-5-5-1-7\ScienceData2.log";
+const oldPath = r"C:\Users\llesche1\Documents\Dashboard\logs\2023-5-5-1-7\ScienceData3.log";
+const newPath = r"C:\Users\llesche1\Documents\Dashboard\logs\2023-5-5-1-7\ScienceData4.log";
 
 
 
@@ -23,6 +23,10 @@ WrappedMessage? updateData(WrappedMessage wrapper) {
 	// For example, to delete messages with a pH over 14: 
 	// if (data.pH > 14) return null;
 	// else return data;
+	if (data.methane < 10) return null;
+	else return wrapper;
+
+
 	if (data.co2 >= 2000) return null;
 	if (data.pH > 14) return null;
 	if (data.methane > 500) return null;
@@ -37,6 +41,18 @@ WrappedMessage? updateData(WrappedMessage wrapper) {
 }
 
 List<WrappedMessage> addNewData() => [
+	// for (int t = 0; t < 100; t++) WrappedMessage(
+	// 	name: "ScienceData",
+	// 	timestamp: Timestamp.fromDateTime(DateTime.now().add(Duration(seconds: t))), 
+	// 	data: ScienceData(methane: 1).writeToBuffer()
+	// ),
+
+	// for (int t = 100; t < 200; t++) WrappedMessage(
+	// 	name: "ScienceData",
+	// 	timestamp: Timestamp.fromDateTime(DateTime.now().add(Duration(seconds: t))), 
+	// 	data: ScienceData(methane: t + random.nextInt(20).toDouble()).writeToBuffer()
+	// ),
+
 	// for (int s = 0; s < 3; s++) 
 	// 	for (int i = 0; i < 20; i++) WrappedMessage(
 	// 		name: "ScienceData",
@@ -91,7 +107,7 @@ void main() async {
 	final List<WrappedMessage> oldData = await readLogs(File(oldPath));
 	final List<WrappedMessage?> newData = [
 		for (final data in oldData) updateData(data),
-		// ...addNewData(),
+		...addNewData(),
 	];
 	int counter = 0;
 	for (final data in newData) {

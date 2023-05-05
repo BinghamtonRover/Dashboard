@@ -103,22 +103,23 @@ extension on Timestamp {
 
 /// The test to determine the presence of life based on temperature data.
 ScienceResult temperatureTest(SampleData data) => (data.average! > -15 && data.average! < 122)
-	? ScienceResult.extinct : ScienceResult.inconclusive;
+	? ScienceResult.extant : ScienceResult.notPresent;
 
 /// The test to determine the presence of life based on humidity data.
-ScienceResult humidityTest(SampleData data) => ScienceResult.inconclusive;
+ScienceResult humidityTest(SampleData data) => (data.average! > 20) 
+	? ScienceResult.extant : ScienceResult.notPresent;
 
 /// The test to determine the presence of life based on pH data.
 ScienceResult pHTest(SampleData data) => (data.average! > 3 && data.average! < 12) 
-	? ScienceResult.extant : ScienceResult.inconclusive;
+	? ScienceResult.extant : ScienceResult.notPresent;
 
 /// The test to determine the presence of life based on CO2 data.
 ScienceResult co2Test(SampleData data) => (data.max! > 409.9) 
-	? ScienceResult.extant : ScienceResult.inconclusive;
+	? ScienceResult.extant : ScienceResult.notPresent;
 
 /// The test to determine the presence of life based on methane data.
 ScienceResult methaneTest(SampleData data) => (data.max! > 0) 
-	? ScienceResult.extant : ScienceResult.inconclusive;
+	? ScienceResult.extant : ScienceResult.notPresent;
 
 /// The temperature sensor.
 const temperature = ScienceSensor(
@@ -130,7 +131,7 @@ const temperature = ScienceSensor(
 const humidity = ScienceSensor(
 	name: "Humidity", 
 	test: humidityTest,
-	testDescription: "No test available",
+	testDescription: "Average above 20%",
 );
 /// The pH sensor.
 const pH = ScienceSensor(
