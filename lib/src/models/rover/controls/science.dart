@@ -28,10 +28,12 @@ class ScienceControls extends RoverControls {
 		else ScienceCommand(pump4: PumpState.PUMP_OFF),
 		if (state.normalTrigger != 0) ScienceCommand(vacuum: PumpState.PUMP_ON)
 		else ScienceCommand(vacuum: PumpState.PUMP_OFF),
+
+		if (state.buttonBack) ScienceCommand(stop: true),
 	];
 
 	@override
-	List<Message> get onDispose => [];
+	List<Message> get onDispose => [ScienceCommand(stop: true)];
 
 	@override
 	Map<String, String> get buttonMapping => {

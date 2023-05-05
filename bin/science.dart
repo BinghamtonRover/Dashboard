@@ -5,8 +5,8 @@ import "dart:convert";
 import "package:rover_dashboard/data.dart";
 
 /// Change these paths as needed
-const oldPath = r"C:\Users\llesche1\Documents\Dashboard\logs\2023-5-5-1-7\ScienceData3.log";
-const newPath = r"C:\Users\llesche1\Documents\Dashboard\logs\2023-5-5-1-7\ScienceData4.log";
+const oldPath = r"C:\Users\llesche1\Documents\Dashboard\logs\2023-5-5-1-7\ScienceData.log";
+const newPath = r"C:\Users\llesche1\Documents\Dashboard\logs\2023-5-5-1-7\ScienceData2.log";
 
 
 
@@ -23,15 +23,13 @@ WrappedMessage? updateData(WrappedMessage wrapper) {
 	// For example, to delete messages with a pH over 14: 
 	// if (data.pH > 14) return null;
 	// else return data;
-	if (data.methane < 10) return null;
-	else return wrapper;
-
 
 	if (data.co2 >= 2000) return null;
+	if (data.co2 > 0 && data.co2 < 400) return null;
+	if (data.methane > 0 && data.methane < 100) return null;
 	if (data.pH > 14) return null;
 	if (data.methane > 500) return null;
 	if (data.humidity > 50) return null;
-
 	else return wrapper;
 	// return WrappedMessage(
 	// 	timestamp: timestamp, 
