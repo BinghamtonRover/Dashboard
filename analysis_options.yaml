@@ -51,3 +51,4 @@ linter:
     # Rules to be disabled from package:lint
     always_use_package_imports: false
     use_key_in_widget_constructors: false
+    comment_references: true
