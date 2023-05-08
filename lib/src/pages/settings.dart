@@ -59,7 +59,7 @@ class SettingsPage extends StatelessWidget {
 								SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
 								ListTile(
 									title: const Text("Restart the network sockets"),
-									subtitle: const Text("This is only useful when connecting to localhost. Does not affect the rover"),
+									subtitle: const Text("This only resets your computer's network, not the rover's"),
 									trailing: const Icon(Icons.refresh),
 									onTap: () async {
 										await models.rover.sockets.reset();

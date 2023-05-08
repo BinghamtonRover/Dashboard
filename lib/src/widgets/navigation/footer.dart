@@ -109,7 +109,7 @@ class StatusIcons extends StatelessWidget {
 					),
 				),
 				IconButton(
-					tooltip: rover.heartbeats.connectionSummary,
+					tooltip: "${rover.heartbeats.connectionSummary}\nClick to reset",
 					icon: Icon(  // network strength
 						rover.isConnected
 							? getNetworkIcon(rover.heartbeats.connectionStrength)
