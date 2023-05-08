@@ -108,17 +108,19 @@ class StatusIcons extends StatelessWidget {
 						color: getColor(rover.metrics.electrical.battery),
 					),
 				),
-				const SizedBox(width: 4),
-				Tooltip(
-					message: rover.heartbeats.connectionSummary,
-					child: Icon(  // network strength
+				IconButton(
+					tooltip: rover.heartbeats.connectionSummary,
+					icon: Icon(  // network strength
 						rover.isConnected
 							? getNetworkIcon(rover.heartbeats.connectionStrength)
 							: Icons.signal_wifi_off_outlined,
 						color: getColor(rover.heartbeats.connectionStrength),
 					),
+					onPressed: () async {
+						await models.rover.sockets.reset();
+						models.home.setMessage(severity: Severity.info, text: "Network reset");
+					},
 				),
-				const SizedBox(width: 8),
 				PopupMenuButton(  // status
 					enabled: rover.isConnected,
 					tooltip: "Change mode",
