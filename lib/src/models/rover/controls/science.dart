@@ -15,8 +15,8 @@ class ScienceControls extends RoverControls {
 		if (state.normalDpadX != 0) ScienceCommand(dirtLinear: state.normalDpadX * 10000),
 		if (state.dpadUp) ScienceCommand(dirtRelease: DirtReleaseState.CLOSE_DIRT),
 		if (state.dpadDown) ScienceCommand(dirtRelease: DirtReleaseState.OPEN_DIRT),
-		if (state.leftShoulder) ScienceCommand(dirtCarousel: -500),
-		if (state.rightShoulder) ScienceCommand(dirtCarousel: 500),
+		if (state.leftShoulder) ScienceCommand(dirtCarousel: -750),
+		if (state.rightShoulder) ScienceCommand(dirtCarousel: 750),
 		// These must be sent at all times to allow sending zero values
 		if (state.buttonA) ScienceCommand(pump1: PumpState.PUMP_ON)
 		else ScienceCommand(pump1: PumpState.PUMP_OFF),
@@ -29,6 +29,7 @@ class ScienceControls extends RoverControls {
 		if (state.normalTrigger != 0) ScienceCommand(vacuum: PumpState.PUMP_ON)
 		else ScienceCommand(vacuum: PumpState.PUMP_OFF),
 
+		if (state.buttonStart) ScienceCommand(calibrate: true),
 		if (state.buttonBack) ScienceCommand(stop: true),
 	];
 
