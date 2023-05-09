@@ -149,10 +149,12 @@ extension GpsUtils on GpsCoordinates {
   );
 }
 
+/// Utilities for color data.
 extension ColorUtils on ProtoColor {
-	fromColor(Color other) {
-		this.red = other.red / 255;
-		this.green = other.green / 255;
-		this.blue = other.blue / 255;
-	}
+	/// Creates a new [ProtoColor] from a Flutter [Color].
+	ProtoColor fromColor(Color other) => ProtoColor(
+		red: other.red / 255,
+		green: other.green / 255,
+		blue: other.blue / 255,
+	);
 }
