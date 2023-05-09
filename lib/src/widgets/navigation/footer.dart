@@ -66,6 +66,7 @@ class StatusIcons extends StatelessWidget {
 	IconData getStatusIcon(RoverStatus status) {
 		switch (status) {
 			case RoverStatus.DISCONNECTED: return Icons.power_off;
+			case RoverStatus.POWER_OFF: return Icons.power_off;
 			case RoverStatus.IDLE: return Icons.pause_circle;
 			case RoverStatus.MANUAL: return Icons.play_circle;
 			case RoverStatus.AUTONOMOUS: return Icons.smart_toy;
@@ -89,6 +90,7 @@ class StatusIcons extends StatelessWidget {
 			case RoverStatus.IDLE: return Colors.yellow;
 			case RoverStatus.MANUAL: return Colors.green;
 			case RoverStatus.AUTONOMOUS: return Colors.blueGrey;
+			case RoverStatus.POWER_OFF: return Colors.red;
 		}
 		throw ArgumentError("Unrecognized rover status: $status");
 	}
@@ -106,17 +108,19 @@ class StatusIcons extends StatelessWidget {
 						color: getColor(rover.metrics.electrical.battery),
 					),
 				),
-				const SizedBox(width: 4),
-				Tooltip(
-					message: rover.heartbeats.connectionSummary,
-					child: Icon(  // network strength
+				IconButton(
+					tooltip: "${rover.heartbeats.connectionSummary}\nClick to reset",
+					icon: Icon(  // network strength
 						rover.isConnected
 							? getNetworkIcon(rover.heartbeats.connectionStrength)
 							: Icons.signal_wifi_off_outlined,
 						color: getColor(rover.heartbeats.connectionStrength),
 					),
+					onPressed: () async {
+						await models.rover.sockets.reset();
+						models.home.setMessage(severity: Severity.info, text: "Network reset");
+					},
 				),
-				const SizedBox(width: 8),
 				PopupMenuButton(  // status
 					enabled: rover.isConnected,
 					tooltip: "Change mode",

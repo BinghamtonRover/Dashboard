@@ -13,16 +13,30 @@ typedef Message = proto.GeneratedMessage;
 /// The `.fromBuffer` constructor is a type of [MessageDecoder]. 
 typedef MessageDecoder<T extends Message> = T Function(List<int> data); 
 
+/// Utilities for [Timestamp]s.
+extension TimestampUtils on Timestamp {
+	/// The [Timestamp] version of [DateTime.now].
+	Timestamp now() => Timestamp.fromDateTime(DateTime.now());
+
+	/// Adds a [Duration] to a [Timestamp].
+	Timestamp operator +(Duration duration) => Timestamp.fromDateTime(toDateTime().add(duration));
+}
+
 /// Defines a friendlier method for getting the name of a message.
 extension MessageUtils on Message {
 	/// The name of the message as declared in the .proto file. 
 	String get messageName => info_.messageName;
 
-	/// Returns a [WrappedMessage] representing this message.
-	WrappedMessage get wrapped => WrappedMessage(
-		name: messageName,
+	/// Returns a [WrappedMessage] representing this message with a timestamp
+	WrappedMessage wrapWithTimestamp(Timestamp timestamp) => WrappedMessage(
 		data: writeToBuffer(),
-		timestamp: Timestamp.fromDateTime(DateTime.now()),
+		timestamp: timestamp,
+	);
+
+	/// Returns a [WrappedMessage] representing this message with a name.
+	WrappedMessage get wrapped => WrappedMessage(
+		data: writeToBuffer(),
+		name: messageName,
 	);
 }
 
@@ -41,6 +55,7 @@ extension RoverStatusHumanName on RoverStatus {
 			case RoverStatus.IDLE: return "Idle";
 			case RoverStatus.MANUAL: return "Manual";
 			case RoverStatus.AUTONOMOUS: return "Autonomous";
+			case RoverStatus.POWER_OFF: return "Off";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized rover status: $this");
@@ -115,9 +130,10 @@ extension DeviceUtils on Device {
 			case Device.ELECTRICAL: return "Electrical";
 			case Device.DRIVE: return "Drive";
 			case Device.MARS: return "MARS";
+			case Device.MARS_SERVER: return "MARS Pi";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
-		throw ArgumentError("Unrecognized rover status: $this");
+		throw ArgumentError("Unrecognized device: $this");
 	}
 }
 

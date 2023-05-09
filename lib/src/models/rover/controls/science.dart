@@ -10,14 +10,13 @@ class ScienceControls extends RoverControls {
 
 	@override
 	List<Message> parseInputs(GamepadState state) => [
-		if (state.normalLeftY != 0) ScienceCommand(vacuumLinearPosition: state.normalLeftY*1000),
-		if (state.normalRightY != 0) ScienceCommand(testLinearPosition: state.normalRightY*-2000),
-		if (state.dpadLeft) ScienceCommand(carouselLinearPosition: -10000),
-		if (state.dpadRight) ScienceCommand(carouselLinearPosition: 10000),
-		if (state.dpadDown) ScienceCommand(dirtRelease: DirtReleasePosition.OPEN_DIRT),
-		if (state.dpadUp) ScienceCommand(dirtRelease: DirtReleasePosition.CLOSE_DIRT),
-		if (state.leftShoulder) ScienceCommand(carouselAngle: 500),
-		if (state.rightShoulder) ScienceCommand(carouselAngle: -500),
+		if (state.normalLeftY != 0) ScienceCommand(vacuumLinear: state.normalLeftY*1000),
+		if (state.normalRightY != 0) ScienceCommand(scienceLinear: state.normalRightY*-10000),
+		if (state.normalDpadX != 0) ScienceCommand(dirtLinear: state.normalDpadX * 10000),
+		if (state.dpadUp) ScienceCommand(dirtRelease: DirtReleaseState.CLOSE_DIRT),
+		if (state.dpadDown) ScienceCommand(dirtRelease: DirtReleaseState.OPEN_DIRT),
+		if (state.leftShoulder) ScienceCommand(dirtCarousel: -750),
+		if (state.rightShoulder) ScienceCommand(dirtCarousel: 750),
 		// These must be sent at all times to allow sending zero values
 		if (state.buttonA) ScienceCommand(pump1: PumpState.PUMP_ON)
 		else ScienceCommand(pump1: PumpState.PUMP_OFF),
@@ -27,10 +26,15 @@ class ScienceControls extends RoverControls {
 		else ScienceCommand(pump3: PumpState.PUMP_OFF),
 		if (state.buttonY) ScienceCommand(pump4: PumpState.PUMP_ON)
 		else ScienceCommand(pump4: PumpState.PUMP_OFF),
+		if (state.normalTrigger != 0) ScienceCommand(vacuum: PumpState.PUMP_ON)
+		else ScienceCommand(vacuum: PumpState.PUMP_OFF),
+
+		if (state.buttonStart) ScienceCommand(calibrate: true),
+		if (state.buttonBack) ScienceCommand(stop: true),
 	];
 
 	@override
-	List<Message> get onDispose => [];
+	List<Message> get onDispose => [ScienceCommand(stop: true)];
 
 	@override
 	Map<String, String> get buttonMapping => {

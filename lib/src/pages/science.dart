@@ -233,7 +233,7 @@ class ResultsBox extends StatelessWidget {
 		switch(analysis.testResult) {
 			case ScienceResult.extinct: return Colors.red;
 			case ScienceResult.extant: return Colors.green;
-			case ScienceResult.notPresent: return Colors.orange;
+			case ScienceResult.notPresent: return Colors.red;
 			case ScienceResult.inconclusive: return Colors.blueGrey;
 			case ScienceResult.loading: return null;
 		}

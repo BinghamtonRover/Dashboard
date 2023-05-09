@@ -8,29 +8,16 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
-@$core.Deprecated('Use ledButtonColorDescriptor instead')
-const LedButtonColor$json = const {
-  '1': 'LedButtonColor',
-  '2': const [
-    const {'1': 'LED_COLOR_UNDEFINED', '2': 0},
-    const {'1': 'RED', '2': 1},
-    const {'1': 'YELLOW', '2': 2},
-    const {'1': 'GREEN', '2': 3},
-  ],
-};
-
-/// Descriptor for `LedButtonColor`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List ledButtonColorDescriptor = $convert.base64Decode('Cg5MZWRCdXR0b25Db2xvchIXChNMRURfQ09MT1JfVU5ERUZJTkVEEAASBwoDUkVEEAESCgoGWUVMTE9XEAISCQoFR1JFRU4QAw==');
 @$core.Deprecated('Use electricalCommandDescriptor instead')
 const ElectricalCommand$json = const {
   '1': 'ElectricalCommand',
   '2': const [
-    const {'1': 'led_button_color', '3': 1, '4': 1, '5': 14, '6': '.LedButtonColor', '10': 'ledButtonColor'},
+    const {'1': 'status', '3': 10, '4': 1, '5': 14, '6': '.RoverStatus', '10': 'status'},
   ],
 };
 
 /// Descriptor for `ElectricalCommand`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List electricalCommandDescriptor = $convert.base64Decode('ChFFbGVjdHJpY2FsQ29tbWFuZBI5ChBsZWRfYnV0dG9uX2NvbG9yGAEgASgOMg8uTGVkQnV0dG9uQ29sb3JSDmxlZEJ1dHRvbkNvbG9y');
+final $typed_data.Uint8List electricalCommandDescriptor = $convert.base64Decode('ChFFbGVjdHJpY2FsQ29tbWFuZBIkCgZzdGF0dXMYCiABKA4yDC5Sb3ZlclN0YXR1c1IGc3RhdHVz');
 @$core.Deprecated('Use powerSourceStatusDescriptor instead')
 const PowerSourceStatus$json = const {
   '1': 'PowerSourceStatus',

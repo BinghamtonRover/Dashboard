@@ -98,7 +98,7 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings>{
 	/// The view model for [ArmSettings.rotate].
 	final NumberBuilder<double> rotate;
 
-	/// The view model for [ArmSettings.ik].
+	/// The view model for [ArmSettings.ikIncrement].
 	final NumberBuilder<double> ik;
 
 	/// Whether to use manual control or IK.

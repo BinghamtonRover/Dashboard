@@ -24,11 +24,12 @@ const Device$json = const {
     const {'1': 'ELECTRICAL', '2': 9},
     const {'1': 'DRIVE', '2': 10},
     const {'1': 'MARS', '2': 11},
+    const {'1': 'MARS_SERVER', '2': 12},
   ],
 };
 
 /// Descriptor for `Device`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List deviceDescriptor = $convert.base64Decode('CgZEZXZpY2USFAoQREVWSUNFX1VOREVGSU5FRBAAEg0KCURBU0hCT0FSRBABEg4KClNVQlNZU1RFTVMQAhIJCgVWSURFTxADEgwKCEFVVE9OT01ZEAQSDAoIRklSTVdBUkUQBRIHCgNBUk0QBhILCgdHUklQUEVSEAcSCwoHU0NJRU5DRRAIEg4KCkVMRUNUUklDQUwQCRIJCgVEUklWRRAKEggKBE1BUlMQCw==');
+final $typed_data.Uint8List deviceDescriptor = $convert.base64Decode('CgZEZXZpY2USFAoQREVWSUNFX1VOREVGSU5FRBAAEg0KCURBU0hCT0FSRBABEg4KClNVQlNZU1RFTVMQAhIJCgVWSURFTxADEgwKCEFVVE9OT01ZEAQSDAoIRklSTVdBUkUQBRIHCgNBUk0QBhILCgdHUklQUEVSEAcSCwoHU0NJRU5DRRAIEg4KCkVMRUNUUklDQUwQCRIJCgVEUklWRRAKEggKBE1BUlMQCxIPCgtNQVJTX1NFUlZFUhAM');
 @$core.Deprecated('Use roverStatusDescriptor instead')
 const RoverStatus$json = const {
   '1': 'RoverStatus',
@@ -37,11 +38,12 @@ const RoverStatus$json = const {
     const {'1': 'IDLE', '2': 1},
     const {'1': 'MANUAL', '2': 2},
     const {'1': 'AUTONOMOUS', '2': 3},
+    const {'1': 'POWER_OFF', '2': 4},
   ],
 };
 
 /// Descriptor for `RoverStatus`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List roverStatusDescriptor = $convert.base64Decode('CgtSb3ZlclN0YXR1cxIQCgxESVNDT05ORUNURUQQABIICgRJRExFEAESCgoGTUFOVUFMEAISDgoKQVVUT05PTU9VUxAD');
+final $typed_data.Uint8List roverStatusDescriptor = $convert.base64Decode('CgtSb3ZlclN0YXR1cxIQCgxESVNDT05ORUNURUQQABIICgRJRExFEAESCgoGTUFOVUFMEAISDgoKQVVUT05PTU9VUxADEg0KCVBPV0VSX09GRhAE');
 @$core.Deprecated('Use connectDescriptor instead')
 const Connect$json = const {
   '1': 'Connect',

@@ -14,6 +14,9 @@ const handshakeWaitDelay = Duration(milliseconds: 100);
 
 /// Monitors the connection to the rover.
 class RoverHeartbeats extends Model {
+	/// Don't show these devices in the [connectionSummary].
+	static const dontShow = {Device.DEVICE_UNDEFINED, Device.FIRMWARE, Device.DASHBOARD};
+
 	/// A timer that sends handshakes to every device on the rover.
 	late Timer handshakeTimer;
 
@@ -36,7 +39,7 @@ class RoverHeartbeats extends Model {
 	String get connectionSummary {
 		final result = StringBuffer();
 		for (final entry in connections.entries) {
-			if (entry.key == Device.DEVICE_UNDEFINED || entry.key == Device.FIRMWARE) continue;
+			if (dontShow.contains(entry.key)) continue;
 			result.write("${entry.key.humanName}: ${(entry.value*100).toStringAsFixed(0)}%\n");
 		}
 		return result.toString().trim();
@@ -121,6 +124,8 @@ class RoverHeartbeats extends Model {
 				return services.videoSocket.sendMessage(message);
 			case Device.AUTONOMY: 
 				return services.autonomySocket.sendMessage(message);
+			case Device.MARS_SERVER: 
+				return services.marsSocket.sendMessage(message);
 			// TODO: Send heartbeats to the firwmare Teensy's.
 			case Device.ARM: 
 			case Device.GRIPPER:
