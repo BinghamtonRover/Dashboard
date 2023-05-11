@@ -132,6 +132,11 @@ class SettingsPage extends StatelessWidget {
 							trailing: const Icon(Icons.launch),
 							onTap: () => launchUrl(services.files.outputDir.uri),
 						),
+						ListTile(
+							title: const Text("Change the LED strip color"),
+							trailing: const Icon(Icons.launch),
+							onTap: () => showDialog<void>(context: context, builder: (_) => ColorEditor(ColorBuilder())),
+						)
 					],
 				),),
 				Row(

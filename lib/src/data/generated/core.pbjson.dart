@@ -70,8 +70,21 @@ const UpdateSetting$json = const {
   '1': 'UpdateSetting',
   '2': const [
     const {'1': 'status', '3': 1, '4': 1, '5': 14, '6': '.RoverStatus', '10': 'status'},
+    const {'1': 'color', '3': 2, '4': 1, '5': 11, '6': '.ProtoColor', '10': 'color'},
   ],
 };
 
 /// Descriptor for `UpdateSetting`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List updateSettingDescriptor = $convert.base64Decode('Cg1VcGRhdGVTZXR0aW5nEiQKBnN0YXR1cxgBIAEoDjIMLlJvdmVyU3RhdHVzUgZzdGF0dXM=');
+final $typed_data.Uint8List updateSettingDescriptor = $convert.base64Decode('Cg1VcGRhdGVTZXR0aW5nEiQKBnN0YXR1cxgBIAEoDjIMLlJvdmVyU3RhdHVzUgZzdGF0dXMSIQoFY29sb3IYAiABKAsyCy5Qcm90b0NvbG9yUgVjb2xvcg==');
+@$core.Deprecated('Use protoColorDescriptor instead')
+const ProtoColor$json = const {
+  '1': 'ProtoColor',
+  '2': const [
+    const {'1': 'red', '3': 1, '4': 1, '5': 2, '10': 'red'},
+    const {'1': 'green', '3': 2, '4': 1, '5': 2, '10': 'green'},
+    const {'1': 'blue', '3': 3, '4': 1, '5': 2, '10': 'blue'},
+  ],
+};
+
+/// Descriptor for `ProtoColor`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List protoColorDescriptor = $convert.base64Decode('CgpQcm90b0NvbG9yEhAKA3JlZBgBIAEoAlIDcmVkEhQKBWdyZWVuGAIgASgCUgVncmVlbhISCgRibHVlGAMgASgCUgRibHVl');

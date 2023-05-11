@@ -144,3 +144,42 @@ class DropdownEditor<T> extends StatelessWidget {
 		),
 	);
 }
+
+/// A widget to edit a color, backed by [ColorBuilder].
+class ColorEditor extends StatelessWidget {
+	/// The view model for this color.
+	final ColorBuilder model;
+	/// A widget that modifies the given view model's color.
+	const ColorEditor(this.model);
+
+	@override
+	Widget build(BuildContext context) => ProviderConsumer<ColorBuilder>.value(
+		value: model,
+		builder: (model) => AlertDialog(
+			title: const Text("Pick a color"),
+			actions: [
+				TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
+				ElevatedButton(
+					onPressed: () async {
+						final result = await model.setColor();
+						if (result && context.mounted) Navigator.of(context).pop();
+					},
+					child: const Text("Save"), 
+				),
+			],
+			content: Column(
+				mainAxisSize: MainAxisSize.min,
+				children: [
+					Slider(
+						value: model.slider, 
+						onChanged: model.updateSlider,
+						label: "color",
+					),
+					Container(height: 50, width: double.infinity, color: model.value),
+					if (model.isLoading) const Text("Loading..."),
+					if (model.errorText != null) Text(model.errorText!, style: const TextStyle(color: Colors.red)),
+				],
+			),
+		),
+	);
+}

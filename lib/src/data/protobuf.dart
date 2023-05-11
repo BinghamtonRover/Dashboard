@@ -1,4 +1,5 @@
 import "dart:math";
+import "dart:ui" show Color;
 
 import "package:protobuf/protobuf.dart" as proto;
 import "package:rover_dashboard/data.dart";
@@ -146,4 +147,19 @@ extension GpsUtils on GpsCoordinates {
       + pow(altitude - other.altitude, 2), 
     0.5,
   );
+}
+
+/// Utilities for color data.
+extension ColorUtils on ProtoColor {
+	/// Creates a new [ProtoColor] from a Flutter [Color].
+	ProtoColor fromColor(Color other) => ProtoColor(
+		red: other.red / 255,
+		green: other.green / 255,
+		blue: other.blue / 255,
+	);
+
+	/// Converts this message to a Flutter [Color].
+	Color toColor() => Color.fromARGB(
+		255, (red*255).toInt(), (green*255).toInt(), (blue*255).toInt(),
+	);
 }
