@@ -40,7 +40,7 @@ analyzer:
     implicit-dynamic: true
 
   exclude: 
-    - lib/src/data/generated/**.dart
+    - lib/generated/**.dart
 
 linter:
   rules:
