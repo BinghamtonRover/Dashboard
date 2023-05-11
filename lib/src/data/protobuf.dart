@@ -157,4 +157,9 @@ extension ColorUtils on ProtoColor {
 		green: other.green / 255,
 		blue: other.blue / 255,
 	);
+
+	/// Converts this message to a Flutter [Color].
+	Color toColor() => Color.fromARGB(
+		255, (red*255).toInt(), (green*255).toInt(), (blue*255).toInt(),
+	);
 }

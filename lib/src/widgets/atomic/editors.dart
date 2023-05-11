@@ -161,8 +161,8 @@ class ColorEditor extends StatelessWidget {
 				TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
 				ElevatedButton(
 					onPressed: () async {
-						await model.setColor();
-						if (context.mounted) Navigator.of(context).pop();
+						final result = await model.setColor();
+						if (result && context.mounted) Navigator.of(context).pop();
 					},
 					child: const Text("Save"), 
 				),
@@ -170,10 +170,11 @@ class ColorEditor extends StatelessWidget {
 			content: Column(
 				mainAxisSize: MainAxisSize.min,
 				children: [
-					NumberEditor(name: "Red", model: model.red),
-					NumberEditor(name: "Green", model: model.green),
-					NumberEditor(name: "Blue", model: model.blue),
-					const SizedBox(height: 8),
+					Slider(
+						value: model.slider, 
+						onChanged: model.updateSlider,
+						label: "color",
+					),
 					Container(height: 50, width: double.infinity, color: model.value),
 					if (model.isLoading) const Text("Loading..."),
 					if (model.errorText != null) Text(model.errorText!, style: const TextStyle(color: Colors.red)),

@@ -30,10 +30,12 @@ class RoverSettings extends Model {
 	/// Sends an [UpdateSetting] and awaits a response.
 	/// 
 	/// The response must be an echo of the data sent, to ensure the rover acknowledges the data.
+	/// Returns true if the handshake succeeds.
 	Future<bool> tryChangeSettings(UpdateSetting value) async {
+		_confirmation = null;
 		services.dataSocket.sendMessage(value);
 		await Future<void>.delayed(confirmationDelay);
-		return value == _confirmation;
+		return _confirmation != null;
 	}
 
 	/// Sets the status of the rover.
@@ -53,17 +55,15 @@ class RoverSettings extends Model {
 	/// Changes the color of the rover's LED strip.
 	Future<bool> setColor(ProtoColor color) async {
 		final message = UpdateSetting(color: color);
-		await tryChangeSettings(message); 
-		return true;
-		// TODO: Fix this
-		// if () {
-		// 	models.home.setMessage(severity: Severity.info, text: "Successfully changed color");
-		// 	settings.color = color;
-		// 	notifyListeners();
-		// 	return true;
-		// } else { 
-		// 	models.home.setMessage(severity: Severity.error, text: "Failed to set color"); 
-		// 	return false;
-		// }
+		final result = await tryChangeSettings(message); 
+		if (result) {
+			models.home.setMessage(severity: Severity.info, text: "Successfully changed color");
+			settings.color = color;
+			notifyListeners();
+			return true;
+		} else { 
+			models.home.setMessage(severity: Severity.error, text: "Failed to set color"); 
+			return false;
+		}
 	}
 }

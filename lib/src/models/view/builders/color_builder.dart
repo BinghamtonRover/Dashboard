@@ -1,29 +1,38 @@
-import "dart:ui" show Color;
+import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
+/// The leftmost color on the spectrum.
+HSVColor minColor = HSVColor.fromColor(Colors.redAccent[700]!);
+/// The rightmost color on the spectrum.
+HSVColor maxColor = HSVColor.fromColor(Colors.pink);
+
 /// A view model to modify a color and send it to the rover.
 class ColorBuilder extends ValueBuilder<Color> {
-	/// The red channel.
-	final red = NumberBuilder<int>(0);
-	/// The green channel.
-	final green = NumberBuilder<int>(0);
-	/// The blue channel.
-	final blue = NumberBuilder<int>(0);
+	/// The color to show in the UI.
+	Color color;
 
-	/// Creates a view model to modify a color.
-	ColorBuilder() {
-		red.addListener(notifyListeners);
-		green.addListener(notifyListeners);
-		blue.addListener(notifyListeners);
+	/// The value of the color slider in the UI.
+	/// 
+	/// This will not match [color] on startup but that's okay.
+	double slider = 0;
+
+	/// Sets [color] to the rover's current color.
+	ColorBuilder() : color = models.rover.settings.settings.color.toColor(); 
+
+	@override
+	Color get value => color;
+
+	@override
+	bool get isValid => true;
+
+	/// Updates [color] based on the slider [value].
+	void updateSlider(double value) { 
+		color = HSVColor.lerp(minColor, maxColor, value)!.toColor();
+		slider = value;
+		notifyListeners(); 
 	}
-
-	@override
-	Color get value => Color.fromARGB(255, red.value, green.value, blue.value);
-
-	@override
-	bool get isValid => red.isValid && green.isValid && blue.isValid;
 
 	/// Whether [setColor] is still running.
 	bool isLoading = false;
@@ -35,10 +44,10 @@ class ColorBuilder extends ValueBuilder<Color> {
 		isLoading = true;
 		notifyListeners();
 		final color = ProtoColor().fromColor(value);
-		// Specifically not awaited since the rover isn't reporting this back
-		await models.rover.settings.setColor(color);
+		final result = await models.rover.settings.setColor(color);
+		errorText = result ? null : "The rover did not accept this command";
 		isLoading = false;
 		notifyListeners();
-		return true;
+		return result;
 	}
 }
