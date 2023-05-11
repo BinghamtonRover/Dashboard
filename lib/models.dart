@@ -13,6 +13,7 @@ import "src/models/model.dart";
 import "src/models/data/home.dart";
 import "src/models/data/serial.dart";
 import "src/models/data/settings.dart";
+import "src/models/data/sockets.dart";
 import "src/models/data/video.dart";
 import "src/models/data/views.dart";
 import "src/models/rover/rover.dart";
@@ -23,16 +24,15 @@ export "src/models/model.dart";
 export "src/models/data/home.dart";
 export "src/models/data/serial.dart";
 export "src/models/data/settings.dart";
+export "src/models/data/sockets.dart";
 export "src/models/data/video.dart";
 export "src/models/data/views.dart";
 
 // Rover models
 export "src/models/rover/controller.dart";
 export "src/models/rover/controls/controls.dart";
-export "src/models/rover/heartbeats.dart";
 export "src/models/rover/metrics.dart";
 export "src/models/rover/rover.dart";
-export "src/models/rover/sockets.dart";
 
 // View models
 export "src/models/view/science.dart";
@@ -66,6 +66,9 @@ class Models extends Model {
 	/// Controls and interacts with the rover.
 	final rover = Rover();
 
+	/// The data model responsible for communicating over Protobuf.
+	final sockets = Sockets();
+
 	/// Responsible for connecting to and monitoring Serial devices.
 	final serial = SerialModel();
 
@@ -83,6 +86,7 @@ class Models extends Model {
 		await video.init();
 		await rover.init();
 		await serial.init();
+		await sockets.init();
 		await views.init();
 
 		isReady = true;
@@ -96,6 +100,7 @@ class Models extends Model {
 		video.dispose();
 		rover.dispose();
 		serial.dispose();
+		sockets.dispose();
 		views.dispose();
 
 		super.dispose();

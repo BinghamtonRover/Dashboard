@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
@@ -8,7 +9,7 @@ import "package:rover_dashboard/widgets.dart";
 class SocketSwitcher extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<Sockets>.value(
-		value: models.rover.sockets,
+		value: models.sockets,
 		builder: (model) => DropdownButton<RoverType>(
 			value: model.rover,
 			onChanged: model.setRover,

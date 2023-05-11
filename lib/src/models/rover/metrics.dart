@@ -1,8 +1,7 @@
 import "dart:async";
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
-
-import "../model.dart";
 
 /// A data model that listens for updated data and provides [Metrics] to the UI.
 class RoverMetrics extends Model {
@@ -33,12 +32,12 @@ class RoverMetrics extends Model {
 
 	@override
 	Future<void> init() async {
-		services.dataSocket.registerHandler<ElectricalData>(
+		models.sockets.data.registerHandler<ElectricalData>(
 			name: ElectricalData().messageName,
 			decoder: ElectricalData.fromBuffer,
 			handler: (data) => update(electrical, data),
 		);
-		services.dataSocket.registerHandler<DriveData>(
+		models.sockets.data.registerHandler<DriveData>(
 			name: DriveData().messageName,
 			decoder: DriveData.fromBuffer,
 			handler: (data) {
@@ -49,17 +48,17 @@ class RoverMetrics extends Model {
 				notifyListeners();
 			},
 		);
-		services.dataSocket.registerHandler<ScienceData>(
+		models.sockets.data.registerHandler<ScienceData>(
 			name: ScienceData().messageName,
 			decoder: ScienceData.fromBuffer,
 			handler: (data) => update(science, data),
 		);
-    services.dataSocket.registerHandler<RoverPosition>(
+    models.sockets.data.registerHandler<RoverPosition>(
 			name: RoverPosition().messageName,
 			decoder: RoverPosition.fromBuffer,
 			handler: (data) {
 				update(position, data);
-				services.marsSocket.sendMessage(data);
+				models.sockets.mars.sendMessage(data);
 			},
 		);
 	}

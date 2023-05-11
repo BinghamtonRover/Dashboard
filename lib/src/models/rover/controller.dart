@@ -91,7 +91,7 @@ class Controller extends Model {
 		if (models.serial.isConnected && (services.serial.connectedDevice == teensyCommands[message.messageName])) {
 			await services.serial.sendMessage(message);
 		} else {
-			services.dataSocket.sendMessage(message);
+			models.sockets.data.sendMessage(message);
 		}
 	}
 

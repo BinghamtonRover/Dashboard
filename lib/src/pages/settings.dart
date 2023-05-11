@@ -62,7 +62,7 @@ class SettingsPage extends StatelessWidget {
 									subtitle: const Text("This only resets your computer's network, not the rover's"),
 									trailing: const Icon(Icons.refresh),
 									onTap: () async {
-										await models.rover.sockets.reset();
+										await models.sockets.reset();
 										if (context.mounted) {
 											ScaffoldMessenger.of(context).showSnackBar(
 												const SnackBar(content: Text("Network reset"), duration: Duration(milliseconds: 500)),
