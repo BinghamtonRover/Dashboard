@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
@@ -15,13 +16,16 @@ class Sidebar extends StatelessWidget {
 		child: ListView(
 			padding: const EdgeInsets.symmetric(horizontal: 4),
 			children: [
-				Text("Metrics", style: Theme.of(context).textTheme.displaySmall, textAlign: TextAlign.center),
+				Text("Metrics", style: context.textTheme.displaySmall, textAlign: TextAlign.center),
 				const MetricsList(),
 				const Divider(),
-				Text("Controls", style: Theme.of(context).textTheme.displaySmall, textAlign: TextAlign.center),
+				Text("Controls", style: context.textTheme.displaySmall, textAlign: TextAlign.center),
 				const SizedBox(height: 4),
 				ControlsDisplay(controller: models.rover.controller1, gamepadNum: 1),
 				ControlsDisplay(controller: models.rover.controller2, gamepadNum: 2),
+				const Divider(),
+				Text("Actions", style: context.textTheme.displaySmall, textAlign: TextAlign.center),
+				ActionsDisplay(),
 			],
 		),
 	);
@@ -86,4 +90,28 @@ class ControlsDisplay extends StatelessWidget {
 			],
 		),
 	);
+}
+
+class ActionsDisplay extends StatelessWidget {
+	@override
+	Widget build(BuildContext context) => Column(
+		children: [
+			for (final entry in roverActions.entries) ...[
+				Text(entry.key.name), ...[
+					for (final action in entry.value) ElevatedButton(
+						onPressed: action.call,
+						child: Text(action.name),
+					)
+				]
+			]
+		],
+	);
+}
+
+
+final Map<OperatingMode, List<RoverAction>> roverActions = {};
+
+class RoverAction {
+	String name = "";
+	void call() { }
 }
