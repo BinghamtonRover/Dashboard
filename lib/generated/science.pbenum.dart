@@ -43,3 +43,20 @@ class DirtReleaseState extends $pb.ProtobufEnum {
   const DirtReleaseState._($core.int v, $core.String n) : super(v, n);
 }
 
+class ScienceState extends $pb.ProtobufEnum {
+  static const ScienceState SCIENCE_STATE_UNDEFINED = ScienceState._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SCIENCE_STATE_UNDEFINED');
+  static const ScienceState COLLECT_DATA = ScienceState._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'COLLECT_DATA');
+  static const ScienceState STOP_COLLECTING = ScienceState._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'STOP_COLLECTING');
+
+  static const $core.List<ScienceState> values = <ScienceState> [
+    SCIENCE_STATE_UNDEFINED,
+    COLLECT_DATA,
+    STOP_COLLECTING,
+  ];
+
+  static final $core.Map<$core.int, ScienceState> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static ScienceState? valueOf($core.int value) => _byValue[value];
+
+  const ScienceState._($core.int v, $core.String n) : super(v, n);
+}
+
