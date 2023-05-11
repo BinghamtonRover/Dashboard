@@ -1,4 +1,0 @@
-[submodule "lib/src/data/Protobuf"]
-	path = lib/src/data/Protobuf
-	url = https://github.com/BinghamtonRover/Protobuf.git
-	branch = autonomy
