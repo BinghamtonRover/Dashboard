@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 
-import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
@@ -92,26 +91,13 @@ class ControlsDisplay extends StatelessWidget {
 	);
 }
 
+// TODO: Implement this
+/// A list of actions the user can take to control the rover in ways the gamepad cannot.
+/// 
+/// Actions can be buttons or other kinds of inputs, like text boxes, but don't fit in the
+/// settings page.
 class ActionsDisplay extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => Column(
-		children: [
-			for (final entry in roverActions.entries) ...[
-				Text(entry.key.name), ...[
-					for (final action in entry.value) ElevatedButton(
-						onPressed: action.call,
-						child: Text(action.name),
-					)
-				]
-			]
-		],
 	);
-}
-
-
-final Map<OperatingMode, List<RoverAction>> roverActions = {};
-
-class RoverAction {
-	String name = "";
-	void call() { }
 }

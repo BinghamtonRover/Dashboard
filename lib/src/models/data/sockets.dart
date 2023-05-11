@@ -33,6 +33,9 @@ class Sockets extends Model {
   /// A UDP socket for controlling rover position
   final mars = ProtoSocket();
 
+  /// A list of all the sockets this model manages.
+  late final List<ProtoSocket> sockets = [data, video, autonomy, mars];
+
   /// The rover-like system currently in use.
   RoverType rover = RoverType.rover;
 
@@ -59,8 +62,6 @@ class Sockets extends Model {
   	return result.toString().trim();
   }
 
-  late final List<ProtoSocket> sockets = [data, video, autonomy, mars];
-
 	@override
 	Future<void> init() async {
 		for (final socket in sockets) { await socket.init(); }
@@ -68,6 +69,7 @@ class Sockets extends Model {
 		await updateSockets();
 	}
 
+	/// Adds handlers for [Connect] and [Disconnect] messages to this [socket].
 	void setup(ProtoSocket socket) => socket..registerHandler<Connect>(
 		name: Connect().messageName,
 		decoder: Connect.fromBuffer,
