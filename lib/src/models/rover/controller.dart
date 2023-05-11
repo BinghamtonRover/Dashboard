@@ -37,7 +37,9 @@ class Controller extends Model {
 	};
 
 	/// Maps button presses on [gamepad] to [controls].
-	Controller(this.gamepadIndex, this.controls);
+	Controller(this.gamepadIndex, this.controls) {
+		models.settings.addListener(notifyListeners);
+	}
 
 	/// The gamepad to read from.
 	Gamepad get gamepad => services.gamepad.gamepads[gamepadIndex];
@@ -50,6 +52,7 @@ class Controller extends Model {
 	@override
 	void dispose() {
 		gamepadTimer.cancel();
+		models.settings.removeListener(notifyListeners);
 		controls.onDispose.forEach(sendMessage);
 		super.dispose();
 	}
