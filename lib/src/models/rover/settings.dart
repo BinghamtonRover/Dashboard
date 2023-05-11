@@ -43,6 +43,10 @@ class RoverSettings extends Model {
 	/// See [RoverStatus] for details.
 	Future<void> setStatus(RoverStatus value) async {
 		final message = UpdateSetting(status: value);
+		services.videoSocket.sendMessage(message);
+		services.autonomySocket.sendMessage(message);
+		services.marsSocket.sendMessage(message);
+		
 		if (await tryChangeSettings(message)) {
 			models.home.setMessage(severity: Severity.info, text: "Set mode to ${value.humanName}");
 			settings.status = value;
