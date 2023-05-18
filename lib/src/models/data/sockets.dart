@@ -16,7 +16,7 @@ const handshakeWaitDelay = Duration(milliseconds: 100);
 /// Coordinates all the sockets to point to the right [RoverType].
 class Sockets extends Model {
 	/// Don't show these devices in the [connectionSummary].
-	static const dontShow = {Device.DEVICE_UNDEFINED, Device.FIRMWARE, Device.DASHBOARD};
+	static final dontShow = {Device.DEVICE_UNDEFINED, Device.FIRMWARE, Device.DASHBOARD};
 
 	/// A timer that sends handshakes to every device on the rover.
 	Timer? handshakeTimer;
@@ -112,12 +112,10 @@ class Sockets extends Model {
 				for (final socket in sockets) {
 					socket.destination!.address = settings.tankSocket.address;
 				}
-				break;
 			case RoverType.localhost: 
 				for (final socket in sockets) {
 					socket.destination!.address = InternetAddress.loopbackIPv4;
 				}
-				break;
 		}
 		await reset();
 	}
