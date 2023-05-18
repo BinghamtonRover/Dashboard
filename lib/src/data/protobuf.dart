@@ -163,3 +163,31 @@ extension ColorUtils on ProtoColor {
 		255, (red*255).toInt(), (green*255).toInt(), (blue*255).toInt(),
 	);
 }
+
+extension AutonomyStateUtils on AutonomyState {
+	String get humanName {
+		switch (this) {
+			case AutonomyState.AUTONOMY_STATE_UNDEFINED: return "";
+			case AutonomyState.PATHING: return "Calculating path...";
+			case AutonomyState.APPROACHING: return "Approaching destination";
+			case AutonomyState.AT_DESTINATION: return "Arrived at destination";
+			case AutonomyState.DRIVING: return "Driving";
+			case AutonomyState.SEARCHING: return "Searching for visual marker";
+		}
+		// Do not use default or else you'll lose exhaustiveness checking.
+		throw ArgumentError("Unrecognized status: $this");
+	}
+}
+
+extension AutonomyTaskUtils on AutonomyTask {
+	String get humanName {
+		switch (this) {
+			case AutonomyTask.AUTONOMY_TASK_UNDEFINED: return "";
+			case AutonomyTask.GPS_ONLY: return "GPS only";
+			case AutonomyTask.VISUAL_MARKER: return "Visual marker";
+			case AutonomyTask.BETWEEN_GATES: return "Between gates";
+		}
+		// Do not use default or else you'll lose exhaustiveness checking.
+		throw ArgumentError("Unrecognized task: $this");
+	}
+}

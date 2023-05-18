@@ -6,6 +6,7 @@
 /// This library may depend on the data, services, models, and widgets libraries. 
 library pages;
 
+export "src/pages/autonomy.dart";
 export "src/pages/home.dart";
 export "src/pages/science.dart";
 export "src/pages/settings.dart";
@@ -23,6 +24,9 @@ class Routes {
 
 	/// The name of the science analysis page.
 	static const String science = "Science Analysis"; 
+
+	/// The name of the autonomy page.
+	static const String autonomy = "Autonomy"; 
 
 	/// The name of the blank page.
 	static const String blank = "blank";

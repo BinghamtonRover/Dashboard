@@ -21,6 +21,7 @@ class AutonomyData extends $pb.GeneratedMessage {
     ..aOM<$0.GpsCoordinates>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'destination', subBuilder: $0.GpsCoordinates.create)
     ..pc<$0.GpsCoordinates>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'obstacles', $pb.PbFieldType.PM, subBuilder: $0.GpsCoordinates.create)
     ..pc<$0.GpsCoordinates>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'path', $pb.PbFieldType.PM, subBuilder: $0.GpsCoordinates.create)
+    ..e<AutonomyTask>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'task', $pb.PbFieldType.OE, defaultOrMaker: AutonomyTask.AUTONOMY_TASK_UNDEFINED, valueOf: AutonomyTask.valueOf, enumValues: AutonomyTask.values)
     ..hasRequiredFields = false
   ;
 
@@ -30,6 +31,7 @@ class AutonomyData extends $pb.GeneratedMessage {
     $0.GpsCoordinates? destination,
     $core.Iterable<$0.GpsCoordinates>? obstacles,
     $core.Iterable<$0.GpsCoordinates>? path,
+    AutonomyTask? task,
   }) {
     final _result = create();
     if (state != null) {
@@ -43,6 +45,9 @@ class AutonomyData extends $pb.GeneratedMessage {
     }
     if (path != null) {
       _result.path.addAll(path);
+    }
+    if (task != null) {
+      _result.task = task;
     }
     return _result;
   }
@@ -92,6 +97,15 @@ class AutonomyData extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(4)
   $core.List<$0.GpsCoordinates> get path => $_getList(3);
+
+  @$pb.TagNumber(5)
+  AutonomyTask get task => $_getN(4);
+  @$pb.TagNumber(5)
+  set task(AutonomyTask v) { setField(5, v); }
+  @$pb.TagNumber(5)
+  $core.bool hasTask() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearTask() => clearField(5);
 }
 
 class AutonomyCommand extends $pb.GeneratedMessage {

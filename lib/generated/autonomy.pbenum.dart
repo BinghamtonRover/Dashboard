@@ -14,12 +14,16 @@ class AutonomyState extends $pb.ProtobufEnum {
   static const AutonomyState PATHING = AutonomyState._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'PATHING');
   static const AutonomyState APPROACHING = AutonomyState._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'APPROACHING');
   static const AutonomyState AT_DESTINATION = AutonomyState._(4, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'AT_DESTINATION');
+  static const AutonomyState DRIVING = AutonomyState._(5, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'DRIVING');
+  static const AutonomyState SEARCHING = AutonomyState._(6, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SEARCHING');
 
   static const $core.List<AutonomyState> values = <AutonomyState> [
     AUTONOMY_STATE_UNDEFINED,
     PATHING,
     APPROACHING,
     AT_DESTINATION,
+    DRIVING,
+    SEARCHING,
   ];
 
   static final $core.Map<$core.int, AutonomyState> _byValue = $pb.ProtobufEnum.initByValue(values);

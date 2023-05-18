@@ -76,6 +76,8 @@ class ProtoSocket extends UdpSocket {
 		}
 	}
 
+	void removeHandler(String name) => _handlers.remove(name);
+
 	/// Wraps the [message] in a [WrappedMessage] container and sends it to the rover. 
 	void sendMessage(Message message) => sendBytes(message.wrapped.writeToBuffer());
 }
