@@ -79,7 +79,6 @@ class NumberEditor extends StatelessWidget {
 	Widget build(BuildContext context) => ProviderConsumer<TextBuilder<num>>.value(
 		value: model,
 		builder: (model) => Row(
-			mainAxisAlignment: MainAxisAlignment.spaceBetween,
 			children: [
 				Expanded(
 					flex: titleFlex, 
@@ -130,6 +129,7 @@ class DropdownEditor<T> extends StatelessWidget {
 	Widget build(BuildContext context) => ListTile(
 		title: Text(name),
 		trailing: DropdownButton<T>(
+			focusNode: FocusNode(),
 			value: value,
 			onChanged: (input) { 
 				if (input == null) return;

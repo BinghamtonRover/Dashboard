@@ -65,6 +65,36 @@ class AutonomyPage extends StatelessWidget {
 							onChanged: (value) => model.zoom(value.toInt()),
 						),),
 					],),
+					ProviderConsumer<AutonomyCommandBuilder>.value(
+						value: model.command,
+						builder: (command) => Row(mainAxisSize: MainAxisSize.min, children: [
+							const SizedBox(width: 4),
+							Text("Next destination: ", style: context.textTheme.titleLarge),
+							Expanded(child: NumberEditor(
+								name: "Longitude",
+								model: command.longitude,
+							),),
+							Expanded(child: NumberEditor(
+								name: "Latitude",
+								model: command.latitude,
+							),),
+							Expanded(child: DropdownEditor<AutonomyTask>(
+								name: "Task type",
+								value: command.task,
+								items: [
+									for (final task in AutonomyTask.values) 
+										if (task != AutonomyTask.AUTONOMY_TASK_UNDEFINED) task
+								],
+								onChanged: command.updateTask,
+								humanName: (task) => task.humanName,
+							),),
+							ElevatedButton(
+								onPressed: command.isLoading ? null : command.submit, 
+								child: const Text("Submit"),
+							),
+							const SizedBox(width: 8),
+						],),
+					),
 					const SizedBox(height: 4),
 				],
 			),
@@ -76,7 +106,7 @@ class AutonomyPage extends StatelessWidget {
 					Text("Autonomy", style: context.textTheme.headlineMedium), 
 					const Spacer(),
 					Text("State: ${model.data.state.humanName}", style: context.textTheme.headlineSmall),
-					const SizedBox(width: 8),
+					const VerticalDivider(),
 					Text("Task: ${model.data.task.humanName}", style: context.textTheme.headlineSmall),
 					const ViewsSelector(currentView: Routes.autonomy),
 				],),

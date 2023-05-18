@@ -47,6 +47,9 @@ class AutonomyModel with ChangeNotifier {
 	/// The offset to add to all other coordinates, based on [roverPosition]. See [recenterRover].
 	GridOffset offset = const GridOffset(0, 0);
 
+	/// The view model for building a new [AutonomyCommand].
+	final command = AutonomyCommandBuilder();
+
 	/// Listens for incoming autonomy or position data.
 	AutonomyModel() {
 		models.sockets.data.registerHandler<AutonomyData>(
