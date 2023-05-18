@@ -15,7 +15,6 @@ library services;
 
 import "src/services/files.dart";
 import "src/services/gamepad.dart";
-import "src/services/proto_socket.dart";
 import "src/services/serial.dart";
 import "src/services/service.dart";
 
@@ -35,21 +34,6 @@ export "src/services/udp_socket.dart";
 ///
 /// To get an instance of this class, use [services].
 class Services extends Service {
-	/// This class has a private constructor since users should only use [services].
-	// Services._();
-
-	/// A UDP socket for sending and receiving Protobuf data.
-	final dataSocket = ProtoSocket();
-
-	/// A UDP socket for receiving video.
-	final videoSocket = ProtoSocket();
-
-	/// A UDP socket for controlling autonomy.
-	final autonomySocket = ProtoSocket();
-
-  /// A UDP socket for controlling rover position
-  final marsSocket = ProtoSocket();
-
 	/// A service that handles controller inputs.
 	final gamepad = GamepadService();
 
@@ -64,10 +48,6 @@ class Services extends Service {
 
 	@override
 	Future<void> init() async {
-		await dataSocket.init();
-		await videoSocket.init();
-		await autonomySocket.init();
-    await marsSocket.init();
 		await gamepad.init();
 		await files.init();
 		await serial.init();
@@ -75,10 +55,6 @@ class Services extends Service {
 
 	@override
 	Future<void> dispose() async {
-		await dataSocket.dispose();
-		await videoSocket.dispose();
-		await autonomySocket.dispose();
-    await marsSocket.dispose();
 		await gamepad.dispose();
 		await files.dispose();
 		await serial.dispose();

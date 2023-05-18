@@ -10,17 +10,17 @@
 ///  library should import any other library.
 library data;
 
-export "src/data/generated/arm.pb.dart";
-export "src/data/generated/core.pb.dart";
-export "src/data/generated/coordinates.pb.dart";
-export "src/data/generated/drive.pb.dart";
-export "src/data/generated/electrical.pb.dart";
-export "src/data/generated/gps.pb.dart";
-export "src/data/generated/science.pb.dart";
-export "src/data/generated/video.pb.dart";
-export "src/data/generated/wrapper.pb.dart";
+export "generated/arm.pb.dart";
+export "generated/core.pb.dart";
+export "generated/coordinates.pb.dart";
+export "generated/drive.pb.dart";
+export "generated/electrical.pb.dart";
+export "generated/gps.pb.dart";
+export "generated/science.pb.dart";
+export "generated/video.pb.dart";
+export "generated/wrapper.pb.dart";
 
-export "src/data/generated/google/protobuf/timestamp.pb.dart";
+export "generated/google/protobuf/timestamp.pb.dart";
 
 export "src/data/metrics/drive.dart";
 export "src/data/metrics/position.dart";

@@ -40,12 +40,12 @@ class VideoModel extends Model {
 
 	@override
 	Future<void> init() async {
-		services.videoSocket.registerHandler<VideoData>(
+		models.sockets.video.registerHandler<VideoData>(
 			name: VideoData().messageName,
 			decoder: VideoData.fromBuffer,
 			handler: handleData,
 		);
-		services.videoSocket.registerHandler<VideoCommand>(
+		models.sockets.video.registerHandler<VideoCommand>(
 			name: VideoCommand().messageName,
 			decoder: VideoCommand.fromBuffer,
 			handler: (command) => _handshake = command,
@@ -112,7 +112,7 @@ class VideoModel extends Model {
 	Future<void> updateCamera(int id, CameraDetails details) async { 
 		_handshake = null;
 		final command = VideoCommand(id: id, details: details);
-		services.videoSocket.sendMessage(command);
+		models.sockets.video.sendMessage(command);
 		await Future<void>.delayed(const Duration(seconds: 2));
 		if (_handshake == null) throw RequestNotAccepted();
 	}
@@ -129,7 +129,7 @@ class VideoModel extends Model {
 		_handshake = null;
 		details.status = enable ? CameraStatus.CAMERA_ENABLED : CameraStatus.CAMERA_DISABLED;
 		final command = VideoCommand(id: feeds[name]!.id, details: details);
-		services.videoSocket.sendMessage(command);
+		models.sockets.video.sendMessage(command);
 		await Future<void>.delayed(const Duration(seconds: 2));
 		if (_handshake == null) {
 			models.home.setMessage(

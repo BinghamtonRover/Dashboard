@@ -16,9 +16,9 @@ class Footer extends StatelessWidget {
 				scrollDirection: Axis.horizontal, 
 				child: SizedBox(
 					width: constraints.maxWidth, 
-					child: Row(
+					child: const Row(
 						mainAxisSize: MainAxisSize.min,
-						children: const [
+						children: [
 							MessageDisplay(),
 							Spacer(),
 							ViewsCounter(),
@@ -108,18 +108,21 @@ class StatusIcons extends StatelessWidget {
 						color: getColor(rover.metrics.electrical.battery),
 					),
 				),
-				IconButton(
-					tooltip: "${rover.heartbeats.connectionSummary}\nClick to reset",
-					icon: Icon(  // network strength
-						rover.isConnected
-							? getNetworkIcon(rover.heartbeats.connectionStrength)
-							: Icons.signal_wifi_off_outlined,
-						color: getColor(rover.heartbeats.connectionStrength),
+				ProviderConsumer<Sockets>.value(
+					value: models.sockets,
+					builder: (model) => IconButton(
+						tooltip: "${model.connectionSummary}\nClick to reset",
+						icon: Icon(  // network strength
+							rover.isConnected
+								? getNetworkIcon(model.connectionStrength)
+								: Icons.signal_wifi_off_outlined,
+							color: getColor(model.connectionStrength),
+						),
+						onPressed: () async {
+							await model.reset();
+							models.home.setMessage(severity: Severity.info, text: "Network reset");
+						},
 					),
-					onPressed: () async {
-						await models.rover.sockets.reset();
-						models.home.setMessage(severity: Severity.info, text: "Network reset");
-					},
 				),
 				PopupMenuButton(  // status
 					enabled: rover.isConnected,

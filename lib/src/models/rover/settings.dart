@@ -1,6 +1,5 @@
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/services.dart";
 
 /// The amount of time to wait between sending a request and receiving a confirmation.
 const confirmationDelay = Duration(seconds: 1);
@@ -20,7 +19,7 @@ class RoverSettings extends Model {
 
 	@override
 	Future<void> init() async {
-		services.dataSocket.registerHandler<UpdateSetting>(
+		models.sockets.data.registerHandler<UpdateSetting>(
 			name: UpdateSetting().messageName,
 			decoder: UpdateSetting.fromBuffer,
 			handler: (settings) => _confirmation = settings,
@@ -33,7 +32,7 @@ class RoverSettings extends Model {
 	/// Returns true if the handshake succeeds.
 	Future<bool> tryChangeSettings(UpdateSetting value) async {
 		_confirmation = null;
-		services.dataSocket.sendMessage(value);
+		models.sockets.data.sendMessage(value);
 		await Future<void>.delayed(confirmationDelay);
 		return _confirmation != null;
 	}
@@ -43,9 +42,9 @@ class RoverSettings extends Model {
 	/// See [RoverStatus] for details.
 	Future<void> setStatus(RoverStatus value) async {
 		final message = UpdateSetting(status: value);
-		services.videoSocket.sendMessage(message);
-		services.autonomySocket.sendMessage(message);
-		services.marsSocket.sendMessage(message);
+		models.sockets.video.sendMessage(message);
+		models.sockets.autonomy.sendMessage(message);
+		models.sockets.mars.sendMessage(message);
 		
 		if (await tryChangeSettings(message)) {
 			models.home.setMessage(severity: Severity.info, text: "Set mode to ${value.humanName}");

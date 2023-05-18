@@ -29,6 +29,8 @@ class ScienceCommand extends $pb.GeneratedMessage {
     ..aOB(13, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'stop')
     ..aOB(14, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'nextTube')
     ..aOB(15, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'nextSection')
+    ..a<$core.int>(16, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'sample', $pb.PbFieldType.O3)
+    ..e<ScienceState>(17, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'state', $pb.PbFieldType.OE, defaultOrMaker: ScienceState.SCIENCE_STATE_UNDEFINED, valueOf: ScienceState.valueOf, enumValues: ScienceState.values)
     ..hasRequiredFields = false
   ;
 
@@ -48,6 +50,8 @@ class ScienceCommand extends $pb.GeneratedMessage {
     $core.bool? stop,
     $core.bool? nextTube,
     $core.bool? nextSection,
+    $core.int? sample,
+    ScienceState? state,
   }) {
     final _result = create();
     if (dirtCarousel != null) {
@@ -91,6 +95,12 @@ class ScienceCommand extends $pb.GeneratedMessage {
     }
     if (nextSection != null) {
       _result.nextSection = nextSection;
+    }
+    if (sample != null) {
+      _result.sample = sample;
+    }
+    if (state != null) {
+      _result.state = state;
     }
     return _result;
   }
@@ -240,6 +250,24 @@ class ScienceCommand extends $pb.GeneratedMessage {
   $core.bool hasNextSection() => $_has(13);
   @$pb.TagNumber(15)
   void clearNextSection() => clearField(15);
+
+  @$pb.TagNumber(16)
+  $core.int get sample => $_getIZ(14);
+  @$pb.TagNumber(16)
+  set sample($core.int v) { $_setSignedInt32(14, v); }
+  @$pb.TagNumber(16)
+  $core.bool hasSample() => $_has(14);
+  @$pb.TagNumber(16)
+  void clearSample() => clearField(16);
+
+  @$pb.TagNumber(17)
+  ScienceState get state => $_getN(15);
+  @$pb.TagNumber(17)
+  set state(ScienceState v) { setField(17, v); }
+  @$pb.TagNumber(17)
+  $core.bool hasState() => $_has(15);
+  @$pb.TagNumber(17)
+  void clearState() => clearField(17);
 }
 
 class ScienceData extends $pb.GeneratedMessage {
@@ -249,6 +277,7 @@ class ScienceData extends $pb.GeneratedMessage {
     ..a<$core.double>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'methane', $pb.PbFieldType.OF)
     ..a<$core.double>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pH', $pb.PbFieldType.OF, protoName: 'pH')
     ..a<$core.double>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'temperature', $pb.PbFieldType.OF)
+    ..a<$core.int>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'sample', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
@@ -259,6 +288,7 @@ class ScienceData extends $pb.GeneratedMessage {
     $core.double? methane,
     $core.double? pH,
     $core.double? temperature,
+    $core.int? sample,
   }) {
     final _result = create();
     if (co2 != null) {
@@ -275,6 +305,9 @@ class ScienceData extends $pb.GeneratedMessage {
     }
     if (temperature != null) {
       _result.temperature = temperature;
+    }
+    if (sample != null) {
+      _result.sample = sample;
     }
     return _result;
   }
@@ -343,5 +376,14 @@ class ScienceData extends $pb.GeneratedMessage {
   $core.bool hasTemperature() => $_has(4);
   @$pb.TagNumber(5)
   void clearTemperature() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.int get sample => $_getIZ(5);
+  @$pb.TagNumber(6)
+  set sample($core.int v) { $_setSignedInt32(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasSample() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearSample() => clearField(6);
 }
 

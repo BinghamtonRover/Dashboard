@@ -14,17 +14,17 @@ class ViewsSelector extends StatelessWidget {
 	const ViewsSelector({required this.currentView});
 
 	@override
-	Widget build(BuildContext context) => PopupMenuButton<View>(
+	Widget build(BuildContext context) => PopupMenuButton<DashboardView>(
 		tooltip: "Select a feed",
 		icon: const Icon(Icons.expand_more),
 		onSelected: (view) => models.views.replaceView(currentView, view),
 		itemBuilder: (_) => [
-			for (final view in View.cameraViews) PopupMenuItem(
+			for (final view in DashboardView.cameraViews) PopupMenuItem(
 				value: view,
 				child: Text(view.name),
 			),
 			const PopupMenuDivider(),
-			for (final view in View.uiViews) PopupMenuItem(
+			for (final view in DashboardView.uiViews) PopupMenuItem(
 				value: view,
 				child: Text(view.name),
 			),
@@ -35,41 +35,41 @@ class ViewsSelector extends StatelessWidget {
 /// A view in the UI.
 /// 
 /// A view can be a camera feed or any other UI element. Views are arranged in a grid.
-class View {
+class DashboardView {
 	/// The name of the view.
 	final String name;
 	/// A function to build this view.
 	final WidgetBuilder builder;
 	/// A const constructor.
-	const View({required this.name, required this.builder});
+	const DashboardView({required this.name, required this.builder});
 
 	/// A list of views that represent all the camera feeds.
-	static final List<View> cameraViews = [
+	static final List<DashboardView> cameraViews = [
 		for (final name in CameraName.values) 
-			if (name != CameraName.CAMERA_NAME_UNDEFINED) View(
+			if (name != CameraName.CAMERA_NAME_UNDEFINED) DashboardView(
 				name: name.humanName,
 				builder: (context) => VideoFeed(name: name),
 			)
 	];
 
 	/// A list of views that represent all non-camera feeds.
-	static final List<View> uiViews = [
-		View(name: Routes.science, builder: (context) => SciencePage()),
+	static final List<DashboardView> uiViews = [
+		DashboardView(name: Routes.science, builder: (context) => SciencePage()),
 	];
 
 	/// A blank view.
-	static final blank = View(
+	static final blank = DashboardView(
 		name: Routes.blank,
 		builder: (context) => ColoredBox(
 			color: context.colorScheme.brightness == Brightness.light
 				? Colors.blueGrey
 				: Colors.blueGrey[700]!, 
-			child: Column(
+			child: const Column(
 				children: [
-					Row(children: const [Spacer(), ViewsSelector(currentView: Routes.blank)]),
-					const Spacer(),
-					const Text("Choose a view"),
-					const Spacer(),
+					Row(children: [Spacer(), ViewsSelector(currentView: Routes.blank)]),
+					Spacer(),
+					Text("Choose a view"),
+					Spacer(),
 				],
 			),
 		),
@@ -79,15 +79,15 @@ class View {
 /// A data model for keeping track of the on-screen views.
 class ViewsModel extends Model {
 	/// The current views on the screen.
-	List<View> views = [
-		View.cameraViews[0],
+	List<DashboardView> views = [
+		DashboardView.cameraViews[0],
 	];
 
 	@override
 	Future<void> init() async { }
 
 	/// Replaces the [oldView] with the [newView].
-	void replaceView(String oldView, View newView) {
+	void replaceView(String oldView, DashboardView newView) {
 		if (views.contains(newView)) {
 			models.home.setMessage(severity: Severity.error, text: "That view is already on-screen");
 			return;
@@ -105,7 +105,7 @@ class ViewsModel extends Model {
 			views = views.sublist(0, value);
 		} else {
 			for (var i = currentNum; i < value; i++) {
-				views.add(View.blank);
+				views.add(DashboardView.blank);
 			}
 		}
 		notifyListeners();

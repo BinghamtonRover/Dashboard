@@ -77,22 +77,12 @@ class VideoFeedState extends State<VideoFeed> {
 	void initState() {
 		super.initState();
 		data = models.video.feeds[widget.name]!;
-		models.video.toggleCamera(widget.name, enable: true);
 		models.video.addListener(updateImage);
-	}
-
-	@override
-	void didUpdateWidget(VideoFeed oldWidget) {
-		super.didUpdateWidget(oldWidget);
-		if (oldWidget.name == widget.name) return;
-		models.video.toggleCamera(widget.name, enable: true);
-		models.video.toggleCamera(oldWidget.name, enable: false);
 	}
 
 	@override
 	void dispose() {
 		models.video.removeListener(updateImage);
-		models.video.toggleCamera(widget.name, enable: false);
 		imageLoader.dispose();
 		super.dispose();
 	}

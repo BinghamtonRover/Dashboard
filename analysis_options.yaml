@@ -28,19 +28,8 @@ analyzer:
     # See https://github.com/dart-lang/language/blob/main/resources/type-system/strict-raw-types.md
     strict-raw-types: true
 
-  strong-mode:
-    # Allow dynamic to be cast to other types, like in JSON. See `strict-casts` above
-    implicit-casts: true
-
-    # Allow a variable or type argument to be dynamic.
-    # 
-    # Whereas `strict-inference` works on the left side of an assignment, this works on the right side.
-    # So, `List<String> names = ["alice", "bob"]` would be caught by this, even though it's fine.
-    # But `List names = <String>["alice", "bob"]` would be caught by `strict-inference`.
-    implicit-dynamic: true
-
   exclude: 
-    - lib/src/data/generated/**.dart
+    - lib/generated/**.dart
 
 linter:
   rules:

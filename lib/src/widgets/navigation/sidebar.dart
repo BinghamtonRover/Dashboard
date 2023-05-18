@@ -15,13 +15,43 @@ class Sidebar extends StatelessWidget {
 		child: ListView(
 			padding: const EdgeInsets.symmetric(horizontal: 4),
 			children: [
-				Text("Metrics", style: Theme.of(context).textTheme.displaySmall, textAlign: TextAlign.center),
+				Text("Metrics", style: context.textTheme.displaySmall, textAlign: TextAlign.center),
 				const MetricsList(),
 				const Divider(),
-				Text("Controls", style: Theme.of(context).textTheme.displaySmall, textAlign: TextAlign.center),
+				Text("Controls", style: context.textTheme.displaySmall, textAlign: TextAlign.center),
 				const SizedBox(height: 4),
 				ControlsDisplay(controller: models.rover.controller1, gamepadNum: 1),
 				ControlsDisplay(controller: models.rover.controller2, gamepadNum: 2),
+				const Divider(),
+				Text("Actions", style: context.textTheme.displaySmall, textAlign: TextAlign.center),
+			],
+		),
+	);
+}
+
+/// Displays metrics of all sorts in a collapsible list.
+class MetricsList extends StatelessWidget {
+	/// A const constructor for this widget.
+	const MetricsList();
+
+	@override
+	Widget build(BuildContext context) => ProviderConsumer<RoverMetrics>.value(
+		value: models.rover.metrics,
+		builder: (model) => Column(
+			children: [
+				for (final metrics in model.allMetrics) ExpansionTile(
+					expandedCrossAxisAlignment: CrossAxisAlignment.start,
+					expandedAlignment: Alignment.centerLeft,
+					childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
+					title: Text(
+						metrics.name,
+						style: Theme.of(context).textTheme.headlineSmall,
+					),
+					children: [
+						for (final String metric in metrics.allMetrics) Text(metric),
+						const SizedBox(height: 4),
+					],
+				),
 			],
 		),
 	);
@@ -39,8 +69,8 @@ class ControlsDisplay extends StatelessWidget {
 	const ControlsDisplay({required this.controller, required this.gamepadNum});
 
 	@override
-	Widget build(BuildContext context) => ProviderConsumer<SettingsModel>.value(
-		value: models.settings,  // refresh controls when settings change
+	Widget build(BuildContext context) => ProviderConsumer<Controller>.value(
+		value: controller,
 		builder: (_) => ExpansionTile(
 			expandedCrossAxisAlignment: CrossAxisAlignment.start,
 			expandedAlignment: Alignment.centerLeft,
