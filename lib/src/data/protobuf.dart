@@ -164,7 +164,9 @@ extension ColorUtils on ProtoColor {
 	);
 }
 
+/// Utilities for [AutonomyState]s.
 extension AutonomyStateUtils on AutonomyState {
+	/// The human-readable name of the task.
 	String get humanName {
 		switch (this) {
 			case AutonomyState.AUTONOMY_STATE_UNDEFINED: return "";
@@ -179,7 +181,9 @@ extension AutonomyStateUtils on AutonomyState {
 	}
 }
 
+/// Utilities for [AutonomyTask]s.
 extension AutonomyTaskUtils on AutonomyTask {
+	/// The human-readable name of the task.
 	String get humanName {
 		switch (this) {
 			case AutonomyTask.AUTONOMY_TASK_UNDEFINED: return "";

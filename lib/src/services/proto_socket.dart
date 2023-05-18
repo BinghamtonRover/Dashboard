@@ -76,6 +76,9 @@ class ProtoSocket extends UdpSocket {
 		}
 	}
 
+	/// Removes the handler for a given message type. 
+	/// 
+	/// This is useful if you register a handler to update a piece of UI that is no longer on-screen.
 	void removeHandler(String name) => _handlers.remove(name);
 
 	/// Wraps the [message] in a [WrappedMessage] container and sends it to the rover. 
