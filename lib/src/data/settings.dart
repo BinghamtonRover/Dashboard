@@ -188,7 +188,7 @@ class AutonomySettings {
 
   /// Parses autonomy settings from a JSON map.
   AutonomySettings.fromJson(Json? json) : 
-    blockSize = double.parse(json?["blockSize"] ?? "1.0");
+    blockSize = json?["blockSize"] ?? 1.0;
 
   /// Serializes these settings to JSON.
   Json toJson() => {
