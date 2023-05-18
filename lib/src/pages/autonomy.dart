@@ -5,11 +5,11 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
-enum AutonomyCell {
-	rover, destination, obstacle, path, empty
-}
-
+/// The UI for the autonomy subsystem.
+/// 
+/// Displays a bird's-eye view of the rover and its path to the goal.
 class AutonomyPage extends StatelessWidget {
+	/// Gets the color for a given [AutonomyCell].
 	Color? getColor(AutonomyCell cell) => switch(cell) {
 		AutonomyCell.rover => Colors.blue,
 		AutonomyCell.destination => Colors.green,
@@ -59,10 +59,4 @@ class AutonomyPage extends StatelessWidget {
 			),
 		],),
 	);
-}
-
-class GridOffset {
-	int x;
-	int y;
-	GridOffset(this.x, this.y);
 }
