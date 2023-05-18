@@ -13,7 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_libserialport: ^0.3.0
-  package_info_plus: ^3.0.3
+  package_info_plus: ^4.0.0
   path_provider: ^2.0.14
   protobuf: ^2.1.0
   provider: ^6.0.5
@@ -29,7 +29,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   icons_launcher: ^2.1.0
-  lint: ^2.0.1
+  lint: ^2.1.2
   msix: ^3.9.1
   protoc_builder: ^0.3.0
 
