@@ -24,13 +24,7 @@ class AutonomyPage extends StatelessWidget {
 		builder: (model) => Stack(children: [
 			Column(
 				children: [
-					const SizedBox(height: 56),
-					Row(children: [
-						Text("State: ${model.data.state.humanName}", style: context.textTheme.headlineSmall),
-						const Spacer(),
-						Text("Task: ${model.data.task.humanName}", style: context.textTheme.headlineSmall),
-					],),
-					const SizedBox(height: 8),
+					const SizedBox(height: 48),
 					for (final row in model.grid) Expanded(
 						child: Row(children: [
 							for (final cell in row) Expanded(child: Container(
@@ -40,7 +34,7 @@ class AutonomyPage extends StatelessWidget {
 							),)					
 						],),
 					),
-					const SizedBox(height: 24),
+					const SizedBox(height: 4),
 					Slider(
 						value: model.gridSize.toDouble(),
 						min: 1,
@@ -57,6 +51,9 @@ class AutonomyPage extends StatelessWidget {
 					const SizedBox(width: 8),
 					Text("Autonomy", style: context.textTheme.headlineMedium), 
 					const Spacer(),
+					Text("State: ${model.data.state.humanName}", style: context.textTheme.headlineSmall),
+					const SizedBox(width: 8),
+					Text("Task: ${model.data.task.humanName}", style: context.textTheme.headlineSmall),
 					const ViewsSelector(currentView: Routes.autonomy),
 				],),
 			),
