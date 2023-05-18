@@ -278,6 +278,7 @@ class ScienceData extends $pb.GeneratedMessage {
     ..a<$core.double>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'pH', $pb.PbFieldType.OF, protoName: 'pH')
     ..a<$core.double>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'temperature', $pb.PbFieldType.OF)
     ..a<$core.int>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'sample', $pb.PbFieldType.O3)
+    ..e<ScienceState>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'state', $pb.PbFieldType.OE, defaultOrMaker: ScienceState.SCIENCE_STATE_UNDEFINED, valueOf: ScienceState.valueOf, enumValues: ScienceState.values)
     ..hasRequiredFields = false
   ;
 
@@ -289,6 +290,7 @@ class ScienceData extends $pb.GeneratedMessage {
     $core.double? pH,
     $core.double? temperature,
     $core.int? sample,
+    ScienceState? state,
   }) {
     final _result = create();
     if (co2 != null) {
@@ -308,6 +310,9 @@ class ScienceData extends $pb.GeneratedMessage {
     }
     if (sample != null) {
       _result.sample = sample;
+    }
+    if (state != null) {
+      _result.state = state;
     }
     return _result;
   }
@@ -385,5 +390,14 @@ class ScienceData extends $pb.GeneratedMessage {
   $core.bool hasSample() => $_has(5);
   @$pb.TagNumber(6)
   void clearSample() => clearField(6);
+
+  @$pb.TagNumber(7)
+  ScienceState get state => $_getN(6);
+  @$pb.TagNumber(7)
+  set state(ScienceState v) { setField(7, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasState() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearState() => clearField(7);
 }
 
