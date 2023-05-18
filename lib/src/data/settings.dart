@@ -74,7 +74,7 @@ class ArmSettings {
   /// How many radians to rotate the gripper each frame.
   final double rotate;
 
-  /// How many mm to move every 10ms in IK mode.
+  /// How many mm to move every 10 ms in IK mode.
   final double ikIncrement;
 
   /// Whether the arm is in manual or IK mode.
@@ -173,6 +173,29 @@ class NetworkSettings {
   };
 }
 
+/// Settings relating to autonomy.
+class AutonomySettings {
+  /// The precision of the GPS grid.
+  /// 
+  /// Since GPS coordinates are decimal values, we divide by this value to get the index of the cell
+  /// each coordinate belongs to. Smaller sizes means more blocks, but we should be careful that the
+  /// blocks are big enough to the margin of error of our GPS. This value must be synced with the
+  /// value in the autonomy program, or else the UI will not be accurate to the rover's logic.
+  final double blockSize;
+
+  /// A const constructor.
+  const AutonomySettings({required this.blockSize});
+
+  /// Parses autonomy settings from a JSON map.
+  AutonomySettings.fromJson(Json? json) : 
+    blockSize = double.parse(json?["blockSize"] ?? "1.0");
+
+  /// Serializes these settings to JSON.
+  Json toJson() => {
+    "blockSize": blockSize,
+  };
+}
+
 /// Settings relating to easter eggs.
 /// 
 /// TODO: Implement these.
@@ -206,6 +229,9 @@ class Settings {
   /// Settings for the science analysis.
   final ScienceSettings science;
 
+  /// Settings for the autonomy display.
+  final AutonomySettings autonomy;
+
   /// A const constructor.
   const Settings({
     required this.network,
@@ -213,10 +239,12 @@ class Settings {
     required this.easterEggs,
     required this.science,
     required this.arm,
+    required this.autonomy,
   });
 
   /// Initialize settings from Json.
   Settings.fromJson(Json json) : 
+    autonomy = AutonomySettings.fromJson(json["autonomy"]),
     network = NetworkSettings.fromJson(json["network"]),
     video = VideoSettings.fromJson(json["video"]),
     easterEggs = EasterEggsSettings.fromJson(json["easterEggs"]),
@@ -225,6 +253,7 @@ class Settings {
 
   /// Converts the data from the settings instance to Json.
   Json toJson() => { 
+    "autonomy": autonomy.toJson(),
     "network": network.toJson(),
     "video": video.toJson(),
     "easterEggs": easterEggs.toJson(),

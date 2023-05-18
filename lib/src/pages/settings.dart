@@ -73,6 +73,17 @@ class SettingsPage extends StatelessWidget {
 							],
 						),
 						const Divider(),
+						ValueEditor<VideoSettings>(
+							name: "Video settings",
+							children: [
+								NumberEditor(
+									name: "Frames per second", 
+									subtitle: "This does not affect the rover's cameras\nUseful for limiting the CPU of the dashboard",
+									model: model.video.fps,
+								),
+							],
+						),
+						const Divider(),
 						ValueEditor<ArmSettings>(
 							name: "Arm settings",
 							children: [
@@ -92,17 +103,6 @@ class SettingsPage extends StatelessWidget {
 							],
 						),
 						const Divider(),
-						ValueEditor<VideoSettings>(
-							name: "Video settings",
-							children: [
-								NumberEditor(
-									name: "Frames per second", 
-									subtitle: "This does not affect the rover's cameras\nUseful for limiting the CPU of the dashboard",
-									model: model.video.fps,
-								),
-							],
-						),
-						const Divider(),
 						ValueEditor<ScienceSettings>(
 							name: "Science settings",
 							children: [
@@ -115,6 +115,17 @@ class SettingsPage extends StatelessWidget {
 									subtitle: const Text("Graphs can either be forced to fit the page or allowed to scroll\nMight be inconvenient for some users on desktop"),
 									value: model.science.scrollableGraphs,
 									onChanged: model.science.updateScrollableGraphs,
+								),
+							],
+						),
+						const Divider(),
+						ValueEditor<AutonomySettings>(
+							name: "Autonomy settings",
+							children: [
+								NumberEditor(
+									name: "Block size", 
+									subtitle: "The precision of the GPS grid", 
+									model: model.autonomy.blockSize,
 								),
 							],
 						),

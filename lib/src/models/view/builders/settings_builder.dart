@@ -199,6 +199,22 @@ class ScienceSettingsBuilder extends ValueBuilder<ScienceSettings> {
 	}
 }
 
+/// A [ValueBuilder] that modifies an [AutonomySettings].
+class AutonomySettingsBuilder extends ValueBuilder<AutonomySettings> {
+	/// The precision of the GPS grid. See [AutonomySettings.blockSize].
+	final NumberBuilder<double> blockSize;
+
+	/// Fills in the fields with the given [initial] settings.
+	AutonomySettingsBuilder(AutonomySettings initial) : 
+		blockSize = NumberBuilder(initial.blockSize);
+
+	@override
+	bool get isValid => blockSize.isValid;
+
+	@override
+	AutonomySettings get value => AutonomySettings(blockSize: blockSize.value);
+}
+
 /// A [ValueBuilder] representing an [ArmSettings].
 class SettingsBuilder extends ValueBuilder<Settings> {
 	/// The [NetworkSettings] view model.
@@ -213,16 +229,21 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	/// The [ScienceSettings] view model.
 	final ScienceSettingsBuilder science;
 
+	/// The [AutonomySettings] view model.
+	final AutonomySettingsBuilder autonomy;
+
 	/// Whether the page is loading.
 	bool isLoading = false;
 
 	/// Modifies the user's settings.
 	SettingsBuilder() : 
+		autonomy = AutonomySettingsBuilder(models.settings.autonomy),
 		network = NetworkSettingsBuilder(models.settings.network),
 		arm = ArmSettingsBuilder(models.settings.arm),
 		video = VideoSettingsBuilder(models.settings.video),
 		science = ScienceSettingsBuilder(models.settings.science)
 	{
+		autonomy.addListener(notifyListeners);
 		network.addListener(notifyListeners);
 		arm.addListener(notifyListeners);
 		video.addListener(notifyListeners);
@@ -230,10 +251,15 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	}
 
 	@override
-	bool get isValid => network.isValid && arm.isValid;
+	bool get isValid => network.isValid 
+		&& arm.isValid 
+		&& autonomy.isValid 
+		&& video.isValid 
+		&& science.isValid;
 
 	@override
 	Settings get value => Settings(
+		autonomy: autonomy.value,
 		network: network.value,
 		video: video.value,
 		easterEggs: const EasterEggsSettings(),
