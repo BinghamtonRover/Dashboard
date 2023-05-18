@@ -9,17 +9,17 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'core.pbenum.dart' as $2;
+import 'core.pbenum.dart' as $1;
 
 class ElectricalCommand extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ElectricalCommand', createEmptyInstance: create)
-    ..e<$2.RoverStatus>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'status', $pb.PbFieldType.OE, defaultOrMaker: $2.RoverStatus.DISCONNECTED, valueOf: $2.RoverStatus.valueOf, enumValues: $2.RoverStatus.values)
+    ..e<$1.RoverStatus>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'status', $pb.PbFieldType.OE, defaultOrMaker: $1.RoverStatus.DISCONNECTED, valueOf: $1.RoverStatus.valueOf, enumValues: $1.RoverStatus.values)
     ..hasRequiredFields = false
   ;
 
   ElectricalCommand._() : super();
   factory ElectricalCommand({
-    $2.RoverStatus? status,
+    $1.RoverStatus? status,
   }) {
     final _result = create();
     if (status != null) {
@@ -49,9 +49,9 @@ class ElectricalCommand extends $pb.GeneratedMessage {
   static ElectricalCommand? _defaultInstance;
 
   @$pb.TagNumber(10)
-  $2.RoverStatus get status => $_getN(0);
+  $1.RoverStatus get status => $_getN(0);
   @$pb.TagNumber(10)
-  set status($2.RoverStatus v) { setField(10, v); }
+  set status($1.RoverStatus v) { setField(10, v); }
   @$pb.TagNumber(10)
   $core.bool hasStatus() => $_has(0);
   @$pb.TagNumber(10)

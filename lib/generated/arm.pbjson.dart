@@ -27,6 +27,18 @@ const MotorDirection$json = const {
 
 /// Descriptor for `MotorDirection`. Decode as a `google.protobuf.EnumDescriptorProto`.
 final $typed_data.Uint8List motorDirectionDescriptor = $convert.base64Decode('Cg5Nb3RvckRpcmVjdGlvbhIdChlNT1RPUl9ESVJFQ1RJT05fVU5ERUZJTkVEEAASBgoCVVAQARIICgRET1dOEAISCAoETEVGVBADEgkKBVJJR0hUEAQSDQoJQ0xPQ0tXSVNFEAUSFQoRQ09VTlRFUl9DTE9DS1dJU0UQBhILCgdPUEVOSU5HEAcSCwoHQ0xPU0lORxAIEg4KCk5PVF9NT1ZJTkcQCQ==');
+@$core.Deprecated('Use coordinatesDescriptor instead')
+const Coordinates$json = const {
+  '1': 'Coordinates',
+  '2': const [
+    const {'1': 'x', '3': 1, '4': 1, '5': 2, '10': 'x'},
+    const {'1': 'y', '3': 2, '4': 1, '5': 2, '10': 'y'},
+    const {'1': 'z', '3': 3, '4': 1, '5': 2, '10': 'z'},
+  ],
+};
+
+/// Descriptor for `Coordinates`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List coordinatesDescriptor = $convert.base64Decode('CgtDb29yZGluYXRlcxIMCgF4GAEgASgCUgF4EgwKAXkYAiABKAJSAXkSDAoBehgDIAEoAlIBeg==');
 @$core.Deprecated('Use motorDataDescriptor instead')
 const MotorData$json = const {
   '1': 'MotorData',

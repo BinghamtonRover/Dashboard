@@ -9,13 +9,13 @@ import 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
-import 'gps.pb.dart' as $1;
+import 'gps.pb.dart' as $0;
 
 class MarsCommand extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'MarsCommand', createEmptyInstance: create)
     ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'swivel', $pb.PbFieldType.OF)
     ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'tilt', $pb.PbFieldType.OF)
-    ..aOM<$1.RoverPosition>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'position', subBuilder: $1.RoverPosition.create)
+    ..aOM<$0.RoverPosition>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'position', subBuilder: $0.RoverPosition.create)
     ..hasRequiredFields = false
   ;
 
@@ -23,7 +23,7 @@ class MarsCommand extends $pb.GeneratedMessage {
   factory MarsCommand({
     $core.double? swivel,
     $core.double? tilt,
-    $1.RoverPosition? position,
+    $0.RoverPosition? position,
   }) {
     final _result = create();
     if (swivel != null) {
@@ -77,15 +77,15 @@ class MarsCommand extends $pb.GeneratedMessage {
   void clearTilt() => clearField(2);
 
   @$pb.TagNumber(3)
-  $1.RoverPosition get position => $_getN(2);
+  $0.RoverPosition get position => $_getN(2);
   @$pb.TagNumber(3)
-  set position($1.RoverPosition v) { setField(3, v); }
+  set position($0.RoverPosition v) { setField(3, v); }
   @$pb.TagNumber(3)
   $core.bool hasPosition() => $_has(2);
   @$pb.TagNumber(3)
   void clearPosition() => clearField(3);
   @$pb.TagNumber(3)
-  $1.RoverPosition ensurePosition() => $_ensure(2);
+  $0.RoverPosition ensurePosition() => $_ensure(2);
 }
 
 class MarsData extends $pb.GeneratedMessage {
