@@ -16,9 +16,9 @@ class Footer extends StatelessWidget {
 				scrollDirection: Axis.horizontal, 
 				child: SizedBox(
 					width: constraints.maxWidth, 
-					child: Row(
+					child: const Row(
 						mainAxisSize: MainAxisSize.min,
-						children: const [
+						children: [
 							MessageDisplay(),
 							Spacer(),
 							ViewsCounter(),
