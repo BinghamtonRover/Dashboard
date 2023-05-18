@@ -11,8 +11,8 @@
 library data;
 
 export "generated/arm.pb.dart";
+export "generated/autonomy.pb.dart";
 export "generated/core.pb.dart";
-export "generated/coordinates.pb.dart";
 export "generated/drive.pb.dart";
 export "generated/electrical.pb.dart";
 export "generated/gps.pb.dart";

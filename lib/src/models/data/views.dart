@@ -55,6 +55,7 @@ class DashboardView {
 	/// A list of views that represent all non-camera feeds.
 	static final List<DashboardView> uiViews = [
 		DashboardView(name: Routes.science, builder: (context) => SciencePage()),
+		DashboardView(name: Routes.autonomy, builder: (context) => AutonomyPage()),
 	];
 
 	/// A blank view.

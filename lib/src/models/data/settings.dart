@@ -19,6 +19,9 @@ class SettingsModel extends Model {
 	/// The user's science settings.
 	ScienceSettings get science => all.science;
 
+	/// The user's autonomy settings.
+	AutonomySettings get autonomy => all.autonomy;
+
 	@override
 	Future<void> init() async {
 		all = await services.files.readSettings();
