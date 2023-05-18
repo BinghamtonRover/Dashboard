@@ -24,7 +24,6 @@ class Sidebar extends StatelessWidget {
 				ControlsDisplay(controller: models.rover.controller2, gamepadNum: 2),
 				const Divider(),
 				Text("Actions", style: context.textTheme.displaySmall, textAlign: TextAlign.center),
-				ActionsDisplay(),
 			],
 		),
 	);
@@ -88,16 +87,5 @@ class ControlsDisplay extends StatelessWidget {
 				],
 			],
 		),
-	);
-}
-
-// TODO: Implement this
-/// A list of actions the user can take to control the rover in ways the gamepad cannot.
-/// 
-/// Actions can be buttons or other kinds of inputs, like text boxes, but don't fit in the
-/// settings page.
-class ActionsDisplay extends StatelessWidget {
-	@override
-	Widget build(BuildContext context) => Column(
 	);
 }
