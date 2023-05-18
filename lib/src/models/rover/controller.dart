@@ -37,9 +37,7 @@ class Controller extends Model {
 	};
 
 	/// Maps button presses on [gamepad] to [controls].
-	Controller(this.gamepadIndex, this.controls) {
-		models.settings.addListener(notifyListeners);
-	}
+	Controller(this.gamepadIndex, this.controls);
 
 	/// The gamepad to read from.
 	Gamepad get gamepad => services.gamepad.gamepads[gamepadIndex];
@@ -47,6 +45,7 @@ class Controller extends Model {
 	@override
 	Future<void> init() async {
 		gamepadTimer = Timer.periodic(gamepadDelay, _update);
+		models.settings.addListener(notifyListeners);
 	}
 
 	@override
