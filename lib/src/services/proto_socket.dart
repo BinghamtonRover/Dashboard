@@ -9,8 +9,14 @@ import "udp_socket.dart";
 /// A callback to execute with a specific serialized Protobuf message.
 typedef MessageHandler<T extends Message> = void Function(T);
 
+/// An event representing a change in network connection status.
 enum HeartbeatEvent {
-	connected, disconnected, none
+	/// The device just connected.
+	connected, 
+	/// The device just disconnected.
+	disconnected, 
+	/// Nothing just happened. Useful for an initial value.
+	none
 }
 
 /// A service to send and receive Protobuf messages over a UDP socket.
@@ -27,6 +33,9 @@ class ProtoSocket extends UdpSocket {
 	/// Handlers for every possible type of Protobuf message in serialized form.
 	final Map<String, RawDataHandler> _handlers = {};
 
+	/// The device this socket is responsible for connecting to.
+	/// 
+	/// This device is reachable at [destination].
 	final Device device;
 
 	/// Opens a socket for sending and receiving Protobuf messages.
@@ -94,10 +103,15 @@ class ProtoSocket extends UdpSocket {
 
 	// ==================== Heartbeats ====================
 
+	/// The connection strength, as a percentage to this [device].
 	final connectionStrength = ValueNotifier(0.0);
-	final status = ValueNotifier(HeartbeatEvent.none);
+	/// The latest [HeartbeatEvent] emitted by this socket. 
+	final event = ValueNotifier(HeartbeatEvent.none);
+	/// The number of heartbeats received since the last heartbeat was sent.
 	int _heartbeats = 0;
+	/// Whether this socket has a stable connection to the [device]/
 	bool get isConnected => connectionStrength.value > 0;
+	/// A timer that sends heartbeats to the [device] every [heartbeatInterval].
 	late final RestartableTimer heartbeatTimer;
 
 	@override
@@ -123,16 +137,18 @@ class ProtoSocket extends UdpSocket {
 		heartbeatTimer.reset();
 	} 
 
+	/// Sends a heartbeat to the [device] and updates [connectionStrength] depending on how many
+	/// heartbeats are received in [heartbeatWaitDelay].
 	Future<void> sendHeartbeat() async {
 		_heartbeats = 0;
 		sendMessage(Connect(sender: Device.DASHBOARD, receiver: device));
 		await Future<void>.delayed(heartbeatWaitDelay);
 		final wasConnected = isConnected;
 		if (_heartbeats > 0) {
-			if (!wasConnected) status.value = HeartbeatEvent.connected;
+			if (!wasConnected) event.value = HeartbeatEvent.connected;
 			connectionStrength.value += connectionIncrement * _heartbeats;
 		} else {
-			if (wasConnected) status.value = HeartbeatEvent.disconnected;
+			if (wasConnected) event.value = HeartbeatEvent.disconnected;
 			connectionStrength.value -= connectionIncrement;
 		}
 		connectionStrength.value = connectionStrength.value.clamp(0, 1);

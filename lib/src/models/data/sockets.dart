@@ -1,4 +1,3 @@
-import "dart:async";
 import "dart:io";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -6,9 +5,6 @@ import "package:rover_dashboard/services.dart";
 
 /// Coordinates all the sockets to point to the right [RoverType].
 class Sockets extends Model {
-	/// A timer that sends handshakes to every device on the rover.
-	Timer? handshakeTimer;
-
 	/// A UDP socket for sending and receiving Protobuf data.
 	final data = ProtoSocket(device: Device.SUBSYSTEMS);
 
@@ -45,29 +41,28 @@ class Sockets extends Model {
 	@override
 	Future<void> dispose() async {
 		for (final socket in sockets) { await socket.dispose(); }
-		handshakeTimer?.cancel();
 		super.dispose();
 	}
 
 	/// Set the right IP addresses for the rover or tank.
 	Future<void> updateSockets() async {
+		// Initialize sockets
 		final settings = models.settings.network;
 		data.destination = settings.subsystemsSocket.copy();
 		video.destination = settings.videoSocket.copy();
 		autonomy.destination = settings.autonomySocket.copy();
 		mars.destination = settings.marsSocket.copy();
 
-		switch (rover) {
-			case RoverType.rover: break;  // IPs are already in the settings
-			case RoverType.tank: 
-				for (final socket in sockets) {
-					socket.destination!.address = settings.tankSocket.address;
-				}
-			case RoverType.localhost: 
-				for (final socket in sockets) {
-					socket.destination!.address = InternetAddress.loopbackIPv4;
-				}
+		// Change IP addresses
+		for (final socket in sockets) {
+			socket.destination!.address = switch (rover) {
+				RoverType.rover => socket.destination!.address,
+				RoverType.tank => settings.tankSocket.address,
+				RoverType.localhost => InternetAddress.loopbackIPv4,
+			};
 		}
+
+		// Reset
 		await reset();
 	}
 
