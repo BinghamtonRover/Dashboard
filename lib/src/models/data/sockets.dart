@@ -12,7 +12,7 @@ class Sockets extends Model {
 	final video = ProtoSocket(device: Device.VIDEO);
 
 	/// A UDP socket for controlling autonomy.
-	final autonomy = ProtoSocket(device: Device.AUTONOMY);
+	final autonomy = ProtoSocket(device: Device.AUTONOMY, allowFallthrough: {AutonomyData().messageName});
 
   /// A UDP socket for controlling rover position
   final mars = ProtoSocket(device: Device.MARS_SERVER);

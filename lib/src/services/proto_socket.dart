@@ -38,8 +38,14 @@ class ProtoSocket extends UdpSocket {
 	/// This device is reachable at [destination].
 	final Device device;
 
+	/// Allows the following messages to be received without a handler.
+	/// 
+	/// It is important that we default to an error if there is no handler becuase otherwise,
+	/// messages with no handlers won't be handled leading to hard-to-find bugs.
+	final Set<String> allowFallthrough;
+
 	/// Opens a socket for sending and receiving Protobuf messages.
-	ProtoSocket({required this.device, super.destination});
+	ProtoSocket({required this.device, this.allowFallthrough = const {}, super.destination});
 
 	/// Runs every time data is received by the socket. 
 	/// 
@@ -51,7 +57,10 @@ class ProtoSocket extends UdpSocket {
 	void onData(List<int> data) {
 		final wrapped = WrappedMessage.fromBuffer(data);
 		final rawHandler = _handlers[wrapped.name];
-		if (rawHandler == null) throw StateError("No handler registered for ${wrapped.name}");
+		if (rawHandler == null) {
+			if (allowFallthrough.contains(wrapped.name)) return;
+			throw StateError("No handler registered for ${wrapped.name} message on the $device socket");
+		}
 		try { return rawHandler(wrapped.data); }
 		on InvalidProtocolBufferException {
 			// There is a bug where CAN messages are getting mutated over the wire.
@@ -105,14 +114,18 @@ class ProtoSocket extends UdpSocket {
 
 	/// The connection strength, as a percentage to this [device].
 	final connectionStrength = ValueNotifier(0.0);
+
 	/// The latest [HeartbeatEvent] emitted by this socket. 
 	final event = ValueNotifier(HeartbeatEvent.none);
+
 	/// The number of heartbeats received since the last heartbeat was sent.
 	int _heartbeats = 0;
+
 	/// Whether this socket has a stable connection to the [device]/
 	bool get isConnected => connectionStrength.value > 0;
+
 	/// A timer that sends heartbeats to the [device] every [heartbeatInterval].
-	late final RestartableTimer heartbeatTimer;
+	late RestartableTimer heartbeatTimer;
 
 	@override
 	Future<void> init() async {
