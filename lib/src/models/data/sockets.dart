@@ -34,15 +34,27 @@ class Sockets extends Model {
 
 	@override
 	Future<void> init() async {
-		for (final socket in sockets) { await socket.init(); }
+		for (final socket in sockets) { 
+			await socket.init(); 
+			socket.event.addListener(() => onNewEvent(socket.device, socket.event.value));
+		}
 		await updateSockets();
 	}
 
 	@override
 	Future<void> dispose() async {
-		for (final socket in sockets) { await socket.dispose(); }
+		for (final socket in sockets) { 
+			await socket.dispose();
+		}
 		super.dispose();
 	}
+
+	/// Notifies the user when a device connects or disconnects.
+	void onNewEvent(Device device, HeartbeatEvent event) => switch (event) {
+		HeartbeatEvent.connected => models.home.setMessage(severity: Severity.info, text: "The ${device.humanName} has connected"),
+		HeartbeatEvent.disconnected => models.home.setMessage(severity: Severity.critical, text: "The ${device.humanName} has disconnected"),
+		HeartbeatEvent.none => "",
+	};
 
 	/// Set the right IP addresses for the rover or tank.
 	Future<void> updateSockets() async {

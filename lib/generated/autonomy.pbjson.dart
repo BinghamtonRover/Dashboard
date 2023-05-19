@@ -54,11 +54,11 @@ final $typed_data.Uint8List autonomyDataDescriptor = $convert.base64Decode('CgxB
 const AutonomyCommand$json = const {
   '1': 'AutonomyCommand',
   '2': const [
-    const {'1': 'enable', '3': 1, '4': 1, '5': 8, '10': 'enable'},
-    const {'1': 'destination', '3': 2, '4': 1, '5': 11, '6': '.GpsCoordinates', '10': 'destination'},
-    const {'1': 'task', '3': 3, '4': 1, '5': 14, '6': '.AutonomyTask', '10': 'task'},
+    const {'1': 'destination', '3': 1, '4': 1, '5': 11, '6': '.GpsCoordinates', '10': 'destination'},
+    const {'1': 'task', '3': 2, '4': 1, '5': 14, '6': '.AutonomyTask', '10': 'task'},
+    const {'1': 'aruco_id', '3': 3, '4': 1, '5': 5, '10': 'arucoId'},
   ],
 };
 
 /// Descriptor for `AutonomyCommand`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List autonomyCommandDescriptor = $convert.base64Decode('Cg9BdXRvbm9teUNvbW1hbmQSFgoGZW5hYmxlGAEgASgIUgZlbmFibGUSMQoLZGVzdGluYXRpb24YAiABKAsyDy5HcHNDb29yZGluYXRlc1ILZGVzdGluYXRpb24SIQoEdGFzaxgDIAEoDjINLkF1dG9ub215VGFza1IEdGFzaw==');
+final $typed_data.Uint8List autonomyCommandDescriptor = $convert.base64Decode('Cg9BdXRvbm9teUNvbW1hbmQSMQoLZGVzdGluYXRpb24YASABKAsyDy5HcHNDb29yZGluYXRlc1ILZGVzdGluYXRpb24SIQoEdGFzaxgCIAEoDjINLkF1dG9ub215VGFza1IEdGFzaxIZCghhcnVjb19pZBgDIAEoBVIHYXJ1Y29JZA==');
