@@ -8,6 +8,21 @@ HSVColor minColor = HSVColor.fromColor(Colors.redAccent[700]!);
 /// The rightmost color on the spectrum.
 HSVColor maxColor = HSVColor.fromColor(Colors.pink);
 
+/// Utilities for color data.
+extension ColorUtils on ProtoColor {
+	/// Creates a new [ProtoColor] from a Flutter [Color].
+	ProtoColor fromColor(Color other) => ProtoColor(
+		red: other.red / 255,
+		green: other.green / 255,
+		blue: other.blue / 255,
+	);
+
+	/// Converts this message to a Flutter [Color].
+	Color toColor() => Color.fromARGB(
+		255, (red*255).toInt(), (green*255).toInt(), (blue*255).toInt(),
+	);
+}
+
 /// A view model to modify a color and send it to the rover.
 class ColorBuilder extends ValueBuilder<Color> {
 	/// The color to show in the UI.
