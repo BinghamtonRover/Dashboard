@@ -1,3 +1,5 @@
+import "package:async/async.dart";
+import "package:flutter/foundation.dart";  // <-- Used for ValueNotifier
 import "package:protobuf/protobuf.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -7,9 +9,13 @@ import "udp_socket.dart";
 /// A callback to execute with a specific serialized Protobuf message.
 typedef MessageHandler<T extends Message> = void Function(T);
 
+enum HeartbeatEvent {
+	connected, disconnected, none
+}
+
 /// A service to send and receive Protobuf messages over a UDP socket.
 /// 
-/// /// All messages are first wrapped in a [WrappedMessage] to identify their type before being
+/// All messages are first wrapped in a [WrappedMessage] to identify their type before being
 /// sent over the network. That means you'll need to call [registerHandler] to tell this class
 /// which type you're expecting to handle and how to decode then handle it. [sendMessage] will 
 /// automatically wrap your message for you. 
@@ -21,8 +27,10 @@ class ProtoSocket extends UdpSocket {
 	/// Handlers for every possible type of Protobuf message in serialized form.
 	final Map<String, RawDataHandler> _handlers = {};
 
+	final Device device;
+
 	/// Opens a socket for sending and receiving Protobuf messages.
-	ProtoSocket({super.destination});
+	ProtoSocket({required this.device, super.destination});
 
 	/// Runs every time data is received by the socket. 
 	/// 
@@ -83,4 +91,60 @@ class ProtoSocket extends UdpSocket {
 
 	/// Wraps the [message] in a [WrappedMessage] container and sends it to the rover. 
 	void sendMessage(Message message) => sendBytes(message.wrapped.writeToBuffer());
+
+	// ==================== Heartbeats ====================
+
+	final connectionStrength = ValueNotifier(0.0);
+	final status = ValueNotifier(HeartbeatEvent.none);
+	int _heartbeats = 0;
+	bool get isConnected => connectionStrength.value > 0;
+	late final RestartableTimer heartbeatTimer;
+
+	@override
+	Future<void> init() async {
+		super.init();
+		heartbeatTimer = RestartableTimer(heartbeatInterval, sendHeartbeat);
+		registerHandler<Connect>(
+			name: Connect().messageName,
+			decoder: Connect.fromBuffer,
+			handler: (_) => _heartbeats++,
+		);
+	}
+
+	@override
+	Future<void> dispose() async {
+		heartbeatTimer.cancel();
+		super.dispose();
+	}
+
+	@override
+	Future<void> reset() async {
+		super.reset();
+		heartbeatTimer.reset();
+	} 
+
+	Future<void> sendHeartbeat() async {
+		_heartbeats = 0;
+		sendMessage(Connect(sender: Device.DASHBOARD, receiver: device));
+		await Future<void>.delayed(heartbeatWaitDelay);
+		final wasConnected = isConnected;
+		if (_heartbeats > 0) {
+			if (!wasConnected) status.value = HeartbeatEvent.connected;
+			connectionStrength.value += connectionIncrement * _heartbeats;
+		} else {
+			if (wasConnected) status.value = HeartbeatEvent.disconnected;
+			connectionStrength.value -= connectionIncrement;
+		}
+		connectionStrength.value = connectionStrength.value.clamp(0, 1);
+		heartbeatTimer.reset();
+	}
 }
+
+/// How much each successful/missed handshake is worth, as a percent.
+const connectionIncrement = 0.2;
+
+/// How long to wait between handshakes.
+const heartbeatInterval = Duration(milliseconds: 200);
+
+/// How long to wait for incoming heartbeats after sending them out.
+const heartbeatWaitDelay = Duration(milliseconds: 100);
