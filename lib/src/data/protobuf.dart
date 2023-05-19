@@ -30,6 +30,7 @@ extension MessageUtils on Message {
 	/// Returns a [WrappedMessage] representing this message with a timestamp
 	WrappedMessage wrapWithTimestamp(Timestamp timestamp) => WrappedMessage(
 		data: writeToBuffer(),
+    name: messageName,
 		timestamp: timestamp,
 	);
 

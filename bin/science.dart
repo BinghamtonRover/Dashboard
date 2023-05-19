@@ -6,7 +6,10 @@ import "package:rover_dashboard/data.dart";
 
 /// Change these paths as needed
 const oldPath = r"C:\Users\llesche1\Documents\Dashboard\logs\2023-5-5-1-7\ScienceData.log";
-const newPath = r"C:\Users\llesche1\Documents\Dashboard\logs\2023-5-5-1-7\ScienceData2.log";
+const newPath = r"C:\Users\Aidan\Documents\Dashboard\logs\2023-5-18-23-44\FakeData.log";
+
+
+final random = Random();
 
 /// Return true to keep this data in the dataset, or false to remove it.
 /// 
@@ -66,9 +69,76 @@ List<WrappedMessage> newData = [
 		).wrapWithTimestamp(Timestamp().now() + Duration(seconds: t + 1))
 ];
 
-// ==================== Do not edit unless you're Aidan or Levi ====================
+List<WrappedMessage> fake1 = [
+    // Adds methane=1 for every second from t=1 to t=100 seconds
+    for (int t = 0; t < 900; t++)
+    ScienceData(
+      sample: 0,
+      pH: 7.0 - (3*t/1000) + (0.5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 0.5]
+      temperature: 35.0 - (10*t)/900 + (random.nextDouble() - random.nextDouble()), // add or subtract [0, 1]
+      co2: 420 + (random.nextDouble() * 5),
+      methane: ((200*t)/1000) + (5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 5]
+      humidity: ((25*t)/1000) + (random.nextDouble() - random.nextDouble()), // add or subtract [0, 1]
+    ).wrapWithTimestamp(Timestamp().now() + Duration(seconds: t)),
 
-final random = Random();
+  for (int t = 900; t < 1000; t++)
+    ScienceData(
+      sample: 0,
+      pH: 7.0 - (3*t/1000) + (0.5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 0.5]
+      temperature: (5*t)/100 - 20 + (random.nextDouble() - random.nextDouble()), // add or subtract [0, 1],
+      co2: 400 + (20*t)/1000,
+      methane: ((200*t)/1000) + (5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 5]
+      humidity: ((25*t)/1000) + (random.nextDouble() - random.nextDouble()), // add or subtract [0, 1]
+    ).wrapWithTimestamp(Timestamp().now() + Duration(seconds: t)),
+];
+
+List<WrappedMessage> fake2 = [
+    // Adds methane=1 for every second from t=1 to t=100 seconds
+    for (int t = 0; t < 900; t++)
+    ScienceData(
+      sample: 1,
+      pH: 7.0 - (3*t/1000) + (0.5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 0.5]
+      temperature: 35.0 - (10*t)/900 + (random.nextDouble() - random.nextDouble()), // add or subtract [0, 1]
+      co2: (400 + (20*t)/1000) + (0.5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 0.5]
+      methane: (200*t)/1000 + (5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 5]
+      humidity: ((25*t)/1000) + (random.nextDouble() - random.nextDouble()), // add or subtract [0, 1]
+    ).wrapWithTimestamp(Timestamp().now() + Duration(seconds: t)),
+
+  for (int t = 900; t < 1000; t++)
+    ScienceData(
+      sample: 1,
+      pH: 7.0 - (3*t/1000) + (0.5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 0.5]
+      temperature: (5*t)/100 - 20 + (random.nextDouble() - random.nextDouble()), // add or subtract [0, 1]
+      co2: (400 + (20*t)/1000) + (0.5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 0.5]
+      methane: (200*t)/1000 + (5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 5]
+      humidity: ((25*t)/1000) + (random.nextDouble() - random.nextDouble()), // add or subtract [0, 1]
+    ).wrapWithTimestamp(Timestamp().now() + Duration(seconds: t)),
+];
+
+List<WrappedMessage> fake3 = [
+    // Adds methane=1 for every second from t=1 to t=100 seconds
+    for (int t = 0; t < 950; t++)
+    ScienceData(
+      sample: 2,
+      pH: 7.0 - (3*t/1000) + (0.5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 0.5]
+      temperature: 35.0 - (10*t)/950 + (random.nextDouble() - random.nextDouble()), // add or subtract [0, 1]
+      co2: (400 + (20*t)/1000) + (0.5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 0.5]
+      methane: (200*t)/1000 + (5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 5]
+      humidity: ((25*t)/1000) + (random.nextDouble() - random.nextDouble()), // add or subtract [0, 1]
+    ).wrapWithTimestamp(Timestamp().now() + Duration(seconds: t)),
+
+  for (int t = 950; t < 1000; t++)
+    ScienceData(
+      sample: 2,
+      pH: 7.0 - (3*t/1000) + (0.5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 0.5]
+      temperature: (5*t)/50 - 70 + (random.nextDouble() - random.nextDouble()), // add or subtract [0, 1]
+      co2: (400 + (20*t)/1000) + (0.5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 0.5]
+      methane: (200*t)/1000 + (5 * (random.nextDouble() - random.nextDouble())), // add or subtract [0, 5]
+      humidity: ((25*t)/1000) + (random.nextDouble() - random.nextDouble()), // add or subtract [0, 1]
+    ).wrapWithTimestamp(Timestamp().now() + Duration(seconds: t)),
+];
+
+// ==================== Do not edit unless you're Aidan or Levi ====================
 
 extension on num {
 	bool isOutOfBounds({required num min, required num max}) => (this > max) || (this != 0 && this < min);
@@ -89,15 +159,18 @@ Future<List<WrappedMessage>> readLogs(File file) async => [
 ];
 
 void main() async {
-	int pruned = 0;
-	if (File(newPath).existsSync()) await File(newPath).delete();
-	final List<WrappedMessage> oldData = await readLogs(File(oldPath));
-	for (final wrapper in oldData + newData) {
-		final data = ScienceData.fromBuffer(wrapper.data);
-		if (!shouldKeepData(data)) { pruned++; continue; }
-		else { await logData(modifyData(wrapper.timestamp, data)); }
-	}
-	print("Pruned $pruned rows of data");  // ignore: avoid_print
+	for(final wrapper in fake1){
+    final data = ScienceData.fromBuffer(wrapper.data);
+    await logData(modifyData(wrapper.timestamp, data));
+  }
+  for(final wrapper in fake2){
+    final data = ScienceData.fromBuffer(wrapper.data);
+    await logData(modifyData(wrapper.timestamp, data));
+  }
+  for(final wrapper in fake3){
+    final data = ScienceData.fromBuffer(wrapper.data);
+    await logData(modifyData(wrapper.timestamp, data));
+  }
 }
 
 // ==================== Do not edit unless you're Aidan or Levi ====================

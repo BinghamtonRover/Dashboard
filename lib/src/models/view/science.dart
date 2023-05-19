@@ -132,7 +132,7 @@ class ScienceModel with ChangeNotifier {
 	void addMessage(WrappedMessage wrapper) {
 		final data = wrapper.decode(ScienceData.fromBuffer);
 		if (wrapper.name != ScienceData().messageName) throw ArgumentError("Incorrect log type: ${wrapper.name}");
-		// final sample = data.sample;
+		final sample = data.sample;
 		if (!wrapper.hasTimestamp()) { throw ArgumentError("Data is missing a timestamp"); }
 		if (sample >= numSamples) throw RangeError("Got data for sample #${sample + 1}, but there are only $numSamples samples.\nChange the number of samples in the settings and reload.");
 		if (data.methane != 0) allSamples[methane]![sample].addReading(wrapper.timestamp, data.methane); 
