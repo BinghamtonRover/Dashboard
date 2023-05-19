@@ -52,7 +52,7 @@ class AutonomyModel with ChangeNotifier {
 
 	/// Listens for incoming autonomy or position data.
 	AutonomyModel() {
-		models.sockets.data.registerHandler<AutonomyData>(
+		models.sockets.autonomy.registerHandler<AutonomyData>(
 			name: AutonomyData().messageName,
 			decoder: AutonomyData.fromBuffer,
 			handler: onNewData, 
@@ -65,7 +65,7 @@ class AutonomyModel with ChangeNotifier {
 
 	@override
 	void dispose() {
-		models.sockets.data.removeHandler(AutonomyData().messageName);
+		models.sockets.autonomy.removeHandler(AutonomyData().messageName);
 		models.rover.metrics.removeListener(recenterRover);
 		command.dispose();
 		super.dispose();
@@ -80,27 +80,10 @@ class AutonomyModel with ChangeNotifier {
 	];
 
 	/// The rover's current position.
-	GpsCoordinates get roverPosition => 
-		GpsCoordinates(latitude: 523, longitude: 432);
-		// models.rover.metrics.position.data.gps;
+	GpsCoordinates get roverPosition => models.rover.metrics.position.data.gps;
 
 	/// The autonomy data as received from the rover.
-	AutonomyData data = AutonomyData(
-		state: AutonomyState.PATHING,
-		task: AutonomyTask.VISUAL_MARKER,
-		destination: GpsCoordinates(latitude: 525, longitude: 435),
-		obstacles: [  // an L shape
-			GpsCoordinates(latitude: 525, longitude: 434),
-			GpsCoordinates(latitude: 525, longitude: 433),
-			GpsCoordinates(latitude: 524, longitude: 434),
-		],
-		path: [
-			GpsCoordinates(latitude: 523, longitude: 433),
-			GpsCoordinates(latitude: 523, longitude: 434),
-			GpsCoordinates(latitude: 523, longitude: 435),
-			GpsCoordinates(latitude: 524, longitude: 435),
-		],
-	);
+	AutonomyData data = AutonomyData();
 
 	/// The grid of size [gridSize] with the rover in the center, ready to draw on the UI.
 	List<List<AutonomyCell>> get grid {
