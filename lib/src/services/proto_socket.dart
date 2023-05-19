@@ -136,10 +136,17 @@ class ProtoSocket extends UdpSocket {
 			decoder: Connect.fromBuffer,
 			handler: (_) => _heartbeats++,
 		);
+		registerHandler<Disconnect>(
+			name: Disconnect().messageName,
+			decoder: Disconnect.fromBuffer,
+			handler: (_) => event.value = HeartbeatEvent.disconnected,
+		);
 	}
 
 	@override
 	Future<void> dispose() async {
+		removeHandler(Connect().messageName);
+		removeHandler(Disconnect().messageName);
 		heartbeatTimer.cancel();
 		super.dispose();
 	}
@@ -176,4 +183,4 @@ const connectionIncrement = 0.2;
 const heartbeatInterval = Duration(milliseconds: 200);
 
 /// How long to wait for incoming heartbeats after sending them out.
-const heartbeatWaitDelay = Duration(milliseconds: 100);
+const heartbeatWaitDelay = Duration(milliseconds: 200);

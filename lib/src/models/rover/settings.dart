@@ -49,7 +49,14 @@ class RoverSettings extends Model {
 		_handshakes = [null, null, null, null];
 		models.sockets.data.sendMessage(value);
 		await Future<void>.delayed(confirmationDelay);
-		return !_handshakes.contains(null);
+		for (int index = 0; index < models.sockets.sockets.length; index++) {
+			if (_handshakes[index] != null) continue;
+			final device = models.sockets.sockets[index].device;
+			if (device == Device.MARS_SERVER) continue;  // <-- Until the MARS server is up and running
+			models.home.setMessage(severity: Severity.error, text: "The ${device.humanName} did not respond");
+			return false;
+		}
+		return true;
 	}
 
 	/// Sets the status of the rover.
@@ -65,8 +72,6 @@ class RoverSettings extends Model {
 			models.home.setMessage(severity: Severity.info, text: "Set mode to ${value.humanName}");
 			settings.status = value;
 			notifyListeners();
-		} else { 
-			models.home.setMessage(severity: Severity.error, text: "Failed to set status"); 
 		}
 	} 
 
@@ -80,7 +85,6 @@ class RoverSettings extends Model {
 			notifyListeners();
 			return true;
 		} else { 
-			models.home.setMessage(severity: Severity.error, text: "Failed to set color"); 
 			return false;
 		}
 	}

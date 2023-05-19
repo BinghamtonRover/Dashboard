@@ -50,11 +50,16 @@ class Sockets extends Model {
 	}
 
 	/// Notifies the user when a device connects or disconnects.
-	void onNewEvent(Device device, HeartbeatEvent event) => switch (event) {
-		HeartbeatEvent.connected => models.home.setMessage(severity: Severity.info, text: "The ${device.humanName} has connected"),
-		HeartbeatEvent.disconnected => models.home.setMessage(severity: Severity.critical, text: "The ${device.humanName} has disconnected"),
-		HeartbeatEvent.none => "",
-	};
+	void onNewEvent(Device device, HeartbeatEvent event) {
+		switch (event) {
+			case HeartbeatEvent.connected: 
+				models.home.setMessage(severity: Severity.info, text: "The ${device.humanName} has connected");
+			case HeartbeatEvent.disconnected: 
+				models.home.setMessage(severity: Severity.critical, text: "The ${device.humanName} has disconnected");
+				if (device == Device.VIDEO) models.video.reset();
+			case HeartbeatEvent.none:
+		}
+	}
 
 	/// Set the right IP addresses for the rover or tank.
 	Future<void> updateSockets() async {
