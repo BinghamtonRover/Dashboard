@@ -67,6 +67,7 @@ class AutonomyModel with ChangeNotifier {
 	void dispose() {
 		models.sockets.data.removeHandler(AutonomyData().messageName);
 		models.rover.metrics.removeListener(recenterRover);
+		command.dispose();
 		super.dispose();
 	}
 
