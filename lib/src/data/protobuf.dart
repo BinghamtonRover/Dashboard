@@ -179,3 +179,17 @@ extension AutonomyTaskUtils on AutonomyTask {
 		throw ArgumentError("Unrecognized task: $this");
 	}
 }
+
+/// Utilities for [ScienceState]s.
+extension ScienceStateUtils on ScienceState {
+	/// The human-readable name of the task.
+	String get humanName {
+		switch (this) {
+			case ScienceState.SCIENCE_STATE_UNDEFINED: return "Unknown";
+			case ScienceState.STOP_COLLECTING: return "Idle";
+			case ScienceState.COLLECT_DATA: return "Collecting data";
+		}
+		// Do not use default or else you'll lose exhaustiveness checking.
+		throw ArgumentError("Unrecognized task: $this");
+	}
+}

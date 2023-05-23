@@ -40,6 +40,7 @@ export "src/models/view/autonomy.dart";
 
 // Builder models
 export "src/models/view/builders/autonomy_command.dart";
+export "src/models/view/builders/science_command.dart";
 export "src/models/view/builders/builder.dart";
 export "src/models/view/builders/color_builder.dart";
 export "src/models/view/builders/settings_builder.dart";

@@ -160,36 +160,73 @@ class SciencePage extends StatelessWidget {
 	Widget build(BuildContext context) => ProviderConsumer<ScienceModel>(
 		create: ScienceModel.new,
 		builder: (model) => Stack(children: [
-			ListView(  // The main content of the page
-				padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 32),
-				children: [
-					if (model.errorText != null) ...[
-						const SizedBox(height: 48),
-						Text("Error analyzing the logs", textAlign: TextAlign.center, style: context.textTheme.headlineLarge),
-						const SizedBox(height: 24),
-						Text("Here is the error:", textAlign: TextAlign.center, style: context.textTheme.titleLarge),
-						const SizedBox(height: 12),
-						Text(model.errorText!, textAlign: TextAlign.center, style: context.textTheme.titleMedium),
-					] else if (!model.isLoading) ...[
-						ChartsRow(
-							title: "Details",
-							analyses: model.analysesForSample,
-							builder: (analysis) => LineChart(getDetailsData(analysis, getColor(model.sample / model.numSamples))),
+			Column(children: [
+				Expanded(child: ListView(  // The main content of the page
+					padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 32),
+					children: [
+						if (model.errorText != null) ...[
+							const SizedBox(height: 48),
+							Text("Error analyzing the logs", textAlign: TextAlign.center, style: context.textTheme.headlineLarge),
+							const SizedBox(height: 24),
+							Text("Here is the error:", textAlign: TextAlign.center, style: context.textTheme.titleLarge),
+							const SizedBox(height: 12),
+							Text(model.errorText!, textAlign: TextAlign.center, style: context.textTheme.titleMedium),
+						] else if (!model.isLoading) ...[
+							ChartsRow(
+								title: "Details",
+								analyses: model.analysesForSample,
+								builder: (analysis) => LineChart(getDetailsData(analysis, getColor(model.sample / model.numSamples))),
+							),
+							ChartsRow(
+								title: "Summary",
+								analyses: model.analysesForSample,
+								builder: (analysis) => BarChart(getBarChartData(analysis, getColor(model.sample / model.numSamples))),
+							),
+							ChartsRow(
+								title: "Results",
+								height: 425,
+								analyses: model.analysesForSample,
+								builder: ResultsBox.new,
+							)
+						],
+					],
+				),),
+				ProviderConsumer<ScienceCommandBuilder>(  // the controls bar on the bottom of the page
+					create: () => ScienceCommandBuilder(),
+					builder: (command) => Container(  
+						color: context.colorScheme.surface,
+						height: 48,
+						child: Row(
+							mainAxisSize: MainAxisSize.min,
+							children: [
+								const SizedBox(width: 8),
+								Text("Status", style: context.textTheme.titleLarge),
+								const SizedBox(width: 12),
+								Text("Sample: ${models.rover.metrics.science.data.sample}", style: context.textTheme.titleMedium),
+								const SizedBox(width: 12),
+								Text("State: ${models.rover.metrics.science.data.state.humanName}", style: context.textTheme.titleMedium),
+								// Text("Status: ${model.status.humanName}"),
+								const Spacer(),
+								Text("Send command", style: context.textTheme.titleLarge),
+								SizedBox(width: 150, child: NumberEditor(name: "Sample: ", model: command.sample)),
+								SizedBox(child: DropdownEditor(
+									name: "State: ",
+									value: command.state,
+									onChanged: command.updateState,
+									items: const [ScienceState.STOP_COLLECTING, ScienceState.COLLECT_DATA],
+									humanName: (state) => state.humanName,
+								),),
+								const SizedBox(width: 12),
+								ElevatedButton(
+									onPressed: command.send,
+									child: const Text("Send"),
+								),
+								const SizedBox(width: 12),
+							],
 						),
-						ChartsRow(
-							title: "Summary",
-							analyses: model.analysesForSample,
-							builder: (analysis) => BarChart(getBarChartData(analysis, getColor(model.sample / model.numSamples))),
-						),
-						ChartsRow(
-							title: "Results",
-							height: 425,
-							analyses: model.analysesForSample,
-							builder: ResultsBox.new,
-						)
-					]
-				],
-			),
+					),
+				),
+			],),
 			Container(
 				color: context.colorScheme.surface, 
 				height: 48, 
