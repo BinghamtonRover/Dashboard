@@ -126,22 +126,25 @@ class DropdownEditor<T> extends StatelessWidget {
 	});
 
 	@override
-	Widget build(BuildContext context) => ListTile(
-		title: Text(name),
-		trailing: DropdownButton<T>(
-			focusNode: FocusNode(),
-			value: value,
-			onChanged: (input) { 
-				if (input == null) return;
-				onChanged(input);
-			},
-			items: [
-				for (final other in items) DropdownMenuItem<T>(
-					value: other,
-					child: Text(humanName(other)),
-				),
-			],
-		),
+	Widget build(BuildContext context) => Row(
+		children: [
+			Text(name),
+			SizedBox(width: 12), 
+			DropdownButton<T>(
+				focusNode: FocusNode(),
+				value: value,
+				onChanged: (input) { 
+					if (input == null) return;
+					onChanged(input);
+				},
+				items: [
+					for (final other in items) DropdownMenuItem<T>(
+						value: other,
+						child: Text(humanName(other)),
+					),
+				],
+			),
+		]
 	);
 }
 
