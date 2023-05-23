@@ -110,27 +110,27 @@ class AutonomyData extends $pb.GeneratedMessage {
 
 class AutonomyCommand extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AutonomyCommand', createEmptyInstance: create)
-    ..aOB(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'enable')
-    ..aOM<$0.GpsCoordinates>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'destination', subBuilder: $0.GpsCoordinates.create)
-    ..e<AutonomyTask>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'task', $pb.PbFieldType.OE, defaultOrMaker: AutonomyTask.AUTONOMY_TASK_UNDEFINED, valueOf: AutonomyTask.valueOf, enumValues: AutonomyTask.values)
+    ..aOM<$0.GpsCoordinates>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'destination', subBuilder: $0.GpsCoordinates.create)
+    ..e<AutonomyTask>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'task', $pb.PbFieldType.OE, defaultOrMaker: AutonomyTask.AUTONOMY_TASK_UNDEFINED, valueOf: AutonomyTask.valueOf, enumValues: AutonomyTask.values)
+    ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'arucoId', $pb.PbFieldType.O3)
     ..hasRequiredFields = false
   ;
 
   AutonomyCommand._() : super();
   factory AutonomyCommand({
-    $core.bool? enable,
     $0.GpsCoordinates? destination,
     AutonomyTask? task,
+    $core.int? arucoId,
   }) {
     final _result = create();
-    if (enable != null) {
-      _result.enable = enable;
-    }
     if (destination != null) {
       _result.destination = destination;
     }
     if (task != null) {
       _result.task = task;
+    }
+    if (arucoId != null) {
+      _result.arucoId = arucoId;
     }
     return _result;
   }
@@ -156,32 +156,32 @@ class AutonomyCommand extends $pb.GeneratedMessage {
   static AutonomyCommand? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.bool get enable => $_getBF(0);
+  $0.GpsCoordinates get destination => $_getN(0);
   @$pb.TagNumber(1)
-  set enable($core.bool v) { $_setBool(0, v); }
+  set destination($0.GpsCoordinates v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasEnable() => $_has(0);
+  $core.bool hasDestination() => $_has(0);
   @$pb.TagNumber(1)
-  void clearEnable() => clearField(1);
+  void clearDestination() => clearField(1);
+  @$pb.TagNumber(1)
+  $0.GpsCoordinates ensureDestination() => $_ensure(0);
 
   @$pb.TagNumber(2)
-  $0.GpsCoordinates get destination => $_getN(1);
+  AutonomyTask get task => $_getN(1);
   @$pb.TagNumber(2)
-  set destination($0.GpsCoordinates v) { setField(2, v); }
+  set task(AutonomyTask v) { setField(2, v); }
   @$pb.TagNumber(2)
-  $core.bool hasDestination() => $_has(1);
+  $core.bool hasTask() => $_has(1);
   @$pb.TagNumber(2)
-  void clearDestination() => clearField(2);
-  @$pb.TagNumber(2)
-  $0.GpsCoordinates ensureDestination() => $_ensure(1);
+  void clearTask() => clearField(2);
 
   @$pb.TagNumber(3)
-  AutonomyTask get task => $_getN(2);
+  $core.int get arucoId => $_getIZ(2);
   @$pb.TagNumber(3)
-  set task(AutonomyTask v) { setField(3, v); }
+  set arucoId($core.int v) { $_setSignedInt32(2, v); }
   @$pb.TagNumber(3)
-  $core.bool hasTask() => $_has(2);
+  $core.bool hasArucoId() => $_has(2);
   @$pb.TagNumber(3)
-  void clearTask() => clearField(3);
+  void clearArucoId() => clearField(3);
 }
 

@@ -22,7 +22,7 @@ class Rover extends Model {
 	final controller2 = Controller(1, ArmControls());
 
 	/// Whether the rover is connected.
-	bool get isConnected => models.sockets.connectionStrength > 0;
+	bool get isConnected => models.sockets.data.connectionStrength.value > 0;
 
 	/// The current status of the rover.
 	/// 
