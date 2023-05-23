@@ -92,7 +92,7 @@ class NumberEditor extends StatelessWidget {
 					onChanged: model.update,
 					decoration: InputDecoration(errorText: model.error),
 					controller: model.controller,
-					inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"\d|\."))],
+					inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"\d|\.|-"))],
 				),),
 			],
 		),
