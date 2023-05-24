@@ -28,15 +28,10 @@ extension MessageUtils on Message {
 	String get messageName => info_.messageName;
 
 	/// Returns a [WrappedMessage] representing this message with a timestamp
-	WrappedMessage wrapWithTimestamp(Timestamp timestamp) => WrappedMessage(
-		data: writeToBuffer(),
-		timestamp: timestamp,
-	);
-
-	/// Returns a [WrappedMessage] representing this message with a name.
-	WrappedMessage get wrapped => WrappedMessage(
+	WrappedMessage wrap([DateTime? timestamp]) => WrappedMessage(
 		data: writeToBuffer(),
 		name: messageName,
+		timestamp: Timestamp.fromDateTime(timestamp ?? DateTime.now()),
 	);
 }
 

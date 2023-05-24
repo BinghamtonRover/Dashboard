@@ -41,18 +41,18 @@ WrappedMessage modifyData(Timestamp timestamp, ScienceData data) {
 	// timestamp += Duration(seconds: 1)
 
 	// Wrap the data and return it. Do not delete.
-	return data.wrapWithTimestamp(timestamp);
+	return data.wrap(timestamp.toDateTime());
 }
 
 /// Use this to add new data to your dataset.
 List<WrappedMessage> newData = [
 	// Adds methane=1 for every second from t=1 to t=100 seconds
 	for (int t = 0; t < 100; t++) 
-		ScienceData(methane: 1).wrapWithTimestamp(Timestamp().now() + Duration(seconds: t)),
+		ScienceData(methane: 1).wrap(DateTime.now().add(Duration(seconds: t))),
 
 	// Adds some random methane in an increasing line between t=100 and t=200 seconds
 	for (int t = 100; t < 200; t++) 
-		ScienceData(methane: t + random.nextDouble() * 20).wrapWithTimestamp(Timestamp().now() + Duration(seconds: t)),
+		ScienceData(methane: t + random.nextDouble() * 20).wrap(DateTime.now().add(Duration(seconds: t))),
 
 	// Adds completely random data for t=0 to t=20 seconds, for all three samples
 	for (int s = 0; s < 3; s++) 
@@ -63,7 +63,7 @@ List<WrappedMessage> newData = [
 			co2: t + s + (random.nextInt(5).toDouble()),
 			humidity: t + s + (random.nextInt(13).toDouble()),
 			pH: t + s + (random.nextInt(15).toDouble()),
-		).wrapWithTimestamp(Timestamp().now() + Duration(seconds: t + 1))
+		).wrap(DateTime.now().add(Duration(seconds: t + 1)))
 ];
 
 // ==================== Do not edit unless you're Aidan or Levi ====================
