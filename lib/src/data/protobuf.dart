@@ -28,15 +28,10 @@ extension MessageUtils on Message {
 	String get messageName => info_.messageName;
 
 	/// Returns a [WrappedMessage] representing this message with a timestamp
-	WrappedMessage wrapWithTimestamp(Timestamp timestamp) => WrappedMessage(
-		data: writeToBuffer(),
-		timestamp: timestamp,
-	);
-
-	/// Returns a [WrappedMessage] representing this message with a name.
-	WrappedMessage get wrapped => WrappedMessage(
+	WrappedMessage wrap([DateTime? timestamp]) => WrappedMessage(
 		data: writeToBuffer(),
 		name: messageName,
+		timestamp: Timestamp.fromDateTime(timestamp ?? DateTime.now()),
 	);
 }
 
@@ -174,6 +169,20 @@ extension AutonomyTaskUtils on AutonomyTask {
 			case AutonomyTask.GPS_ONLY: return "GPS only";
 			case AutonomyTask.VISUAL_MARKER: return "Visual marker";
 			case AutonomyTask.BETWEEN_GATES: return "Between gates";
+		}
+		// Do not use default or else you'll lose exhaustiveness checking.
+		throw ArgumentError("Unrecognized task: $this");
+	}
+}
+
+/// Utilities for [ScienceState]s.
+extension ScienceStateUtils on ScienceState {
+	/// The human-readable name of the task.
+	String get humanName {
+		switch (this) {
+			case ScienceState.SCIENCE_STATE_UNDEFINED: return "Unknown";
+			case ScienceState.STOP_COLLECTING: return "Idle";
+			case ScienceState.COLLECT_DATA: return "Collecting data";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized task: $this");

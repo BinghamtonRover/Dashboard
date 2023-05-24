@@ -10,6 +10,20 @@ import "service.dart";
 
 export "serial_errors.dart";
 
+/// Map to figure out what device is connected
+/// 
+/// Used to send data to the correct teensy
+/// <Command, Teensy>
+const Map<String, Device> teensyCommands = {
+	"ArmCommand": Device.ARM,
+	"GripperCommand": Device.GRIPPER,
+	"ScienceCommand": Device.SCIENCE,
+	"ElecticalCommand": Device.ELECTRICAL,
+	"DriveCommand": Device.DRIVE,
+	"MarsCommand": Device.MARS,
+	"FirmwareCommand": Device.FIRMWARE
+};
+
 /// A service to interact with Serial Port(s) from dashboard.
 ///
 /// Since a device may not be connected right away, or may be disconnected after the dashboard is
@@ -63,7 +77,7 @@ class Serial extends Service {
 
 		// Send a handshake, expect one back
 		await sendMessage(Connect(sender: Device.DASHBOARD, receiver: Device.FIRMWARE));
-		await Future<void>.delayed(const Duration(milliseconds: 1500));
+		await Future<void>.delayed(const Duration(milliseconds: 2000));
 		final received = _writer!.read(4); // nice way to read X bytes at a time
 		if (received.isEmpty) throw MalformedSerialPacket(packet: received);
 		try {
