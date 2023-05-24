@@ -10,13 +10,13 @@ class ScienceControls extends RoverControls {
 
 	@override
 	List<Message> parseInputs(GamepadState state) => [
-		if (state.normalLeftY != 0) ScienceCommand(vacuumLinear: state.normalLeftY*-10000),
+		if (state.normalLeftY != 0) ScienceCommand(vacuumLinear: state.normalLeftY*1000),
 		if (state.normalRightY != 0) ScienceCommand(scienceLinear: state.normalRightY*-10000),
-		if (state.normalDpadX != 0) ScienceCommand(dirtLinear: state.normalDpadX * -200000),
+		if (state.normalDpadX != 0) ScienceCommand(dirtLinear: state.normalDpadX * 10000),
 		if (state.dpadUp) ScienceCommand(dirtRelease: DirtReleaseState.CLOSE_DIRT),
 		if (state.dpadDown) ScienceCommand(dirtRelease: DirtReleaseState.OPEN_DIRT),
-		if (state.leftShoulder) ScienceCommand(dirtCarousel: -15000),
-		if (state.rightShoulder) ScienceCommand(dirtCarousel: 750),
+		if (state.leftShoulder) ScienceCommand(dirtCarousel: -1000),
+		if (state.rightShoulder) ScienceCommand(dirtCarousel: 1000),
 		// These must be sent at all times to allow sending zero values
 		if (state.buttonA) ScienceCommand(pump1: PumpState.PUMP_ON)
 		else ScienceCommand(pump1: PumpState.PUMP_OFF),
