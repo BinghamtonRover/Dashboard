@@ -150,6 +150,7 @@ class VideoFeedState extends State<VideoFeed> {
 			case CameraStatus.CAMERA_DISABLED: return "Camera is disabled.\nClick the settings icon to enabled it.";
 			case CameraStatus.CAMERA_NOT_RESPONDING: return "Camera is not responding";
 			case CameraStatus.FRAME_TOO_LARGE: return "Camera is reading too much detail\nReduce the quality or resolution";
+			case CameraStatus.CAMERA_HAS_NO_NAME: return "Camera has no name\nChange lib/constants.py on the video Pi";
 			case CameraStatus.CAMERA_ENABLED: 
 				if (data.hasFrame()) { return "Loading feed..."; }
 				else { return "Starting camera..."; }

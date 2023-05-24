@@ -26,6 +26,7 @@ class ViewsSelector extends StatelessWidget {
 			case CameraStatus.CAMERA_DISABLED: return const Icon(Icons.circle, size: size, color: Colors.orange);
 			case CameraStatus.CAMERA_NOT_RESPONDING: return const Icon(Icons.circle, size: size, color: Colors.red);
 			case CameraStatus.FRAME_TOO_LARGE: return const Icon(Icons.circle, size: size, color: Colors.orange);
+			case CameraStatus.CAMERA_HAS_NO_NAME: return const Icon(Icons.circle, size: size, color: Colors.black);  // won't happen
 		}
 		// Do not use `default` or you will lose exhaustiveness checking
 		throw ArgumentError("Unrecognized status: $status");
