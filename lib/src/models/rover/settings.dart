@@ -14,6 +14,9 @@ class RoverSettings extends Model {
 	/// The settings we will send to the rover.
 	UpdateSetting settings = UpdateSetting(status: RoverStatus.MANUAL);
 
+	/// A shorthand for accessing [UpdateSetting.status].
+	RoverStatus get status => settings.status;
+
 	/// The last received confirmation from each socket.
 	List<UpdateSetting?> _handshakes = [null, null, null, null];
 
@@ -68,11 +71,11 @@ class RoverSettings extends Model {
 		models.sockets.autonomy.sendMessage(message);
 		models.sockets.mars.sendMessage(message);
 		
-		if (await tryChangeSettings(message)) {
-			models.home.setMessage(severity: Severity.info, text: "Set mode to ${value.humanName}");
-			settings.status = value;
-			notifyListeners();
-		}
+		if (!await tryChangeSettings(message)) return;
+		models.home.setMessage(severity: Severity.info, text: "Set mode to ${value.humanName}");
+		settings.status = value;
+		models.rover.status.value = value;
+		notifyListeners();
 	} 
 
 	/// Changes the color of the rover's LED strip.
@@ -83,9 +86,7 @@ class RoverSettings extends Model {
 			models.home.setMessage(severity: Severity.info, text: "Successfully changed color");
 			settings.color = color;
 			notifyListeners();
-			return true;
-		} else { 
-			return false;
 		}
+		return result;
 	}
 }

@@ -54,8 +54,10 @@ class Sockets extends Model {
 		switch (event) {
 			case HeartbeatEvent.connected: 
 				models.home.setMessage(severity: Severity.info, text: "The ${device.humanName} has connected");
+				if (device == Device.SUBSYSTEMS) models.rover.status.value = models.rover.settings.status;
 			case HeartbeatEvent.disconnected: 
 				models.home.setMessage(severity: Severity.critical, text: "The ${device.humanName} has disconnected");
+				if (device == Device.SUBSYSTEMS) models.rover.status.value = RoverStatus.DISCONNECTED;
 				if (device == Device.VIDEO) models.video.reset();
 			case HeartbeatEvent.none:
 		}

@@ -96,40 +96,42 @@ class StatusIcons extends StatelessWidget {
 	}
 
 	@override
-	Widget build(BuildContext context) => Consumer<Rover>(
-		builder: (_, rover, __) => Row(
-			children: [
-				Tooltip(
-					message: "Battery: ${(rover.metrics.electrical.battery*100).toStringAsFixed(0)}%",
-					child: Icon(  // battery level
-						rover.isConnected 
-							? getBatteryIcon(rover.metrics.electrical.battery)
+	Widget build(BuildContext context) => Row(
+		children: [
+			AnimatedBuilder(  // battery level
+				animation: Listenable.merge([models.rover.metrics.electrical, models.rover.status]),
+				builder: (context, _) => Tooltip(
+					message: "Battery: ${(models.rover.metrics.electrical.battery*100).toStringAsFixed(0)}%",
+					child: Icon(
+						models.rover.isConnected
+							? getBatteryIcon(models.rover.metrics.electrical.battery)
 							: Icons.battery_unknown,
-						color: getColor(rover.metrics.electrical.battery),
+						color: getColor(models.rover.metrics.electrical.battery),
 					),
 				),
-				ValueListenableBuilder<double>(
-					valueListenable: models.sockets.data.connectionStrength,
-					builder: (context, value, child) => IconButton(
-						tooltip: "${models.sockets.connectionSummary}\nClick to reset",
-						icon: Icon(  // network strength
-							rover.isConnected
-								? getNetworkIcon(value)
-								: Icons.signal_wifi_off_outlined,
-							color: getColor(value),
-						),
-						onPressed: () async {
-							await models.sockets.reset();
-							models.home.setMessage(severity: Severity.info, text: "Network reset");
-						},
-					),
-				),
-				PopupMenuButton(  // status
-					tooltip: "Change mode",
-					onSelected: rover.settings.setStatus,
+			),
+			ValueListenableBuilder<double>(  // network strength
+				valueListenable: models.sockets.data.connectionStrength,
+				builder: (context, value, child) => IconButton(
+					tooltip: "${models.sockets.connectionSummary}\nClick to reset",
 					icon: Icon(
-						getStatusIcon(rover.status),
-						color: getStatusColor(rover.status),
+						value > 0 ? getNetworkIcon(value) : Icons.signal_wifi_off_outlined,
+						color: getColor(value),
+					),
+					onPressed: () async {
+						await models.sockets.reset();
+						models.home.setMessage(severity: Severity.info, text: "Network reset");
+					},
+				),
+			),
+			ValueListenableBuilder<RoverStatus>(  // status
+				valueListenable: models.rover.status,
+				builder: (context, value, child) => PopupMenuButton(
+					tooltip: "Change mode",
+					onSelected: models.rover.settings.setStatus,
+					icon: Icon(
+						getStatusIcon(value),
+						color: getStatusColor(value),
 					),
 					itemBuilder: (_) => [
 						for (final value in RoverStatus.values)
@@ -137,9 +139,9 @@ class StatusIcons extends StatelessWidget {
 								PopupMenuItem(value: value, child: Text(value.humanName))
 					],
 				),
-				const SizedBox(width: 4),
-			],
-		),
+			),
+			const SizedBox(width: 4),
+		],
 	);
 }
 
