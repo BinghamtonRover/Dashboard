@@ -78,11 +78,13 @@ class VideoFeedState extends State<VideoFeed> {
 		super.initState();
 		data = models.video.feeds[widget.name]!;
 		models.video.addListener(updateImage);
+		models.sockets.video.event.addListener(updateImage);
 	}
 
 	@override
 	void dispose() {
 		models.video.removeListener(updateImage);
+		models.sockets.video.event.removeListener(updateImage);
 		imageLoader.dispose();
 		super.dispose();
 	}
@@ -110,7 +112,7 @@ class VideoFeedState extends State<VideoFeed> {
 				width: double.infinity,
 				padding: const EdgeInsets.all(4),
 				alignment: Alignment.center,
-				child: imageLoader.hasImage && data.details.status == CameraStatus.CAMERA_ENABLED 
+				child: models.sockets.video.isConnected && imageLoader.hasImage && data.details.status == CameraStatus.CAMERA_ENABLED 
 					? Row(children: [
 							Expanded(child: RawImage(image: imageLoader.image, fit: BoxFit.contain))
 					],)
@@ -140,12 +142,11 @@ class VideoFeedState extends State<VideoFeed> {
 
 	/// Displays an error message describing why `image == null`.
 	String get errorMessage {
+		if (!models.sockets.video.isConnected) return "The video program is not connected";
 		switch (data.details.status) {
 			case CameraStatus.CAMERA_LOADING: return "Camera is loading...";
 			case CameraStatus.CAMERA_STATUS_UNDEFINED: return "Unknown error";
-			case CameraStatus.CAMERA_DISCONNECTED: 
-				if (!models.rover.isConnected) return "The rover is not connected";
-				return "Camera is not connected";
+			case CameraStatus.CAMERA_DISCONNECTED: return "Camera is not connected";
 			case CameraStatus.CAMERA_DISABLED: return "Camera is disabled.\nClick the settings icon to enabled it.";
 			case CameraStatus.CAMERA_NOT_RESPONDING: return "Camera is not responding";
 			case CameraStatus.FRAME_TOO_LARGE: return "Camera is reading too much detail\nReduce the quality or resolution";
