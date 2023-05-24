@@ -10,12 +10,15 @@ class PositionMetrics extends Metrics<RoverPosition> {
 	@override
 	String get name => "Position";
 
+	GpsCoordinates get baseStation => _baseStation ?? data.gps;
+	GpsCoordinates? _baseStation;
+
 	@override
 	List<String> get allMetrics => [  
     "Latitude: ${data.gps.latitude}",
 		"Longitude: ${data.gps.longitude}",
 		"Altitude: ${data.gps.altitude}",
 		"Orientation: ${data.orientation.y}",
-    "Distance to base stattion: ${data.gps.distanceTo(data.baseStation)}",
+    "Distance to base stattion: ${data.gps.distanceTo(baseStation)}",
 	];
 }

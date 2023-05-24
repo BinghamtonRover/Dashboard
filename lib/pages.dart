@@ -28,6 +28,9 @@ class Routes {
 	/// The name of the autonomy page.
 	static const String autonomy = "Autonomy"; 
 
+	/// The name of the MARS page.
+	static const String mars = "MARS";
+
 	/// The name of the blank page.
 	static const String blank = "blank";
 }
