@@ -92,8 +92,15 @@ class ScienceModel with ChangeNotifier {
 		]
 	};
 
+	/// The [Metrics] model for science data.
+	ScienceMetrics get metrics => models.rover.metrics.science;
+
+	/// Whether to listen for new data from the rover. This is false after loading a file.
+	bool isListening = true;
+
 	/// Listens to all the [ScienceTestBuilder]s in the UI.
 	ScienceModel() {
+		metrics.addListener(updateData);
 		for (final sample in analysesForSample) {
 			sample.testBuilder.addListener(notifyListeners);
 		}
@@ -109,10 +116,18 @@ class ScienceModel with ChangeNotifier {
 
 	@override
 	void dispose() {
+		metrics.removeListener(updateData);
 		for (final sample in analysesForSample) {
 			sample.testBuilder.dispose();
 		}
 		super.dispose();
+	}
+
+	/// Updates the graph using [addMessage] with the latest data from [metrics].
+	void updateData() {
+		if (!isListening) return;
+		addMessage(metrics.data.wrap());
+		notifyListeners();
 	}
 
 	/// Updates the [sample] variable.
@@ -130,9 +145,9 @@ class ScienceModel with ChangeNotifier {
 
 	/// Adds a [WrappedMessage] containing a [ScienceData] to the UI.
 	void addMessage(WrappedMessage wrapper) {
-		final data = wrapper.decode(ScienceData.fromBuffer);
 		if (wrapper.name != ScienceData().messageName) throw ArgumentError("Incorrect log type: ${wrapper.name}");
-		// final sample = data.sample;
+		final data = wrapper.decode(ScienceData.fromBuffer);
+		final sample = data.sample;
 		if (!wrapper.hasTimestamp()) { throw ArgumentError("Data is missing a timestamp"); }
 		if (sample >= numSamples) throw RangeError("Got data for sample #${sample + 1}, but there are only $numSamples samples.\nChange the number of samples in the settings and reload.");
 		if (data.methane != 0) allSamples[methane]![sample].addReading(wrapper.timestamp, data.methane); 
@@ -149,11 +164,14 @@ class ScienceModel with ChangeNotifier {
 				analysis.clear();
 			}
 		}
+		isListening = true;
+		models.home.setMessage(severity: Severity.info, text: "Science UI will update on new data");
 	}
 
 	/// Calls [addMessage] for each message in the picked file.
 	Future<void> loadFile() async {
 		// Pick a file
+		clear();
 		isLoading = true;
 		notifyListeners();
 		final result = await FilePicker.platform.pickFiles(
@@ -169,12 +187,12 @@ class ScienceModel with ChangeNotifier {
 		// Read the file
 		final file = File(result.paths.first!);
 		try {
-			clear();
 			final messages = await services.files.readLogs(file);
 			messages.forEach(addMessage);
-			updateSample(0);
 			errorText = null;
 			isLoading = false;
+			isListening = false;
+			models.home.setMessage(severity: Severity.info, text: "Science logs loaded, new data will be ignored");
 			notifyListeners();
 		} catch (error) {
 			errorText = error.toString();

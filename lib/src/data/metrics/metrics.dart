@@ -1,3 +1,4 @@
+import "package:flutter/foundation.dart";
 import "../protobuf.dart";
 
 /// A readout of metrics reported by one of the rover's subsystems. 
@@ -7,12 +8,12 @@ import "../protobuf.dart";
 /// ```dart
 /// class ScienceMetrics extends Metrics<ScienceMessage> { }
 /// ```
-abstract class Metrics<T extends Message> {
+abstract class Metrics<T extends Message> with ChangeNotifier {
 	/// The underlying data used to get these metrics.
 	final T data;
 
 	/// A const constructor for metrics.
-	const Metrics(this.data);
+	Metrics(this.data);
 
 	/// A collective name for this group of metrics (usually the name of the subsystem).
 	String get name;
@@ -24,5 +25,8 @@ abstract class Metrics<T extends Message> {
 	List<String> get allMetrics;
 
 	/// Updates [data] with new data.
-	void update(T newData) => data.mergeFromMessage(newData);
+	void update(T newData) {
+		data.mergeFromMessage(newData);
+		notifyListeners();
+	}
 }

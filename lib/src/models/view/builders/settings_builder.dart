@@ -272,7 +272,7 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 		isLoading = true;
 		notifyListeners();
 		await models.settings.update(value);
-		await models.sockets.init();
+		await models.sockets.reset();
 		models.video.reset();
 		isLoading = false;
 		notifyListeners();
