@@ -4,11 +4,15 @@ import "package:rover_dashboard/services.dart";
 import "arm.dart";
 import "autonomy.dart";
 import "drive.dart";
+import "mars.dart";
+import "none.dart";
 import "science.dart";
 
 export "arm.dart";
 export "autonomy.dart";
 export "drive.dart";
+export "mars.dart";
+export "none.dart";
 export "science.dart";
 
 /// How often to check the gamepad for new button presses.
@@ -29,6 +33,8 @@ abstract class RoverControls {
 			case OperatingMode.science: return ScienceControls();
 			case OperatingMode.autonomy: return AutonomyControls();
 			case OperatingMode.drive: return DriveControls();
+			case OperatingMode.mars: return MarsControls();
+			case OperatingMode.none: return NoControls();
 		}
 	}
 

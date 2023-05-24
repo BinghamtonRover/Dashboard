@@ -20,6 +20,10 @@ enum OperatingMode {
 	/// Focus on helping the user understand the rover's decisions.
 	autonomy("Autonomy"), 
 
+	mars("MARS"),
+
+	none("None"),
+
 	/// Drive mode. 
 	/// 
 	/// Focus on helping the user simply drive the rover.
