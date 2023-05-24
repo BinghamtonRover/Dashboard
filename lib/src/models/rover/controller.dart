@@ -13,6 +13,15 @@ import "package:rover_dashboard/services.dart";
 /// call [RoverControls.parseInputs] to see what actions can be done. Each command is then sent
 /// via [sendMessage], which will either send them over the network or via USB ([SerialModel]).
 class Controller extends Model {
+	/// Sends a command over the network or over Serial.
+	static Future<void> sendMessage(Message message) async {
+		if (models.serial.isConnected && (services.serial.connectedDevice == teensyCommands[message.messageName])) {
+			await services.serial.sendMessage(message);
+		} else {
+			models.sockets.data.sendMessage(message);
+		}
+	}
+
 	/// Reads the gamepad and controls the rover when triggered.
 	late final Timer gamepadTimer;
 
@@ -21,20 +30,6 @@ class Controller extends Model {
 
 	/// Defines what the current controls are for the current mode.
 	RoverControls controls;
-
-	/// Map to figure out what device is connected
-	/// 
-	/// Used to send data to the correct teensy
-	/// <Command, Teensy>
-	Map<String, Device> teensyCommands = {
-		"ArmCommand": Device.ARM,
-		"GripperCommand": Device.GRIPPER,
-		"ScienceCommand": Device.SCIENCE,
-		"ElecticalCommand": Device.ELECTRICAL,
-		"DriveCommand": Device.DRIVE,
-		"MarsCommand": Device.MARS,
-		"FirmwareCommand": Device.FIRMWARE
-	};
 
 	/// Maps button presses on [gamepad] to [controls].
 	Controller(this.gamepadIndex, this.controls);
@@ -84,15 +79,6 @@ class Controller extends Model {
 
 	/// Same as [setMode], but uses [OperatingMode.index] instead.
 	void setModeIndex(int index) => setMode(OperatingMode.values[index]);
-
-	/// Sends a command over the network or over Serial.
-	Future<void> sendMessage(Message message) async {
-		if (models.serial.isConnected && (services.serial.connectedDevice == teensyCommands[message.messageName])) {
-			await services.serial.sendMessage(message);
-		} else {
-			models.sockets.data.sendMessage(message);
-		}
-	}
 
 	/// Reads the gamepad, chooses commands, and sends them to the rover.
 	Future<void> _update([_]) async {

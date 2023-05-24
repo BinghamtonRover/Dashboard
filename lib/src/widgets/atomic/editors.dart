@@ -129,7 +129,7 @@ class DropdownEditor<T> extends StatelessWidget {
 	Widget build(BuildContext context) => Row(
 		children: [
 			Text(name),
-			SizedBox(width: 12), 
+			const SizedBox(width: 12), 
 			DropdownButton<T>(
 				focusNode: FocusNode(),
 				value: value,
@@ -144,7 +144,7 @@ class DropdownEditor<T> extends StatelessWidget {
 					),
 				],
 			),
-		]
+		],
 	);
 }
 

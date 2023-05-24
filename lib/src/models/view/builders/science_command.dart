@@ -3,11 +3,11 @@ import "package:rover_dashboard/models.dart";
 
 /// A [ValueBuilder] to modify and send an [AutonomyCommand].
 class ScienceCommandBuilder extends ValueBuilder<ScienceCommand> {
+	/// The sample number being tested.
 	final sample = NumberBuilder<int>(0);
 
+	/// Whether the science program should collect data.
 	ScienceState state = ScienceState.STOP_COLLECTING;
-
-	bool isLoading = false;
 
 	@override
 	bool get isValid => sample.isValid;
@@ -18,14 +18,15 @@ class ScienceCommandBuilder extends ValueBuilder<ScienceCommand> {
 		state: state,
 	);
 
+	/// Updates the state and refreshes the UI.
 	void updateState(ScienceState input) {
 		state = input;
 		notifyListeners();
 	}
 
+	/// Sends the command to the science subsystem.
 	Future<void> send() async {
-		// models.sockets.data.sendMessage(value);
-		models.rover.controller1.sendMessage(value);
+		Controller.sendMessage(value);
 		models.home.setMessage(severity: Severity.info, text: "Science command submitted. Check the video feed to confirm");
 	}
 }

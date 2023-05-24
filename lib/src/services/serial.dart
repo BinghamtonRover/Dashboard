@@ -10,6 +10,20 @@ import "service.dart";
 
 export "serial_errors.dart";
 
+/// Map to figure out what device is connected
+/// 
+/// Used to send data to the correct teensy
+/// <Command, Teensy>
+const Map<String, Device> teensyCommands = {
+	"ArmCommand": Device.ARM,
+	"GripperCommand": Device.GRIPPER,
+	"ScienceCommand": Device.SCIENCE,
+	"ElecticalCommand": Device.ELECTRICAL,
+	"DriveCommand": Device.DRIVE,
+	"MarsCommand": Device.MARS,
+	"FirmwareCommand": Device.FIRMWARE
+};
+
 /// A service to interact with Serial Port(s) from dashboard.
 ///
 /// Since a device may not be connected right away, or may be disconnected after the dashboard is
