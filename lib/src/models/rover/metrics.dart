@@ -17,11 +17,13 @@ class RoverMetrics extends Model {
   /// Data from the drive subsystem.
   final drive = DriveMetrics();
 
+  final mars = MarsMetrics();
+
 	/// A list of all the metrics to iterate over.
 	///
 	/// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
 	/// when new data is received. As a getter, every time it is called it will use new data.
-	List<Metrics> get allMetrics => [position, electrical, drive, science];
+	List<Metrics> get allMetrics => [position, mars, electrical, drive, science];
 
 	/// Updates the [metrics] object, updates the UI, and saves [data] to a file.
 	void update<T extends Message>(Metrics<T> metrics, T data) {
@@ -57,7 +59,15 @@ class RoverMetrics extends Model {
 			decoder: RoverPosition.fromBuffer,
 			handler: (data) {
 				update(position, data);
-				models.sockets.mars.sendMessage(data);
+				models.sockets.mars.sendMessage(MarsCommand(rover: data.gps));
+			},
+		);
+		models.sockets.data.registerHandler<MarsData>(
+			name: MarsData().messageName,
+			decoder: MarsData.fromBuffer,
+			handler: (data) {
+				update(mars, data);
+				position.baseStation = data.coordinates;
 			},
 		);
 	}
