@@ -17,6 +17,10 @@ class DriveCommand extends $pb.GeneratedMessage {
     ..aOB(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setLeft')
     ..aOB(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setRight')
     ..aOB(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setThrottle')
+    ..a<$core.double>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'frontSwivel', $pb.PbFieldType.OF)
+    ..a<$core.double>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'frontTilt', $pb.PbFieldType.OF)
+    ..a<$core.double>(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rearSwivel', $pb.PbFieldType.OF)
+    ..a<$core.double>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rearTilt', $pb.PbFieldType.OF)
     ..hasRequiredFields = false
   ;
 
@@ -28,6 +32,10 @@ class DriveCommand extends $pb.GeneratedMessage {
     $core.bool? setLeft,
     $core.bool? setRight,
     $core.bool? setThrottle,
+    $core.double? frontSwivel,
+    $core.double? frontTilt,
+    $core.double? rearSwivel,
+    $core.double? rearTilt,
   }) {
     final _result = create();
     if (throttle != null) {
@@ -47,6 +55,18 @@ class DriveCommand extends $pb.GeneratedMessage {
     }
     if (setThrottle != null) {
       _result.setThrottle = setThrottle;
+    }
+    if (frontSwivel != null) {
+      _result.frontSwivel = frontSwivel;
+    }
+    if (frontTilt != null) {
+      _result.frontTilt = frontTilt;
+    }
+    if (rearSwivel != null) {
+      _result.rearSwivel = rearSwivel;
+    }
+    if (rearTilt != null) {
+      _result.rearTilt = rearTilt;
     }
     return _result;
   }
@@ -124,6 +144,42 @@ class DriveCommand extends $pb.GeneratedMessage {
   $core.bool hasSetThrottle() => $_has(5);
   @$pb.TagNumber(6)
   void clearSetThrottle() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.double get frontSwivel => $_getN(6);
+  @$pb.TagNumber(7)
+  set frontSwivel($core.double v) { $_setFloat(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasFrontSwivel() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearFrontSwivel() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.double get frontTilt => $_getN(7);
+  @$pb.TagNumber(8)
+  set frontTilt($core.double v) { $_setFloat(7, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasFrontTilt() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearFrontTilt() => clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.double get rearSwivel => $_getN(8);
+  @$pb.TagNumber(9)
+  set rearSwivel($core.double v) { $_setFloat(8, v); }
+  @$pb.TagNumber(9)
+  $core.bool hasRearSwivel() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearRearSwivel() => clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.double get rearTilt => $_getN(9);
+  @$pb.TagNumber(10)
+  set rearTilt($core.double v) { $_setFloat(9, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasRearTilt() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearRearTilt() => clearField(10);
 }
 
 class DriveData extends $pb.GeneratedMessage {
@@ -134,6 +190,10 @@ class DriveData extends $pb.GeneratedMessage {
     ..aOB(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setLeft')
     ..aOB(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setRight')
     ..aOB(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'setThrottle')
+    ..a<$core.double>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'frontSwivel', $pb.PbFieldType.OF)
+    ..a<$core.double>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'frontTilt', $pb.PbFieldType.OF)
+    ..a<$core.double>(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rearSwivel', $pb.PbFieldType.OF)
+    ..a<$core.double>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rearTilt', $pb.PbFieldType.OF)
     ..hasRequiredFields = false
   ;
 
@@ -145,6 +205,10 @@ class DriveData extends $pb.GeneratedMessage {
     $core.bool? setLeft,
     $core.bool? setRight,
     $core.bool? setThrottle,
+    $core.double? frontSwivel,
+    $core.double? frontTilt,
+    $core.double? rearSwivel,
+    $core.double? rearTilt,
   }) {
     final _result = create();
     if (throttle != null) {
@@ -164,6 +228,18 @@ class DriveData extends $pb.GeneratedMessage {
     }
     if (setThrottle != null) {
       _result.setThrottle = setThrottle;
+    }
+    if (frontSwivel != null) {
+      _result.frontSwivel = frontSwivel;
+    }
+    if (frontTilt != null) {
+      _result.frontTilt = frontTilt;
+    }
+    if (rearSwivel != null) {
+      _result.rearSwivel = rearSwivel;
+    }
+    if (rearTilt != null) {
+      _result.rearTilt = rearTilt;
     }
     return _result;
   }
@@ -241,5 +317,41 @@ class DriveData extends $pb.GeneratedMessage {
   $core.bool hasSetThrottle() => $_has(5);
   @$pb.TagNumber(6)
   void clearSetThrottle() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.double get frontSwivel => $_getN(6);
+  @$pb.TagNumber(7)
+  set frontSwivel($core.double v) { $_setFloat(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasFrontSwivel() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearFrontSwivel() => clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.double get frontTilt => $_getN(7);
+  @$pb.TagNumber(8)
+  set frontTilt($core.double v) { $_setFloat(7, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasFrontTilt() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearFrontTilt() => clearField(8);
+
+  @$pb.TagNumber(9)
+  $core.double get rearSwivel => $_getN(8);
+  @$pb.TagNumber(9)
+  set rearSwivel($core.double v) { $_setFloat(8, v); }
+  @$pb.TagNumber(9)
+  $core.bool hasRearSwivel() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearRearSwivel() => clearField(9);
+
+  @$pb.TagNumber(10)
+  $core.double get rearTilt => $_getN(9);
+  @$pb.TagNumber(10)
+  set rearTilt($core.double v) { $_setFloat(9, v); }
+  @$pb.TagNumber(10)
+  $core.bool hasRearTilt() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearRearTilt() => clearField(10);
 }
 
