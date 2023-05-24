@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
@@ -33,25 +34,24 @@ class MetricsList extends StatelessWidget {
 	const MetricsList();
 
 	@override
-	Widget build(BuildContext context) => ProviderConsumer<RoverMetrics>.value(
-		value: models.rover.metrics,
-		builder: (model) => Column(
-			children: [
-				for (final metrics in model.allMetrics) ExpansionTile(
-					expandedCrossAxisAlignment: CrossAxisAlignment.start,
-					expandedAlignment: Alignment.centerLeft,
-					childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
-					title: Text(
-						metrics.name,
-						style: Theme.of(context).textTheme.headlineSmall,
-					),
-					children: [
-						for (final String metric in metrics.allMetrics) Text(metric),
-						const SizedBox(height: 4),
-					],
+	Widget build(BuildContext context) => Column(
+		children: [
+			for (final metrics in models.rover.metrics.allMetrics) ProviderConsumer<Metrics>.value(
+				value: metrics,
+				builder: (metrics) => ExpansionTile(
+				expandedCrossAxisAlignment: CrossAxisAlignment.start,
+				expandedAlignment: Alignment.centerLeft,
+				childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
+				title: Text(
+					metrics.name,
+					style: Theme.of(context).textTheme.headlineSmall,
 				),
-			],
-		),
+				children: [
+					for (final String metric in metrics.allMetrics) Text(metric),
+					const SizedBox(height: 4),
+				],
+			),),
+		],
 	);
 }
 

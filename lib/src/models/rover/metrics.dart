@@ -26,7 +26,6 @@ class RoverMetrics extends Model {
 	/// Updates the [metrics] object, updates the UI, and saves [data] to a file.
 	void update<T extends Message>(Metrics<T> metrics, T data) {
 		metrics.update(data);
-		notifyListeners();
 		services.files.logData(data);
 	}
 
