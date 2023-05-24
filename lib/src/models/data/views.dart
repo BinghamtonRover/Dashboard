@@ -13,17 +13,41 @@ class ViewsSelector extends StatelessWidget {
 	/// A const constructor.
 	const ViewsSelector({required this.currentView});
 
+	/// An icon to indicate the status of the given camera. 
+	Widget getCameraStatus(DashboardView view) {
+		final name = view.key! as CameraName;
+		final status = models.video.feeds[name]!.details.status;
+		const size = 12.0;
+		switch(status) {
+			case CameraStatus.CAMERA_STATUS_UNDEFINED: return const Icon(Icons.question_mark, size: size);
+			case CameraStatus.CAMERA_DISCONNECTED: return const Icon(Icons.circle, size: size, color: Colors.black);
+			case CameraStatus.CAMERA_ENABLED: return const Icon(Icons.circle, size: size, color: Colors.green);
+			case CameraStatus.CAMERA_LOADING: return const Icon(Icons.circle, size: size, color: Colors.blueGrey);
+			case CameraStatus.CAMERA_DISABLED: return const Icon(Icons.circle, size: size, color: Colors.orange);
+			case CameraStatus.CAMERA_NOT_RESPONDING: return const Icon(Icons.circle, size: size, color: Colors.red);
+			case CameraStatus.FRAME_TOO_LARGE: return const Icon(Icons.circle, size: size, color: Colors.orange);
+			case CameraStatus.CAMERA_HAS_NO_NAME: return const Icon(Icons.circle, size: size, color: Colors.black);  // won't happen
+		}
+		// Do not use `default` or you will lose exhaustiveness checking
+		throw ArgumentError("Unrecognized status: $status");
+	}
+
 	@override
 	Widget build(BuildContext context) => PopupMenuButton<DashboardView>(
 		tooltip: "Select a feed",
 		icon: const Icon(Icons.expand_more),
 		onSelected: (view) => models.views.replaceView(currentView, view),
 		itemBuilder: (_) => [
+			const PopupMenuItem(enabled: false, child: Text("Cameras")),
 			for (final view in DashboardView.cameraViews) PopupMenuItem(
 				value: view,
-				child: Text(view.name),
+				child: Row(children: [
+					if (models.sockets.video.isConnected) ...[getCameraStatus(view), const SizedBox(width: 8)],
+					Text(view.name),
+				],),
 			),
 			const PopupMenuDivider(),
+			const PopupMenuItem(enabled: false, child: Text("Controls")),
 			for (final view in DashboardView.uiViews) PopupMenuItem(
 				value: view,
 				child: Text(view.name),
@@ -38,16 +62,19 @@ class ViewsSelector extends StatelessWidget {
 class DashboardView {
 	/// The name of the view.
 	final String name;
+	/// A unique key to use while selecting this view.
+	final Object? key;
 	/// A function to build this view.
 	final WidgetBuilder builder;
 	/// A const constructor.
-	const DashboardView({required this.name, required this.builder});
+	const DashboardView({required this.name, required this.builder, this.key});
 
 	/// A list of views that represent all the camera feeds.
 	static final List<DashboardView> cameraViews = [
 		for (final name in CameraName.values) 
 			if (name != CameraName.CAMERA_NAME_UNDEFINED) DashboardView(
 				name: name.humanName,
+				key: name,
 				builder: (context) => VideoFeed(name: name),
 			)
 	];

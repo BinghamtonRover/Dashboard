@@ -1,4 +1,5 @@
 import "dart:async";
+import "package:flutter/foundation.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -22,13 +23,10 @@ class Rover extends Model {
 	final controller2 = Controller(1, ArmControls());
 
 	/// Whether the rover is connected.
-	bool get isConnected => models.sockets.data.connectionStrength.value > 0;
+	bool get isConnected => models.sockets.data.isConnected;
 
 	/// The current status of the rover.
-	/// 
-	/// Since the rover obviously cannot tell us if it's disconnected,
-	/// this function checks the connection strength first.
-	RoverStatus get status => isConnected ? settings.settings.status : RoverStatus.DISCONNECTED; 
+	ValueNotifier<RoverStatus> status = ValueNotifier(RoverStatus.DISCONNECTED);
 
 	@override
 	Future<void> init() async { 

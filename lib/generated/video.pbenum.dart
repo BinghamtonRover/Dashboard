@@ -17,6 +17,7 @@ class CameraStatus extends $pb.ProtobufEnum {
   static const CameraStatus CAMERA_NOT_RESPONDING = CameraStatus._(4, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CAMERA_NOT_RESPONDING');
   static const CameraStatus CAMERA_LOADING = CameraStatus._(5, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CAMERA_LOADING');
   static const CameraStatus FRAME_TOO_LARGE = CameraStatus._(6, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'FRAME_TOO_LARGE');
+  static const CameraStatus CAMERA_HAS_NO_NAME = CameraStatus._(7, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CAMERA_HAS_NO_NAME');
 
   static const $core.List<CameraStatus> values = <CameraStatus> [
     CAMERA_STATUS_UNDEFINED,
@@ -26,6 +27,7 @@ class CameraStatus extends $pb.ProtobufEnum {
     CAMERA_NOT_RESPONDING,
     CAMERA_LOADING,
     FRAME_TOO_LARGE,
+    CAMERA_HAS_NO_NAME,
   ];
 
   static final $core.Map<$core.int, CameraStatus> _byValue = $pb.ProtobufEnum.initByValue(values);

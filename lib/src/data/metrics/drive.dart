@@ -15,8 +15,8 @@ class DriveMetrics extends Metrics<DriveData> {
 
 	@override
 	List<String> get allMetrics => [  
-		"Throttle: ${data.throttle}",
-		"Left: ${data.left}",
-		"Right: ${data.right}",
+		"Throttle: ${data.throttle.toStringAsFixed(2)}",
+		"Left: ${data.left.toStringAsFixed(2)}",
+		"Right: ${data.right.toStringAsFixed(2)}",
 	];
 }

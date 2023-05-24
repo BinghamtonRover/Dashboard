@@ -5,6 +5,19 @@
 /// - change the on-screen UI to provide information useful in this context
 /// - highlight the relevant metrics
 enum OperatingMode { 
+	/// No controls. Allows the user to "disable" a gamepad.
+	none("None"),
+
+	/// Drive mode. 
+	/// 
+	/// Focus on helping the user simply drive the rover.
+	drive("Drive"),
+
+	/// Camera mode.
+	/// 
+	/// The on-board cameras are on spinnable mounts. This mode controls those mounts.
+	cameras("Cameras"),
+
 	/// Science mode. 
 	/// 
 	/// Focus cameras on the science chamber and allow the user to collect samples and data.
@@ -15,28 +28,10 @@ enum OperatingMode {
 	/// Focus on helping the user manipulate the arm.
 	arm("Arm"), 
 
-	/// Autonomy mode. 
-	/// 
-	/// Focus on helping the user understand the rover's decisions.
-	autonomy("Autonomy"), 
-
 	/// MARS mode.
 	/// 
 	/// Allows the user to control the MARS subsystem manually.
-	mars("MARS"),
-
-	/// No controls. Allows the user to "disable" a gamepad.
-	none("None"),
-
-	/// Camera mode.
-	/// 
-	/// The on-board cameras are on spinnable mounts. This mode controls those mounts.
-	cameras("Cameras"),
-
-	/// Drive mode. 
-	/// 
-	/// Focus on helping the user simply drive the rover.
-	drive("Drive");
+	mars("MARS");
 
 	/// The name of this mode.
 	/// 
