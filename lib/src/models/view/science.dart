@@ -171,6 +171,7 @@ class ScienceModel with ChangeNotifier {
 	/// Calls [addMessage] for each message in the picked file.
 	Future<void> loadFile() async {
 		// Pick a file
+		clear();
 		isLoading = true;
 		notifyListeners();
 		final result = await FilePicker.platform.pickFiles(

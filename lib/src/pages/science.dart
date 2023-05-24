@@ -205,7 +205,6 @@ class SciencePage extends StatelessWidget {
 								Text("Sample: ${models.rover.metrics.science.data.sample}", style: context.textTheme.titleMedium),
 								const SizedBox(width: 12),
 								Text("State: ${models.rover.metrics.science.data.state.humanName}", style: context.textTheme.titleMedium),
-								// Text("Status: ${model.status.humanName}"),
 								const Spacer(),
 								Text("Send command", style: context.textTheme.titleLarge),
 								SizedBox(width: 150, child: NumberEditor(name: "Sample: ", model: command.sample)),
