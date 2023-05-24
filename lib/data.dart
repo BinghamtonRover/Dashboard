@@ -16,6 +16,7 @@ export "generated/core.pb.dart";
 export "generated/drive.pb.dart";
 export "generated/electrical.pb.dart";
 export "generated/gps.pb.dart";
+export "generated/mars.pb.dart";
 export "generated/science.pb.dart";
 export "generated/video.pb.dart";
 export "generated/wrapper.pb.dart";
@@ -25,6 +26,7 @@ export "generated/google/protobuf/timestamp.pb.dart";
 export "src/data/metrics/drive.dart";
 export "src/data/metrics/position.dart";
 export "src/data/metrics/electrical.dart";
+export "src/data/metrics/mars.dart";
 export "src/data/metrics/metrics.dart";
 export "src/data/metrics/science.dart";
 

@@ -14,13 +14,13 @@ const MarsCommand$json = const {
   '2': const [
     const {'1': 'swivel', '3': 1, '4': 1, '5': 2, '10': 'swivel'},
     const {'1': 'tilt', '3': 2, '4': 1, '5': 2, '10': 'tilt'},
-    const {'1': 'position', '3': 3, '4': 1, '5': 11, '6': '.GpsCoordinates', '10': 'position'},
+    const {'1': 'rover', '3': 3, '4': 1, '5': 11, '6': '.GpsCoordinates', '10': 'rover'},
     const {'1': 'baseStationOverride', '3': 4, '4': 1, '5': 11, '6': '.GpsCoordinates', '10': 'baseStationOverride'},
   ],
 };
 
 /// Descriptor for `MarsCommand`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List marsCommandDescriptor = $convert.base64Decode('CgtNYXJzQ29tbWFuZBIWCgZzd2l2ZWwYASABKAJSBnN3aXZlbBISCgR0aWx0GAIgASgCUgR0aWx0EisKCHBvc2l0aW9uGAMgASgLMg8uR3BzQ29vcmRpbmF0ZXNSCHBvc2l0aW9uEkEKE2Jhc2VTdGF0aW9uT3ZlcnJpZGUYBCABKAsyDy5HcHNDb29yZGluYXRlc1ITYmFzZVN0YXRpb25PdmVycmlkZQ==');
+final $typed_data.Uint8List marsCommandDescriptor = $convert.base64Decode('CgtNYXJzQ29tbWFuZBIWCgZzd2l2ZWwYASABKAJSBnN3aXZlbBISCgR0aWx0GAIgASgCUgR0aWx0EiUKBXJvdmVyGAMgASgLMg8uR3BzQ29vcmRpbmF0ZXNSBXJvdmVyEkEKE2Jhc2VTdGF0aW9uT3ZlcnJpZGUYBCABKAsyDy5HcHNDb29yZGluYXRlc1ITYmFzZVN0YXRpb25PdmVycmlkZQ==');
 @$core.Deprecated('Use marsDataDescriptor instead')
 const MarsData$json = const {
   '1': 'MarsData',
