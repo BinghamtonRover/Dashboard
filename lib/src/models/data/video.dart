@@ -87,6 +87,10 @@ class VideoModel extends Model {
 
 	/// Updates the data for a given camera.
 	void handleData(VideoData newData) {
+		if (newData.details.status == CameraStatus.CAMERA_HAS_NO_NAME) {
+			models.home.setMessage(severity: Severity.critical, text: "Received feed from camera #${newData.id} with no name");
+			return;
+		}
 		final name = newData.details.name;
 		framesThisSecond[name] = (framesThisSecond[name] ?? 0) + 1;
 		final data = feeds[name]!
