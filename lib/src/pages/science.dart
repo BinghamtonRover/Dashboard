@@ -159,103 +159,96 @@ class SciencePage extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<ScienceModel>(
 		create: ScienceModel.new,
-		builder: (model) => Stack(children: [
-			Column(children: [
-				Expanded(child: ListView(  // The main content of the page
-					padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 32),
-					children: [
-						if (model.errorText != null) ...[
-							const SizedBox(height: 48),
-							Text("Error analyzing the logs", textAlign: TextAlign.center, style: context.textTheme.headlineLarge),
-							const SizedBox(height: 24),
-							Text("Here is the error:", textAlign: TextAlign.center, style: context.textTheme.titleLarge),
-							const SizedBox(height: 12),
-							Text(model.errorText!, textAlign: TextAlign.center, style: context.textTheme.titleMedium),
-						] else if (!model.isLoading) ...[
-							ChartsRow(
-								title: "Details",
-								analyses: model.analysesForSample,
-								builder: (analysis) => LineChart(getDetailsData(analysis, getColor(model.sample / model.numSamples))),
-							),
-							ChartsRow(
-								title: "Summary",
-								analyses: model.analysesForSample,
-								builder: (analysis) => BarChart(getBarChartData(analysis, getColor(model.sample / model.numSamples))),
-							),
-							ChartsRow(
-								title: "Results",
-								height: 425,
-								analyses: model.analysesForSample,
-								builder: ResultsBox.new,
-							)
-						],
+		builder: (model) => Column(children: [
+			Row(children: [  // The header at the top
+				const SizedBox(width: 8),
+				Text("Science Analysis", style: context.textTheme.headlineMedium), 
+				const SizedBox(width: 12),
+				if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
+				const Spacer(),
+				DropdownButton(
+					value: model.sample,
+					onChanged: model.updateSample,
+					items: [
+						for (int i = 0; i < model.numSamples; i++) DropdownMenuItem(
+							value: i,
+							child: Text("Sample ${i + 1}"),
+						)
 					],
-				),),
-				ProviderConsumer<ScienceCommandBuilder>(  // the controls bar on the bottom of the page
-					create: () => ScienceCommandBuilder(),
-					builder: (command) => Container(  
-						color: context.colorScheme.surface,
-						height: 48,
-						child: Row(
-							mainAxisSize: MainAxisSize.min,
-							children: [
-								const SizedBox(width: 8),
-								Text("Status", style: context.textTheme.titleLarge),
-								const SizedBox(width: 12),
-								Text("Sample: ${models.rover.metrics.science.data.sample}", style: context.textTheme.titleMedium),
-								const SizedBox(width: 12),
-								Text("State: ${models.rover.metrics.science.data.state.humanName}", style: context.textTheme.titleMedium),
-								const Spacer(),
-								Text("Send command", style: context.textTheme.titleLarge),
-								SizedBox(width: 150, child: NumberEditor(name: "Sample: ", model: command.sample)),
-								SizedBox(child: DropdownEditor(
-									name: "State: ",
-									value: command.state,
-									onChanged: command.updateState,
-									items: const [ScienceState.STOP_COLLECTING, ScienceState.COLLECT_DATA],
-									humanName: (state) => state.humanName,
-								),),
-								const SizedBox(width: 12),
-								ElevatedButton(
-									onPressed: command.send,
-									child: const Text("Send"),
-								),
-								const SizedBox(width: 12),
-							],
+				),
+				if (model.isListening) IconButton(
+					icon: const Icon(Icons.upload_file),
+					onPressed: model.loadFile,
+					tooltip: "Load file",
+				) else IconButton(
+					icon: const Icon(Icons.clear),
+					onPressed: model.clear,
+					tooltip: "Clear",
+				),
+				const ViewsSelector(currentView: Routes.science),
+			],),
+			Expanded(child: ListView(  // The main content of the page
+				padding: const EdgeInsets.symmetric(horizontal: 4),
+				children: [
+					if (model.errorText != null) ...[
+						Text("Error analyzing the logs", textAlign: TextAlign.center, style: context.textTheme.headlineLarge),
+						const SizedBox(height: 24),
+						Text("Here is the error:", textAlign: TextAlign.center, style: context.textTheme.titleLarge),
+						const SizedBox(height: 12),
+						Text(model.errorText!, textAlign: TextAlign.center, style: context.textTheme.titleMedium),
+					] else if (!model.isLoading) ...[
+						ChartsRow(
+							title: "Details",
+							analyses: model.analysesForSample,
+							builder: (analysis) => LineChart(getDetailsData(analysis, getColor(model.sample / model.numSamples))),
 						),
+						ChartsRow(
+							title: "Summary",
+							analyses: model.analysesForSample,
+							builder: (analysis) => BarChart(getBarChartData(analysis, getColor(model.sample / model.numSamples))),
+						),
+						ChartsRow(
+							title: "Results",
+							height: 425,
+							analyses: model.analysesForSample,
+							builder: ResultsBox.new,
+						)
+					],
+				],
+			),),
+			ProviderConsumer<ScienceCommandBuilder>(  // the controls bar on the bottom of the page
+				create: () => ScienceCommandBuilder(),
+				builder: (command) => Container(  
+					color: context.colorScheme.surface,
+					height: 48,
+					child: Row(
+						mainAxisSize: MainAxisSize.min,
+						children: [
+							const SizedBox(width: 8),
+							Text("Status", style: context.textTheme.titleLarge),
+							const SizedBox(width: 12),
+							Text("Sample: ${models.rover.metrics.science.data.sample}", style: context.textTheme.titleMedium),
+							const SizedBox(width: 12),
+							Text("State: ${models.rover.metrics.science.data.state.humanName}", style: context.textTheme.titleMedium),
+							const Spacer(),
+							Text("Send command", style: context.textTheme.titleLarge),
+							SizedBox(width: 150, child: NumberEditor(name: "Sample: ", model: command.sample)),
+							SizedBox(child: DropdownEditor(
+								name: "State: ",
+								value: command.state,
+								onChanged: command.updateState,
+								items: const [ScienceState.STOP_COLLECTING, ScienceState.COLLECT_DATA],
+								humanName: (state) => state.humanName,
+							),),
+							const SizedBox(width: 12),
+							ElevatedButton(
+								onPressed: command.send,
+								child: const Text("Send"),
+							),
+							const SizedBox(width: 12),
+						],
 					),
 				),
-			],),
-			Container(
-				color: context.colorScheme.surface, 
-				height: 48, 
-				child: Row(children: [  // The header at the top
-					const SizedBox(width: 8),
-					Text("Science Analysis", style: context.textTheme.headlineMedium), 
-					const SizedBox(width: 12),
-					if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
-					const Spacer(),
-					DropdownButton(
-						value: model.sample,
-						onChanged: model.updateSample,
-						items: [
-							for (int i = 0; i < model.numSamples; i++) DropdownMenuItem(
-								value: i,
-								child: Text("Sample ${i + 1}"),
-							)
-						],
-					),
-					if (model.isListening) IconButton(
-						icon: const Icon(Icons.upload_file),
-						onPressed: model.loadFile,
-						tooltip: "Load file",
-					) else IconButton(
-						icon: const Icon(Icons.clear),
-						onPressed: model.clear,
-						tooltip: "Clear",
-					),
-					const ViewsSelector(currentView: Routes.science),
-				],),
 			),
 		],),
 	);

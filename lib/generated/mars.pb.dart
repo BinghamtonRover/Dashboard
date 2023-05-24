@@ -15,7 +15,8 @@ class MarsCommand extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'MarsCommand', createEmptyInstance: create)
     ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'swivel', $pb.PbFieldType.OF)
     ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'tilt', $pb.PbFieldType.OF)
-    ..aOM<$0.RoverPosition>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'position', subBuilder: $0.RoverPosition.create)
+    ..aOM<$0.GpsCoordinates>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rover', subBuilder: $0.GpsCoordinates.create)
+    ..aOM<$0.GpsCoordinates>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'baseStationOverride', protoName: 'baseStationOverride', subBuilder: $0.GpsCoordinates.create)
     ..hasRequiredFields = false
   ;
 
@@ -23,7 +24,8 @@ class MarsCommand extends $pb.GeneratedMessage {
   factory MarsCommand({
     $core.double? swivel,
     $core.double? tilt,
-    $0.RoverPosition? position,
+    $0.GpsCoordinates? rover,
+    $0.GpsCoordinates? baseStationOverride,
   }) {
     final _result = create();
     if (swivel != null) {
@@ -32,8 +34,11 @@ class MarsCommand extends $pb.GeneratedMessage {
     if (tilt != null) {
       _result.tilt = tilt;
     }
-    if (position != null) {
-      _result.position = position;
+    if (rover != null) {
+      _result.rover = rover;
+    }
+    if (baseStationOverride != null) {
+      _result.baseStationOverride = baseStationOverride;
     }
     return _result;
   }
@@ -77,21 +82,33 @@ class MarsCommand extends $pb.GeneratedMessage {
   void clearTilt() => clearField(2);
 
   @$pb.TagNumber(3)
-  $0.RoverPosition get position => $_getN(2);
+  $0.GpsCoordinates get rover => $_getN(2);
   @$pb.TagNumber(3)
-  set position($0.RoverPosition v) { setField(3, v); }
+  set rover($0.GpsCoordinates v) { setField(3, v); }
   @$pb.TagNumber(3)
-  $core.bool hasPosition() => $_has(2);
+  $core.bool hasRover() => $_has(2);
   @$pb.TagNumber(3)
-  void clearPosition() => clearField(3);
+  void clearRover() => clearField(3);
   @$pb.TagNumber(3)
-  $0.RoverPosition ensurePosition() => $_ensure(2);
+  $0.GpsCoordinates ensureRover() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $0.GpsCoordinates get baseStationOverride => $_getN(3);
+  @$pb.TagNumber(4)
+  set baseStationOverride($0.GpsCoordinates v) { setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasBaseStationOverride() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearBaseStationOverride() => clearField(4);
+  @$pb.TagNumber(4)
+  $0.GpsCoordinates ensureBaseStationOverride() => $_ensure(3);
 }
 
 class MarsData extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'MarsData', createEmptyInstance: create)
     ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'swivel', $pb.PbFieldType.OF)
     ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'tilt', $pb.PbFieldType.OF)
+    ..aOM<$0.GpsCoordinates>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'coordinates', subBuilder: $0.GpsCoordinates.create)
     ..hasRequiredFields = false
   ;
 
@@ -99,6 +116,7 @@ class MarsData extends $pb.GeneratedMessage {
   factory MarsData({
     $core.double? swivel,
     $core.double? tilt,
+    $0.GpsCoordinates? coordinates,
   }) {
     final _result = create();
     if (swivel != null) {
@@ -106,6 +124,9 @@ class MarsData extends $pb.GeneratedMessage {
     }
     if (tilt != null) {
       _result.tilt = tilt;
+    }
+    if (coordinates != null) {
+      _result.coordinates = coordinates;
     }
     return _result;
   }
@@ -147,5 +168,16 @@ class MarsData extends $pb.GeneratedMessage {
   $core.bool hasTilt() => $_has(1);
   @$pb.TagNumber(2)
   void clearTilt() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $0.GpsCoordinates get coordinates => $_getN(2);
+  @$pb.TagNumber(3)
+  set coordinates($0.GpsCoordinates v) { setField(3, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasCoordinates() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearCoordinates() => clearField(3);
+  @$pb.TagNumber(3)
+  $0.GpsCoordinates ensureCoordinates() => $_ensure(2);
 }
 

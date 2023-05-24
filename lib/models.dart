@@ -35,12 +35,14 @@ export "src/models/rover/metrics.dart";
 export "src/models/rover/rover.dart";
 
 // View models
-export "src/models/view/science.dart";
 export "src/models/view/autonomy.dart";
+export "src/models/view/mars.dart";
+export "src/models/view/science.dart";
 
 // Builder models
 export "src/models/view/builders/autonomy_command.dart";
 export "src/models/view/builders/science_command.dart";
+export "src/models/view/builders/mars_command.dart";
 export "src/models/view/builders/builder.dart";
 export "src/models/view/builders/color_builder.dart";
 export "src/models/view/builders/settings_builder.dart";

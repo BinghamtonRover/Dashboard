@@ -40,6 +40,8 @@ class FilesService extends Service {
   /// from the file should be done with [Settings.fromJson].
   File get settingsFile => File("${outputDir.path}/settings.json");
 
+  bool _isWritingFile = false;
+
   /// Ensure that files and directories that are expected to be present actually
   /// exist on the system. If not, create them. 
   @override
@@ -86,11 +88,14 @@ class FilesService extends Service {
   }
 
   /// Outputs log data to the correct file based on message
-  Future<void> logData(Message message) async{
+  Future<void> logData(Message message) async {
+    if (_isWritingFile) return;
+    _isWritingFile = true;
     final List<int> bytes = message.wrap().writeToBuffer();
     final line = base64.encode(bytes);
     final file = File("${loggingDir.path}/${message.messageName}.log");
     await file.writeAsString("$line\n", mode: FileMode.writeOnlyAppend, flush: true);
+    _isWritingFile = false;
   }
 
   /// Reads logs from the given file.
