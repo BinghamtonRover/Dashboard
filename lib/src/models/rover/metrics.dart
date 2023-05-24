@@ -47,7 +47,7 @@ class RoverMetrics extends Model {
 				if (data.setLeft) drive.data.left = data.left;
 				if (data.setRight) drive.data.right = data.right;
 				if (data.setThrottle) drive.data.throttle = data.throttle;
-				notifyListeners();
+				drive.notifyListeners();
 			},
 		);
 		models.sockets.data.registerHandler<ScienceData>(
