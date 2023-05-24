@@ -246,9 +246,14 @@ class SciencePage extends StatelessWidget {
 							)
 						],
 					),
-					IconButton(
+					if (model.isListening) IconButton(
 						icon: const Icon(Icons.upload_file),
 						onPressed: model.loadFile,
+						tooltip: "Load file",
+					) else IconButton(
+						icon: const Icon(Icons.clear),
+						onPressed: model.clear,
+						tooltip: "Clear",
 					),
 					const ViewsSelector(currentView: Routes.science),
 				],),
