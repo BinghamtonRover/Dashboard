@@ -10,8 +10,13 @@ class PositionMetrics extends Metrics<RoverPosition> {
 	@override
 	String get name => "Position";
 
+	/// A helper for [baseStation].
 	GpsCoordinates? _baseStation;
-	GpsCoordinates get baseStation => _baseStation ?? GpsCoordinates(latitude: 0, longitude: 0);
+
+	/// The position of the base station. Setting this value updates the UI.
+	/// 
+	/// Defaults to [RoverPosition.gps] until the MARS subsystem comes online (see [MarsData.coordinates]).
+	GpsCoordinates get baseStation => _baseStation ?? data.gps;
 	set baseStation(GpsCoordinates value) { 
 		_baseStation = value;
 		notifyListeners();

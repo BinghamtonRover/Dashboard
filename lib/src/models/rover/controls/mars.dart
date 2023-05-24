@@ -3,6 +3,7 @@ import "package:rover_dashboard/services.dart";
 
 import "controls.dart";
 
+/// A [RoverControls] for the MARS subsystems.
 class MarsControls extends RoverControls {
 	@override
 	OperatingMode get mode => OperatingMode.mars;

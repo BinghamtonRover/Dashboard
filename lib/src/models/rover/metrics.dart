@@ -17,6 +17,7 @@ class RoverMetrics extends Model {
   /// Data from the drive subsystem.
   final drive = DriveMetrics();
 
+  /// Data from the MARS subsystem.
   final mars = MarsMetrics();
 
 	/// A list of all the metrics to iterate over.

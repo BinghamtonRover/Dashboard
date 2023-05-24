@@ -1,6 +1,12 @@
 import "package:rover_dashboard/data.dart";
 
+/// Metrics reported by the MARS subsystem.
+/// 
+/// The MARS subsystem tracks the rover's position and orients the unidirectional antenna to face
+/// the rover for a better signal. These metrics are used to track the subsystem's accuracy and
+/// visualize its movements. 
 class MarsMetrics extends Metrics<MarsData> {
+	/// A collection of metrics relevant for monitoring the MARS subsystem.
 	MarsMetrics() : super(MarsData());
 
 	@override
