@@ -1,4 +1,7 @@
 import "package:flutter/foundation.dart";
+
+import "package:rover_dashboard/services.dart";
+
 import "../protobuf.dart";
 
 /// A readout of metrics reported by one of the rover's subsystems. 
@@ -28,5 +31,6 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
 	void update(T newData) {
 		data.mergeFromMessage(newData);
 		notifyListeners();
+		services.files.logData(newData);
 	}
 }

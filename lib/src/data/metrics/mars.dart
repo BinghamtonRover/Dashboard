@@ -1,4 +1,5 @@
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 
 /// Metrics reported by the MARS subsystem.
 /// 
@@ -23,8 +24,15 @@ class MarsMetrics extends Metrics<MarsData> {
 		"  Altitude: ${data.coordinates.altitude}",
 	];
 
+	/// Clears [MarsData.status], because the Teensy cannot be observed when the Pi is disconnected.
 	void clearStatus() {
 		data.clearStatus();
 		notifyListeners();
+	}
+
+	@override
+	void update(MarsData value) {
+		super.update(value);
+		models.rover.metrics.position.baseStation = data.coordinates;
 	}
 }
