@@ -4,10 +4,14 @@ import "package:rover_dashboard/models.dart";
 /// A [ValueBuilder] to modify and send an [AutonomyCommand].
 class ScienceCommandBuilder extends ValueBuilder<ScienceCommand> {
 	/// The sample number being tested.
-	final sample = NumberBuilder<int>(0);
+	final sample = NumberBuilder<int>(1, min: 1, max: 3);
 
 	/// Whether the science program should collect data.
 	ScienceState state = ScienceState.STOP_COLLECTING;
+
+	/// Listens to changes in the sample number.
+	@override
+	List<ValueBuilder<dynamic>> get otherBuilders => [sample];
 
 	@override
 	bool get isValid => sample.isValid;

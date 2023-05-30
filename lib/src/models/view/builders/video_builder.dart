@@ -35,12 +35,15 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
 	/// The error that occurrec when changing these settings, if any.
 	String? error;
 
+	@override
+	List<ValueBuilder<dynamic>> get otherBuilders => [resolutionHeight, resolutionWidth, quality, fps];
+
 	/// Creates a [ValueBuilder] view model to change a [CameraDetails].
 	CameraDetailsBuilder(CameraDetails data) : 
-		resolutionHeight = NumberBuilder(data.resolutionHeight),
-		resolutionWidth = NumberBuilder(data.resolutionWidth),
-		quality = NumberBuilder(data.quality),
-		fps = NumberBuilder(data.fps),
+		resolutionHeight = NumberBuilder(data.resolutionHeight, min: 0, max: 300),
+		resolutionWidth = NumberBuilder(data.resolutionWidth, min: 0, max: 300),
+		quality = NumberBuilder(data.quality, min: 0, max: 100),
+		fps = NumberBuilder(data.fps, min: 0, max: 60),
 		name = data.name,
 		status = CameraStatus.CAMERA_ENABLED;
 
