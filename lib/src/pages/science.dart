@@ -124,7 +124,7 @@ class SciencePage extends StatelessWidget {
 					getTitlesWidget: (double value, TitleMeta meta) => SideTitleWidget(
 						axisSide: AxisSide.bottom,
 						space: 3,
-						child: Text(value.toString()),
+						child: Text(value.toStringAsFixed(0)),
 					),
 				),
 			),
@@ -245,7 +245,7 @@ class SciencePage extends StatelessWidget {
 							),),
 							const SizedBox(width: 12),
 							ElevatedButton(
-								onPressed: command.send,
+								onPressed: command.isValid ? command.send : null,
 								child: const Text("Send"),
 							),
 							const SizedBox(width: 12),

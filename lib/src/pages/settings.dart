@@ -54,12 +54,12 @@ class SettingsPage extends StatelessWidget {
 						ValueEditor<NetworkSettings>(
 							name: "Network settings",
 							children: [
-								ColoredBox(color: Colors.blueGrey[100]!, child: SocketEditor(name: "Subsystems socket", model: model.network.dataSocket)),
-								ColoredBox(color: Colors.blueGrey[50]!, child: SocketEditor(name: "Video socket", model: model.network.videoSocket)),
-								ColoredBox(color: Colors.blueGrey[100]!, child: SocketEditor(name: "Autonomy socket", model: model.network.autonomySocket)),
-								ColoredBox(color: Colors.blueGrey[50]!, child: SocketEditor(name: "MARS socket", model: model.network.marsSocket)),
-								ColoredBox(color: Colors.blueGrey[100]!, child: SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false)),
-								ColoredBox(color: Colors.blueGrey[50]!, child: ListTile(
+								SocketEditor(name: "Subsystems socket", model: model.network.dataSocket),
+								SocketEditor(name: "Video socket", model: model.network.videoSocket),
+								SocketEditor(name: "Autonomy socket", model: model.network.autonomySocket),
+								SocketEditor(name: "MARS socket", model: model.network.marsSocket),
+								SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
+								ListTile(
 									title: const Text("Restart the network sockets"),
 									subtitle: const Text("This only resets your computer's network, not the rover's"),
 									trailing: const Icon(Icons.refresh),
@@ -71,64 +71,64 @@ class SettingsPage extends StatelessWidget {
 											);
 										}
 									},
-								),),
+								),
 							],
 						),
 						const Divider(),
 						ValueEditor<VideoSettings>(
 							name: "Video settings",
 							children: [
-								ColoredBox(color: Colors.blueGrey[100]!, child: NumberEditor(
+								NumberEditor(
 									name: "Frames per second", 
 									subtitle: "This does not affect the rover's cameras. Useful for limiting the CPU of the dashboard",
 									model: model.video.fps,
-								),),
+								),
 							],
 						),
 						const Divider(),
 						ValueEditor<ArmSettings>(
 							name: "Arm settings",
 							children: [
-								ColoredBox(color: Colors.blueGrey[50]!, child: NumberEditor(name: "Swivel increment", model: model.arm.swivel)),
-								ColoredBox(color: Colors.blueGrey[100]!, child: NumberEditor(name: "Shoulder increment", model: model.arm.shoulder)),
-								ColoredBox(color: Colors.blueGrey[50]!, child: NumberEditor(name: "Elbow increment", model: model.arm.elbow)),
-								ColoredBox(color: Colors.blueGrey[100]!, child: NumberEditor(name: "Wrist rotate increment", model: model.arm.rotate)),
-								ColoredBox(color: Colors.blueGrey[50]!, child: NumberEditor(name: "Wrist lift increment", model: model.arm.lift)),
-								ColoredBox(color: Colors.blueGrey[100]!, child: NumberEditor(name: "Pinch increment", model: model.arm.pinch)),
-								ColoredBox(color: Colors.blueGrey[50]!, child: NumberEditor(name: "IK increment", model: model.arm.ik)),
-								ColoredBox(color: Colors.blueGrey[100]!, child: SwitchListTile(
+								NumberEditor(name: "Swivel increment", model: model.arm.swivel),
+								NumberEditor(name: "Shoulder increment", model: model.arm.shoulder),
+								NumberEditor(name: "Elbow increment", model: model.arm.elbow),
+								NumberEditor(name: "Wrist rotate increment", model: model.arm.rotate),
+								NumberEditor(name: "Wrist lift increment", model: model.arm.lift),
+								NumberEditor(name: "Pinch increment", model: model.arm.pinch),
+								NumberEditor(name: "IK increment", model: model.arm.ik),
+								SwitchListTile(
 									title: const Text("Use IK?"),
 									subtitle: const Text("Move in millimeters in 3D space instead of radians"),
 									value: model.arm.useIK,
 									onChanged: model.arm.updateIK,
-								),),
+								),
 							],
 						),
 						const Divider(),
 						ValueEditor<ScienceSettings>(
 							name: "Science settings",
 							children: [
-								ColoredBox(color: Colors.blueGrey[50]!, child: NumberEditor(
+								NumberEditor(
 									name: "Number of samples", 
 									model: model.science.numSamples,
-								),),
-								ColoredBox(color: Colors.blueGrey[100]!, child: SwitchListTile(
+								),
+								SwitchListTile(
 									title: const Text("Scrollable graphs"),
 									subtitle: const Text("Graphs can either be forced to fit the page or allowed to scroll\nMight be inconvenient for desktop users"),
 									value: model.science.scrollableGraphs,
 									onChanged: model.science.updateScrollableGraphs,
-								),),
+								),
 							],
 						),
 						const Divider(),
 						ValueEditor<AutonomySettings>(
 							name: "Autonomy settings",
 							children: [
-								ColoredBox(color: Colors.blueGrey[50]!, child: NumberEditor(
+								NumberEditor(
 									name: "Block size", 
 									subtitle: "The precision of the GPS grid", 
 									model: model.autonomy.blockSize,
-								),),
+								),
 							],
 						),
 						const Divider(),

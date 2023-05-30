@@ -29,7 +29,7 @@ class PositionMetrics extends Metrics<RoverPosition> {
     "  Latitude: ${data.gps.latitude.toStringAsFixed(2)}°",
 		"  Longitude: ${data.gps.longitude.toStringAsFixed(2)}°",
 		"  Altitude: ${data.gps.altitude.toStringAsFixed(2)} m",
-		"Orientation: ${data.orientation.y.toStringAsFixed(2)} ° of N",
+		"Orientation: ${data.orientation.y.toStringAsFixed(2)}° of N",
     "Distance: ${data.gps.distanceTo(baseStation).toStringAsFixed(2)} m",
 	];
 

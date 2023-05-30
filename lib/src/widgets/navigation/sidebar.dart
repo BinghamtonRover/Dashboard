@@ -74,7 +74,7 @@ class ControlsDisplay extends StatelessWidget {
 			expandedAlignment: Alignment.centerLeft,
 			childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
 			title: Text(
-				"Gamepad $gamepadNum: ${controller.controls.mode.name}", 
+				controller.controls.mode.name, 
 				style: Theme.of(context).textTheme.titleLarge,
 				textAlign: TextAlign.start,
 			),
