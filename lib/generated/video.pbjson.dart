@@ -36,11 +36,13 @@ const CameraName$json = const {
     const {'1': 'ARM_GRIPPER', '2': 4},
     const {'1': 'SCIENCE_CAROUSEL', '2': 5},
     const {'1': 'SCIENCE_MICROSCOPE', '2': 6},
+    const {'1': 'AUTONOMY_DEPTH', '2': 7},
+    const {'1': 'SCIENCE_VACUUM', '2': 8},
   ],
 };
 
 /// Descriptor for `CameraName`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List cameraNameDescriptor = $convert.base64Decode('CgpDYW1lcmFOYW1lEhkKFUNBTUVSQV9OQU1FX1VOREVGSU5FRBAAEg8KC1JPVkVSX0ZST05UEAESDgoKUk9WRVJfUkVBUhACEgwKCEFSTV9CQVNFEAMSDwoLQVJNX0dSSVBQRVIQBBIUChBTQ0lFTkNFX0NBUk9VU0VMEAUSFgoSU0NJRU5DRV9NSUNST1NDT1BFEAY=');
+final $typed_data.Uint8List cameraNameDescriptor = $convert.base64Decode('CgpDYW1lcmFOYW1lEhkKFUNBTUVSQV9OQU1FX1VOREVGSU5FRBAAEg8KC1JPVkVSX0ZST05UEAESDgoKUk9WRVJfUkVBUhACEgwKCEFSTV9CQVNFEAMSDwoLQVJNX0dSSVBQRVIQBBIUChBTQ0lFTkNFX0NBUk9VU0VMEAUSFgoSU0NJRU5DRV9NSUNST1NDT1BFEAYSEgoOQVVUT05PTVlfREVQVEgQBxISCg5TQ0lFTkNFX1ZBQ1VVTRAI');
 @$core.Deprecated('Use cameraDetailsDescriptor instead')
 const CameraDetails$json = const {
   '1': 'CameraDetails',

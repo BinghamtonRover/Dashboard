@@ -44,6 +44,8 @@ class CameraName extends $pb.ProtobufEnum {
   static const CameraName ARM_GRIPPER = CameraName._(4, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ARM_GRIPPER');
   static const CameraName SCIENCE_CAROUSEL = CameraName._(5, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SCIENCE_CAROUSEL');
   static const CameraName SCIENCE_MICROSCOPE = CameraName._(6, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SCIENCE_MICROSCOPE');
+  static const CameraName AUTONOMY_DEPTH = CameraName._(7, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'AUTONOMY_DEPTH');
+  static const CameraName SCIENCE_VACUUM = CameraName._(8, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SCIENCE_VACUUM');
 
   static const $core.List<CameraName> values = <CameraName> [
     CAMERA_NAME_UNDEFINED,
@@ -53,6 +55,8 @@ class CameraName extends $pb.ProtobufEnum {
     ARM_GRIPPER,
     SCIENCE_CAROUSEL,
     SCIENCE_MICROSCOPE,
+    AUTONOMY_DEPTH,
+    SCIENCE_VACUUM,
   ];
 
   static final $core.Map<$core.int, CameraName> _byValue = $pb.ProtobufEnum.initByValue(values);
