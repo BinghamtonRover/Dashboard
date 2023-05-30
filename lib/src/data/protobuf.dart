@@ -62,6 +62,9 @@ extension CoordinatesUtils on Coordinates {
 	/// Adds two coordinates.
 	Coordinates operator +(Coordinates other) => 
 		Coordinates(x: x + other.x, y: y + other.y, z: z + other.z);
+
+	/// Returns a user-friendly format of these coordinates.
+	String get prettyPrint => "(${x.toStringAsFixed(2)}, ${y.toStringAsFixed(2)}, ${z.toStringAsFixed(2)})";
 }
 
 /// Extensions for [CameraName] values.
@@ -212,5 +215,26 @@ extension MarsStatusUtils on MarsStatus {
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized MarsStatus: $this");
+	}
+}
+
+/// Utilities for [MotorDirection]s.
+extension MotorDirectionUtils on MotorDirection {
+	/// The human-readable name of the direction
+	String get humanName {
+		switch (this) {
+			case MotorDirection.MOTOR_DIRECTION_UNDEFINED: return "Unknown";
+			case MotorDirection.UP: return "Up";
+			case MotorDirection.DOWN: return "Down";
+			case MotorDirection.LEFT: return "Left";
+			case MotorDirection.RIGHT: return "Right";
+			case MotorDirection.CLOCKWISE: return "Clockwise";
+			case MotorDirection.COUNTER_CLOCKWISE: return "Counter clockwise";
+			case MotorDirection.OPENING: return "Opening";
+			case MotorDirection.CLOSING: return "Closing";
+			case MotorDirection.NOT_MOVING: return "Not moving";
+		}
+		// Do not use default or else you'll lose exhaustiveness checking.
+		throw ArgumentError("Unrecognized MotorDirection: $this");
 	}
 }
