@@ -13,6 +13,24 @@ abstract class ValueBuilder<T> with ChangeNotifier {
 	/// 
 	/// Do not try to access [value] if this is false.
 	bool get isValid;
+
+	/// Other builders to listen to.
+	List<ValueBuilder<dynamic>> get otherBuilders => [];
+
+	/// Listens to all [otherBuilders] as part of this builder.
+	ValueBuilder() {
+		for (final builder in otherBuilders) {
+			builder.addListener(notifyListeners);
+		}
+	}
+
+	@override
+	void dispose() {
+		for (final builder in otherBuilders) {
+			builder.removeListener(notifyListeners);
+		}
+		super.dispose();
+	}
 }
 
 /// A [ValueBuilder] backed by a Flutter [TextField].
@@ -28,8 +46,8 @@ abstract class TextBuilder<T> extends ValueBuilder<T> {
 	/// Creates a view model to update settings.
 	/// 
 	/// If [text] is not null, it will be used instead of [value] to prefill the [controller].
-	TextBuilder(this.value, {String? text}) : 
-		controller = TextEditingController(text: text ?? value.toString());
+	TextBuilder(this.value, {String? text}) :
+		controller = TextEditingController(text: text ?? value.toString()), super();
 
 	/// The error to display in the UI, if any.
 	String? error;
@@ -51,24 +69,29 @@ class NumberBuilder<T extends num> extends TextBuilder<T> {
 	/// Whether this builder is modifying a decimal number.
 	bool get isInteger => List<int> == List<T>;
 
+	/// The minimum allowed value.
+	num? min;
+
+	/// The maximum allowed value.
+	num? max;
+
 	/// Creates a number builder based on an initial value.
-	NumberBuilder(super.value);
+	NumberBuilder(super.value, {this.min, this.max});
 
 	@override
 	void update(String input) {
 		if (input.isEmpty) {
-			error = "Must not be empty";
+			error = "Empty";
 		} else if (double.tryParse(input) == null) {
 			error = "Invalid number";
 		} else if (isInteger && int.tryParse(input) == null) {
-			error = "Must be an integer";
+			error = "Not an integer";
 		} else {
 			error = null;
-			if (isInteger) {
-				value = int.parse(input) as T;
-			} else {
-				value = double.parse(input) as T;
-			}
+			final T result = isInteger ? (int.parse(input) as T) : (double.parse(input) as T);
+			if (min != null && result < min!) error = "Must be >$min";
+			if (max != null && result > max!) error = "Must be <$max";
+			value = result;
 		}
 		notifyListeners();
 	}

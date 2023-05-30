@@ -11,6 +11,10 @@ import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'gps.pb.dart' as $0;
 
+import 'mars.pbenum.dart';
+
+export 'mars.pbenum.dart';
+
 class MarsCommand extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'MarsCommand', createEmptyInstance: create)
     ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'swivel', $pb.PbFieldType.OF)
@@ -109,6 +113,7 @@ class MarsData extends $pb.GeneratedMessage {
     ..a<$core.double>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'swivel', $pb.PbFieldType.OF)
     ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'tilt', $pb.PbFieldType.OF)
     ..aOM<$0.GpsCoordinates>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'coordinates', subBuilder: $0.GpsCoordinates.create)
+    ..e<MarsStatus>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'status', $pb.PbFieldType.OE, defaultOrMaker: MarsStatus.MARS_STATUS_UNDEFINED, valueOf: MarsStatus.valueOf, enumValues: MarsStatus.values)
     ..hasRequiredFields = false
   ;
 
@@ -117,6 +122,7 @@ class MarsData extends $pb.GeneratedMessage {
     $core.double? swivel,
     $core.double? tilt,
     $0.GpsCoordinates? coordinates,
+    MarsStatus? status,
   }) {
     final _result = create();
     if (swivel != null) {
@@ -127,6 +133,9 @@ class MarsData extends $pb.GeneratedMessage {
     }
     if (coordinates != null) {
       _result.coordinates = coordinates;
+    }
+    if (status != null) {
+      _result.status = status;
     }
     return _result;
   }
@@ -179,5 +188,14 @@ class MarsData extends $pb.GeneratedMessage {
   void clearCoordinates() => clearField(3);
   @$pb.TagNumber(3)
   $0.GpsCoordinates ensureCoordinates() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  MarsStatus get status => $_getN(3);
+  @$pb.TagNumber(4)
+  set status(MarsStatus v) { setField(4, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasStatus() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearStatus() => clearField(4);
 }
 

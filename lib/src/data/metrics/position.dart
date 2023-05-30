@@ -1,4 +1,5 @@
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 
 /// Metrics about the rover's position and orientation.
 /// 
@@ -24,11 +25,17 @@ class PositionMetrics extends Metrics<RoverPosition> {
 
 	@override
 	List<String> get allMetrics => [  
-    "Latitude: ${data.gps.latitude}",
-		"Longitude: ${data.gps.longitude}",
-		"Altitude: ${data.gps.altitude}",
-		"Orientation: ${data.orientation.y}",
-		"base station: ${baseStation.latitude}",
-    "Distance to base stattion: ${data.gps.distanceTo(baseStation)}",
+    "GPS: ",
+    "  Latitude: ${data.gps.latitude.toStringAsFixed(2)}°",
+		"  Longitude: ${data.gps.longitude.toStringAsFixed(2)}°",
+		"  Altitude: ${data.gps.altitude.toStringAsFixed(2)} m",
+		"Orientation: ${data.orientation.y.toStringAsFixed(2)}° of N",
+    "Distance: ${data.gps.distanceTo(baseStation).toStringAsFixed(2)} m",
 	];
+
+	@override
+	void update(RoverPosition value) {
+		super.update(value);
+		models.sockets.mars.sendMessage(MarsCommand(rover: value.gps));
+	}
 }

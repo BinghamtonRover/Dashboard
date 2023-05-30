@@ -65,6 +65,9 @@ class NumberEditor extends StatelessWidget {
 	final NumberBuilder model;
 
 	/// How much space to allocate in between the label and text field.
+	final double? width;
+
+	/// The amount of space to allocate to the title.
 	final int titleFlex;
 
 	/// Creates a widget to modify a number.
@@ -73,21 +76,24 @@ class NumberEditor extends StatelessWidget {
 		required this.model, 
 		this.subtitle,
 		this.titleFlex = 4,
+		this.width,
 	});
 
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<TextBuilder<num>>.value(
 		value: model,
 		builder: (model) => Row(
+			mainAxisSize: MainAxisSize.min,
 			children: [
 				Expanded(
-					flex: titleFlex, 
+					flex: titleFlex,
 					child: subtitle == null ? ListTile(title: Text(name)) : ListTile(
 						title: Text(name),
 						subtitle: Text(subtitle!),
 					),
 				),
-				const Spacer(),
+				if (width == null) const Spacer()
+				else SizedBox(width: width),
 				Expanded(child: TextField(
 					onChanged: model.update,
 					decoration: InputDecoration(errorText: model.error),

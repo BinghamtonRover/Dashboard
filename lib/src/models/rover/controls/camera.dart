@@ -10,10 +10,14 @@ class CameraControls extends RoverControls {
 
 	@override
 	List<Message> parseInputs(GamepadState state) => [
-		DriveCommand(frontSwivel: state.normalRightX * 1000),
-		DriveCommand(frontTilt: state.normalRightY * 1000),
-		DriveCommand(rearSwivel: state.normalLeftX * 1000),
-		DriveCommand(rearTilt: state.normalLeftY * 1000),
+		if (state.normalRightTrigger.abs() > 0.75) ...[
+			DriveCommand(frontSwivel: 90 - state.normalRightX * 90),
+			DriveCommand(frontTilt: 90 - state.normalRightY * 90),
+		],
+		if (state.normalLeftTrigger.abs() > 0.75) ...[
+			DriveCommand(rearSwivel: 90 - state.normalLeftX * 90),
+			DriveCommand(rearTilt: 90 + state.normalLeftY * 90),
+		]
 	];
 
 	@override
@@ -21,7 +25,7 @@ class CameraControls extends RoverControls {
 
 	@override
 	Map<String, String> get buttonMapping => {
-		"Front camera": "Left joystick",
-		"Rear camera": "Right joystick",
+		"Front camera": "Right trigger + joystick",
+		"Rear camera": "Left trigger + joystick",
 	};
 }

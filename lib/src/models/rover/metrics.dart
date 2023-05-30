@@ -1,7 +1,6 @@
 import "dart:async";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/services.dart";
 
 /// A data model that listens for updated data and provides [Metrics] to the UI.
 class RoverMetrics extends Model {
@@ -20,56 +19,54 @@ class RoverMetrics extends Model {
   /// Data from the MARS subsystem.
   final mars = MarsMetrics();
 
+  /// Data from the HREI subsystem about the arm base.
+  final arm = ArmMetrics();
+
+  /// Data from the HREI subsystem about the gripper.
+  final gripper = GripperMetrics();
+
 	/// A list of all the metrics to iterate over.
 	///
 	/// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
 	/// when new data is received. As a getter, every time it is called it will use new data.
-	List<Metrics> get allMetrics => [position, mars, electrical, drive, science];
-
-	/// Updates the [metrics] object, updates the UI, and saves [data] to a file.
-	void update<T extends Message>(Metrics<T> metrics, T data) {
-		metrics.update(data);
-		services.files.logData(data);
-	}
+	List<Metrics> get allMetrics => [position, mars, electrical, drive, science, arm, gripper];
 
 	@override
 	Future<void> init() async {
 		models.sockets.data.registerHandler<ElectricalData>(
 			name: ElectricalData().messageName,
 			decoder: ElectricalData.fromBuffer,
-			handler: (data) => update(electrical, data),
+			handler: electrical.update,
 		);
 		models.sockets.data.registerHandler<DriveData>(
 			name: DriveData().messageName,
 			decoder: DriveData.fromBuffer,
-			handler: (data) {
-				// Since the values are often zero, [Metrics.merge] won't work.
-				if (data.setLeft) drive.data.left = data.left;
-				if (data.setRight) drive.data.right = data.right;
-				if (data.setThrottle) drive.data.throttle = data.throttle;
-				drive.notifyListeners();
-			},
+			handler: drive.update,
 		);
 		models.sockets.data.registerHandler<ScienceData>(
 			name: ScienceData().messageName,
 			decoder: ScienceData.fromBuffer,
-			handler: (data) => update(science, data),
+			handler: science.update,
 		);
-    models.sockets.data.registerHandler<RoverPosition>(
+    models.sockets.autonomy.registerHandler<RoverPosition>(
 			name: RoverPosition().messageName,
 			decoder: RoverPosition.fromBuffer,
-			handler: (data) {
-				update(position, data);
-				models.sockets.mars.sendMessage(MarsCommand(rover: data.gps));
-			},
+			handler: position.update,
 		);
-		models.sockets.data.registerHandler<MarsData>(
+		models.sockets.mars.registerHandler<MarsData>(
 			name: MarsData().messageName,
 			decoder: MarsData.fromBuffer,
-			handler: (data) {
-				update(mars, data);
-				position.baseStation = data.coordinates;
-			},
+			handler: mars.update,
+		);
+		models.sockets.data.registerHandler<ArmData>(
+			name: ArmData().messageName,
+			decoder: ArmData.fromBuffer,
+			handler: arm.update,
+		);
+		models.sockets.data.registerHandler<GripperData>(
+			name: GripperData().messageName,
+			decoder: GripperData.fromBuffer,
+			handler: gripper.update,
 		);
 	}
 }

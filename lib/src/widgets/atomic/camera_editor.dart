@@ -35,12 +35,15 @@ class CameraDetailsEditor extends StatelessWidget {
 			content: SingleChildScrollView(
 				child: Column(
 					children: [
-						DropdownEditor<CameraStatus>(
-							name: "Status",
-							humanName: (value) => value.humanName,
-							value: model.status,
-							onChanged: model.updateStatus,
-							items: CameraDetailsBuilder.okStatuses,
+						Padding(
+							padding: const EdgeInsets.symmetric(horizontal: 16),
+							child: DropdownEditor<CameraStatus>(
+								name: "Status",
+								humanName: (value) => value.humanName,
+								value: model.status,
+								onChanged: model.updateStatus,
+								items: CameraDetailsBuilder.okStatuses,
+							),
 						),
 						NumberEditor(
 							name: "Resolution height",

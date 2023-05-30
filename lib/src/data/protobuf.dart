@@ -62,6 +62,9 @@ extension CoordinatesUtils on Coordinates {
 	/// Adds two coordinates.
 	Coordinates operator +(Coordinates other) => 
 		Coordinates(x: x + other.x, y: y + other.y, z: z + other.z);
+
+	/// Returns a user-friendly format of these coordinates.
+	String get prettyPrint => "(${x.toStringAsFixed(2)}, ${y.toStringAsFixed(2)}, ${z.toStringAsFixed(2)})";
 }
 
 /// Extensions for [CameraName] values.
@@ -74,11 +77,13 @@ extension CameraNameUtils on CameraName {
 			case CameraName.ROVER_REAR: return "Rover rear";
 			case CameraName.ARM_BASE: return "Arm";
 			case CameraName.ARM_GRIPPER: return "Gripper";
-			case CameraName.SCIENCE_CAROUSEL: return "Science";
+			case CameraName.SCIENCE_CAROUSEL: return "Carousel";
 			case CameraName.SCIENCE_MICROSCOPE: return "Microscope";
+			case CameraName.SCIENCE_VACUUM: return "Vacuum";
+			case CameraName.AUTONOMY_DEPTH: return "Depth";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
-		throw ArgumentError("Unrecognized rover status: $this");
+		throw ArgumentError("Unrecognized camera name: $this");
 	}
 }
 
@@ -135,13 +140,20 @@ extension DeviceUtils on Device {
 
 /// Utilities for Gps Coordinates Data
 extension GpsUtils on GpsCoordinates {
-  /// Calculate Euclidean distance between current coordinates and another set of coordinates
-  num distanceTo(GpsCoordinates other) => pow(
-    pow(latitude - other.latitude, 2) 
-      + pow(longitude - other.longitude, 2) 
-      + pow(altitude - other.altitude, 2), 
-    0.5,
-  );
+  /// Calculate Euclidean distance between current coordinates and another set of coordinates.
+  /// 
+  /// See https://en.wikipedia.org/wiki/Geographic_coordinate_system#Length_of_a_degree
+  double distanceTo(GpsCoordinates other) {
+  	// Convert to distance in meters and use Pythagorean theorem
+  	final latitudeDistance = 111132.92 - 559.82*cos(2*latitude) + 1.175*cos(4*latitude) - 0.0023*cos(6*latitude);
+  	final longitudeDistance = 111412.84*cos(latitude) - 93.5*cos(3*latitude) + 0.118*cos(5*latitude);
+  	return pow(
+	    pow((latitude - other.latitude)*latitudeDistance, 2)
+		    + pow((longitude - other.longitude)*longitudeDistance, 2)
+	      + pow(altitude - other.altitude, 2),
+	    0.5,
+	  ).toDouble();
+  }
 }
 
 /// Utilities for [AutonomyState]s.
@@ -187,5 +199,42 @@ extension ScienceStateUtils on ScienceState {
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized task: $this");
+	}
+}
+
+/// Utilities for [MarsStatus]es.
+extension MarsStatusUtils on MarsStatus {
+	/// The human-readable name of the status
+	String get humanName {
+		switch (this) {
+			case MarsStatus.MARS_STATUS_UNDEFINED: return "Not available";
+			case MarsStatus.PORT_NOT_FOUND: return "Could not open port";
+			case MarsStatus.TEENSY_UNRESPONSIVE: return "Teensy unresponsive";
+			case MarsStatus.FAILED_HANDSHAKE: return "Failed handshake";
+			case MarsStatus.TEENSY_CONNECTED: return "Connected";
+		}
+		// Do not use default or else you'll lose exhaustiveness checking.
+		throw ArgumentError("Unrecognized MarsStatus: $this");
+	}
+}
+
+/// Utilities for [MotorDirection]s.
+extension MotorDirectionUtils on MotorDirection {
+	/// The human-readable name of the direction
+	String get humanName {
+		switch (this) {
+			case MotorDirection.MOTOR_DIRECTION_UNDEFINED: return "Unknown";
+			case MotorDirection.UP: return "Up";
+			case MotorDirection.DOWN: return "Down";
+			case MotorDirection.LEFT: return "Left";
+			case MotorDirection.RIGHT: return "Right";
+			case MotorDirection.CLOCKWISE: return "Clockwise";
+			case MotorDirection.COUNTER_CLOCKWISE: return "Counter clockwise";
+			case MotorDirection.OPENING: return "Opening";
+			case MotorDirection.CLOSING: return "Closing";
+			case MotorDirection.NOT_MOVING: return "Not moving";
+		}
+		// Do not use default or else you'll lose exhaustiveness checking.
+		throw ArgumentError("Unrecognized MotorDirection: $this");
 	}
 }

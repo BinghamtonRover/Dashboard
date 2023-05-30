@@ -19,4 +19,13 @@ class DriveMetrics extends Metrics<DriveData> {
 		"Left: ${data.left.toStringAsFixed(2)}",
 		"Right: ${data.right.toStringAsFixed(2)}",
 	];
+
+	@override
+	void update(DriveData value) {
+		// Since the values are often zero, [Metrics.merge] won't work.
+		if (value.setLeft) data.left = value.left;
+		if (value.setRight) data.right = value.right;
+		if (value.setThrottle) data.throttle = value.throttle;
+		notifyListeners();
+	}
 }

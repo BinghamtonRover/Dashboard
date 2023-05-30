@@ -70,15 +70,20 @@ class AutonomyPage extends StatelessWidget {
 						builder: (command) => Row(mainAxisSize: MainAxisSize.min, children: [
 							const SizedBox(width: 4),
 							Text("Next destination: ", style: context.textTheme.titleLarge),
-							Expanded(child: NumberEditor(
+							const Spacer(),
+							SizedBox(width: 250, child: NumberEditor(
 								name: "Longitude",
 								model: command.longitude,
+								width: 12,
+								titleFlex: 1,
 							),),
-							Expanded(child: NumberEditor(
+							SizedBox(width: 250, child: NumberEditor(
 								name: "Latitude",
 								model: command.latitude,
+								width: 12,
+								titleFlex: 1,
 							),),
-							Expanded(child: DropdownEditor<AutonomyTask>(
+							DropdownEditor<AutonomyTask>(
 								name: "Task type",
 								value: command.task,
 								items: [
@@ -87,7 +92,7 @@ class AutonomyPage extends StatelessWidget {
 								],
 								onChanged: command.updateTask,
 								humanName: (task) => task.humanName,
-							),),
+							),
 							ElevatedButton(
 								onPressed: command.isLoading ? null : command.submit, 
 								child: const Text("Submit"),

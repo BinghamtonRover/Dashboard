@@ -131,13 +131,13 @@ const temperature = ScienceSensor(
 const humidity = ScienceSensor(
 	name: "Humidity", 
 	test: humidityTest,
-	testDescription: "Average above 20%",
+	testDescription: "Average above 20%: Extant",
 );
 /// The pH sensor.
 const pH = ScienceSensor(
 	name: "pH", 
 	test: pHTest,
-	testDescription: "Average between 3 and 12 -> Extant",
+	testDescription: "Average between 3 and 12: Extant",
 );
 /// The co2 sensor.
 const co2 = ScienceSensor(

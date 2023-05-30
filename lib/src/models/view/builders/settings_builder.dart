@@ -44,20 +44,16 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
   /// The view model representing the [SocketConfig] for the rover.
 	final SocketBuilder marsSocket;
 
+	@override
+	List<SocketBuilder> get otherBuilders => [dataSocket, videoSocket, autonomySocket, tankSocket, marsSocket];
+
 	/// Creates the view model based on the current [Settings].
 	NetworkSettingsBuilder(NetworkSettings initial) :
 		dataSocket = SocketBuilder(initial.subsystemsSocket),
 		videoSocket = SocketBuilder(initial.videoSocket),
 		autonomySocket = SocketBuilder(initial.autonomySocket),
 		tankSocket = SocketBuilder(initial.tankSocket),
-    marsSocket = SocketBuilder(initial.marsSocket)
-	{
-		dataSocket.addListener(notifyListeners);
-		videoSocket.addListener(notifyListeners);
-		autonomySocket.addListener(notifyListeners);
-		tankSocket.addListener(notifyListeners);
-    marsSocket.addListener(notifyListeners);
-	}
+    marsSocket = SocketBuilder(initial.marsSocket);
 
 	@override
 	bool get isValid => dataSocket.isValid

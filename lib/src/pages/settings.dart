@@ -25,6 +25,7 @@ class ValueEditor<T> extends StatelessWidget {
 	Widget build(BuildContext context) => Column(
 		crossAxisAlignment: CrossAxisAlignment.start,
 		children: [
+			const SizedBox(height: 4),
 			Padding(
 				padding: const EdgeInsets.symmetric(horizontal: 8),
 				child: Text(
@@ -33,6 +34,7 @@ class ValueEditor<T> extends StatelessWidget {
 					textAlign: TextAlign.start,
 				),			
 			),
+			const SizedBox(height: 4),
 			...children,
 		],
 	);
@@ -78,7 +80,7 @@ class SettingsPage extends StatelessWidget {
 							children: [
 								NumberEditor(
 									name: "Frames per second", 
-									subtitle: "This does not affect the rover's cameras\nUseful for limiting the CPU of the dashboard",
+									subtitle: "This does not affect the rover's cameras. Useful for limiting the CPU of the dashboard",
 									model: model.video.fps,
 								),
 							],
@@ -112,7 +114,7 @@ class SettingsPage extends StatelessWidget {
 								),
 								SwitchListTile(
 									title: const Text("Scrollable graphs"),
-									subtitle: const Text("Graphs can either be forced to fit the page or allowed to scroll\nMight be inconvenient for some users on desktop"),
+									subtitle: const Text("Graphs can either be forced to fit the page or allowed to scroll\nMight be inconvenient for desktop users"),
 									value: model.science.scrollableGraphs,
 									onChanged: model.science.updateScrollableGraphs,
 								),
