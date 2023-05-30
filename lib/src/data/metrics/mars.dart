@@ -16,9 +16,15 @@ class MarsMetrics extends Metrics<MarsData> {
 	List<String> get allMetrics => [
 		"Swivel: ${data.swivel}",
 		"Tilt: ${data.tilt}",
+		"Teensy: ${data.status.humanName}",
 		"GPS:",
 		"  Latitude: ${data.coordinates.latitude}",
 		"  Longitude: ${data.coordinates.longitude}",
 		"  Altitude: ${data.coordinates.altitude}",
 	];
+
+	void clearStatus() {
+		data.clearStatus();
+		notifyListeners();
+	}
 }

@@ -55,7 +55,7 @@ class RoverMetrics extends Model {
 			decoder: ScienceData.fromBuffer,
 			handler: (data) => update(science, data),
 		);
-    models.sockets.data.registerHandler<RoverPosition>(
+    models.sockets.autonomy.registerHandler<RoverPosition>(
 			name: RoverPosition().messageName,
 			decoder: RoverPosition.fromBuffer,
 			handler: (data) {
@@ -63,7 +63,7 @@ class RoverMetrics extends Model {
 				models.sockets.mars.sendMessage(MarsCommand(rover: data.gps));
 			},
 		);
-		models.sockets.data.registerHandler<MarsData>(
+		models.sockets.mars.registerHandler<MarsData>(
 			name: MarsData().messageName,
 			decoder: MarsData.fromBuffer,
 			handler: (data) {

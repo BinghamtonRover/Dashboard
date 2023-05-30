@@ -189,3 +189,19 @@ extension ScienceStateUtils on ScienceState {
 		throw ArgumentError("Unrecognized task: $this");
 	}
 }
+
+/// Utilities for [MarsStatus]es.
+extension MarsStatusUtils on MarsStatus {
+	/// The human-readable name of the status
+	String get humanName {
+		switch (this) {
+			case MarsStatus.MARS_STATUS_UNDEFINED: return "Not available";
+			case MarsStatus.PORT_NOT_FOUND: return "Could not open port";
+			case MarsStatus.TEENSY_UNRESPONSIVE: return "Teensy unresponsive";
+			case MarsStatus.FAILED_HANDSHAKE: return "Failed handshake";
+			case MarsStatus.TEENSY_CONNECTED: return "Connected";
+		}
+		// Do not use default or else you'll lose exhaustiveness checking.
+		throw ArgumentError("Unrecognized MarsStatus: $this");
+	}
+}

@@ -1,3 +1,5 @@
+import "dart:math";
+
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 
@@ -10,8 +12,8 @@ class MarsControls extends RoverControls {
 
 	@override
 	List<Message> parseInputs(GamepadState state) => [
-		MarsCommand(swivel: state.normalLeftX * 1000),
-		MarsCommand(tilt: state.normalRightY * 1000),
+		if (state.normalLeftX != 0) MarsCommand(swivel: state.normalLeftX * pi / 50),
+		if (state.normalRightY != 0) MarsCommand(tilt: state.normalRightY * 5000),
 	];
 
 	@override
