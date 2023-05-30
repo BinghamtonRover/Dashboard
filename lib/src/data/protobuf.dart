@@ -137,13 +137,20 @@ extension DeviceUtils on Device {
 
 /// Utilities for Gps Coordinates Data
 extension GpsUtils on GpsCoordinates {
-  /// Calculate Euclidean distance between current coordinates and another set of coordinates
-  num distanceTo(GpsCoordinates other) => pow(
-    pow(latitude - other.latitude, 2) 
-      + pow(longitude - other.longitude, 2) 
-      + pow(altitude - other.altitude, 2), 
-    0.5,
-  );
+  /// Calculate Euclidean distance between current coordinates and another set of coordinates.
+  /// 
+  /// See https://en.wikipedia.org/wiki/Geographic_coordinate_system#Length_of_a_degree
+  double distanceTo(GpsCoordinates other) {
+  	// Convert to distance in meters and use Pythagorean theorem
+  	final latitudeDistance = 111132.92 - 559.82*cos(2*latitude) + 1.175*cos(4*latitude) - 0.0023*cos(6*latitude);
+  	final longitudeDistance = 111412.84*cos(latitude) - 93.5*cos(3*latitude) + 0.118*cos(5*latitude);
+  	return pow(
+	    pow((latitude - other.latitude)*latitudeDistance, 2)
+		    + pow((longitude - other.longitude)*longitudeDistance, 2)
+	      + pow(altitude - other.altitude, 2),
+	    0.5,
+	  ).toDouble();
+  }
 }
 
 /// Utilities for [AutonomyState]s.
