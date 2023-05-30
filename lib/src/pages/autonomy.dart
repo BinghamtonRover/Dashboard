@@ -65,8 +65,8 @@ class AutonomyPage extends StatelessWidget {
 							onChanged: (value) => model.zoom(value.toInt()),
 						),),
 					],),
-					ProviderConsumer<AutonomyCommandBuilder>.value(
-						value: model.command,
+					ProviderConsumer<AutonomyCommandBuilder>(
+						create: () => AutonomyCommandBuilder(),
 						builder: (command) => Row(mainAxisSize: MainAxisSize.min, children: [
 							const SizedBox(width: 4),
 							Text("Next destination: ", style: context.textTheme.titleLarge),
