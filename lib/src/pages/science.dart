@@ -131,6 +131,8 @@ class SciencePage extends StatelessWidget {
 		),
 		extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)], verticalLines: [VerticalLine(x: 0)]),
 		minX: 0, minY: 0,
+		clipData: FlClipData.all(),
+		lineTouchData: LineTouchData(touchTooltipData: LineTouchTooltipData(fitInsideVertically: true, fitInsideHorizontally: true)),
 	);
 
 	/// The `package:fl_chart` helper class for the summary charts.
@@ -154,6 +156,7 @@ class SciencePage extends StatelessWidget {
 				),
 			),
 		),
+		barTouchData: BarTouchData(touchTooltipData: BarTouchTooltipData(fitInsideVertically: true, fitInsideHorizontally: true)),
 	);
 
 	@override
@@ -231,8 +234,8 @@ class SciencePage extends StatelessWidget {
 							const SizedBox(width: 12),
 							Text("State: ${models.rover.metrics.science.data.state.humanName}", style: context.textTheme.titleMedium),
 							const Spacer(),
-							Text("Send command", style: context.textTheme.titleLarge),
-							SizedBox(width: 150, child: NumberEditor(name: "Sample: ", model: command.sample)),
+							Text("Command", style: context.textTheme.titleLarge),
+							SizedBox(width: 125, child: NumberEditor(width: 4, name: "Sample: ", model: command.sample)),
 							SizedBox(child: DropdownEditor(
 								name: "State: ",
 								value: command.state,
