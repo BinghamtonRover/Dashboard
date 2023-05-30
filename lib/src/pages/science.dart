@@ -304,17 +304,14 @@ class ResultsBox extends StatelessWidget {
 		NumberEditor(
 			name: "Min",
 			model: analysis.testBuilder.min,
-			titleFlex: 1,
 		),
 		NumberEditor(
 			name: "Average",
 			model: analysis.testBuilder.average,
-			titleFlex: 1,
 		),
 		NumberEditor(
 			name: "Max",
 			model: analysis.testBuilder.max,
-			titleFlex: 1,
 		),
 	],);
 }

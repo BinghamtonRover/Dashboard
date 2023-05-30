@@ -87,12 +87,14 @@ class VideoModel extends Model {
 
 	/// Updates the data for a given camera.
 	void handleData(VideoData newData) {
-		if (newData.details.status == CameraStatus.CAMERA_HAS_NO_NAME) {
+		if (
+			(newData.hasFrame() && newData.details.name == CameraName.CAMERA_NAME_UNDEFINED) ||
+			newData.details.status == CameraStatus.CAMERA_HAS_NO_NAME
+		) {
 			models.home.setMessage(severity: Severity.critical, text: "Received feed from camera #${newData.id} with no name");
 			return;
 		}
 		final name = newData.details.name;
-		framesThisSecond[name] = (framesThisSecond[name] ?? 0) + 1;
 		final data = feeds[name]!
 			..details = newData.details
 			..id = newData.id;
@@ -101,6 +103,7 @@ class VideoModel extends Model {
 		// If this is one such packet (doesn't have a frame but status == enabled), don't save.
 		if (newData.hasFrame() && newData.details.status == CameraStatus.CAMERA_ENABLED) {
 			data.frame = newData.frame;
+			framesThisSecond[name] = (framesThisSecond[name] ?? 0) + 1;
 		}
 	}
 
