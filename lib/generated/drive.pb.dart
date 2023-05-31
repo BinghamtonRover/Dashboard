@@ -194,6 +194,8 @@ class DriveData extends $pb.GeneratedMessage {
     ..a<$core.double>(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'frontTilt', $pb.PbFieldType.OF)
     ..a<$core.double>(9, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rearSwivel', $pb.PbFieldType.OF)
     ..a<$core.double>(10, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rearTilt', $pb.PbFieldType.OF)
+    ..a<$core.double>(11, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'leftSensorValue', $pb.PbFieldType.OF, protoName: 'leftSensorValue')
+    ..a<$core.double>(12, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'rightSensorValue', $pb.PbFieldType.OF, protoName: 'rightSensorValue')
     ..hasRequiredFields = false
   ;
 
@@ -209,6 +211,8 @@ class DriveData extends $pb.GeneratedMessage {
     $core.double? frontTilt,
     $core.double? rearSwivel,
     $core.double? rearTilt,
+    $core.double? leftSensorValue,
+    $core.double? rightSensorValue,
   }) {
     final _result = create();
     if (throttle != null) {
@@ -240,6 +244,12 @@ class DriveData extends $pb.GeneratedMessage {
     }
     if (rearTilt != null) {
       _result.rearTilt = rearTilt;
+    }
+    if (leftSensorValue != null) {
+      _result.leftSensorValue = leftSensorValue;
+    }
+    if (rightSensorValue != null) {
+      _result.rightSensorValue = rightSensorValue;
     }
     return _result;
   }
@@ -353,5 +363,23 @@ class DriveData extends $pb.GeneratedMessage {
   $core.bool hasRearTilt() => $_has(9);
   @$pb.TagNumber(10)
   void clearRearTilt() => clearField(10);
+
+  @$pb.TagNumber(11)
+  $core.double get leftSensorValue => $_getN(10);
+  @$pb.TagNumber(11)
+  set leftSensorValue($core.double v) { $_setFloat(10, v); }
+  @$pb.TagNumber(11)
+  $core.bool hasLeftSensorValue() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearLeftSensorValue() => clearField(11);
+
+  @$pb.TagNumber(12)
+  $core.double get rightSensorValue => $_getN(11);
+  @$pb.TagNumber(12)
+  set rightSensorValue($core.double v) { $_setFloat(11, v); }
+  @$pb.TagNumber(12)
+  $core.bool hasRightSensorValue() => $_has(11);
+  @$pb.TagNumber(12)
+  void clearRightSensorValue() => clearField(12);
 }
 

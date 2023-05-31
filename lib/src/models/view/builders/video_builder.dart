@@ -79,7 +79,7 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
 	}
 
 	/// Saves these settings to the rover and updates the UI.
-	Future<bool> saveSettings(int id) async {
+	Future<bool> saveSettings(String id) async {
 		isLoading = true;
 		error = null;
 		notifyListeners();
