@@ -116,7 +116,7 @@ class VideoModel extends Model {
 	}
 
 	/// Updates settings for the given camera.
-	Future<void> updateCamera(int id, CameraDetails details) async { 
+	Future<void> updateCamera(String id, CameraDetails details) async { 
 		_handshake = null;
 		final command = VideoCommand(id: id, details: details);
 		models.sockets.video.sendMessage(command);
