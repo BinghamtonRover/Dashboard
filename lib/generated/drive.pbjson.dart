@@ -41,8 +41,10 @@ const DriveData$json = const {
     const {'1': 'front_tilt', '3': 8, '4': 1, '5': 2, '10': 'frontTilt'},
     const {'1': 'rear_swivel', '3': 9, '4': 1, '5': 2, '10': 'rearSwivel'},
     const {'1': 'rear_tilt', '3': 10, '4': 1, '5': 2, '10': 'rearTilt'},
+    const {'1': 'leftSensorValue', '3': 11, '4': 1, '5': 2, '10': 'leftSensorValue'},
+    const {'1': 'rightSensorValue', '3': 12, '4': 1, '5': 2, '10': 'rightSensorValue'},
   ],
 };
 
 /// Descriptor for `DriveData`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List driveDataDescriptor = $convert.base64Decode('CglEcml2ZURhdGESGgoIdGhyb3R0bGUYASABKAJSCHRocm90dGxlEhIKBGxlZnQYAiABKAJSBGxlZnQSFAoFcmlnaHQYAyABKAJSBXJpZ2h0EhkKCHNldF9sZWZ0GAQgASgIUgdzZXRMZWZ0EhsKCXNldF9yaWdodBgFIAEoCFIIc2V0UmlnaHQSIQoMc2V0X3Rocm90dGxlGAYgASgIUgtzZXRUaHJvdHRsZRIhCgxmcm9udF9zd2l2ZWwYByABKAJSC2Zyb250U3dpdmVsEh0KCmZyb250X3RpbHQYCCABKAJSCWZyb250VGlsdBIfCgtyZWFyX3N3aXZlbBgJIAEoAlIKcmVhclN3aXZlbBIbCglyZWFyX3RpbHQYCiABKAJSCHJlYXJUaWx0');
+final $typed_data.Uint8List driveDataDescriptor = $convert.base64Decode('CglEcml2ZURhdGESGgoIdGhyb3R0bGUYASABKAJSCHRocm90dGxlEhIKBGxlZnQYAiABKAJSBGxlZnQSFAoFcmlnaHQYAyABKAJSBXJpZ2h0EhkKCHNldF9sZWZ0GAQgASgIUgdzZXRMZWZ0EhsKCXNldF9yaWdodBgFIAEoCFIIc2V0UmlnaHQSIQoMc2V0X3Rocm90dGxlGAYgASgIUgtzZXRUaHJvdHRsZRIhCgxmcm9udF9zd2l2ZWwYByABKAJSC2Zyb250U3dpdmVsEh0KCmZyb250X3RpbHQYCCABKAJSCWZyb250VGlsdBIfCgtyZWFyX3N3aXZlbBgJIAEoAlIKcmVhclN3aXZlbBIbCglyZWFyX3RpbHQYCiABKAJSCHJlYXJUaWx0EigKD2xlZnRTZW5zb3JWYWx1ZRgLIAEoAlIPbGVmdFNlbnNvclZhbHVlEioKEHJpZ2h0U2Vuc29yVmFsdWUYDCABKAJSEHJpZ2h0U2Vuc29yVmFsdWU=');

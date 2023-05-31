@@ -132,7 +132,7 @@ class CameraDetails extends $pb.GeneratedMessage {
 
 class VideoData extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'VideoData', createEmptyInstance: create)
-    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
     ..aOM<CameraDetails>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'details', subBuilder: CameraDetails.create)
     ..a<$core.List<$core.int>>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'frame', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
@@ -140,7 +140,7 @@ class VideoData extends $pb.GeneratedMessage {
 
   VideoData._() : super();
   factory VideoData({
-    $core.int? id,
+    $core.String? id,
     CameraDetails? details,
     $core.List<$core.int>? frame,
   }) {
@@ -178,9 +178,9 @@ class VideoData extends $pb.GeneratedMessage {
   static VideoData? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
+  $core.String get id => $_getSZ(0);
   @$pb.TagNumber(1)
-  set id($core.int v) { $_setSignedInt32(0, v); }
+  set id($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
@@ -209,14 +209,14 @@ class VideoData extends $pb.GeneratedMessage {
 
 class VideoCommand extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'VideoCommand', createEmptyInstance: create)
-    ..a<$core.int>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id', $pb.PbFieldType.O3)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
     ..aOM<CameraDetails>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'details', subBuilder: CameraDetails.create)
     ..hasRequiredFields = false
   ;
 
   VideoCommand._() : super();
   factory VideoCommand({
-    $core.int? id,
+    $core.String? id,
     CameraDetails? details,
   }) {
     final _result = create();
@@ -250,9 +250,9 @@ class VideoCommand extends $pb.GeneratedMessage {
   static VideoCommand? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get id => $_getIZ(0);
+  $core.String get id => $_getSZ(0);
   @$pb.TagNumber(1)
-  set id($core.int v) { $_setSignedInt32(0, v); }
+  set id($core.String v) { $_setString(0, v); }
   @$pb.TagNumber(1)
   $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
