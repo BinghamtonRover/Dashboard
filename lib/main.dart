@@ -24,7 +24,7 @@ void main() async {
 			if (error is SocketException && error.osError!.errorCode == 1234) {
 				models.home.setMessage(severity: Severity.critical, text: "Network error, restart by clicking the network icon");
 			} else {
-        models.home.setMessage(severity: Severity.critical, text: "Error: $error");
+        models.home.setMessage(severity: Severity.critical, text: "Error occurred in the dashboard. See the logs");
         services.files.logError(error, stack);
 				Error.throwWithStackTrace(error, stack);
 			}

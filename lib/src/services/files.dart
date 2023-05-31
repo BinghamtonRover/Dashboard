@@ -127,9 +127,8 @@ class FilesService extends Service {
 
   /// Outputs error to log file
   Future<void> logError(Object error, StackTrace stack) async{
-    final file = File("${loggingDir.path}/errors.log");
-    await file.writeAsString(error.toString(), mode: FileMode.writeOnlyAppend);
-    await file.writeAsString(stack.toString(), mode: FileMode.writeOnlyAppend);
+    final file = File("${loggingDir.path}/errors.txt");
+    await file.writeAsString("${DateTime.now().timeStamp} $error $stack\n", mode: FileMode.writeOnlyAppend);
   }
 }
 
