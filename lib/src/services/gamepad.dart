@@ -140,7 +140,7 @@ const vibrateIntensity = 65000;
 /// [update] to read any button presses, or else [Gamepad.state] will never update.
 class GamepadService extends Service {
   /// The maximum number of gamepads we support.
-  static const int numGamepads = 2;
+  static const int numGamepads = 3;
 
   /// A list of all the [Gamepad]s the user has connected.
   /// 
