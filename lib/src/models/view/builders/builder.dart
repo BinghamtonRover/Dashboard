@@ -70,10 +70,10 @@ class NumberBuilder<T extends num> extends TextBuilder<T> {
 	bool get isInteger => List<int> == List<T>;
 
 	/// The minimum allowed value.
-	num? min;
+	final num? min;
 
 	/// The maximum allowed value.
-	num? max;
+	final num? max;
 
 	/// Creates a number builder based on an initial value.
 	NumberBuilder(super.value, {this.min, this.max});
@@ -93,6 +93,14 @@ class NumberBuilder<T extends num> extends TextBuilder<T> {
 			if (max != null && result > max!) error = "Must be <$max";
 			value = result;
 		}
+		notifyListeners();
+	}
+
+	/// Clears the value in this builder.
+	void clear() {
+		error = null;
+		value = (isInteger ? 0 : 0.0) as T;
+		controller.text = value.toString();
 		notifyListeners();
 	}
 }

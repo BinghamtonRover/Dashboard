@@ -41,6 +41,7 @@ export "src/models/view/science.dart";
 
 // Builder models
 export "src/models/view/builders/autonomy_command.dart";
+export "src/models/view/builders/gps.dart";
 export "src/models/view/builders/science_command.dart";
 export "src/models/view/builders/mars_command.dart";
 export "src/models/view/builders/builder.dart";
