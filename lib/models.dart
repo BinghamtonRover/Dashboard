@@ -47,6 +47,7 @@ export "src/models/view/builders/mars_command.dart";
 export "src/models/view/builders/builder.dart";
 export "src/models/view/builders/color_builder.dart";
 export "src/models/view/builders/settings_builder.dart";
+export "src/models/view/builders/timer_builder.dart";
 export "src/models/view/builders/video_builder.dart";
 
 /// A wrapper model around all other data models used by the app.

@@ -16,6 +16,9 @@ class HomeModel extends Model {
 	/// The dashboard's version from the `pubspec.yaml`. 
 	String? version;
 
+  /// Timer to display how much time is left 
+  MissionTimer? timer;
+
 	@override
 	Future<void> init() async { 
 		final info = await PackageInfo.fromPlatform();

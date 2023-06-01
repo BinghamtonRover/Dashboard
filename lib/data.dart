@@ -39,3 +39,4 @@ export "src/data/science.dart";
 export "src/data/settings.dart";
 export "src/data/socket.dart";
 export "src/data/taskbar_message.dart";
+export "src/data/timer.dart";

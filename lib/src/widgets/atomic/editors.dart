@@ -193,6 +193,53 @@ class ColorEditor extends StatelessWidget {
 	);
 }
 
+/// A widget to edit a color, backed by [ColorBuilder].
+class TimerEditor extends StatelessWidget {
+	/// The view model for this color.
+	final TimerBuilder model;
+	/// A widget that modifies the given view model's color.
+	const TimerEditor(this.model);
+
+	@override
+	Widget build(BuildContext context) => ProviderConsumer<TimerBuilder>.value(
+		value: model,
+		builder: (model) => AlertDialog(
+			title: const Text("Start a timer"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+				children: [
+          SizedBox(
+            height: 50, 
+            width: double.infinity,
+            child: TextField(
+              onChanged: model.update,
+              decoration: const InputDecoration(hintText: "Timer Name"),
+            ),
+          ),
+          SizedBox(
+            height: 50, 
+            width: double.infinity,
+            child: TextField(
+              onChanged: model.update,
+              decoration: const InputDecoration(hintText: "Number of Minutes"),
+              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"^[0-9]*$"))],
+            ),
+          ),
+        ],
+      ),
+			actions: [
+				TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
+				ElevatedButton(
+					onPressed: () async {
+						Navigator.of(context).pop();
+					},
+					child: const Text("Save"), 
+				),
+			],
+		),
+	);
+}
+
 /// A widget to edit a GPS coordinate in degree/minute/seconds or decimal format.
 class GpsEditor extends StatelessWidget {
 	/// The [ValueBuilder] backing this widget.
