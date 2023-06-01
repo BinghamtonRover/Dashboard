@@ -16,6 +16,7 @@ class AutonomyPage extends StatelessWidget {
 		AutonomyCell.obstacle => Colors.black,
 		AutonomyCell.path => Colors.blueGrey,
 		AutonomyCell.empty => Colors.white,
+		AutonomyCell.marker => Colors.red,
 	};
 
 	@override
@@ -54,6 +55,10 @@ class AutonomyPage extends StatelessWidget {
 						Container(width: 24, height: 24, color: Colors.blueGrey),
 						const SizedBox(width: 4),
 						Text("Path", style: context.textTheme.titleMedium),
+						const SizedBox(width: 24),
+						Container(width: 24, height: 24, color: Colors.red),
+						const SizedBox(width: 4),
+						Text("Marker", style: context.textTheme.titleMedium),
 						const Spacer(),
 						Text("Zoom: ", style: context.textTheme.titleLarge),
 						Expanded(flex: 2, child: Slider(
@@ -65,24 +70,24 @@ class AutonomyPage extends StatelessWidget {
 							onChanged: (value) => model.zoom(value.toInt()),
 						),),
 					],),
+					Row(children: [
+						const SizedBox(width: 4),
+						Text("Place marker: ", style: context.textTheme.titleLarge),
+						const SizedBox(width: 8),
+						ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text("Clear all"), onPressed: model.clearMarkers),
+						const Spacer(),
+						GpsEditor(model: model.markerBuilder),
+						const SizedBox(width: 8),
+						ElevatedButton(onPressed: model.placeMarker, child: const Text("Place")), 
+						const SizedBox(width: 8),
+					],),
+					const Divider(),
 					ProviderConsumer<AutonomyCommandBuilder>(
 						create: () => AutonomyCommandBuilder(),
 						builder: (command) => Row(mainAxisSize: MainAxisSize.min, children: [
 							const SizedBox(width: 4),
-							Text("Next destination: ", style: context.textTheme.titleLarge),
+							Text("Autonomy: ", style: context.textTheme.titleLarge),
 							const Spacer(),
-							SizedBox(width: 250, child: NumberEditor(
-								name: "Longitude",
-								model: command.longitude,
-								width: 12,
-								titleFlex: 1,
-							),),
-							SizedBox(width: 250, child: NumberEditor(
-								name: "Latitude",
-								model: command.latitude,
-								width: 12,
-								titleFlex: 1,
-							),),
 							DropdownEditor<AutonomyTask>(
 								name: "Task type",
 								value: command.task,
@@ -93,6 +98,9 @@ class AutonomyPage extends StatelessWidget {
 								onChanged: command.updateTask,
 								humanName: (task) => task.humanName,
 							),
+							const SizedBox(width: 16),
+							GpsEditor(model: command.gps),
+							const SizedBox(width: 8),
 							ElevatedButton(
 								onPressed: command.isLoading ? null : command.submit, 
 								child: const Text("Submit"),
@@ -105,14 +113,17 @@ class AutonomyPage extends StatelessWidget {
 			),
 			Container(
 				color: context.colorScheme.surface, 
-				height: 48, 
+				height: 50, 
 				child: Row(children: [  // The header at the top
 					const SizedBox(width: 8),
-					Text("Autonomy", style: context.textTheme.headlineMedium), 
+					Text("Map", style: context.textTheme.headlineMedium), 
 					const Spacer(),
-					Text("State: ${model.data.state.humanName}", style: context.textTheme.headlineSmall),
+					Text("Autonomy status", style: context.textTheme.headlineMedium),
+					const SizedBox(width: 16),
+					Text("State: ${model.data.state.humanName}.", style: context.textTheme.titleLarge),
+					const SizedBox(width: 8),
+					Text("Task: ${model.data.task.humanName}", style: context.textTheme.titleLarge),
 					const VerticalDivider(),
-					Text("Task: ${model.data.task.humanName}", style: context.textTheme.headlineSmall),
 					const ViewsSelector(currentView: Routes.autonomy),
 				],),
 			),

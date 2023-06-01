@@ -14,7 +14,9 @@ enum AutonomyCell {
 	/// This cell is along the rover's path to its destination.
 	path,
 	/// This cell is traversable but otherwise not of interest.
-	empty
+	empty,
+	/// THis cell was manually marked as a point of interest.
+	marker,
 }
 
 /// Like an [Offset] from Flutter, but using integers instead of doubles.
@@ -75,6 +77,11 @@ class AutonomyModel with ChangeNotifier {
 		]
 	];
 
+	/// A list of markers maanually placed by the user. Useful for the Extreme Retrieval Mission.
+	List<GpsCoordinates> markers = [];
+	/// The view model to edit the coordinate of the marker.
+	GpsBuilder markerBuilder = GpsBuilder();
+
 	/// The rover's current position.
 	GpsCoordinates get roverPosition => models.rover.metrics.position.data.gps;
 
@@ -84,13 +91,16 @@ class AutonomyModel with ChangeNotifier {
 	/// The grid of size [gridSize] with the rover in the center, ready to draw on the UI.
 	List<List<AutonomyCell>> get grid {
 		final result = empty;
-		markCell(result, roverPosition, AutonomyCell.rover);	
 		markCell(result, data.destination, AutonomyCell.destination);
+		markCell(result, roverPosition, AutonomyCell.rover);	
 		for (final obstacle in data.obstacles) {
 			markCell(result, obstacle, AutonomyCell.obstacle);
 		}
 		for (final path in data.path) {
 			markCell(result, path, AutonomyCell.path);
+		}
+		for (final marker in markers) {
+			markCell(result, marker, AutonomyCell.marker);
 		}
 		return result;
 	}
@@ -141,6 +151,20 @@ class AutonomyModel with ChangeNotifier {
 	/// A handler to call when new data arrives. Updates [data] and the UI.
 	void onNewData(AutonomyData value) {
 		data.mergeFromMessage(value);
+		notifyListeners();
+	}
+
+	/// Places the marker in [markerBuilder].
+	void placeMarker() {
+		markers.add(markerBuilder.value);
+		markerBuilder.clear();
+		notifyListeners();
+	}
+
+	/// Deletes all the markers in [markers].
+	void clearMarkers() {
+		markers.clear();
+		markerBuilder.clear();
 		notifyListeners();
 	}
 }
