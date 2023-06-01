@@ -75,12 +75,10 @@ extension CameraNameUtils on CameraName {
 			case CameraName.CAMERA_NAME_UNDEFINED: return "";
 			case CameraName.ROVER_FRONT: return "Rover front";
 			case CameraName.ROVER_REAR: return "Rover rear";
-			case CameraName.ARM_BASE: return "Arm";
-			case CameraName.ARM_GRIPPER: return "Gripper";
-			case CameraName.SCIENCE_CAROUSEL: return "Carousel";
-			case CameraName.SCIENCE_MICROSCOPE: return "Microscope";
-			case CameraName.SCIENCE_VACUUM: return "Vacuum";
 			case CameraName.AUTONOMY_DEPTH: return "Depth";
+			case CameraName.SUBSYSTEM1: return "Subsystem 1";
+			case CameraName.SUBSYSTEM2: return "Subsystem 2";
+			case CameraName.SUBSYSTEM3: return "Subsystem 3";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized camera name: $this");

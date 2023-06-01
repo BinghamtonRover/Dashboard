@@ -18,6 +18,8 @@ class DriveMetrics extends Metrics<DriveData> {
 		"Throttle: ${data.throttle.toStringAsFixed(2)}",
 		"Left: ${data.left.toStringAsFixed(2)}",
 		"Right: ${data.right.toStringAsFixed(2)}",
+		"Left sensor: ${data.leftSensorValue.toStringAsFixed(2)}",
+		"Right sensor: ${data.rightSensorValue.toStringAsFixed(2)}",
 	];
 
 	@override
