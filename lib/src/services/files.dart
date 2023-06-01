@@ -124,6 +124,12 @@ class FilesService extends Service {
     for (final line in (await file.readAsString()).trim().split("\n"))
       WrappedMessage.fromBuffer(base64.decode(line))
   ];
+
+  /// Outputs error to log file
+  Future<void> logError(Object error, StackTrace stack) async{
+    final file = File("${loggingDir.path}/errors.txt");
+    await file.writeAsString("${DateTime.now().timeStamp} $error $stack\n", mode: FileMode.writeOnlyAppend);
+  }
 }
 
 extension on FileSystemEntity {
