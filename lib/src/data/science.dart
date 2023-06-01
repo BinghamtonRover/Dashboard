@@ -114,11 +114,13 @@ ScienceResult pHTest(SampleData data) => (data.average! > 3 && data.average! < 1
 	? ScienceResult.extant : ScienceResult.notPresent;
 
 /// The test to determine the presence of life based on CO2 data.
-ScienceResult co2Test(SampleData data) => (data.max! > 409.9) 
+/// The max has to be greater than 10% greater than min for life to exist
+ScienceResult co2Test(SampleData data) => (data.max! >= (data.min! * 1.1)) 
 	? ScienceResult.extant : ScienceResult.notPresent;
 
 /// The test to determine the presence of life based on methane data.
-ScienceResult methaneTest(SampleData data) => (data.max! > 0) 
+/// The max has to be greater than 1
+ScienceResult methaneTest(SampleData data) => (data.min! > 1) 
 	? ScienceResult.extant : ScienceResult.notPresent;
 
 /// The temperature sensor.
@@ -143,13 +145,13 @@ const pH = ScienceSensor(
 const co2 = ScienceSensor(
 	name: "CO2", 
 	test: co2Test,
-	testDescription: "CO2 above 409.8: Extant",
+	testDescription: "Max CO2 greater than 10% of Min CO2: Extant",
 );
 /// The methane sensor.
 const methane = ScienceSensor(
 	name: "Methane", 
 	test: methaneTest,
-	testDescription: "Any methane: Extant",
+	testDescription: "Methane above 1: Extant",
 );
 /// A list of all the sensors on the Science subsystem.
 const sensors = [temperature, humidity, pH, co2, methane];
