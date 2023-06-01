@@ -27,7 +27,7 @@ class Routes {
 	static const String science = "Science Analysis"; 
 
 	/// The name of the autonomy page.
-	static const String autonomy = "Autonomy"; 
+	static const String autonomy = "Map"; 
 
 	/// The name of the MARS page.
 	static const String mars = "MARS";
