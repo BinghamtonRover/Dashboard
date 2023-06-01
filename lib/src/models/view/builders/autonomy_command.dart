@@ -6,6 +6,7 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 	/// The type of task the rover should complete.
 	AutonomyTask task = AutonomyTask.GPS_ONLY;
 
+	/// The view model to edit the [AutonomyCommand.destination].
 	final gps = GpsBuilder();
 
 	/// The handshake as received by the rover after [submit] is called.
