@@ -22,6 +22,9 @@ class Rover extends Model {
 	/// Listens for inputs on the second connected gamepad.
 	final controller2 = Controller(1, ArmControls());
 
+  	/// Listens for inputs on the third connected gamepad.
+	final controller3 = Controller(2, CameraControls());
+
 	/// Whether the rover is connected.
 	bool get isConnected => models.sockets.data.isConnected;
 
@@ -33,6 +36,7 @@ class Rover extends Model {
 		await metrics.init();
 		await controller1.init();
 		await controller2.init();
+    await controller3.init();
 		await settings.init();
 
 		metrics.addListener(notifyListeners);
@@ -47,6 +51,7 @@ class Rover extends Model {
 		metrics.dispose();
 		controller1.dispose();
 		controller2.dispose();
+    controller3.dispose();
 		settings.dispose();
 		super.dispose();
 	}
