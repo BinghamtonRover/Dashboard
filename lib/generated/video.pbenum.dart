@@ -40,23 +40,19 @@ class CameraName extends $pb.ProtobufEnum {
   static const CameraName CAMERA_NAME_UNDEFINED = CameraName._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'CAMERA_NAME_UNDEFINED');
   static const CameraName ROVER_FRONT = CameraName._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ROVER_FRONT');
   static const CameraName ROVER_REAR = CameraName._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ROVER_REAR');
-  static const CameraName ARM_BASE = CameraName._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ARM_BASE');
-  static const CameraName ARM_GRIPPER = CameraName._(4, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ARM_GRIPPER');
-  static const CameraName SCIENCE_CAROUSEL = CameraName._(5, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SCIENCE_CAROUSEL');
-  static const CameraName SCIENCE_MICROSCOPE = CameraName._(6, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SCIENCE_MICROSCOPE');
-  static const CameraName AUTONOMY_DEPTH = CameraName._(7, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'AUTONOMY_DEPTH');
-  static const CameraName SCIENCE_VACUUM = CameraName._(8, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SCIENCE_VACUUM');
+  static const CameraName AUTONOMY_DEPTH = CameraName._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'AUTONOMY_DEPTH');
+  static const CameraName SUBSYSTEM1 = CameraName._(4, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SUBSYSTEM1');
+  static const CameraName SUBSYSTEM2 = CameraName._(5, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SUBSYSTEM2');
+  static const CameraName SUBSYSTEM3 = CameraName._(6, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SUBSYSTEM3');
 
   static const $core.List<CameraName> values = <CameraName> [
     CAMERA_NAME_UNDEFINED,
     ROVER_FRONT,
     ROVER_REAR,
-    ARM_BASE,
-    ARM_GRIPPER,
-    SCIENCE_CAROUSEL,
-    SCIENCE_MICROSCOPE,
     AUTONOMY_DEPTH,
-    SCIENCE_VACUUM,
+    SUBSYSTEM1,
+    SUBSYSTEM2,
+    SUBSYSTEM3,
   ];
 
   static final $core.Map<$core.int, CameraName> _byValue = $pb.ProtobufEnum.initByValue(values);
