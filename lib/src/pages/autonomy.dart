@@ -1,3 +1,4 @@
+import "dart:math";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -28,11 +29,20 @@ class AutonomyPage extends StatelessWidget {
 					const SizedBox(height: 48),
 					for (final row in model.grid) Expanded(
 						child: Row(children: [
-							for (final cell in row) Expanded(child: Container(
-								height: double.infinity,
-								width: 24,
-								decoration: BoxDecoration(color: getColor(cell), border: Border.all()),
-							),)					
+							for (final cell in row) Expanded(
+								child: Container(
+									height: double.infinity,
+									width: 24,
+									decoration: BoxDecoration(color: getColor(cell), border: Border.all()),
+									child: cell != AutonomyCell.rover ? null : ProviderConsumer<PositionMetrics>.value(
+										value: models.rover.metrics.position, 
+										builder: (position) => Transform.rotate(
+											angle: position.angle * pi / 180, 
+											child: const Icon(Icons.arrow_upward, size: 24),
+										),
+									),
+								),
+							),
 						],),
 					),
 					const SizedBox(height: 4),

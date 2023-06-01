@@ -41,4 +41,7 @@ class PositionMetrics extends Metrics<RoverPosition> {
 		super.update(value);
 		models.sockets.mars.sendMessage(MarsCommand(rover: value.gps));
 	}
+
+	/// The angle to orient the rover on the top-down map.
+	double get angle => data.orientation.z;
 }
