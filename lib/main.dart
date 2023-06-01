@@ -15,14 +15,20 @@ import "package:flutter/material.dart";
 import "package:rover_dashboard/app.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
+
+/// Network errors that can be fixed by a simple reset.
+const networkErrors = {1234, 1231};
 
 void main() async {
 	runZonedGuarded(
 		() => runApp(RoverControlDashboard()),
 		(error, stack) async {
-			if (error is SocketException && error.osError!.errorCode == 1234) {
+			if (error is SocketException && networkErrors.contains(error.osError!.errorCode)) {
 				models.home.setMessage(severity: Severity.critical, text: "Network error, restart by clicking the network icon");
 			} else {
+        models.home.setMessage(severity: Severity.critical, text: "Error occurred in the dashboard. See the logs");
+        services.files.logError(error, stack);
 				Error.throwWithStackTrace(error, stack);
 			}
 		}
