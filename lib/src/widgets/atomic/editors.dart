@@ -192,3 +192,46 @@ class ColorEditor extends StatelessWidget {
 		),
 	);
 }
+
+/// A widget to edit a GPS coordinate in degree/minute/seconds or decimal format.
+class GpsEditor extends StatelessWidget {
+	/// The [ValueBuilder] backing this widget.
+	final GpsBuilder model;
+	/// Listens to [model] to rebuild the UI.
+	const GpsEditor({required this.model});
+
+	@override
+	Widget build(BuildContext context) => ProviderConsumer<GpsBuilder>.value(
+		value: model,
+		builder: (model) => Row(children: [
+			DropdownEditor(
+				name: "Type", 
+				value: model.type,
+				onChanged: model.updateType,
+				items: GpsType.values,
+				humanName: (type) => type.humanName,
+			),
+			const SizedBox(width: 12),
+			switch (model.type) {
+				GpsType.degrees => Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+					Row(children: [  // Longitude
+						const Text("Longitude:"),
+						SizedBox(width: 200, child: NumberEditor(name: "Degrees", width: 12, titleFlex: 1, model: model.longDegrees)),
+						SizedBox(width: 200, child: NumberEditor(name: "Minutes", width: 12, titleFlex: 1, model: model.longMinutes)),
+						SizedBox(width: 200, child: NumberEditor(name: "Seconds", width: 12, titleFlex: 1, model: model.longSeconds)),
+					],),
+					Row(children: [  // Latitude
+						const Text("Latitude:"),
+						SizedBox(width: 200, child: NumberEditor(name: "Degrees", width: 12, titleFlex: 1, model: model.latDegrees)),
+						SizedBox(width: 200, child: NumberEditor(name: "Minutes", width: 12, titleFlex: 1, model: model.latMinutes)),
+						SizedBox(width: 200, child: NumberEditor(name: "Seconds", width: 12, titleFlex: 1, model: model.latSeconds)),
+					],),
+				],),
+				GpsType.decimal => Row(children: [
+					SizedBox(width: 225, child: NumberEditor(name: "Longitude", width: 0, titleFlex: 1, model: model.longDecimal)),
+					SizedBox(width: 200, child: NumberEditor(name: "Latitude", width: 0, titleFlex: 1, model: model.latDecimal)),
+				],),
+			},
+		],),
+	);
+}

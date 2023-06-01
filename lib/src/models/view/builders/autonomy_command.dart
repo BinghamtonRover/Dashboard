@@ -5,13 +5,13 @@ import "package:rover_dashboard/models.dart";
 class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 	/// The type of task the rover should complete.
 	AutonomyTask task = AutonomyTask.GPS_ONLY;
-	/// The latitude of the destination.
-	final latitude = NumberBuilder<double>(0);
-	/// The longitude of the destination.
-	final longitude = NumberBuilder<double>(0);
+
+	/// The view model to edit the [AutonomyCommand.destination].
+	final gps = GpsBuilder();
 
 	/// The handshake as received by the rover after [submit] is called.
 	AutonomyCommand? _handshake;
+
 	/// Whether the dashboard is awaiting a response from the rover.
 	bool isLoading = false;
 
@@ -31,11 +31,11 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 	}
 
 	@override
-	bool get isValid => latitude.isValid && longitude.isValid;
+	bool get isValid => gps.isValid;
 
 	@override
 	AutonomyCommand get value => AutonomyCommand(
-		destination: GpsCoordinates(latitude: latitude.value, longitude: longitude.value),
+		destination: gps.value,
 		task: task,
 	);
 

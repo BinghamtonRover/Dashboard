@@ -29,7 +29,10 @@ class PositionMetrics extends Metrics<RoverPosition> {
     "  Latitude: ${data.gps.latitude.toStringAsFixed(2)}°",
 		"  Longitude: ${data.gps.longitude.toStringAsFixed(2)}°",
 		"  Altitude: ${data.gps.altitude.toStringAsFixed(2)} m",
-		"Orientation: ${data.orientation.y.toStringAsFixed(2)}° of N",
+		"Orientation:",
+		"  X: ${data.orientation.x.toStringAsFixed(2)}°",
+		"  Y: ${data.orientation.y.toStringAsFixed(2)}°",
+		"  Z: ${data.orientation.z.toStringAsFixed(2)}°",
     "Distance: ${data.gps.distanceTo(baseStation).toStringAsFixed(2)} m",
 	];
 
@@ -38,4 +41,7 @@ class PositionMetrics extends Metrics<RoverPosition> {
 		super.update(value);
 		models.sockets.mars.sendMessage(MarsCommand(rover: value.gps));
 	}
+
+	/// The angle to orient the rover on the top-down map.
+	double get angle => data.orientation.z;
 }
