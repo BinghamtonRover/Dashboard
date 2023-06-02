@@ -17,6 +17,8 @@ class Controller extends Model {
 	static Future<void> sendMessage(Message message) async {
 		if (models.serial.isConnected && (services.serial.connectedDevice == teensyCommands[message.messageName])) {
 			await services.serial.sendMessage(message);
+		} else if (message.messageName == "MarsCommand") {
+			models.sockets.mars.sendMessage(message);
 		} else {
 			models.sockets.data.sendMessage(message);
 		}

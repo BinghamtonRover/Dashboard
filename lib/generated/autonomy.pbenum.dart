@@ -16,6 +16,8 @@ class AutonomyState extends $pb.ProtobufEnum {
   static const AutonomyState AT_DESTINATION = AutonomyState._(4, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'AT_DESTINATION');
   static const AutonomyState DRIVING = AutonomyState._(5, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'DRIVING');
   static const AutonomyState SEARCHING = AutonomyState._(6, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'SEARCHING');
+  static const AutonomyState NO_SOLUTION = AutonomyState._(7, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'NO_SOLUTION');
+  static const AutonomyState ABORTING = AutonomyState._(8, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ABORTING');
 
   static const $core.List<AutonomyState> values = <AutonomyState> [
     AUTONOMY_STATE_UNDEFINED,
@@ -24,6 +26,8 @@ class AutonomyState extends $pb.ProtobufEnum {
     AT_DESTINATION,
     DRIVING,
     SEARCHING,
+    NO_SOLUTION,
+    ABORTING,
   ];
 
   static final $core.Map<$core.int, AutonomyState> _byValue = $pb.ProtobufEnum.initByValue(values);
