@@ -94,9 +94,15 @@ class AutonomyPage extends StatelessWidget {
 					const Divider(),
 					ProviderConsumer<AutonomyCommandBuilder>(
 						create: () => AutonomyCommandBuilder(),
-						builder: (command) => Row(mainAxisSize: MainAxisSize.min, children: [
+						builder: (command) => Row(children: [
 							const SizedBox(width: 4),
 							Text("Autonomy: ", style: context.textTheme.titleLarge),
+							const SizedBox(width: 8),
+							ElevatedButton(
+								style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
+								onPressed: command.abort,
+								child: const Text("ABORT"), 
+							),
 							const Spacer(),
 							DropdownEditor<AutonomyTask>(
 								name: "Task type",
@@ -130,7 +136,7 @@ class AutonomyPage extends StatelessWidget {
 					const Spacer(),
 					Text("Autonomy status", style: context.textTheme.headlineMedium),
 					const SizedBox(width: 16),
-					Text("State: ${model.data.state.humanName}.", style: context.textTheme.titleLarge),
+					Text("State: ${model.data.state.humanName}", style: context.textTheme.titleLarge),
 					const SizedBox(width: 8),
 					Text("Task: ${model.data.task.humanName}", style: context.textTheme.titleLarge),
 					const VerticalDivider(),

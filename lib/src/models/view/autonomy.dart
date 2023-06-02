@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/models.dart";
 
 /// Represents the state of a cell on the autonomy map.
@@ -151,6 +152,7 @@ class AutonomyModel with ChangeNotifier {
 	/// A handler to call when new data arrives. Updates [data] and the UI.
 	void onNewData(AutonomyData value) {
 		data.mergeFromMessage(value);
+		services.files.logData(value);
 		notifyListeners();
 	}
 
