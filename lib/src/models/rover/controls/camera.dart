@@ -1,3 +1,5 @@
+import "dart:math";
+
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 
@@ -17,7 +19,8 @@ class CameraControls extends RoverControls {
 		if (state.normalLeftTrigger.abs() > 0.75) ...[
 			DriveCommand(rearSwivel: 90 - state.normalLeftX * 90),
 			DriveCommand(rearTilt: 90 + state.normalLeftY * 90),
-		]
+		],
+		if (state.normalDpadX != 0) MarsCommand(swivel: state.normalDpadX * pi / 50),
 	];
 
 	@override
@@ -27,5 +30,6 @@ class CameraControls extends RoverControls {
 	Map<String, String> get buttonMapping => {
 		"Front camera": "Right trigger + joystick",
 		"Rear camera": "Left trigger + joystick",
+		"MARS swivel": "D-pad (horizontal)"
 	};
 }
