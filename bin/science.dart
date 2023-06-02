@@ -1,6 +1,6 @@
 import "dart:convert";
 import "dart:io";
-import "dart:math";
+//import "dart:math";
 
 //import "package:rover_dashboard/data.dart";
 import "package:protobuf/protobuf.dart" as proto;
@@ -68,7 +68,7 @@ WrappedMessage modifyData(Timestamp timestamp, ScienceData data) {
 	// Wrap the data and return it. Do not delete.
 	return data.wrap(timestamp.toDateTime());
 }
-
+/*
 /// Use this to add new data to your dataset.
 List<WrappedMessage> newData = [
 	// Adds methane=1 for every second from t=1 to t=100 seconds
@@ -94,6 +94,7 @@ List<WrappedMessage> newData = [
 // ==================== Do not edit unless you're Aidan or Levi ====================
 
 final random = Random();
+*/
 
 extension on num {
 	bool isOutOfBounds({required num min, required num max}) => (this > max) || (this != 0 && this < min);
