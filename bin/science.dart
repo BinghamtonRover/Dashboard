@@ -116,8 +116,8 @@ Future<List<WrappedMessage>> readLogs(File file) async => [
 void main() async {
 	int pruned = 0;
 	if (File(newPath).existsSync()) await File(newPath).delete();
-	//final List<WrappedMessage> oldData = await readLogs(File(oldPath));
-	for (final wrapper in newData) {
+	final List<WrappedMessage> oldData = await readLogs(File(oldPath));
+	for (final wrapper in oldData) {
 		final data = ScienceData.fromBuffer(wrapper.data);
 		if (!shouldKeepData(data)) { pruned++; continue; }
 		else { await logData(modifyData(wrapper.timestamp, data)); }
