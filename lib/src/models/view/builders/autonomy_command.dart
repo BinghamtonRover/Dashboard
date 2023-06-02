@@ -61,4 +61,25 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 		isLoading = false;
 		notifyListeners();
 	}
+
+	/// Forces the rover to go back to the previous waypoint.
+	Future<void> abort() async {
+		_handshake = null;
+		isLoading = true;
+		notifyListeners();
+		final message = AutonomyCommand(abort: true);
+		// x3 just in case
+		models.sockets.autonomy.sendMessage(message);
+		models.sockets.autonomy.sendMessage(message);
+		models.sockets.autonomy.sendMessage(message);
+		models.home.setMessage(severity: Severity.info, text: "Aborting autonomy...");
+		await Future<void>.delayed(const Duration(seconds: 1));
+		if (_handshake != null) {
+			models.home.setMessage(severity: Severity.info, text: "Command received");
+		} else {
+			models.home.setMessage(severity: Severity.critical, text: "The rover did not receive that command");
+		}
+		isLoading = false;
+		notifyListeners();
+	}
 }

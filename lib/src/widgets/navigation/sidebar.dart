@@ -23,6 +23,7 @@ class Sidebar extends StatelessWidget {
 				const SizedBox(height: 4),
 				ControlsDisplay(controller: models.rover.controller1, gamepadNum: 1),
 				ControlsDisplay(controller: models.rover.controller2, gamepadNum: 2),
+				ControlsDisplay(controller: models.rover.controller3, gamepadNum: 3),
 			],
 		),
 	);
