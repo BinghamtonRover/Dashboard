@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
-import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 
 /// Represents the state of a cell on the autonomy map.
 enum AutonomyCell {

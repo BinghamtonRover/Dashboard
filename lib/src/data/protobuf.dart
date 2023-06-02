@@ -166,6 +166,7 @@ extension AutonomyStateUtils on AutonomyState {
 			case AutonomyState.DRIVING: return "Driving.";
 			case AutonomyState.SEARCHING: return "Searching for ArUco.";
 			case AutonomyState.ABORTING: return "Aborting!";
+			case AutonomyState.NO_SOLUTION: return "No solution found!";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized status: $this");
