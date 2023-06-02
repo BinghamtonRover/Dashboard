@@ -26,8 +26,8 @@ class PositionMetrics extends Metrics<RoverPosition> {
 	@override
 	List<String> get allMetrics => [  
     "GPS: ",
-    "  Latitude: ${data.gps.latitude.toStringAsFixed(2)}°",
-		"  Longitude: ${data.gps.longitude.toStringAsFixed(2)}°",
+    "  Latitude: ${data.gps.latitude.toStringAsFixed(6)}°",
+		"  Longitude: ${data.gps.longitude.toStringAsFixed(6)}°",
 		"  Altitude: ${data.gps.altitude.toStringAsFixed(2)} m",
 		"Orientation:",
 		"  X: ${data.orientation.x.toStringAsFixed(2)}°",
