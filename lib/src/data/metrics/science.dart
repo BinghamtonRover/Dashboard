@@ -19,4 +19,12 @@ class ScienceMetrics extends Metrics<ScienceData> {
 		"Humidity: ${data.humidity.toStringAsFixed(3)}",
 		"pH: ${data.pH.toStringAsFixed(3)}"
 	];
+
+	@override
+	void update(ScienceData data){
+		if(data.state == ScienceState.STOP_COLLECTING){
+			return;
+		}
+		super.update(data);
+	}
 }
