@@ -5,6 +5,26 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
+/// A widget to view timer 
+/// Can also stop and start timer
+class Timer extends StatelessWidget {
+	@override
+	Widget build(BuildContext context) => ProviderConsumer<Sockets>.value(
+		value: models.sockets,
+		builder: (model) => DropdownButton<RoverType>(
+			value: model.rover,
+			onChanged: model.setRover,
+			focusNode: FocusNode(),
+			items: [
+				for (final type in RoverType.values) DropdownMenuItem(
+					value: type,
+					child: Text(type.humanName),
+				),
+			],
+		),
+	);
+}
+
 /// A widget to switch between tank and rover modes.
 class SocketSwitcher extends StatelessWidget {
 	@override
@@ -42,6 +62,7 @@ class HomePageState extends State<HomePage>{
 		appBar: AppBar(
 			title: Text("Dashboard v${models.home.version ?? ''}"),
 			actions: [
+        Text("Timer"),
 				SocketSwitcher(),
 				IconButton(
 					icon: const Icon(Icons.settings),
@@ -52,6 +73,7 @@ class HomePageState extends State<HomePage>{
 					onPressed: () => setState(() => showSidebar = !showSidebar),
 				),)
 			],
+      
 		),
 		bottomNavigationBar: Footer(),
 		body: Row(

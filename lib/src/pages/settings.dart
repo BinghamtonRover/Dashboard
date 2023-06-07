@@ -151,7 +151,7 @@ class SettingsPage extends StatelessWidget {
 							onTap: () => showDialog<void>(context: context, builder: (_) => ColorEditor(ColorBuilder())),
 						),
             ListTile(
-							title: const Text("Start the timer"),
+							title: const Text("Set a timer"),
 							trailing: const Icon(Icons.launch),
 							onTap: () => showDialog<void>(context: context, builder: (_) => TimerEditor(TimerBuilder())),
 						)
