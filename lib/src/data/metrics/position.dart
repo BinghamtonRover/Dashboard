@@ -38,8 +38,22 @@ class PositionMetrics extends Metrics<RoverPosition> {
 
 	@override
 	void update(RoverPosition value) {
+		final oldOrientation = data.orientation.deepCopy();
 		super.update(value);
+		if(data.orientation.x > 360 || data.orientation.x < -360){
+			data.orientation.x = oldOrientation.x;
+			notifyListeners();
+		}
+		if(data.orientation.y > 360 || data.orientation.y < -360){
+			data.orientation.y = oldOrientation.y;
+			notifyListeners();
+		}
+		if(data.orientation.z > 360 || data.orientation.z < -360){
+			data.orientation.z = oldOrientation.z;
+			notifyListeners();
+		}
 		models.sockets.mars.sendMessage(MarsCommand(rover: value.gps));
+		
 	}
 
 	/// The angle to orient the rover on the top-down map.
