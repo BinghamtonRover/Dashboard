@@ -33,4 +33,10 @@ class HomeModel extends Model {
 		notifyListeners();
 		_messageTimer = Timer(const Duration(seconds: 5), () { message = null; notifyListeners(); });
 	} 
+
+  /// Starts a new timer that will decriment
+  void newTimer({required String name, required int duration}){
+    timer = MissionTimer(name: name , duration: Duration(minutes: duration));
+    notifyListeners();
+  }
 }

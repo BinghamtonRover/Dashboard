@@ -193,7 +193,7 @@ class ColorEditor extends StatelessWidget {
 	);
 }
 
-/// A widget to edit a color, backed by [ColorBuilder].
+/// A widget to edit a color, backed by [TimerBuilder].
 class TimerEditor extends StatelessWidget {
 	/// The view model for this color.
 	final TimerBuilder model;

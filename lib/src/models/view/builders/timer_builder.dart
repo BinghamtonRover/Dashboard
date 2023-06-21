@@ -19,8 +19,8 @@ class TimerBuilder extends ValueBuilder<MissionTimer> {
   );
 
   /// Updates Timer Name based on user input
-  void updateName(String text){
-    name = text;
+  void updateName(String input){
+    name = input;
     notifyListeners();
   }
 
@@ -33,7 +33,7 @@ class TimerBuilder extends ValueBuilder<MissionTimer> {
   /// Starts the timer
   bool startTimer(){
     print("$name and ${duration.value}");
-
+    notifyListeners();
     return true; 
     
   }
