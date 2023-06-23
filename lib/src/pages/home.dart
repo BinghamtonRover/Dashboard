@@ -11,21 +11,21 @@ class Timer extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ProviderConsumer<HomeModel>.value(
 		value: models.home,
-		builder: (model) =>  SizedBox(
+		builder: (model) => (model.timer == null || model.timer!.timeLeft < Duration.zero)
+      ? Container()
+      : SizedBox(
       width: 200,
       child: Align(
         child: Row(children: [
-          Text("${model.timer?.duration}"),
           Text(model.timer!.name),
+          const SizedBox(width: 10),
+          Text("${model.timer?.timeLeft}"),
         ],
       ),
     ),
     ),
 	);
 }
-
-
-
 
 /// A widget to switch between tank and rover modes.
 class SocketSwitcher extends StatelessWidget {

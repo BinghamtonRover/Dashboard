@@ -15,26 +15,22 @@ class TimerBuilder extends ValueBuilder<MissionTimer> {
   @override
 	MissionTimer get value => MissionTimer(
     name: name,
-    duration: Duration(minutes: duration.value),
+    duration: duration.value,
   );
 
   /// Updates Timer Name based on user input
-  void updateName(String input){
+  void setName(String input){
     name = input;
-    notifyListeners();
   }
 
   /// Updates Timer duration based on input
-  void updateTime(String duration){
-    this.duration = NumberBuilder<int>(int.parse(duration)); // Can always garuntee this is a int because of regex
-    notifyListeners();
+  void setTime(String input){
+    duration = NumberBuilder<int>(int.parse(input)); // Can always garuntee this is a int because of regex
   }
 
   /// Starts the timer
   bool startTimer(){
-    print("$name and ${duration.value}");
-    notifyListeners();
-    return true; 
-    
+    models.home.setTimer(timer: value);
+    return true;
   }
 }

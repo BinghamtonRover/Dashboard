@@ -16,8 +16,9 @@ class HomeModel extends Model {
 	/// The dashboard's version from the `pubspec.yaml`. 
 	String? version;
 
-  /// Timer to display how much time is left 
+  /// Mission timer displayed on homepage
   MissionTimer? timer;
+
 
 	@override
 	Future<void> init() async { 
@@ -34,9 +35,15 @@ class HomeModel extends Model {
 		_messageTimer = Timer(const Duration(seconds: 5), () { message = null; notifyListeners(); });
 	} 
 
-  /// Starts a new timer that will decriment
-  void newTimer({required String name, required int duration}){
-    timer = MissionTimer(name: name , duration: Duration(minutes: duration));
-    notifyListeners();
+  /// Updates the timer every second
+  void setTimer({required MissionTimer timer}) {
+    this.timer = timer;
+    if(timer.timeLeft <= Duration.zero){
+      return;
+    }
+    Timer(const Duration(seconds: 1), () {
+      notifyListeners();
+      setTimer(timer: timer);
+    });
   }
 }

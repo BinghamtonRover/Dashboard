@@ -212,7 +212,7 @@ class TimerEditor extends StatelessWidget {
             height: 50, 
             width: double.infinity,
             child: TextField(
-              onChanged: model.updateName,
+              onChanged: model.setName,
               decoration: const InputDecoration(hintText: "Timer Name"),
             ),
           ),
@@ -220,7 +220,7 @@ class TimerEditor extends StatelessWidget {
             height: 50, 
             width: double.infinity,
             child: TextField(
-              onChanged: model.updateTime,
+              onChanged: model.setTime,
               decoration: const InputDecoration(hintText: "Number of Minutes"),
               inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"^[0-9]*$"))],
             ),
