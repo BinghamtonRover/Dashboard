@@ -1,4 +1,3 @@
-import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
 /// A [ValueBuilder] to modify a [MissionTimer]
@@ -19,14 +18,10 @@ class TimerBuilder extends ValueBuilder<MissionTimer> {
   );
 
   /// Updates Timer Name based on user input
-  void setName(String input){
-    name = input;
-  }
+  void setName(String input) => name = input; 
 
   /// Updates Timer duration based on input
-  void setTime(String input){
-    duration = NumberBuilder<int>(int.parse(input)); // Can always garuntee this is a int because of regex
-  }
+  void setTime(String input) => duration = NumberBuilder<int>(int.parse(input)); // Can always garuntee this is a int because of regex
 
   /// Starts the timer
   bool startTimer(){

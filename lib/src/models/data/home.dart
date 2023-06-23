@@ -19,13 +19,6 @@ class HomeModel extends Model {
   /// Mission timer displayed on homepage
   MissionTimer? timer;
 
-  /// Whether or not to decrement timer
-  /// Used for pausing and resuming timer
-  bool paused = false;
-
-  /// Holds amount of time left when timer is paused
-  Duration? timeLeft;
-
 	@override
 	Future<void> init() async { 
 		final info = await PackageInfo.fromPlatform();
@@ -41,18 +34,16 @@ class HomeModel extends Model {
 		_messageTimer = Timer(const Duration(seconds: 5), () { message = null; notifyListeners(); });
 	} 
 
-  /// Updates the timer every second
-  void startTimer({required MissionTimer timer}) {
-    paused = false;
-    timeLeft = timer.timeLeft;
+  /// Starts a new timer
+  void startTimer({required MissionTimer timer}){
     this.timer = timer;
     runTimer();
   }
-  
+
   /// Runs the timer
   /// Updates the UI every second
   void runTimer(){
-    if(paused || timer!.timeLeft <= Duration.zero){
+    if(timer!.paused || timer!.timeLeft <= Duration.zero){
       notifyListeners();
       return;
     }
@@ -62,19 +53,21 @@ class HomeModel extends Model {
     });
   }
 
+  /// Pauses the timer
   void pauseTimer(){
-    timeLeft = timer!.timeLeft;
-    paused = true;
+    timer!.remainingTime = timer!.timeLeft;
+    timer!.paused = true;
   }
 
+  /// Resumes timer
   void resumeTimer(){
-    paused = false;
-    startTimer(timer: MissionTimer(name: timer!.name, duration: timeLeft!));
+    timer!.paused = false;
+    startTimer(timer: MissionTimer(name: timer!.name, duration: timer!.remainingTime!));
   }
 
+  /// Removes the timer from displaying on homepage
   void stopTimer(){
-    paused = true; // stops runTimer 
-    timer = null;
+    timer = MissionTimer(name: "", duration: Duration.zero);
     notifyListeners();
   }
 }

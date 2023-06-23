@@ -12,27 +12,26 @@ class Timer extends StatelessWidget {
 	Widget build(BuildContext context) => ProviderConsumer<HomeModel>.value(
 		value: models.home,
 		builder: (model) => (model.timer == null || model.timer!.timeLeft < Duration.zero)
-      ? Container()
-      : SizedBox(
-      width: 500,
-      child: Align(
-        child: Row(children: [
-          Text(model.timer!.name),
-          const SizedBox(width: 10),
-          Text("${model.timer?.timeLeft}"),
-          ElevatedButton(
-            onPressed: () => model.paused ? model.resumeTimer() : model.pauseTimer(),
-            child: model.paused ? const Text("Resume") : const Text("Pause"), 
-          ),
-          ElevatedButton(
-            onPressed: () => model.stopTimer(),
-            child: const Text("Delete"), 
-          ),
-        ],
-      ),
-    ),
-    ),
-	);
+      ? const Text("Null")
+      : Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(model.timer!.name),
+            const SizedBox(width: 8),
+            Text("${model.timer?.timeLeft}"),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: () => model.timer!.paused ? model.resumeTimer() : model.pauseTimer(),
+              child: model.timer!.paused ? const Text("Resume") : const Text("Pause"), 
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: () => model.stopTimer(),
+              child: const Text("Delete"), 
+            ),
+          ],
+        ),
+    );
 }
 
 /// A widget to switch between tank and rover modes.
@@ -72,8 +71,8 @@ class HomePageState extends State<HomePage>{
 		appBar: AppBar(
       automaticallyImplyLeading: false,
 			title: Text("Dashboard v${models.home.version ?? ''}"),
+      flexibleSpace: Center(child: Timer()),
 			actions: [
-        Timer(),
 				SocketSwitcher(),
 				IconButton(
 					icon: const Icon(Icons.settings),
