@@ -14,12 +14,20 @@ class Timer extends StatelessWidget {
 		builder: (model) => (model.timer == null || model.timer!.timeLeft < Duration.zero)
       ? Container()
       : SizedBox(
-      width: 200,
+      width: 500,
       child: Align(
         child: Row(children: [
           Text(model.timer!.name),
           const SizedBox(width: 10),
           Text("${model.timer?.timeLeft}"),
+          ElevatedButton(
+            onPressed: () => model.paused ? model.resumeTimer() : model.pauseTimer(),
+            child: model.paused ? const Text("Resume") : const Text("Pause"), 
+          ),
+          ElevatedButton(
+            onPressed: () => model.stopTimer(),
+            child: const Text("Delete"), 
+          ),
         ],
       ),
     ),

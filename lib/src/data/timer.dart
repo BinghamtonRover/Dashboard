@@ -5,7 +5,7 @@ class MissionTimer {
   final String name;
 
   /// The current duration of a mission
-  int duration;
+  Duration duration;
   
   /// The time which the timer should end
   late DateTime end;
@@ -18,6 +18,6 @@ class MissionTimer {
     required this.name,
     required this.duration,
   }){
-    end = DateTime.now().add(Duration(minutes: duration));
+    end = DateTime.now().add(duration);
   }
 }

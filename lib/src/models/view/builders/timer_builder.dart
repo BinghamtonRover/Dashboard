@@ -15,7 +15,7 @@ class TimerBuilder extends ValueBuilder<MissionTimer> {
   @override
 	MissionTimer get value => MissionTimer(
     name: name,
-    duration: duration.value,
+    duration: Duration(minutes: duration.value),
   );
 
   /// Updates Timer Name based on user input
@@ -30,7 +30,7 @@ class TimerBuilder extends ValueBuilder<MissionTimer> {
 
   /// Starts the timer
   bool startTimer(){
-    models.home.setTimer(timer: value);
+    models.home.startTimer(timer: value);
     return true;
   }
 }
