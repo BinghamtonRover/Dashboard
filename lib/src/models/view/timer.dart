@@ -18,6 +18,9 @@ class MissionTimer with ChangeNotifier{
   /// Time remaining while timer is running
   Duration get timeLeft => end.difference(DateTime.now());
 
+  /// Formatted string of [timeLeft]
+  String get timeLeftFormatted => timeLeft.toString().split(".").first.padLeft(8, "0");
+
   /// Time remaining on timer when paused
   Duration? remainingTime;
 

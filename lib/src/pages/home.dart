@@ -12,13 +12,19 @@ class Timer extends StatelessWidget {
 	Widget build(BuildContext context) => ProviderConsumer<HomeModel>.value(
 		value: models.home,
 		builder: (model) => (model.timer == null || model.timer!.timeLeft < Duration.zero)
-      ? const Text("Null")
+      ? const Text("null",
+              style: TextStyle(color: Color.fromRGBO(255, 255, 255, 1), fontSize: 20),
+        )
       : Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(model.timer!.name),
+            Text(model.timer!.name,
+              style: const TextStyle(color: Color.fromRGBO(255, 255, 255, 1), fontSize: 18),
+            ),
             const SizedBox(width: 8),
-            Text("${model.timer?.timeLeft}"),
+            Text("${model.timer?.timeLeftFormatted}",
+              style: const TextStyle(color: Color.fromRGBO(255, 255, 255, 1), fontSize: 20),
+            ),
             const SizedBox(width: 8),
             ElevatedButton(
               onPressed: () => model.timer!.paused ? model.resumeTimer() : model.pauseTimer(),
