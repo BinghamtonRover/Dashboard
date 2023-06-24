@@ -21,6 +21,9 @@ class MissionTimer with ChangeNotifier{
   /// Formatted string of [timeLeft]
   String get timeLeftFormatted => timeLeft.toString().split(".").first.padLeft(8, "0");
 
+  /// See if less than a minute remains on timer
+  bool get underMin => timeLeft < const Duration(minutes: 1);
+
   /// Time remaining on timer when paused
   Duration? remainingTime;
 

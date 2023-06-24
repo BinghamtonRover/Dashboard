@@ -21,11 +21,23 @@ class Timer extends StatelessWidget {
             Text(model.timer!.name,
               style: const TextStyle(color: Color.fromRGBO(255, 255, 255, 1), fontSize: 18),
             ),
-            const SizedBox(width: 8),
-            Text("${model.timer?.timeLeftFormatted}",
-              style: const TextStyle(color: Color.fromRGBO(255, 255, 255, 1), fontSize: 20),
+            SizedBox(width: model.timer!.underMin ? 8 : 0),
+            Container(
+              padding: const EdgeInsets.all(8),
+              color: model.timer!.underMin ? const Color.fromRGBO(0, 0, 0, 1) : const Color.fromRGBO(0, 0, 0, 0),
+              child: Text("${model.timer?.timeLeftFormatted}",
+                style: model.timer!.underMin ? const TextStyle( 
+                  color:  Color.fromRGBO(255, 0, 0, 1), 
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ) 
+                : const TextStyle( 
+                  color: Color.fromRGBO(250, 255, 255, 1), 
+                  fontSize: 20,
+                ),
+              ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: model.timer!.underMin ? 8 : 0),
             ElevatedButton(
               onPressed: () => model.timer!.paused ? model.resumeTimer() : model.pauseTimer(),
               child: model.timer!.paused ? const Text("Resume") : const Text("Pause"), 
