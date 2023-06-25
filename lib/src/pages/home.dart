@@ -12,9 +12,7 @@ class Timer extends StatelessWidget {
 	Widget build(BuildContext context) => ProviderConsumer<HomeModel>.value(
 		value: models.home,
 		builder: (model) => (model.timer == null || model.timer!.timeLeft < Duration.zero)
-      ? const Text("null",
-              style: TextStyle(color: Color.fromRGBO(255, 255, 255, 1), fontSize: 20),
-        )
+      ? Container()
       : Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -27,8 +25,8 @@ class Timer extends StatelessWidget {
               color: model.timer!.underMin ? const Color.fromRGBO(0, 0, 0, 1) : const Color.fromRGBO(0, 0, 0, 0),
               child: Text("${model.timer?.timeLeftFormatted}",
                 style: model.timer!.underMin ? const TextStyle( 
-                  color:  Color.fromRGBO(255, 0, 0, 1), 
-                  fontSize: 20,
+                  color:  Color.fromRGBO(179, 0, 0, 1), 
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ) 
                 : const TextStyle( 
