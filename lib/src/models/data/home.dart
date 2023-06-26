@@ -35,7 +35,7 @@ class HomeModel extends Model {
 	} 
 
   /// Starts a new timer
-  void startTimer({required MissionTimer timer}){
+  void startTimer(MissionTimer timer){
     this.timer = timer;
     runTimer();
   }
@@ -62,7 +62,7 @@ class HomeModel extends Model {
   /// Resumes timer
   void resumeTimer(){
     timer!.paused = false;
-    startTimer(timer: MissionTimer(name: timer!.name, duration: timer!.remainingTime!));
+    startTimer(MissionTimer(name: timer!.name, duration: timer!.remainingTime!));
   }
 
   /// Removes the timer from displaying on homepage

@@ -19,7 +19,7 @@ class TimerBuilder extends ValueBuilder<MissionTimer> {
 
   /// Starts the timer
   bool startTimer(){
-    models.home.startTimer(timer: value);
+    models.home.startTimer(value);
     return true;
   }
 }
