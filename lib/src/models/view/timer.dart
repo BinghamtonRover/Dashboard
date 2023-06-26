@@ -5,11 +5,8 @@ class MissionTimer with ChangeNotifier{
   /// Name of the mission 
   final String name;
 
-  /// The current duration of a mission
-  Duration duration;
-  
   /// The time which the timer should end
-  late DateTime end;
+  final DateTime end;
 
   /// Whether or not to decrement timer
   /// Used for pausing and resuming timer
