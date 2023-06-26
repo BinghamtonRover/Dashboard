@@ -212,7 +212,7 @@ class TimerEditor extends StatelessWidget {
             height: 50, 
             width: double.infinity,
             child: TextField(
-              onChanged: (value) => model.name = value,
+              onChanged: model.setName, 
               decoration: const InputDecoration(hintText: "Timer Name"),
             ),
           ),
@@ -230,10 +230,7 @@ class TimerEditor extends StatelessWidget {
 			actions: [
 				TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
 				ElevatedButton(
-					onPressed: () {
-            final result = model.startTimer();
-						if (result && context.mounted) Navigator.of(context).pop();
-					},
+					onPressed: model.isValid ? () { model.start(); Navigator.of(context).pop(); } : null,
 					child: const Text("Save"), 
 				),
 			],
