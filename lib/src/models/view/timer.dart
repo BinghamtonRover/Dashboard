@@ -21,9 +21,6 @@ class MissionTimer with ChangeNotifier{
   /// See if less than a minute remains on timer
   bool get underMin => timeLeft < const Duration(minutes: 1);
 
-  /// Time remaining on timer when paused
-  Duration? remainingTime;
-
   /// Creates a Timer to display
   MissionTimer({
     required this.name,
