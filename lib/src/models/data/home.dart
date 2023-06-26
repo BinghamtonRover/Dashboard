@@ -16,6 +16,9 @@ class HomeModel extends Model {
 	/// The dashboard's version from the `pubspec.yaml`. 
 	String? version;
 
+  /// Mission timer displayed on homepage
+  final mission = MissionTimer();
+
 	@override
 	Future<void> init() async { 
 		final info = await PackageInfo.fromPlatform();

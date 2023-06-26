@@ -149,6 +149,11 @@ class SettingsPage extends StatelessWidget {
 							title: const Text("Change the LED strip color"),
 							trailing: const Icon(Icons.launch),
 							onTap: () => showDialog<void>(context: context, builder: (_) => ColorEditor(ColorBuilder())),
+						),
+            ListTile(
+							title: const Text("Set a timer"),
+							trailing: const Icon(Icons.launch),
+							onTap: () => showDialog<void>(context: context, builder: (_) => TimerEditor(TimerBuilder())),
 						)
 					],
 				),),

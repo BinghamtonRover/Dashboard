@@ -38,6 +38,7 @@ export "src/models/rover/rover.dart";
 export "src/models/view/autonomy.dart";
 export "src/models/view/mars.dart";
 export "src/models/view/science.dart";
+export "src/models/view/timer.dart";
 
 // Builder models
 export "src/models/view/builders/autonomy_command.dart";
@@ -47,6 +48,7 @@ export "src/models/view/builders/mars_command.dart";
 export "src/models/view/builders/builder.dart";
 export "src/models/view/builders/color_builder.dart";
 export "src/models/view/builders/settings_builder.dart";
+export "src/models/view/builders/timer_builder.dart";
 export "src/models/view/builders/video_builder.dart";
 
 /// A wrapper model around all other data models used by the app.
