@@ -13,41 +13,38 @@ class Timer extends StatelessWidget {
 		value: models.home,
 		builder: (model) => (model.timer == null || model.timer!.timeLeft < Duration.zero)
       ? Container()
-      : Row(
+      : AnimatedScale(
+        scale: model.timer!.underMin ? 1.1 : 1, 
+        duration: const Duration(milliseconds: 500), 
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(model.timer!.name,
-              style: const TextStyle(color: Color.fromRGBO(255, 255, 255, 1), fontSize: 18),
+            Text("${model.timer!.name}: ",
+              style: context.textTheme.headlineSmall!.copyWith(color: context.colorScheme.onPrimary),
             ),
-            SizedBox(width: model.timer!.underMin ? 8 : 0),
-            Container(
-              padding: const EdgeInsets.all(8),
-              color: model.timer!.underMin ? const Color.fromRGBO(0, 0, 0, 1) : const Color.fromRGBO(0, 0, 0, 0),
-              child: Text("${model.timer?.timeLeftFormatted}",
-                style: model.timer!.underMin ? const TextStyle( 
-                  color:  Color.fromRGBO(179, 0, 0, 1), 
-                  fontSize: 24,
+            const SizedBox(width: 4),
+            Text("${model.timer?.timeLeftFormatted}",
+              style: model.timer!.underMin
+                ? context.textTheme.headlineSmall!.copyWith(
+                  color: context.colorScheme.error,
                   fontWeight: FontWeight.bold,
-                ) 
-                : const TextStyle( 
-                  color: Color.fromRGBO(250, 255, 255, 1), 
-                  fontSize: 20,
-                ),
-              ),
+                )
+                : context.textTheme.headlineSmall!.copyWith(color: context.colorScheme.onPrimary),
             ),
-            SizedBox(width: model.timer!.underMin ? 8 : 0),
+            const SizedBox(width: 8),
             ElevatedButton(
-              onPressed: () => model.timer!.paused ? model.resumeTimer() : model.pauseTimer(),
+              onPressed: model.timer!.paused ? model.resumeTimer : model.pauseTimer,
               child: model.timer!.paused ? const Text("Resume") : const Text("Pause"), 
             ),
             const SizedBox(width: 8),
             ElevatedButton(
-              onPressed: () => model.stopTimer(),
-              child: const Text("Delete"), 
+              onPressed: model.stopTimer,
+              child: const Text("Cancel"), 
             ),
           ],
         ),
-    );
+      ),
+  );
 }
 
 /// A widget to switch between tank and rover modes.
