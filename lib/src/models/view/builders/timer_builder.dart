@@ -17,12 +17,6 @@ class TimerBuilder extends ValueBuilder<MissionTimer> {
     duration: Duration(minutes: duration.value),
   );
 
-  /// Updates Timer Name based on user input
-  void setName(String input) => name = input; 
-
-  /// Updates Timer duration based on input
-  void setTime(String input) => duration = NumberBuilder<int>(int.parse(input)); // Can always garuntee this is a int because of regex
-
   /// Starts the timer
   bool startTimer(){
     models.home.startTimer(timer: value);
