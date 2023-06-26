@@ -13,23 +13,24 @@ class Timer extends StatelessWidget {
 		value: models.home,
 		builder: (model) => (model.timer == null || model.timer!.timeLeft < Duration.zero)
       ? Container()
-      : AnimatedScale(
-        scale: model.timer!.underMin ? 1.1 : 1, 
-        duration: const Duration(milliseconds: 500), 
-        child: Row(
+      : Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text("${model.timer!.name}: ",
               style: context.textTheme.headlineSmall!.copyWith(color: context.colorScheme.onPrimary),
             ),
             const SizedBox(width: 4),
-            Text("${model.timer?.timeLeftFormatted}",
-              style: model.timer!.underMin
-                ? context.textTheme.headlineSmall!.copyWith(
-                  color: context.colorScheme.error,
-                  fontWeight: FontWeight.bold,
-                )
-                : context.textTheme.headlineSmall!.copyWith(color: context.colorScheme.onPrimary),
+            AnimatedScale(
+              scale: (model.timer!.underMin) && (model.timer!.timeLeft.inSeconds % 2 == 0) ? 1.2 : 1, 
+              duration: const Duration(milliseconds: 500),
+              child: Text("${model.timer?.timeLeftFormatted}",
+                style: model.timer!.underMin
+                  ? context.textTheme.headlineSmall!.copyWith(
+                    color: context.colorScheme.error,
+                    fontWeight: FontWeight.bold,
+                  )
+                  : context.textTheme.headlineSmall!.copyWith(color: context.colorScheme.onPrimary),
+              ),
             ),
             const SizedBox(width: 8),
             ElevatedButton(
@@ -43,8 +44,7 @@ class Timer extends StatelessWidget {
             ),
           ],
         ),
-      ),
-  );
+      );
 }
 
 /// A widget to switch between tank and rover modes.

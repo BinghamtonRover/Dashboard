@@ -43,7 +43,7 @@ class HomeModel extends Model {
   /// Runs the timer
   /// Updates the UI every second
   void runTimer(){
-    if(timer!.paused || timer!.timeLeft <= Duration.zero){
+    if(timer == null || timer!.paused || timer!.timeLeft <= Duration.zero){
       notifyListeners();
       return;
     }
