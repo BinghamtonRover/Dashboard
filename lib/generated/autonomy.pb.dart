@@ -22,6 +22,7 @@ class AutonomyData extends $pb.GeneratedMessage {
     ..pc<$0.GpsCoordinates>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'obstacles', $pb.PbFieldType.PM, subBuilder: $0.GpsCoordinates.create)
     ..pc<$0.GpsCoordinates>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'path', $pb.PbFieldType.PM, subBuilder: $0.GpsCoordinates.create)
     ..e<AutonomyTask>(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'task', $pb.PbFieldType.OE, defaultOrMaker: AutonomyTask.AUTONOMY_TASK_UNDEFINED, valueOf: AutonomyTask.valueOf, enumValues: AutonomyTask.values)
+    ..aOB(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'crash')
     ..hasRequiredFields = false
   ;
 
@@ -32,6 +33,7 @@ class AutonomyData extends $pb.GeneratedMessage {
     $core.Iterable<$0.GpsCoordinates>? obstacles,
     $core.Iterable<$0.GpsCoordinates>? path,
     AutonomyTask? task,
+    $core.bool? crash,
   }) {
     final _result = create();
     if (state != null) {
@@ -48,6 +50,9 @@ class AutonomyData extends $pb.GeneratedMessage {
     }
     if (task != null) {
       _result.task = task;
+    }
+    if (crash != null) {
+      _result.crash = crash;
     }
     return _result;
   }
@@ -106,6 +111,15 @@ class AutonomyData extends $pb.GeneratedMessage {
   $core.bool hasTask() => $_has(4);
   @$pb.TagNumber(5)
   void clearTask() => clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.bool get crash => $_getBF(5);
+  @$pb.TagNumber(6)
+  set crash($core.bool v) { $_setBool(5, v); }
+  @$pb.TagNumber(6)
+  $core.bool hasCrash() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearCrash() => clearField(6);
 }
 
 class AutonomyCommand extends $pb.GeneratedMessage {
@@ -113,6 +127,7 @@ class AutonomyCommand extends $pb.GeneratedMessage {
     ..aOM<$0.GpsCoordinates>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'destination', subBuilder: $0.GpsCoordinates.create)
     ..e<AutonomyTask>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'task', $pb.PbFieldType.OE, defaultOrMaker: AutonomyTask.AUTONOMY_TASK_UNDEFINED, valueOf: AutonomyTask.valueOf, enumValues: AutonomyTask.values)
     ..a<$core.int>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'arucoId', $pb.PbFieldType.O3)
+    ..aOB(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'abort')
     ..hasRequiredFields = false
   ;
 
@@ -121,6 +136,7 @@ class AutonomyCommand extends $pb.GeneratedMessage {
     $0.GpsCoordinates? destination,
     AutonomyTask? task,
     $core.int? arucoId,
+    $core.bool? abort,
   }) {
     final _result = create();
     if (destination != null) {
@@ -131,6 +147,9 @@ class AutonomyCommand extends $pb.GeneratedMessage {
     }
     if (arucoId != null) {
       _result.arucoId = arucoId;
+    }
+    if (abort != null) {
+      _result.abort = abort;
     }
     return _result;
   }
@@ -183,5 +202,14 @@ class AutonomyCommand extends $pb.GeneratedMessage {
   $core.bool hasArucoId() => $_has(2);
   @$pb.TagNumber(3)
   void clearArucoId() => clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.bool get abort => $_getBF(3);
+  @$pb.TagNumber(4)
+  set abort($core.bool v) { $_setBool(3, v); }
+  @$pb.TagNumber(4)
+  $core.bool hasAbort() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAbort() => clearField(4);
 }
 

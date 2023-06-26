@@ -42,7 +42,7 @@ class ViewsSelector extends StatelessWidget {
 			for (final view in DashboardView.cameraViews) PopupMenuItem(
 				value: view,
 				child: Row(children: [
-					if (models.sockets.video.isConnected) ...[getCameraStatus(view), const SizedBox(width: 8)],
+					if (models.sockets.video.isConnected || models.sockets.video2.isConnected) ...[getCameraStatus(view), const SizedBox(width: 8)],
 					Text(view.name),
 				],),
 			),

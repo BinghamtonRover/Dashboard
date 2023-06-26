@@ -11,6 +11,9 @@ class Sockets extends Model {
 	/// A UDP socket for receiving video.
 	final video = ProtoSocket(device: Device.VIDEO);
 
+	/// A UDP socket for receiving video.
+	final video2 = ProtoSocket(device: Device.VIDEO);
+
 	/// A UDP socket for controlling autonomy.
 	final autonomy = ProtoSocket(device: Device.AUTONOMY, allowFallthrough: {AutonomyData().messageName});
 
@@ -18,7 +21,7 @@ class Sockets extends Model {
   final mars = ProtoSocket(device: Device.MARS_SERVER);
 
   /// A list of all the sockets this model manages.
-  late final List<ProtoSocket> sockets = [data, video, autonomy, mars];
+  late final List<ProtoSocket> sockets = [data, video, video2, autonomy, mars];
 
   /// The rover-like system currently in use.
   RoverType rover = RoverType.rover;
@@ -70,6 +73,7 @@ class Sockets extends Model {
 		final settings = models.settings.network;
 		data.destination = settings.subsystemsSocket.copy();
 		video.destination = settings.videoSocket.copy();
+		video2.destination = SocketConfig(InternetAddress("192.168.1.30"), 8007);
 		autonomy.destination = settings.autonomySocket.copy();
 		mars.destination = settings.marsSocket.copy();
 

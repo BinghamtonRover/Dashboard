@@ -112,7 +112,7 @@ class VideoFeedState extends State<VideoFeed> {
 				width: double.infinity,
 				padding: const EdgeInsets.all(4),
 				alignment: Alignment.center,
-				child: models.sockets.video.isConnected && imageLoader.hasImage && data.details.status == CameraStatus.CAMERA_ENABLED 
+				child: (models.sockets.video.isConnected || models.sockets.video2.isConnected) && imageLoader.hasImage && data.details.status == CameraStatus.CAMERA_ENABLED 
 					? Row(children: [
 							Expanded(child: RawImage(image: imageLoader.image, fit: BoxFit.contain))
 					],)
@@ -142,7 +142,7 @@ class VideoFeedState extends State<VideoFeed> {
 
 	/// Displays an error message describing why `image == null`.
 	String get errorMessage {
-		if (!models.sockets.video.isConnected) return "The video program is not connected";
+		if (!models.sockets.video.isConnected && !models.sockets.video2.isConnected) return "The video program is not connected";
 		switch (data.details.status) {
 			case CameraStatus.CAMERA_LOADING: return "Camera is loading...";
 			case CameraStatus.CAMERA_STATUS_UNDEFINED: return "Unknown error";

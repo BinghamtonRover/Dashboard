@@ -28,6 +28,8 @@ class DriveMetrics extends Metrics<DriveData> {
 		if (value.setLeft) data.left = value.left;
 		if (value.setRight) data.right = value.right;
 		if (value.setThrottle) data.throttle = value.throttle;
+		if (value.leftSensorValue != 0) data.leftSensorValue = value.leftSensorValue;
+		if (value.rightSensorValue!= 0) data.rightSensorValue = value.rightSensorValue;
 		notifyListeners();
 	}
 }
