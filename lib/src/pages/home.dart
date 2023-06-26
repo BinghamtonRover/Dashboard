@@ -21,7 +21,7 @@ class Timer extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             AnimatedScale(
-              scale: (model.timer!.underMin) && (model.timer!.timeLeft.inSeconds % 2 == 0) ? 1.2 : 1, 
+              scale: (model.timer!.underMin) && (model.timer!.timeLeft.inSeconds.isEven) ? 1.2 : 1, 
               duration: const Duration(milliseconds: 500),
               child: Text("${model.timer?.timeLeftFormatted}",
                 style: model.timer!.underMin
