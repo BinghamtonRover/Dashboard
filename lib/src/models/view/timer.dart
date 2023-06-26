@@ -30,8 +30,6 @@ class MissionTimer with ChangeNotifier{
   /// Creates a Timer to display
   MissionTimer({
     required this.name,
-    required this.duration,
-  }){
-    end = DateTime.now().add(duration);
-  }
+    required Duration duration,
+  }) : end = DateTime.now().add(duration);
 }
