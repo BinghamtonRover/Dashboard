@@ -67,7 +67,7 @@ class HomeModel extends Model {
 
   /// Removes the timer from displaying on homepage
   void stopTimer(){
-    timer = MissionTimer(name: "", duration: Duration.zero);
+    timer = null;
     notifyListeners();
   }
 }
