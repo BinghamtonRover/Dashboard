@@ -1,29 +1,56 @@
+import "dart:async";
 import "package:flutter/foundation.dart";
 
-/// Contains the duration of a current mission
-class MissionTimer with ChangeNotifier{
-  /// Name of the mission 
-  final String name;
+/// A timer to keep track of progress in a mission. 
+/// 
+/// Control using [start], [pause], [resume], and [cancel].
+class MissionTimer with ChangeNotifier {
+  /// The title for this timer. Null means no timer has been set. 
+  String? title;
+  /// The time remaining. Stops decreasing when [isPaused] is true.
+  Duration timeLeft = Duration.zero;
+  /// Whether this timer is paused.
+  bool isPaused = false;
+  /// Runs every second to deduct one second from [timeLeft].
+  Timer? _timer;
 
-  /// The time which the timer should end
-  final DateTime end;
+  /// Whether this timer has under a minute remaining.
+  bool get underMin => timeLeft <= const Duration(minutes: 1);
 
-  /// Whether or not to decrement timer
-  /// Used for pausing and resuming timer
-  bool paused = false;
+  /// Updates the [timeLeft] field and cancels and checks if the timer has finished.
+  void _update(_) {
+    timeLeft -= const Duration(seconds: 1);
+    if (timeLeft == Duration.zero) cancel();
+    notifyListeners();
+  }
 
-  /// Time remaining while timer is running
-  Duration get timeLeft => end.difference(DateTime.now());
+  /// Starts a new timer with the given title and duration. Cancels any previous timer.
+  void start({required String title, required Duration duration}) {
+    cancel();
+    isPaused = false;
+    this.title = title;
+    timeLeft = duration;
+    _timer = Timer.periodic(const Duration(seconds: 1), _update);
+    notifyListeners();
+  }
 
-  /// Formatted string of [timeLeft]
-  String get timeLeftFormatted => timeLeft.toString().split(".").first.padLeft(8, "0");
+  /// Pauses the timer.
+  void pause() { 
+    isPaused = true; 
+    _timer?.cancel(); 
+    notifyListeners();
+  }
 
-  /// See if less than a minute remains on timer
-  bool get underMin => timeLeft < const Duration(minutes: 1);
+  /// Resumes the timer.
+  void resume() { 
+    isPaused = false; 
+    _timer = Timer.periodic(const Duration(seconds: 1), _update); 
+  }
 
-  /// Creates a Timer to display
-  MissionTimer({
-    required this.name,
-    required Duration duration,
-  }) : end = DateTime.now().add(duration);
+  /// Cancels the timer.
+  void cancel() { 
+    title = null; 
+    _timer?.cancel(); 
+    notifyListeners(); 
+  }
 }

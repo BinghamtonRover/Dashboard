@@ -9,22 +9,22 @@ import "package:rover_dashboard/widgets.dart";
 /// Can also stop and start timer
 class Timer extends StatelessWidget {
 	@override
-	Widget build(BuildContext context) => ProviderConsumer<HomeModel>.value(
-		value: models.home,
-		builder: (model) => (model.timer == null || model.timer!.timeLeft < Duration.zero)
+	Widget build(BuildContext context) => ProviderConsumer<MissionTimer>.value(
+		value: models.home.mission,
+		builder: (model) => (model.title == null)
       ? Container()
       : Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("${model.timer!.name}: ",
+            Text("${model.title}: ",
               style: context.textTheme.headlineSmall!.copyWith(color: context.colorScheme.onPrimary),
             ),
             const SizedBox(width: 4),
             AnimatedScale(
-              scale: (model.timer!.underMin) && (model.timer!.timeLeft.inSeconds.isEven) ? 1.2 : 1, 
-              duration: const Duration(milliseconds: 500),
-              child: Text("${model.timer?.timeLeftFormatted}",
-                style: model.timer!.underMin
+              scale: (model.underMin) && (model.timeLeft.inSeconds.isEven) ? 1.2 : 1, 
+              duration: const Duration(milliseconds: 750),
+              child: Text(model.timeLeft.toString().split(".").first.padLeft(8, "0"),
+                style: model.underMin
                   ? context.textTheme.headlineSmall!.copyWith(
                     color: context.colorScheme.error,
                     fontWeight: FontWeight.bold,
@@ -34,12 +34,12 @@ class Timer extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             ElevatedButton(
-              onPressed: model.timer!.paused ? model.resumeTimer : model.pauseTimer,
-              child: model.timer!.paused ? const Text("Resume") : const Text("Pause"), 
+              onPressed: model.isPaused ? model.resume : model.pause,
+              child: model.isPaused ? const Text("Resume") : const Text("Pause"), 
             ),
             const SizedBox(width: 8),
             ElevatedButton(
-              onPressed: model.stopTimer,
+              onPressed: model.cancel,
               child: const Text("Cancel"), 
             ),
           ],

@@ -17,7 +17,7 @@ class HomeModel extends Model {
 	String? version;
 
   /// Mission timer displayed on homepage
-  MissionTimer? timer;
+  final mission = MissionTimer();
 
 	@override
 	Future<void> init() async { 
@@ -33,41 +33,4 @@ class HomeModel extends Model {
 		notifyListeners();
 		_messageTimer = Timer(const Duration(seconds: 5), () { message = null; notifyListeners(); });
 	} 
-
-  /// Starts a new timer
-  void startTimer(MissionTimer timer){
-    this.timer = timer;
-    runTimer();
-  }
-
-  /// Runs the timer
-  /// Updates the UI every second
-  void runTimer(){
-    if(timer == null || timer!.paused || timer!.timeLeft <= Duration.zero){
-      notifyListeners();
-      return;
-    }
-    Timer(const Duration(seconds: 1), () {
-      notifyListeners();
-      runTimer();
-    });
-  }
-
-  /// Pauses the timer
-  void pauseTimer(){
-    timer!.remainingTime = timer!.timeLeft;
-    timer!.paused = true;
-  }
-
-  /// Resumes timer
-  void resumeTimer(){
-    timer!.paused = false;
-    startTimer(MissionTimer(name: timer!.name, duration: timer!.remainingTime!));
-  }
-
-  /// Removes the timer from displaying on homepage
-  void stopTimer(){
-    timer = null;
-    notifyListeners();
-  }
 }
