@@ -93,7 +93,7 @@ class AutonomyPage extends StatelessWidget {
 					],),
 					const Divider(),
 					ProviderConsumer<AutonomyCommandBuilder>(
-						create: () => AutonomyCommandBuilder(),
+						create: AutonomyCommandBuilder.new,
 						builder: (command) => Row(children: [
 							const SizedBox(width: 4),
 							Text("Autonomy: ", style: context.textTheme.titleLarge),

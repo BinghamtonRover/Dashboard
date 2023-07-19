@@ -10,18 +10,7 @@
 ///  library should import any other library.
 library data;
 
-export "generated/arm.pb.dart";
-export "generated/autonomy.pb.dart";
-export "generated/core.pb.dart";
-export "generated/drive.pb.dart";
-export "generated/electrical.pb.dart";
-export "generated/gps.pb.dart";
-export "generated/mars.pb.dart";
-export "generated/science.pb.dart";
-export "generated/video.pb.dart";
-export "generated/wrapper.pb.dart";
-
-export "generated/google/protobuf/timestamp.pb.dart";
+export "package:burt_network/generated.dart";
 
 export "src/data/metrics/arm.dart";
 export "src/data/metrics/drive.dart";

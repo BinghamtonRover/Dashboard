@@ -2,11 +2,11 @@ import "socket.dart";
 
 /// A collection of functions for parsing [Settings]. 
 extension SettingsParser on Json {
-  /// Parses a [SocketConfig] that may not be present.
-  SocketConfig? getSocket(String key) {
+  /// Parses a [SocketInfo] that may not be present.
+  SocketInfo? getSocket(String key) {
     final Json? socket = this[key];
     if (socket == null) return null;
-    return SocketConfig.fromJson(socket);
+    return SocketInfo.fromJson(socket);
   }
 }
 
@@ -124,13 +124,13 @@ class NetworkSettings {
   final int connectionTimeout;
 
   /// The address and port of the subsystems program.
-  final SocketConfig subsystemsSocket;
+  final SocketInfo subsystemsSocket;
 
   /// The address and port of the video program.
-  final SocketConfig videoSocket;
+  final SocketInfo videoSocket;
 
   /// The address and port of the autonomy program.
-  final SocketConfig autonomySocket;
+  final SocketInfo autonomySocket;
 
   /// The address of the tank. The port is ignored.
   /// 
@@ -138,10 +138,10 @@ class NetworkSettings {
   /// include port numbers because ports are specific to the program, and the tank will have many
   /// programs running. Instead, the IP address of all the other programs should be swapped with
   /// the tank when it's being used.
-  final SocketConfig tankSocket;
+  final SocketInfo tankSocket;
 
   /// The address and port of the Rover's GPS
-  final SocketConfig marsSocket;
+  final SocketInfo marsSocket;
 
   /// Creates a new network settings object.
   NetworkSettings({
@@ -155,11 +155,11 @@ class NetworkSettings {
 
   /// Parses network settings from a JSON map.
   NetworkSettings.fromJson(Json? json) : 
-    subsystemsSocket = json?.getSocket("subsystemsSocket") ?? SocketConfig.raw("192.168.1.20", 8001),
-    videoSocket = json?.getSocket("videoSocket") ?? SocketConfig.raw("192.168.1.30", 8002),
-    autonomySocket = json?.getSocket("autonomySocket") ?? SocketConfig.raw("192.168.1.30", 8003),
-    tankSocket = json?.getSocket("tankSocket") ?? SocketConfig.raw("192.168.1.40", 8000),
-    marsSocket = json?.getSocket("marsSocket") ?? SocketConfig.raw("192.168.1.50", 8006),
+    subsystemsSocket = json?.getSocket("subsystemsSocket") ?? SocketInfo.raw("192.168.1.20", 8001),
+    videoSocket = json?.getSocket("videoSocket") ?? SocketInfo.raw("192.168.1.30", 8002),
+    autonomySocket = json?.getSocket("autonomySocket") ?? SocketInfo.raw("192.168.1.30", 8003),
+    tankSocket = json?.getSocket("tankSocket") ?? SocketInfo.raw("192.168.1.40", 8000),
+    marsSocket = json?.getSocket("marsSocket") ?? SocketInfo.raw("192.168.1.50", 8006),
     connectionTimeout = json?["connectionTimeout"] ?? 5;
 
   /// Serializes these settings to JSON.
@@ -198,7 +198,7 @@ class AutonomySettings {
 
 /// Settings relating to easter eggs.
 /// 
-/// TODO: Implement these.
+/// Implement these! Ask Levi for details.
 class EasterEggsSettings {
   /// A const constructor.
   const EasterEggsSettings();

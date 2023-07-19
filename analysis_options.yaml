@@ -5,10 +5,7 @@
 # The issues identified by the analyzer are surfaced in the UI of Dart-enabled
 # IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
 # invoked from the command line by running `flutter analyze`.
-
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
-include: package:lint/package.yaml  # has more lints than flutter_lints
+include: package:very_good_analysis/analysis_options.yaml  # has more lints
 
 analyzer:
   language:
@@ -30,14 +27,24 @@ analyzer:
 
   exclude: 
     - lib/generated/**.dart
+    - test/**.dart
+    - example/**.dart
 
 linter:
   rules:
-    # Rules NOT in package:lint
+    # Rules NOT in package:very_good_analysis
     prefer_double_quotes: true
-    public_member_api_docs: true
+    prefer_expression_function_bodies: true
 
-    # Rules to be disabled from package:lint
-    always_use_package_imports: false
-    use_key_in_widget_constructors: false
-    comment_references: true
+    # Rules to be disabled from package:very_good_analysis
+    prefer_single_quotes: false  # prefer_double_quotes
+    lines_longer_than_80_chars: false  # lines should be at most 100 chars
+    sort_pub_dependencies: false  # Sort dependencies by function
+    use_key_in_widget_constructors: false  # not in Flutter apps
+    directives_ordering: false  # sort dart, then flutter, then package imports
+    always_use_package_imports: false  # not when importing sibling files
+    sort_constructors_first: false  # final properties, then constructor
+    avoid_dynamic_calls: false  # this lint takes over errors in the IDE
+    
+    # Temporarily disabled until we are ready to document
+    # public_member_api_docs: false

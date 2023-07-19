@@ -157,7 +157,7 @@ class GamepadService extends Service {
 
   @override
   Future<void> init() async {
-    for (int i = 0; i < numGamepads; i++) {
+    for (var i = 0; i < numGamepads; i++) {
       await connect(i);
     }
   }
@@ -169,7 +169,7 @@ class GamepadService extends Service {
   Future<void> connect(int index) async {
     if (!Platform.isWindows) return;
     gamepads[index] = MockGamepad();
-    for (int i = 0; i < maxGamepads; i++) {
+    for (var i = 0; i < maxGamepads; i++) {
       final gamepad = Gamepad(i);
       if (!gamepad.isConnected) continue;
       if (ids.contains(i)) continue;

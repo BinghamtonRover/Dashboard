@@ -6,22 +6,22 @@ import "package:rover_dashboard/services.dart";
 /// Coordinates all the sockets to point to the right [RoverType].
 class Sockets extends Model {
 	/// A UDP socket for sending and receiving Protobuf data.
-	final data = ProtoSocket(device: Device.SUBSYSTEMS);
+	final data = DashboardSocket(device: Device.SUBSYSTEMS);
 
 	/// A UDP socket for receiving video.
-	final video = ProtoSocket(device: Device.VIDEO);
+	final video = DashboardSocket(device: Device.VIDEO);
 
 	/// A UDP socket for receiving video.
-	final video2 = ProtoSocket(device: Device.VIDEO);
+	final video2 = DashboardSocket(device: Device.VIDEO);
 
 	/// A UDP socket for controlling autonomy.
-	final autonomy = ProtoSocket(device: Device.AUTONOMY, allowFallthrough: {AutonomyData().messageName});
+	final autonomy = DashboardSocket(device: Device.AUTONOMY, allowedFallthrough: {AutonomyData().messageName});
 
   /// A UDP socket for controlling rover position
-  final mars = ProtoSocket(device: Device.MARS_SERVER);
+  final mars = DashboardSocket(device: Device.MARS_SERVER);
 
   /// A list of all the sockets this model manages.
-  late final List<ProtoSocket> sockets = [data, video, video2, autonomy, mars];
+  late final List<DashboardSocket> sockets = [data, video, video2, autonomy, mars];
 
   /// The rover-like system currently in use.
   RoverType rover = RoverType.rover;
@@ -73,7 +73,7 @@ class Sockets extends Model {
 		final settings = models.settings.network;
 		data.destination = settings.subsystemsSocket.copy();
 		video.destination = settings.videoSocket.copy();
-		video2.destination = SocketConfig(InternetAddress("192.168.1.30"), 8007);
+		video2.destination = SocketInfo(address: InternetAddress("192.168.1.30"), port: 8007);
 		autonomy.destination = settings.autonomySocket.copy();
 		mars.destination = settings.marsSocket.copy();
 
@@ -95,7 +95,10 @@ class Sockets extends Model {
 	/// When working with localhost, even UDP sockets can throw errors when the remote is unreachable.
 	/// Resetting the sockets will bypass these errors.
 	Future<void> reset() async {
-		for (final socket in sockets) { await socket.reset(); }
+		for (final socket in sockets) { 
+			await socket.dispose();
+			await socket.init();
+		}
 	}
 
 	/// Change which rover is being used.

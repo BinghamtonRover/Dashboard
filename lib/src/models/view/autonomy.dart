@@ -118,8 +118,8 @@ class AutonomyModel with ChangeNotifier {
 		// - rover.longitude => (gridSize - 1) / 2
 		// - rover.latitude => (gridSize - 1) / 2
 		// Then, everything else should be offset by that
-		final int x = gpsToBlock(gps.longitude) + offset.x;
-		final int y = gpsToBlock(gps.latitude) + offset.y;
+		final x = gpsToBlock(gps.longitude) + offset.x;
+		final y = gpsToBlock(gps.latitude) + offset.y;
 		if (x < 0 || x >= gridSize) return;
 		if (y < 0 || y >= gridSize) return;
 		list[y][x] = value;
@@ -136,9 +136,9 @@ class AutonomyModel with ChangeNotifier {
 	/// `(3, 2)` to get it there. That means we should also add `(3, 2)` to the obstacle's position
 	/// so it remains `(-1, -1)` away from the rover's new position, yielding `(4, 4)`.
 	void recenterRover() {
-		final int midpoint = ((gridSize - 1) / 2).floor();
-		final int offsetX = midpoint - gpsToBlock(roverPosition.longitude);
-		final int offsetY = midpoint - gpsToBlock(roverPosition.latitude);
+		final midpoint = ((gridSize - 1) / 2).floor();
+		final offsetX = midpoint - gpsToBlock(roverPosition.longitude);
+		final offsetY = midpoint - gpsToBlock(roverPosition.latitude);
 		offset = GridOffset(offsetX, offsetY);
 		notifyListeners();
 	}

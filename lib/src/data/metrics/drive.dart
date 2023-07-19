@@ -24,7 +24,7 @@ class DriveMetrics extends Metrics<DriveData> {
 
 	@override
 	void update(DriveData value) {
-		// Since the values are often zero, [Metrics.merge] won't work.
+		// Since the newValues are often zero, [Metrics.merge] won't work.
 		if (value.setLeft) data.left = value.left;
 		if (value.setRight) data.right = value.right;
 		if (value.setThrottle) data.throttle = value.throttle;

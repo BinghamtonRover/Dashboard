@@ -22,7 +22,7 @@ class MarsPage extends StatelessWidget {
 			],),
 		),
 		Expanded(child: ProviderConsumer<MarsModel>(
-			create: () => MarsModel(),
+			create: MarsModel.new,
 			builder: (model) => Stack(children: [
 				const Center(child: Divider()),
 				const Center(child: VerticalDivider()),
@@ -47,7 +47,7 @@ class MarsPage extends StatelessWidget {
 		),
 		const Divider(),
 		ProviderConsumer<MarsCommandBuilder>(
-			create: () => MarsCommandBuilder(),
+			create: MarsCommandBuilder.new,
 			builder: (command) => Column(children: [
 				Row(children: [
 					const SizedBox(width: 4),
@@ -97,7 +97,5 @@ class LinePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(LinePainter oldDelegate) {
-    return oldDelegate.position != position;
-  }
+  bool shouldRepaint(LinePainter oldDelegate) => oldDelegate.position != position;
 }

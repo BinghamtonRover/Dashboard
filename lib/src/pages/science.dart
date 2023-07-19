@@ -220,7 +220,7 @@ class SciencePage extends StatelessWidget {
 				],
 			),),
 			ProviderConsumer<ScienceCommandBuilder>(  // the controls bar on the bottom of the page
-				create: () => ScienceCommandBuilder(),
+				create: ScienceCommandBuilder.new,
 				builder: (command) => Container(  
 					color: context.colorScheme.surface,
 					height: 48,
