@@ -52,7 +52,7 @@ class RoverSettings extends Model {
 		_handshakes = [null, null, null, null];
 		models.sockets.data.sendMessage(value);
 		await Future<void>.delayed(confirmationDelay);
-		for (int index = 0; index < models.sockets.sockets.length; index++) {
+		for (var index = 0; index < models.sockets.sockets.length; index++) {
 			if (_handshakes[index] != null) continue;
 			final device = models.sockets.sockets[index].device;
 			if (device == Device.MARS_SERVER) continue;  // <-- Until the MARS server is up and running

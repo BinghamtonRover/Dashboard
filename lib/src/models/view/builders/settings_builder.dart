@@ -1,16 +1,16 @@
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
-/// A [ValueBuilder] that modifies a [SocketConfig].
-class SocketBuilder extends ValueBuilder<SocketConfig> {
+/// A [ValueBuilder] that modifies a [SocketInfo].
+class SocketBuilder extends ValueBuilder<SocketInfo> {
 	/// The builder for the IP address.
 	final AddressBuilder address;
 
 	/// The builder for the port number.
 	final NumberBuilder<int> port;
 
-	/// Creates a view model to modify the given [SocketConfig].
-	SocketBuilder(SocketConfig initial) : 
+	/// Creates a view model to modify the given [SocketInfo].
+	SocketBuilder(SocketInfo initial) : 
 		address = AddressBuilder(initial.address),
 		port = NumberBuilder<int>(initial.port) 
 	{
@@ -22,26 +22,26 @@ class SocketBuilder extends ValueBuilder<SocketConfig> {
 	bool get isValid => address.isValid && port.isValid;
 
 	@override
-	SocketConfig get value => SocketConfig(address.value, port.value);
+	SocketInfo get value => SocketInfo(address: address.value, port: port.value);
 }
 
 /// A [ValueBuilder] representing a [NetworkSettings].
 class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
-	/// The view model representing the [SocketConfig] for the subsystems program.
+	/// The view model representing the [SocketInfo] for the subsystems program.
 	final SocketBuilder dataSocket;
 
-	/// The view model representing the [SocketConfig] for the video program.
+	/// The view model representing the [SocketInfo] for the video program.
 	final SocketBuilder videoSocket;
 
-	/// The view model representing the [SocketConfig] for the autonomy program.
+	/// The view model representing the [SocketInfo] for the autonomy program.
 	final SocketBuilder autonomySocket;
 
-	/// The view model representing the [SocketConfig] for the tank.
+	/// The view model representing the [SocketInfo] for the tank.
 	/// 
 	/// Since the tank runs multiple programs, the port is discarded and only the address is used.
 	final SocketBuilder tankSocket;
 
-  /// The view model representing the [SocketConfig] for the rover.
+  /// The view model representing the [SocketInfo] for the rover.
 	final SocketBuilder marsSocket;
 
 	@override

@@ -88,7 +88,7 @@ class NumberBuilder<T extends num> extends TextBuilder<T> {
 			error = "Not an integer";
 		} else {
 			error = null;
-			final T result = isInteger ? (int.parse(input) as T) : (double.parse(input) as T);
+			final result = isInteger ? (int.parse(input) as T) : (double.parse(input) as T);
 			if (min != null && result < min!) error = "Must be >$min";
 			if (max != null && result > max!) error = "Must be <$max";
 			value = result;

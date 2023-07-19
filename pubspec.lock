@@ -113,6 +113,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.5.0"
+  burt_network:
+    dependency: "direct main"
+    description:
+      path: "../networking/burt_network"
+      relative: true
+    source: path
+    version: "1.0.0"
   characters:
     dependency: transitive
     description:
@@ -400,14 +407,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0+1"
-  lint:
-    dependency: "direct dev"
+  logger:
+    dependency: transitive
     description:
-      name: lint
-      sha256: f4bd4dbaa39f4ae8836f2d1275f2f32bc68b3a8cce0a0735dd1f7a601f06682a
+      name: logger
+      sha256: "7ad7215c15420a102ec687bb320a7312afd449bac63bfb1c60d9787c27b9767f"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.2"
+    version: "1.4.0"
   logging:
     dependency: transitive
     description:
@@ -805,6 +812,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  very_good_analysis:
+    dependency: "direct dev"
+    description:
+      name: very_good_analysis
+      sha256: "5e4ea72d2a9188630f0dd8f120a541de730090ef8863243fedca8267a84508b8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.0+1"
   watcher:
     dependency: transitive
     description:
@@ -870,5 +885,5 @@ packages:
     source: hosted
     version: "1.0.3"
 sdks:
-  dart: ">=3.0.0 <4.0.0"
+  dart: ">=3.0.5 <4.0.0"
   flutter: ">=3.3.0"

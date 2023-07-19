@@ -22,6 +22,8 @@ dependencies:
   win32_gamepad: ^1.0.3
   yaml: ^3.1.1
   yaml_writer: ^1.0.2
+  burt_network: 
+    path: ../networking/burt_network
 
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
@@ -30,9 +32,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   icons_launcher: ^2.1.0
-  lint: ^2.1.2
   msix: ^3.9.1
   protoc_builder: ^0.3.0
+  very_good_analysis: ^5.0.0+1
 
 # Do not modify this section unless you know what it does and why you need it.
 dependency_overrides: 

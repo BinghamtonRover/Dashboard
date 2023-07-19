@@ -37,7 +37,7 @@ class MetricsList extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => Column(
 		children: [
-			for (final metrics in models.rover.metrics.allMetrics) ProviderConsumer<Metrics>.value(
+			for (final metrics in models.rover.metrics.allMetrics) ProviderConsumer<Metrics<dynamic>>.value(
 				value: metrics,
 				builder: (metrics) => ExpansionTile(
 				expandedCrossAxisAlignment: CrossAxisAlignment.start,

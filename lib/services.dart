@@ -18,11 +18,10 @@ import "src/services/gamepad.dart";
 import "src/services/serial.dart";
 import "src/services/service.dart";
 
+export "src/services/socket.dart";
 export "src/services/files.dart";
 export "src/services/gamepad.dart";
-export "src/services/proto_socket.dart";
 export "src/services/serial.dart";
-export "src/services/udp_socket.dart";
 
 /// A dependency injection service that manages the lifecycle of other services.
 ///

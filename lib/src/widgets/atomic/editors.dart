@@ -5,7 +5,7 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
-/// Creates a widget to edit a [SocketConfig], backed by [SocketBuilder].
+/// Creates a widget to edit a [SocketInfo], backed by [SocketBuilder].
 class SocketEditor extends StatelessWidget {
 	/// The name of the socket being edited.
 	final String name;
