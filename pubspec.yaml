@@ -44,18 +44,18 @@ dependency_overrides:
 # Generates icons for the given platforms
 #   Run: flutter pub run icons_launcher:create
 icons_launcher:
-  image_path: "logo.png"
+  image_path: "assets/logo.png"
   platforms: 
     android:
-      # adaptive_foreground_image: "logo.png"
+      # adaptive_foreground_image: "assets/logo.png"
       # adaptive_background_color: "#000000"
-      # adaptive_monochrome_image: "logo.png"
+      # adaptive_monochrome_image: "assets/logo.png"
       enable: true
     windows: 
       enable: true
 
 flutter_launcher_icons:
-  image_path: "logo.png"
+  image_path: "assets/logo.png"
   android: true
   windows: 
     generate: true
@@ -67,7 +67,7 @@ msix_config:
   display_name: Dashboard
   publisher_display_name: Binghamton University Rover Team
   identity_name: edu.binghamton.rover
-  logo_path: logo.png
+  logo_path: assets/logo.png
   trim_logo: false
   capabilities: internetClientServer, privateNetworkClientServer, usb, serialcommunication, lowLevel
   output_name: Dashboard
@@ -78,3 +78,5 @@ msix_config:
 # The following section is specific to Flutter packages.
 flutter:
   uses-material-design: true
+  assets: 
+    - assets/rover.png

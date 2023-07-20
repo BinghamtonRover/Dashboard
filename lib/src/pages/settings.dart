@@ -132,10 +132,14 @@ class SettingsPage extends StatelessWidget {
 							],
 						),
 						const Divider(),
-						const ValueEditor<EasterEggsSettings>(
+						ValueEditor<EasterEggsSettings>(
 							name: "Easter eggs",
 							children: [
-								ListTile(title: Text("Coming soon!")),
+								SwitchListTile(
+									title: const Text("Enable SEGA Intro"),
+									value: model.easterEggs.segaIntro,
+									onChanged: model.easterEggs.updateSegaIntro,
+								),
 							],
 						),
 						const Divider(),

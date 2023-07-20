@@ -200,14 +200,22 @@ class AutonomySettings {
 /// 
 /// Implement these! Ask Levi for details.
 class EasterEggsSettings {
+  /// Whether to do a SEGA-like intro during boot.
+  final bool segaIntro;
+
   /// A const constructor.
-  const EasterEggsSettings();
+  const EasterEggsSettings({
+    required this.segaIntro,
+  });
 
   /// Parses easter eggs settings from JSON.
-  EasterEggsSettings.fromJson(Json? json);  // ignore: avoid_unused_constructor_parameters
+  EasterEggsSettings.fromJson(Json? json) : 
+    segaIntro = json?["segaIntro"] ?? true;
 
   /// Serializes these settings to JSON.
-  Json toJson() => { };
+  Json toJson() => {
+    "segaIntro": segaIntro,
+  };
 }
 
 /// Contains the settings for running the dashboard and the rover. 

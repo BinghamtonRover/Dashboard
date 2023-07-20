@@ -22,6 +22,9 @@ class SettingsModel extends Model {
 	/// The user's autonomy settings.
 	AutonomySettings get autonomy => all.autonomy;
 
+	/// The user's easter egg settings.
+	EasterEggsSettings get easterEggs => all.easterEggs;
+
 	@override
 	Future<void> init() async {
 		all = await services.files.readSettings();

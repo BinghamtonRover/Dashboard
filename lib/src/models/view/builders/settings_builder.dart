@@ -211,6 +211,28 @@ class AutonomySettingsBuilder extends ValueBuilder<AutonomySettings> {
 	AutonomySettings get value => AutonomySettings(blockSize: blockSize.value);
 }
 
+/// A [ValueBuilder] that modifies an [EasterEggsSettings].
+class EasterEggsSettingsBuilder extends ValueBuilder<EasterEggsSettings> {
+	/// Whether to show a SEGA intro. See [EasterEggsSettings.segaIntro].
+	bool segaIntro;
+
+	/// Fills in the fields with the given [initial] settings.
+	EasterEggsSettingsBuilder(EasterEggsSettings initial) : 
+		segaIntro = initial.segaIntro;
+
+	@override
+	bool get isValid => true;
+
+	@override
+	EasterEggsSettings get value => EasterEggsSettings(segaIntro: segaIntro);
+
+	/// Updates the value of [EasterEggsSettings.segaIntro].
+	void updateSegaIntro(bool input) {  // ignore: avoid_positional_boolean_parameters
+		segaIntro = input;
+		notifyListeners();
+	}
+}
+
 /// A [ValueBuilder] representing an [ArmSettings].
 class SettingsBuilder extends ValueBuilder<Settings> {
 	/// The [NetworkSettings] view model.
@@ -228,6 +250,9 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	/// The [AutonomySettings] view model.
 	final AutonomySettingsBuilder autonomy;
 
+	/// The [EasterEggsSettings] view model.
+	final EasterEggsSettingsBuilder easterEggs;
+
 	/// Whether the page is loading.
 	bool isLoading = false;
 
@@ -237,13 +262,15 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 		network = NetworkSettingsBuilder(models.settings.network),
 		arm = ArmSettingsBuilder(models.settings.arm),
 		video = VideoSettingsBuilder(models.settings.video),
-		science = ScienceSettingsBuilder(models.settings.science)
+		science = ScienceSettingsBuilder(models.settings.science),
+		easterEggs = EasterEggsSettingsBuilder(models.settings.easterEggs)
 	{
 		autonomy.addListener(notifyListeners);
 		network.addListener(notifyListeners);
 		arm.addListener(notifyListeners);
 		video.addListener(notifyListeners);
 		science.addListener(notifyListeners);
+		easterEggs.addListener(notifyListeners);
 	}
 
 	@override
@@ -258,7 +285,7 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 		autonomy: autonomy.value,
 		network: network.value,
 		video: video.value,
-		easterEggs: const EasterEggsSettings(),
+		easterEggs: easterEggs.value,
 		science: science.value,
 		arm: arm.value,
 	);
