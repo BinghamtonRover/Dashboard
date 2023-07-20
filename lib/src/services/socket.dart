@@ -1,37 +1,42 @@
 import "package:burt_network/burt_network.dart";
 import "package:flutter/foundation.dart";  // <-- Used for ValueNotifier
-import "package:protobuf/protobuf.dart";
 
 import "package:rover_dashboard/data.dart";
 
 import "service.dart";
-
-/// A callback to execute with a specific serialized Protobuf message.
-typedef MessageHandler<T extends Message> = void Function(T);
-
-/// A callback to execute with raw Protobuf data.
-typedef RawDataHandler = void Function(List<int> data);
+import "wrapper_registry.dart";
 
 /// A service to send and receive Protobuf messages over a UDP socket, using [ProtoSocket].
 /// 
+/// This class monitors its connection to the given [device] by sending heartbeats periodically and
+/// logging the response (or lack thereof).
+/// - Heartbeats are sent via [checkHeartbeats] 
+/// - The strength of the connection is exposed via [connectionStrength], which is also a [ValueNotifier].
+/// - For a simple connection check, use [isConnected].
+/// - Use the [event] [ValueNotifier] to listen for new or dropped connections.
+/// 
+/// To use this class: 
+/// - Call [init] to open the socket.
+/// - Check [connectionStrength] for the connection to the given [device].
 /// - To send a message, call [sendMessage].
-/// - To be notified when a message is received, call [registerHandler].
-class DashboardSocket extends ProtoSocket implements Service {
-	// ================== Final fields ==================
+/// - To be notified when a message is received, call [registerHandler]. 
+/// - To remove your handler, call [removeHandler].
+/// - Call [dispose] to close the socket.
+class DashboardSocket extends ProtoSocket with WrapperRegistry implements Service {
 	/// A list of message names that are allowed to pass without a handler.
+	@override
 	final Set<String> allowedFallthrough;
-	/// The handlers registered by [registerHandler].
-	final Map<String, RawDataHandler> _handlers = {};
+
+	/// A callback to run when the [device] has connected.
+	void Function(Device device) onConnect;
+	/// A callback to run when the [device] has disconnected.
+	void Function(Device device) onDisconnect;
 
 	/// Listens for incoming messages on a UDP socket and sends heartbeats to the [device].
-	DashboardSocket({required super.device, this.allowedFallthrough = const {}}) : super(port: 0);
+	DashboardSocket({required this.onConnect, required this.onDisconnect, required super.device, this.allowedFallthrough = const {}}) : super(port: 0);
 
-	// ================== Mutable fields ==================
 	/// The connection strength, as a percentage to this [device].
 	final connectionStrength = ValueNotifier<double>(0);
-
-	/// The latest [HeartbeatEvent] emitted by this socket. 
-	final event = ValueNotifier(HeartbeatEvent.none);
 
 	/// The number of heartbeats received since the last heartbeat was sent.
 	int _heartbeats = 0;
@@ -42,89 +47,33 @@ class DashboardSocket extends ProtoSocket implements Service {
 	/// Whether this socket has a stable connection to the [device].
 	bool get isConnected => connectionStrength.value > 0;
 
-	// ================== Overriden methods ==================
-
-	@override
-	void onMessage(WrappedMessage wrapper) {
-		final rawHandler = _handlers[wrapper.name];
-		if (rawHandler == null) {
-			if (allowedFallthrough.contains(wrapper.name)) return;
-			throw StateError("No handler registered for ${wrapper.name} message on the $device socket");
-		}
-		try { return rawHandler(wrapper.data); }
-		on InvalidProtocolBufferException {
-			try { return rawHandler(wrapper.data); }
-			on InvalidProtocolBufferException { /* Nothing we can do */ }
-		}	
-	}
-
 	@override
 	void updateSettings(UpdateSetting settings) { }
 
 	@override
-	Future<void> checkHeartbeats() async {
-		if (_isChecking) return;
-		_isChecking = true;
-		_heartbeats = 0;
-		sendMessage(Connect(sender: Device.DASHBOARD, receiver: device));
-		await Future<void>.delayed(heartbeatWaitDelay);
-		final wasConnected = isConnected;
-		if (_heartbeats > 0) {
-			if (!wasConnected) event.value = HeartbeatEvent.connected;
-			connectionStrength.value += connectionIncrement * _heartbeats;
-		} else {
-			if (wasConnected) event.value = HeartbeatEvent.disconnected;
-			connectionStrength.value -= connectionIncrement;
-		}
-		connectionStrength.value = connectionStrength.value.clamp(0, 1);
-		_isChecking = false;
-	}
-
-	@override
 	void onHeartbeat(Connect heartbeat, SocketInfo source) => _heartbeats++;
 
-	// ================== Public methods ==================
-
-	/// Adds a handler for a given type. 
-	/// 
-	/// When a new message is received, [onMessage] checks to see if its type matches [name].
-	/// If so, it calls [decoder] to parse the binary data into a Protobuf class, and then
-	/// calls [handler] with that parsed data class. 
-	/// 
-	/// For example, with a message called `ScienceData`, you would use this function as: 
-	/// ```dart
-	/// registerHandler<ScienceData>(
-	/// 	name: ScienceData().messageName,  // identify the data as a ScienceData message
-	/// 	decoder: ScienceData.fromBuffer,  // deserialize into a ScienceData instance
-	/// 	handler: (ScienceData data) => print(data.methane),  // do something with the data
-	/// );
-	/// ```
-	void registerHandler<T extends Message>({
-		required String name, 
-		required MessageDecoder<T> decoder, 
-		required MessageHandler<T> handler,
-	}) {
-		if (_handlers.containsKey(name)) {  // handler was already registered
-			throw ArgumentError("There's already a message handler for $name.");
+	@override
+	Future<void> checkHeartbeats() async {
+		if (_isChecking) return;
+		// 1. Clear state and send a heartbeat
+		_isChecking = true;
+		_heartbeats = 0;
+		final wasConnected = isConnected;
+		sendMessage(Connect(sender: Device.DASHBOARD, receiver: device));
+		// 2. Wait a bit and count the number of responses
+		await Future<void>.delayed(heartbeatWaitDelay);
+		if (_heartbeats > 0) {			
+			connectionStrength.value += connectionIncrement * _heartbeats;
 		} else {
-			_handlers[name] = (data) => handler(decoder(data));
+			connectionStrength.value -= connectionIncrement;
 		}
+		// 3. Assess the current state
+		connectionStrength.value = connectionStrength.value.clamp(0, 1);
+		if (isConnected && !wasConnected) onConnect(device);
+		if (wasConnected && !isConnected) onDisconnect(device);
+		_isChecking = false;
 	}
-
-	/// Removes the handler for a given message type. 
-	/// 
-	/// This is useful if you register a handler to update a piece of UI that is no longer on-screen.
-	void removeHandler(String name) => _handlers.remove(name);
-}
-
-/// An event representing a change in network connection status.
-enum HeartbeatEvent {
-	/// The device just connected.
-	connected, 
-	/// The device just disconnected.
-	disconnected, 
-	/// Nothing just happened. Useful for an initial value.
-	none
 }
 
 /// How much each successful/missed handshake is worth, as a percent.

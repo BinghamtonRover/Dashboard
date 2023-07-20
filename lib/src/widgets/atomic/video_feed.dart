@@ -78,13 +78,11 @@ class VideoFeedState extends State<VideoFeed> {
 		super.initState();
 		data = models.video.feeds[widget.name]!;
 		models.video.addListener(updateImage);
-		models.sockets.video.event.addListener(updateImage);
 	}
 
 	@override
 	void dispose() {
 		models.video.removeListener(updateImage);
-		models.sockets.video.event.removeListener(updateImage);
 		imageLoader.dispose();
 		super.dispose();
 	}
