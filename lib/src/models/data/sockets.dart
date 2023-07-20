@@ -34,7 +34,7 @@ class Sockets extends Model {
 		allowedFallthrough: {AutonomyData().messageName},
 	);
 
-  /// A UDP socket for controlling rover position
+  /// A UDP socket for controlling the MARS subsystem.
   late final mars = DashboardSocket(
   	device: Device.MARS_SERVER,
   	onConnect: onConnect, 

@@ -51,26 +51,29 @@ class DashboardSocket extends ProtoSocket with WrapperRegistry implements Servic
 	void updateSettings(UpdateSetting settings) { }
 
 	@override
-	Future<void> checkHeartbeats() async {
-		if (_isChecking) return;
-		_isChecking = true;
-		_heartbeats = 0;
-		sendMessage(Connect(sender: Device.DASHBOARD, receiver: device));
-		await Future<void>.delayed(heartbeatWaitDelay);
-		final wasConnected = isConnected;
-		if (_heartbeats > 0) {			
-			if (!wasConnected) onConnect(device);
-			connectionStrength.value += connectionIncrement * _heartbeats;
-		} else {
-			if (wasConnected) onDisconnect(device);
-			connectionStrength.value -= connectionIncrement;
-		}
-		connectionStrength.value = connectionStrength.value.clamp(0, 1);
-		_isChecking = false;
-	}
+	void onHeartbeat(Connect heartbeat, SocketInfo source) => _heartbeats++;
 
 	@override
-	void onHeartbeat(Connect heartbeat, SocketInfo source) => _heartbeats++;
+	Future<void> checkHeartbeats() async {
+		if (_isChecking) return;
+		// 1. Clear state and send a heartbeat
+		_isChecking = true;
+		_heartbeats = 0;
+		final wasConnected = isConnected;
+		sendMessage(Connect(sender: Device.DASHBOARD, receiver: device));
+		// 2. Wait a bit and count the number of responses
+		await Future<void>.delayed(heartbeatWaitDelay);
+		if (_heartbeats > 0) {			
+			connectionStrength.value += connectionIncrement * _heartbeats;
+		} else {
+			connectionStrength.value -= connectionIncrement;
+		}
+		// 3. Assess the current state
+		connectionStrength.value = connectionStrength.value.clamp(0, 1);
+		if (isConnected && !wasConnected) onConnect(device);
+		if (wasConnected && !isConnected) onDisconnect(device);
+		_isChecking = false;
+	}
 }
 
 /// How much each successful/missed handshake is worth, as a percent.
