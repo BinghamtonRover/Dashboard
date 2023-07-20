@@ -1,0 +1,66 @@
+import "package:protobuf/protobuf.dart";
+
+import "package:rover_dashboard/data.dart";
+
+/// A callback to execute with a specific serialized Protobuf message.
+typedef MessageHandler<T extends Message> = void Function(T);
+
+/// A callback to execute with raw Protobuf data.
+typedef RawDataHandler = void Function(List<int> data);
+
+/// A mixin that delegates [WrappedMessage]s to a handler via [registerHandler].
+/// 
+/// - Use [registerHandler] to invoke your handler whenever a new message is received.
+/// - Use [removeHandler] to remove your handler.
+/// - Override [allowedFallthrough] to allow certain massages to pass unhandled.
+mixin WrapperRegistry {
+	final Map<String, RawDataHandler> _handlers = {};
+
+	/// A set of message types that are allowed to pass through without being handled.
+	Set<String> get allowedFallthrough;
+
+	/// Delegates the message contents to the appropriate handler.
+	void onMessage(WrappedMessage wrapper) {
+		final rawHandler = _handlers[wrapper.name];
+		if (rawHandler == null) {
+			if (allowedFallthrough.contains(wrapper.name)) return;
+			throw StateError("No handler registered for ${wrapper.name} message");
+		}
+		try { return rawHandler(wrapper.data); }
+		on InvalidProtocolBufferException {
+			try { return rawHandler(wrapper.data); }
+			on InvalidProtocolBufferException { /* Nothing we can do */ }
+		}	
+	}
+
+	/// Adds a handler for the given message type. 
+	/// 
+	/// When a new message is received, [onMessage] checks to see if its type matches [name].
+	/// If so, it calls [decoder] to parse the binary data into a Protobuf class, and then
+	/// calls [handler] with that parsed data class. 
+	/// 
+	/// For example, with a message called `ScienceData`, you would use this function as: 
+	/// ```dart
+	/// registerHandler<ScienceData>(
+	/// 	name: ScienceData().messageName,  // identify the data as a ScienceData message
+	/// 	decoder: ScienceData.fromBuffer,  // deserialize into a ScienceData instance
+	/// 	handler: (ScienceData data) => print(data.methane),  // do something with the data
+	/// );
+	/// ```
+	void registerHandler<T extends Message>({
+		required String name, 
+		required MessageDecoder<T> decoder, 
+		required MessageHandler<T> handler,
+	}) {
+		if (_handlers.containsKey(name)) {  // handler was already registered
+			throw ArgumentError("There's already a message handler for $name.");
+		} else {
+			_handlers[name] = (data) => handler(decoder(data));
+		}
+	}
+
+	/// Removes the handler for a given message type. 
+	/// 
+	/// This is useful if you register a handler to update a piece of UI that is no longer on-screen.
+	void removeHandler(String name) => _handlers.remove(name);
+}

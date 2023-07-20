@@ -45,6 +45,7 @@ linter:
     always_use_package_imports: false  # not when importing sibling files
     sort_constructors_first: false  # final properties, then constructor
     avoid_dynamic_calls: false  # this lint takes over errors in the IDE
+    one_member_abstracts: false  # abstract classes are good for interfaces
     
     # Temporarily disabled until we are ready to document
     # public_member_api_docs: false

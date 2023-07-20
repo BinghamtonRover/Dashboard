@@ -6,22 +6,43 @@ import "package:rover_dashboard/services.dart";
 /// Coordinates all the sockets to point to the right [RoverType].
 class Sockets extends Model {
 	/// A UDP socket for sending and receiving Protobuf data.
-	final data = DashboardSocket(device: Device.SUBSYSTEMS);
+	late final data = DashboardSocket(
+		device: Device.SUBSYSTEMS,
+		onConnect: onConnect, 
+		onDisconnect: onDisconnect,
+	);
 
 	/// A UDP socket for receiving video.
-	final video = DashboardSocket(device: Device.VIDEO);
+	late final video = DashboardSocket(
+		device: Device.VIDEO,
+		onConnect: onConnect, 
+		onDisconnect: onDisconnect,
+	);
 
 	/// A UDP socket for receiving video.
-	final video2 = DashboardSocket(device: Device.VIDEO);
+	late final video2 = DashboardSocket(
+		device: Device.VIDEO,
+		onConnect: onConnect, 
+		onDisconnect: onDisconnect,
+	);
 
 	/// A UDP socket for controlling autonomy.
-	final autonomy = DashboardSocket(device: Device.AUTONOMY, allowedFallthrough: {AutonomyData().messageName});
+	late final autonomy = DashboardSocket(
+		device: Device.AUTONOMY,
+		onConnect: onConnect, 
+		onDisconnect: onDisconnect,
+		allowedFallthrough: {AutonomyData().messageName},
+	);
 
   /// A UDP socket for controlling rover position
-  final mars = DashboardSocket(device: Device.MARS_SERVER);
+  late final mars = DashboardSocket(
+  	device: Device.MARS_SERVER,
+  	onConnect: onConnect, 
+		onDisconnect: onDisconnect,
+	);
 
   /// A list of all the sockets this model manages.
-  late final List<DashboardSocket> sockets = [data, video, video2, autonomy, mars];
+  List<DashboardSocket> get sockets => [data, video, video2, autonomy, mars];
 
   /// The rover-like system currently in use.
   RoverType rover = RoverType.rover;
@@ -39,7 +60,6 @@ class Sockets extends Model {
 	Future<void> init() async {
 		for (final socket in sockets) { 
 			await socket.init(); 
-			socket.event.addListener(() => onNewEvent(socket.device, socket.event.value));
 		}
 		await updateSockets();
 	}
@@ -52,24 +72,23 @@ class Sockets extends Model {
 		super.dispose();
 	}
 
-	/// Notifies the user when a device connects or disconnects.
-	void onNewEvent(Device device, HeartbeatEvent event) {
-		switch (event) {
-			case HeartbeatEvent.connected: 
-				models.home.setMessage(severity: Severity.info, text: "The ${device.humanName} has connected");
-				if (device == Device.SUBSYSTEMS) models.rover.status.value = models.rover.settings.status;
-			case HeartbeatEvent.disconnected: 
-				models.home.setMessage(severity: Severity.critical, text: "The ${device.humanName} has disconnected");
-				if (device == Device.SUBSYSTEMS) models.rover.status.value = RoverStatus.DISCONNECTED;
-				if (device == Device.VIDEO) models.video.reset();
-				if (device == Device.MARS_SERVER) models.rover.metrics.mars.clearStatus();
-			case HeartbeatEvent.none:
-		}
+	/// Notifies the user when a new device has connected.
+	void onConnect(Device device) {
+		models.home.setMessage(severity: Severity.info, text: "The ${device.humanName} has connected");
+		if (device == Device.SUBSYSTEMS) models.rover.status.value = models.rover.settings.status;
+	}
+
+	/// Notifies the user when a device has disconnected.
+	void onDisconnect(Device device) {
+		models.home.setMessage(severity: Severity.critical, text: "The ${device.humanName} has disconnected");
+		if (device == Device.SUBSYSTEMS) models.rover.status.value = RoverStatus.DISCONNECTED;
+		if (device == Device.VIDEO) models.video.reset();
+		if (device == Device.MARS_SERVER) models.rover.metrics.mars.clearStatus();
 	}
 
 	/// Set the right IP addresses for the rover or tank.
 	Future<void> updateSockets() async {
-		// Initialize sockets
+		// 1. Initialize sockets
 		final settings = models.settings.network;
 		data.destination = settings.subsystemsSocket.copy();
 		video.destination = settings.videoSocket.copy();
@@ -77,7 +96,7 @@ class Sockets extends Model {
 		autonomy.destination = settings.autonomySocket.copy();
 		mars.destination = settings.marsSocket.copy();
 
-		// Change IP addresses
+		// 2. Change IP addresses
 		for (final socket in sockets) {
 			socket.destination!.address = switch (rover) {
 				RoverType.rover => socket.destination!.address,
@@ -86,7 +105,7 @@ class Sockets extends Model {
 			};
 		}
 
-		// Reset
+		// 3. Reset
 		await reset();
 	}
 
