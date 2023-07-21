@@ -40,17 +40,17 @@ class VideoModel extends Model {
 
 	@override
 	Future<void> init() async {
-		models.sockets.video.registerHandler<VideoData>(
+		models.messages.registerHandler<VideoData>(
 			name: VideoData().messageName,
 			decoder: VideoData.fromBuffer,
 			handler: handleData,
 		);
-		models.sockets.video2.registerHandler<VideoData>(
+		models.messages.registerHandler<VideoData>(
 			name: VideoData().messageName,
 			decoder: VideoData.fromBuffer,
 			handler: handleData,
 		);
-		models.sockets.video.registerHandler<VideoCommand>(
+		models.messages.registerHandler<VideoCommand>(
 			name: VideoCommand().messageName,
 			decoder: VideoCommand.fromBuffer,
 			handler: (command) => _handshake = command,

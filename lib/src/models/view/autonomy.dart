@@ -52,7 +52,7 @@ class AutonomyModel with ChangeNotifier {
 
 	/// Listens for incoming autonomy or position data.
 	AutonomyModel() {
-		models.sockets.autonomy.registerHandler<AutonomyData>(
+		models.messages.registerHandler<AutonomyData>(
 			name: AutonomyData().messageName,
 			decoder: AutonomyData.fromBuffer,
 			handler: onNewData, 
@@ -65,7 +65,7 @@ class AutonomyModel with ChangeNotifier {
 
 	@override
 	void dispose() {
-		models.sockets.autonomy.removeHandler(AutonomyData().messageName);
+		models.messages.removeHandler(AutonomyData().messageName);
 		models.rover.metrics.position.removeListener(recenterRover);
 		super.dispose();
 	}

@@ -33,42 +33,42 @@ class RoverMetrics extends Model {
 
 	@override
 	Future<void> init() async {
-		models.sockets.data.registerHandler<ElectricalData>(
+		models.messages.registerHandler<ElectricalData>(
 			name: ElectricalData().messageName,
 			decoder: ElectricalData.fromBuffer,
 			handler: electrical.update,
 		);
-		models.sockets.data.registerHandler<DriveData>(
+		models.messages.registerHandler<DriveData>(
 			name: DriveData().messageName,
 			decoder: DriveData.fromBuffer,
 			handler: drive.update,
 		);
-		models.sockets.data.registerHandler<ScienceData>(
+		models.messages.registerHandler<ScienceData>(
 			name: ScienceData().messageName,
 			decoder: ScienceData.fromBuffer,
 			handler: science.update,
 		);
-    models.sockets.autonomy.registerHandler<RoverPosition>(
+    models.messages.registerHandler<RoverPosition>(
 			name: RoverPosition().messageName,
 			decoder: RoverPosition.fromBuffer,
 			handler: position.update,
 		);
-    models.sockets.data.registerHandler<RoverPosition>(
+    models.messages.registerHandler<RoverPosition>(
 			name: RoverPosition().messageName,
 			decoder: RoverPosition.fromBuffer,
 			handler: position.update,
 		);
-		models.sockets.mars.registerHandler<MarsData>(
+		models.messages.registerHandler<MarsData>(
 			name: MarsData().messageName,
 			decoder: MarsData.fromBuffer,
 			handler: mars.update,
 		);
-		models.sockets.data.registerHandler<ArmData>(
+		models.messages.registerHandler<ArmData>(
 			name: ArmData().messageName,
 			decoder: ArmData.fromBuffer,
 			handler: arm.update,
 		);
-		models.sockets.data.registerHandler<GripperData>(
+		models.messages.registerHandler<GripperData>(
 			name: GripperData().messageName,
 			decoder: GripperData.fromBuffer,
 			handler: gripper.update,

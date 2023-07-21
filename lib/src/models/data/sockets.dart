@@ -10,6 +10,7 @@ class Sockets extends Model {
 		device: Device.SUBSYSTEMS,
 		onConnect: onConnect, 
 		onDisconnect: onDisconnect,
+		messageHandler: models.messages.onMessage,
 	);
 
 	/// A UDP socket for receiving video.
@@ -17,6 +18,7 @@ class Sockets extends Model {
 		device: Device.VIDEO,
 		onConnect: onConnect, 
 		onDisconnect: onDisconnect,
+		messageHandler: models.messages.onMessage,
 	);
 
 	/// A UDP socket for receiving video.
@@ -24,6 +26,7 @@ class Sockets extends Model {
 		device: Device.VIDEO,
 		onConnect: onConnect, 
 		onDisconnect: onDisconnect,
+		messageHandler: models.messages.onMessage,
 	);
 
 	/// A UDP socket for controlling autonomy.
@@ -31,7 +34,7 @@ class Sockets extends Model {
 		device: Device.AUTONOMY,
 		onConnect: onConnect, 
 		onDisconnect: onDisconnect,
-		allowedFallthrough: {AutonomyData().messageName},
+		messageHandler: models.messages.onMessage,
 	);
 
   /// A UDP socket for controlling the MARS subsystem.
@@ -39,6 +42,7 @@ class Sockets extends Model {
   	device: Device.MARS_SERVER,
   	onConnect: onConnect, 
 		onDisconnect: onDisconnect,
+		messageHandler: models.messages.onMessage,
 	);
 
   /// A list of all the sockets this model manages.

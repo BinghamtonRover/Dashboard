@@ -2,22 +2,16 @@ import "package:protobuf/protobuf.dart";
 
 import "package:rover_dashboard/data.dart";
 
-/// A callback to execute with a specific serialized Protobuf message.
-typedef MessageHandler<T extends Message> = void Function(T);
-
-/// A callback to execute with raw Protobuf data.
-typedef RawDataHandler = void Function(List<int> data);
-
 /// A mixin that delegates [WrappedMessage]s to a handler via [registerHandler].
 /// 
 /// - Use [registerHandler] to invoke your handler whenever a new message is received.
 /// - Use [removeHandler] to remove your handler.
 /// - Override [allowedFallthrough] to allow certain massages to pass unhandled.
-mixin WrapperRegistry {
+class MessagesModel {
 	final Map<String, RawDataHandler> _handlers = {};
 
 	/// A set of message types that are allowed to pass through without being handled.
-	Set<String> get allowedFallthrough;
+	Set<String> allowedFallthrough = {"AutonomyData"};
 
 	/// Delegates the message contents to the appropriate handler.
 	void onMessage(WrappedMessage wrapper) {
