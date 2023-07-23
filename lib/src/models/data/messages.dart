@@ -9,10 +9,11 @@ import "package:rover_dashboard/models.dart";
 /// - Use [removeHandler] to remove your handler.
 /// - Override [allowedFallthrough] to allow certain massages to pass unhandled.
 class MessagesModel {
-	final Map<String, RawDataHandler> _handlers = {};
-
 	/// A set of message types that are allowed to pass through without being handled.
-	Set<String> allowedFallthrough = {"AutonomyData"};
+	static const Set<String> allowedFallthrough = {"AutonomyData"};
+
+	/// A set of handlers to be called based on [WrappedMessage.name].
+	final Map<String, RawDataHandler> _handlers = {};
 
 	/// Delegates the message contents to the appropriate handler.
 	void onMessage(WrappedMessage wrapper) {
