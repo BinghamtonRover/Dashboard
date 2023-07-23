@@ -53,11 +53,6 @@ class RoverMetrics extends Model {
 			decoder: RoverPosition.fromBuffer,
 			handler: position.update,
 		);
-    models.messages.registerHandler<RoverPosition>(
-			name: RoverPosition().messageName,
-			decoder: RoverPosition.fromBuffer,
-			handler: position.update,
-		);
 		models.messages.registerHandler<MarsData>(
 			name: MarsData().messageName,
 			decoder: MarsData.fromBuffer,

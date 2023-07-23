@@ -15,7 +15,6 @@ library services;
 
 import "src/services/files.dart";
 import "src/services/gamepad.dart";
-import "src/services/serial.dart";
 import "src/services/service.dart";
 
 export "src/services/socket.dart";
@@ -39,9 +38,6 @@ class Services extends Service {
 	/// A service that reads and writes to device files.
 	final files = FilesService();
 
-	/// A service that communicates over a serial connection.
-	final serial = Serial();
-
 	/// The first error that occurred during startup.
 	String? error;
 
@@ -49,14 +45,12 @@ class Services extends Service {
 	Future<void> init() async {
 		await gamepad.init();
 		await files.init();
-		await serial.init();
 	}
 
 	@override
 	Future<void> dispose() async {
 		await gamepad.dispose();
 		await files.dispose();
-		await serial.dispose();
 	}
 }
 

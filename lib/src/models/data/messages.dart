@@ -1,6 +1,7 @@
 import "package:protobuf/protobuf.dart";
 
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 
 /// A mixin that delegates [WrappedMessage]s to a handler via [registerHandler].
 /// 
@@ -25,6 +26,12 @@ class MessagesModel {
 			try { return rawHandler(wrapper.data); }
 			on InvalidProtocolBufferException { /* Nothing we can do */ }
 		}	
+	}
+
+	/// Sends a command over the network or over Serial.
+	void sendMessage(Message message) {
+		models.serial.sendMessage(message);
+		models.sockets.data.sendMessage(message);
 	}
 
 	/// Adds a handler for the given message type. 

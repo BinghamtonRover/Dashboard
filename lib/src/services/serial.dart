@@ -6,131 +6,101 @@ import "package:protobuf/protobuf.dart";
 import "package:rover_dashboard/data.dart";
 
 import "serial_errors.dart";
-import "service.dart";
 
 export "serial_errors.dart";
 
-/// Map to figure out what device is connected
+/// A service to connect to a single serial device.
 /// 
-/// Used to send data to the correct teensy
-/// <Command, Teensy>
-const Map<String, Device> teensyCommands = {
-	"ArmCommand": Device.ARM,
-	"GripperCommand": Device.GRIPPER,
-	"ScienceCommand": Device.SCIENCE,
-	"ElecticalCommand": Device.ELECTRICAL,
-	"DriveCommand": Device.DRIVE,
-	"MarsCommand": Device.MARS,
-	"FirmwareCommand": Device.FIRMWARE
-};
+/// Create a new [SerialDevice] instance for every device you wish to connect to. You must call
+/// [connect] before you can use the device, and you must call [dispose] when you are done.
+/// 
+/// To send a message, use [sendMessage]. To handle messages, pass an [onMessage] callback.
+class SerialDevice {
+	/// Sending this code resets the Teensy to its "unconnected" state.
+	static const resetCode = [0, 0, 0, 0];
+	/// A list of all available ports to connect to.
+	static List<String> get availablePorts => SerialPort.availablePorts;
 
-/// A service to interact with Serial Port(s) from dashboard.
-///
-/// Since a device may not be connected right away, or may be disconnected after the dashboard is
-/// running, this service needs to explicitly connect to a device using [connect]. The device may
-/// be disconnected by calling [disconnect]. In any event, [dispose] will also call [disconnect].
-class Serial extends Service {
-	/// Writes data to the serial device.
-	///
-	/// This field is only non-null after calling [connect] successfully.
-	SerialPort? _writer;
+	/// The port to connect to.
+	final String port;
+	/// A callback to run whenever a message is received by this device.
+	final WrappedMessageHandler onMessage;
+	/// Manages a connection to a Serial device.
+	SerialDevice({required this.port, required this.onMessage});
 
-	/// Reads data from the serial device.
-	///
-	/// This field is only non-null after calling [connect] successfully.
-	SerialPortReader? _reader;
+	/// The device we're connected to. 
+	/// 
+	/// Initially, the device is just a generic "firmware", but after calling [Connect], the Teensy
+	/// will identify itself more specifically.
+	Device device = Device.FIRMWARE;
 
-	/// Device that is currently connected
-	///
-	/// This field is only non-null after calling [connect] successfully.
-	/// This field gets assigned after revceiving response from the handshake
-	Device? connectedDevice;
+	/// Writes data to the serial port.
+	late final SerialPort _writer;
+	/// Reads data from the serial port.
+	late final SerialPortReader _reader;
 
-	@override
-	Future<void> init() async {}
-
-	@override
-	Future<void> dispose() async {
-		_writer?.close();
-		_writer?.dispose();
-		_reader?.close();
+	/// Opens the Serial port and identifies the device on the other end.
+	Future<void> connect() async {
+		await Future(_setupConnection);
+		await _identifyDevice();
+		_reader.stream.listen(_onData);
 	}
 
-	/// All the Serial ports available to connect to.
-	///
-	/// Not all of these will be for the firmware, so the user needs to choose the right one. To make
-	/// the display cleaner, this collection filters out duplicate entries.
-	Iterable<String> get availablePorts => SerialPort.availablePorts.toSet();
+	/// Closes the connection and resets the device.
+	void dispose() {
+		_writer..close()..dispose();
+		_reader.close();
+	}
 
-	/// Connects a device to the dashboard for reading and writing.
-	///
-	/// Sends a [Connect] message, then expects a [Connect] message in response.
-	Future<void> connect(String device) async {
-		await disconnect(); // only when exactly one new device is found
-		_writer = SerialPort(device);
-		_reader = SerialPortReader(_writer!);
-		final didOpen = _writer!.openReadWrite();
+	/// Sends a message to the device, if the device accepts it.
+	/// 
+	/// The firmware on the rover cannot handle [WrappedMessage]s and instead assume that all commands
+	/// they receive are the type they ecpect. This function checks [getCommandName] to ensure that
+	/// the [message] is of the correct type before sending it.
+	void sendMessage(Message message) {
+		final thisDeviceAccepts = getCommandName(device);
+		if (message.messageName != thisDeviceAccepts) return;
+		_sendRaw(message.writeToBuffer());
+	}
+
+	/// Sends raw data over the serial port.
+	void _sendRaw(List<int> data) => _writer.write(Uint8List.fromList(data), timeout: 500);
+
+	/// Sets up the connection and throws an error if the port fails to open.
+	void _setupConnection() {
+		_writer = SerialPort(port);
+		_reader = SerialPortReader(_writer);
+		final didOpen = _writer.openReadWrite();
 		if (!didOpen) {
-			await disconnect();
-			throw SerialCannotOpen(device);
+			dispose();
+			throw SerialCannotOpen(port);
 		}
+		_sendRaw(resetCode);
+	}
 
-		// Send a handshake, expect one back
-		await sendMessage(Connect(sender: Device.DASHBOARD, receiver: Device.FIRMWARE));
+	/// Sends a handshake to the Teensy and decodes the response to identify the device.
+	Future<void> _identifyDevice() async {
+		final handshake = Connect(sender: Device.DASHBOARD, receiver: Device.FIRMWARE);
+		_sendRaw(handshake.writeToBuffer());
 		await Future<void>.delayed(const Duration(milliseconds: 2000));
-		final received = _writer!.read(4); // nice way to read X bytes at a time
+		final received = _writer.read(4); // nice way to read X bytes at a time
 		if (received.isEmpty) throw MalformedSerialPacket(packet: received);
 		try {
 			final message = Connect.fromBuffer(received);
 			final isValid = message.receiver == Device.DASHBOARD;
 			if (!isValid) {
-				await disconnect();
+				dispose();
 				throw SerialHandshakeFailed();
 			}
-			connectedDevice = message.sender;
+			device = message.sender;
 		} on InvalidProtocolBufferException {
-			await disconnect();
+			dispose();
 			throw MalformedSerialPacket(packet: received);
 		}
 	}
 
-	/// Disposes of the current [_reader] and [_writer] and marks them as null.
-	///
-	/// Use this to indicate that the previous device is no longer available.
-	Future<void> disconnect() async {
-		await dispose();
-		_writer = null;
-		_reader = null;
-		connectedDevice = null;
-	}
-
-	/// Sends a [Message] over Serial, without wrapping it.
-	Future<void> sendMessage(Message message) => sendRaw(message.writeToBuffer());
-
-	/// Write data to the device.
-	///
-	/// - If no device is connected, this will throw a [DeviceNotConnected].
-	/// - If there is an IO error, this will throw a [SerialPortError].
-	Future<void> sendRaw(Uint8List data) async {
-		if (_writer == null) throw DeviceNotConnected();
-		try {
-			_writer!.write(Uint8List.fromList(data), timeout: 500);
-		} on SerialPortError catch (error) {
-			await disconnect();
-			throw SerialIOError(error);
-		}
-	}
-
-	/// Returns a stream of all commands being sent.
-	///
-	/// - If no device is connected, this will throw a [DeviceNotConnected].
-	/// - If there is an IO error, this will throw a [SerialPortError].
-	Stream<Uint8List> get incomingData {
-		if (_reader == null) throw DeviceNotConnected();
-		try { return _reader!.stream; }
-		on SerialPortError catch (error) {
-			disconnect();
-			throw SerialIOError(error);
-		}
-	}
+	/// Wraps the data in a [WrappedMessage] using [getDataName] as [WrappedMessage.name].
+	void _onData(Uint8List data) => onMessage(
+		WrappedMessage(name: getDataName(device), data: data),
+	);
 }

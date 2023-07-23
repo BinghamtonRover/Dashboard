@@ -45,11 +45,6 @@ class VideoModel extends Model {
 			decoder: VideoData.fromBuffer,
 			handler: handleData,
 		);
-		models.messages.registerHandler<VideoData>(
-			name: VideoData().messageName,
-			decoder: VideoData.fromBuffer,
-			handler: handleData,
-		);
 		models.messages.registerHandler<VideoCommand>(
 			name: VideoCommand().messageName,
 			decoder: VideoCommand.fromBuffer,
