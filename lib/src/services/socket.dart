@@ -3,37 +3,34 @@ import "package:flutter/foundation.dart";  // <-- Used for ValueNotifier
 
 import "package:rover_dashboard/data.dart";
 
-import "service.dart";
-import "wrapper_registry.dart";
-
 /// A service to send and receive Protobuf messages over a UDP socket, using [ProtoSocket].
 /// 
 /// This class monitors its connection to the given [device] by sending heartbeats periodically and
-/// logging the response (or lack thereof).
-/// - Heartbeats are sent via [checkHeartbeats] 
-/// - The strength of the connection is exposed via [connectionStrength], which is also a [ValueNotifier].
-/// - For a simple connection check, use [isConnected].
-/// - Use the [event] [ValueNotifier] to listen for new or dropped connections.
-/// 
+/// logging the response (or lack thereof). To be notified of connection events, pass in 
+/// [onConnect] and [onDisconnect] callbacks. To be notified of incoming messages, pass in an 
+/// [onMessage] callback that accepts a [WrappedMessage].
+///  
 /// To use this class: 
 /// - Call [init] to open the socket.
-/// - Check [connectionStrength] for the connection to the given [device].
+/// - Check [connectionStrength] or [isConnected] for the connection to the given [device].
 /// - To send a message, call [sendMessage].
-/// - To be notified when a message is received, call [registerHandler]. 
-/// - To remove your handler, call [removeHandler].
 /// - Call [dispose] to close the socket.
-class DashboardSocket extends ProtoSocket with WrapperRegistry implements Service {
-	/// A list of message names that are allowed to pass without a handler.
-	@override
-	final Set<String> allowedFallthrough;
-
+class DashboardSocket extends ProtoSocket {
 	/// A callback to run when the [device] has connected.
 	void Function(Device device) onConnect;
 	/// A callback to run when the [device] has disconnected.
 	void Function(Device device) onDisconnect;
 
+	/// The handler to call when a [WrappedMessage] comes in. Used by [onMessage].
+	final WrappedMessageHandler messageHandler;
+
 	/// Listens for incoming messages on a UDP socket and sends heartbeats to the [device].
-	DashboardSocket({required this.onConnect, required this.onDisconnect, required super.device, this.allowedFallthrough = const {}}) : super(port: 0);
+	DashboardSocket({
+		required this.onConnect, 
+		required this.onDisconnect, 
+		required this.messageHandler,
+		required super.device, 
+	}) : super(port: 0);
 
 	/// The connection strength, as a percentage to this [device].
 	final connectionStrength = ValueNotifier<double>(0);
@@ -49,6 +46,9 @@ class DashboardSocket extends ProtoSocket with WrapperRegistry implements Servic
 
 	@override
 	void updateSettings(UpdateSetting settings) { }
+
+	@override
+	void onMessage(WrappedMessage wrapper) => messageHandler(wrapper);
 
 	@override
 	void onHeartbeat(Connect heartbeat, SocketInfo source) => _heartbeats++;

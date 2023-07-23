@@ -11,6 +11,7 @@ library models;
 
 import "src/models/model.dart";
 import "src/models/data/home.dart";
+import "src/models/data/messages.dart";
 import "src/models/data/serial.dart";
 import "src/models/data/settings.dart";
 import "src/models/data/sockets.dart";
@@ -22,6 +23,7 @@ export "src/models/model.dart";
 
 // Data models
 export "src/models/data/home.dart";
+export "src/models/data/messages.dart";
 export "src/models/data/serial.dart";
 export "src/models/data/settings.dart";
 export "src/models/data/sockets.dart";
@@ -85,6 +87,9 @@ class Models extends Model {
 
 	/// The views data model.
 	final views = ViewsModel();
+
+	/// The messages model.
+	final messages = MessagesModel();
 
 	@override
 	Future<void> init() async {

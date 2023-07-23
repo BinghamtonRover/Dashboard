@@ -18,29 +18,14 @@ class RoverSettings extends Model {
 	RoverStatus get status => settings.status;
 
 	/// The last received confirmation from each socket.
-	List<UpdateSetting?> _handshakes = [null, null, null, null];
+	int _handshakes = 0;
 
 	@override
 	Future<void> init() async {
-		models.sockets.data.registerHandler<UpdateSetting>(
+		models.messages.registerHandler<UpdateSetting>(
 			name: UpdateSetting().messageName,
 			decoder: UpdateSetting.fromBuffer,
-			handler: (settings) => _handshakes[0] = settings,
-		);
-		models.sockets.video.registerHandler<UpdateSetting>(
-			name: UpdateSetting().messageName,
-			decoder: UpdateSetting.fromBuffer,
-			handler: (settings) => _handshakes[1] = settings,
-		);
-		models.sockets.autonomy.registerHandler<UpdateSetting>(
-			name: UpdateSetting().messageName,
-			decoder: UpdateSetting.fromBuffer,
-			handler: (settings) => _handshakes[2] = settings,
-		);
-		models.sockets.mars.registerHandler<UpdateSetting>(
-			name: UpdateSetting().messageName,
-			decoder: UpdateSetting.fromBuffer,
-			handler: (settings) => _handshakes[3] = settings,
+			handler: (settings) => _handshakes++,
 		);
 	}
 
@@ -49,14 +34,11 @@ class RoverSettings extends Model {
 	/// The response must be an echo of the data sent, to ensure the rover acknowledges the data.
 	/// Returns true if the handshake succeeds.
 	Future<bool> tryChangeSettings(UpdateSetting value) async {
-		_handshakes = [null, null, null, null];
+		_handshakes = 0;
 		models.sockets.data.sendMessage(value);
 		await Future<void>.delayed(confirmationDelay);
-		for (var index = 0; index < models.sockets.sockets.length; index++) {
-			if (_handshakes[index] != null) continue;
-			final device = models.sockets.sockets[index].device;
-			if (device == Device.MARS_SERVER) continue;  // <-- Until the MARS server is up and running
-			models.home.setMessage(severity: Severity.error, text: "The ${device.humanName} did not respond");
+		if (_handshakes != 3) {
+			models.home.setMessage(severity: Severity.error, text: "Could not update settings");
 			return false;
 		}
 		return true;

@@ -3,6 +3,7 @@ import "package:provider/provider.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// The footer, responsible for showing vitals and logs. 
@@ -183,23 +184,22 @@ class SerialButton extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) => Consumer<SerialModel>(
-		builder: (_, model, __) => model.isConnected 
-			? IconButton(
-				icon: const Icon(Icons.usb, color: Colors.green),
-				onPressed: model.disconnect,
-				constraints: const BoxConstraints(maxWidth: 36),
-			)
-			: PopupMenuButton(
-				icon: Icon(Icons.usb, color: context.colorScheme.onSecondary),
-				tooltip: "Select device",
-				onSelected: model.connect,
-				itemBuilder: (_) => [
-					for (final String device in model.availableDevices)
-						PopupMenuItem(
-							value: device,
-							child: Text(device),
-						)
-				],
+		builder: (_, model, __) => PopupMenuButton(
+			icon: Icon(
+				Icons.usb, 
+				color: model.hasDevice ? Colors.green : context.colorScheme.onSecondary,
+			),
+			tooltip: "Select device",
+			onSelected: model.toggle,
+			itemBuilder: (_) => [
+				for (final String port in SerialDevice.availablePorts) PopupMenuItem(
+					value: port,
+					child: ListTile(
+						title: Text(port),
+						leading: model.isConnected(port) ? const Icon(Icons.check) : null,
+					),
+				)
+			],
 		),
 	);
 } 

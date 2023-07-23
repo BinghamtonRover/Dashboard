@@ -1,23 +1,19 @@
 import "package:protobuf/protobuf.dart";
 
 import "package:rover_dashboard/data.dart";
-
-/// A callback to execute with a specific serialized Protobuf message.
-typedef MessageHandler<T extends Message> = void Function(T);
-
-/// A callback to execute with raw Protobuf data.
-typedef RawDataHandler = void Function(List<int> data);
+import "package:rover_dashboard/models.dart";
 
 /// A mixin that delegates [WrappedMessage]s to a handler via [registerHandler].
 /// 
 /// - Use [registerHandler] to invoke your handler whenever a new message is received.
 /// - Use [removeHandler] to remove your handler.
 /// - Override [allowedFallthrough] to allow certain massages to pass unhandled.
-mixin WrapperRegistry {
-	final Map<String, RawDataHandler> _handlers = {};
-
+class MessagesModel {
 	/// A set of message types that are allowed to pass through without being handled.
-	Set<String> get allowedFallthrough;
+	static const Set<String> allowedFallthrough = {"AutonomyData"};
+
+	/// A set of handlers to be called based on [WrappedMessage.name].
+	final Map<String, RawDataHandler> _handlers = {};
 
 	/// Delegates the message contents to the appropriate handler.
 	void onMessage(WrappedMessage wrapper) {
@@ -31,6 +27,12 @@ mixin WrapperRegistry {
 			try { return rawHandler(wrapper.data); }
 			on InvalidProtocolBufferException { /* Nothing we can do */ }
 		}	
+	}
+
+	/// Sends a command over the network or over Serial.
+	void sendMessage(Message message) {
+		models.serial.sendMessage(message);
+		models.sockets.data.sendMessage(message);
 	}
 
 	/// Adds a handler for the given message type. 

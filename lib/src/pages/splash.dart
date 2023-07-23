@@ -64,47 +64,62 @@ class SplashPageState extends State<SplashPage>{
 			if (mounted) {
 				await Navigator.of(context).pushReplacementNamed(Routes.home);
 			}			
-		} catch (error) {
-			setState(() => errorText = error.toString());
+		} catch (error, stackTrace) {
+			setState(() => errorText = "$error\n$stackTrace");
 			rethrow;
 		}
 	}
 
 	@override
 	Widget build(BuildContext context) => Scaffold(
-		body: Stack(
-			alignment: Alignment.center,					
-			children: [
-				AnimatedOpacity(
-					duration: const Duration(milliseconds: 1000),
-					opacity: switch (state) {
-						SegaState.partOne => 0,
-						SegaState.partTwo => 0.3,
-						SegaState.partThree => 1,
-					},
-					child: Text("Binghamton University\nRover Team", textAlign: TextAlign.center, style: context.textTheme.displayMedium),
-				),
-				AnimatedAlign(
-					duration: const Duration(milliseconds: 750),
-					alignment: switch (state) {
-						SegaState.partOne => const Alignment(-1.5, 0),
-						SegaState.partTwo => const Alignment(1.5, 0),
-						SegaState.partThree => const Alignment(-1.5, 0),
-					},
-					child: Transform.flip(
-						flipX: switch (state) {
-							SegaState.partOne => true, 
-							SegaState.partTwo => true, 
-							SegaState.partThree => false, 
+		body: errorText == null
+			? Stack(  // SEGA intro
+				alignment: Alignment.center,					
+				children: [
+					AnimatedOpacity(
+						duration: const Duration(milliseconds: 1000),
+						opacity: switch (state) {
+							SegaState.partOne => 0,
+							SegaState.partTwo => 0.3,
+							SegaState.partThree => 1,
 						},
-						child: SizedBox(
-							width: 150, 
-							height: 150, 
-							child: Image.asset("assets/rover.png"),
+						child: Text("Binghamton University\nRover Team", textAlign: TextAlign.center, style: context.textTheme.displayMedium),
+					),
+					AnimatedAlign(
+						duration: const Duration(milliseconds: 750),
+						alignment: switch (state) {
+							SegaState.partOne => const Alignment(-1.5, 0),
+							SegaState.partTwo => const Alignment(1.5, 0),
+							SegaState.partThree => const Alignment(-1.5, 0),
+						},
+						child: Transform.flip(
+							flipX: switch (state) {
+								SegaState.partOne => true, 
+								SegaState.partTwo => true, 
+								SegaState.partThree => false, 
+							},
+							child: SizedBox(
+								width: 150, 
+								height: 150, 
+								child: Image.asset("assets/rover.png"),
+							),
 						),
 					),
-				),
-			],
-		),
+				],
+			)
+			: Center(child: Column(  // Error
+				mainAxisAlignment: MainAxisAlignment.center,
+				children: [
+					const Spacer(flex: 2),
+					Text("Something went wrong", style: Theme.of(context).textTheme.displayLarge),
+					const Spacer(),
+					Text("The error occurred when trying to initialize $current", style: Theme.of(context).textTheme.headlineLarge),
+					const SizedBox(height: 24),
+					Text("Here is the exact error:", style: Theme.of(context).textTheme.titleLarge),
+					const SizedBox(height: 16),
+					Text(errorText!),
+					const Spacer(flex: 2),
+				],
+			),),
 	);
 }

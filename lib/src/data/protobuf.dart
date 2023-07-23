@@ -9,6 +9,37 @@ export "package:protobuf/protobuf.dart" show GeneratedMessageGenericExtensions;
 /// The `.fromBuffer` constructor is a type of [MessageDecoder]. 
 typedef MessageDecoder<T extends Message> = T Function(List<int> data); 
 
+/// A callback to execute with a specific serialized Protobuf message.
+typedef MessageHandler<T extends Message> = void Function(T);
+
+/// A callback to handle any [WrappedMessage].
+typedef WrappedMessageHandler = void Function(WrappedMessage);
+
+/// A callback to execute with raw Protobuf data.
+typedef RawDataHandler = void Function(List<int> data);
+
+/// Gets the name of the command message 1for the given device.
+String getCommandName(Device device) => switch (device) {
+	Device.ARM => "ArmCommand",
+	Device.GRIPPER => "GripperCommand",
+	Device.SCIENCE => "ScienceCommand",
+	Device.ELECTRICAL => "ElecticalCommand",
+	Device.DRIVE => "DriveCommand",
+	Device.MARS => "MarsCommand",
+	_ => "Unknown",
+};
+
+/// Gets the name of the data message for the given device.
+String getDataName(Device device) => switch (device) {
+	Device.ARM => "ArmData",
+	Device.GRIPPER => "GripperData",
+	Device.SCIENCE => "ScienceData",
+	Device.ELECTRICAL => "ElectricalData",
+	Device.DRIVE => "DriveData",
+	Device.MARS => "MarsData",
+	_ => "Unknown",
+};
+
 /// Utilities for [Timestamp]s.
 extension TimestampUtils on Timestamp {
 	/// The [Timestamp] version of [DateTime.now].

@@ -11,19 +11,8 @@ import "package:rover_dashboard/services.dart";
 ///
 /// Once every [gamepadDelay], the [gamepadTimer] will trigger, which [_update]s the gamepad and
 /// call [RoverControls.parseInputs] to see what actions can be done. Each command is then sent
-/// via [sendMessage], which will either send them over the network or via USB ([SerialModel]).
+/// with [MessagesModel.sendMessage], which will either send them over the network or via serial.
 class Controller extends Model {
-	/// Sends a command over the network or over Serial.
-	static Future<void> sendMessage(Message message) async {
-		if (models.serial.isConnected && (services.serial.connectedDevice == teensyCommands[message.messageName])) {
-			await services.serial.sendMessage(message);
-		} else if (message.messageName == "MarsCommand") {
-			models.sockets.mars.sendMessage(message);
-		} else {
-			models.sockets.data.sendMessage(message);
-		}
-	}
-
 	/// Reads the gamepad and controls the rover when triggered.
 	late final Timer gamepadTimer;
 
@@ -49,7 +38,7 @@ class Controller extends Model {
 	void dispose() {
 		gamepadTimer.cancel();
 		models.settings.removeListener(notifyListeners);
-		controls.onDispose.forEach(sendMessage);
+		controls.onDispose.forEach(models.messages.sendMessage);
 		super.dispose();
 	}
 
@@ -62,7 +51,7 @@ class Controller extends Model {
 	/// Changes the current mode this [gamepad] is controlling, and chooses a new [RoverControls].
 	void setMode(OperatingMode? mode) {
 		if (mode == null) return;
-		controls.onDispose.forEach(sendMessage);
+		controls.onDispose.forEach(models.messages.sendMessage);
 		controls = RoverControls.forMode(mode);
 		gamepad.pulse();
 		notifyListeners();
@@ -89,7 +78,7 @@ class Controller extends Model {
 		controls.updateState(gamepad.state);
 		final messages = controls.parseInputs(gamepad.state);
 		for (final message in messages) {
-			if (message != null) await sendMessage(message);
+			if (message != null) models.messages.sendMessage(message);
 		}
 	}
 }

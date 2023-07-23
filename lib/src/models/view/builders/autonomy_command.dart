@@ -17,7 +17,7 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 
 	/// Listens for incoming confirmations from the rover that it received the command.
 	AutonomyCommandBuilder() {
-		models.sockets.autonomy.registerHandler<AutonomyCommand>(
+		models.messages.registerHandler<AutonomyCommand>(
 			name: AutonomyCommand().messageName,
 			decoder: AutonomyCommand.fromBuffer,
 			handler: (data) => _handshake = data,
@@ -26,7 +26,7 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 
 	@override
 	void dispose() {
-		models.sockets.autonomy.removeHandler(AutonomyCommand().messageName);
+		models.messages.removeHandler(AutonomyCommand().messageName);
 		super.dispose();
 	}
 

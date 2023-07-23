@@ -30,7 +30,7 @@ class ScienceCommandBuilder extends ValueBuilder<ScienceCommand> {
 
 	/// Sends the command to the science subsystem.
 	Future<void> send() async {
-		await Controller.sendMessage(value);
+		models.messages.sendMessage(value);
 		models.home.setMessage(severity: Severity.info, text: "Science command submitted. Check the video feed to confirm");
 	}
 }
