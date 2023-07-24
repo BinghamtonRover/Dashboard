@@ -51,6 +51,13 @@ class Sockets extends Model {
   /// The rover-like system currently in use.
   RoverType rover = RoverType.rover;
 
+  /// The [InternetAddress] to use instead of the address on the rover.
+  InternetAddress? get addressOverride => switch (rover) {
+  	RoverType.rover => null,
+  	RoverType.tank => models.settings.network.tankSocket.address,
+  	RoverType.localhost => InternetAddress.loopbackIPv4,
+  };
+
   /// A rundown of the connection strength of each device.
   String get connectionSummary {
   	final result = StringBuffer();
@@ -92,24 +99,12 @@ class Sockets extends Model {
 
 	/// Set the right IP addresses for the rover or tank.
 	Future<void> updateSockets() async {
-		// 1. Initialize sockets
 		final settings = models.settings.network;
-		data.destination = settings.subsystemsSocket.copy();
-		video.destination = settings.videoSocket.copy();
+		data.destination = settings.subsystemsSocket.copyWith(address: addressOverride);
+		video.destination = settings.videoSocket.copyWith(address: addressOverride);
 		video2.destination = SocketInfo(address: InternetAddress("192.168.1.30"), port: 8007);
-		autonomy.destination = settings.autonomySocket.copy();
-		mars.destination = settings.marsSocket.copy();
-
-		// 2. Change IP addresses
-		for (final socket in sockets) {
-			socket.destination!.address = switch (rover) {
-				RoverType.rover => socket.destination!.address,
-				RoverType.tank => settings.tankSocket.address,
-				RoverType.localhost => InternetAddress.loopbackIPv4,
-			};
-		}
-
-		// 3. Reset
+		autonomy.destination = settings.autonomySocket.copyWith(address: addressOverride);
+		mars.destination = settings.marsSocket.copyWith(address: addressOverride);
 		await reset();
 	}
 
