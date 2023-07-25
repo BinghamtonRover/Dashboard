@@ -30,7 +30,10 @@ class DashboardSocket extends ProtoSocket {
 		required this.onDisconnect, 
 		required this.messageHandler,
 		required super.device, 
-	}) : super(port: 0);
+	}) : super(
+		port: null,
+		heartbeatInterval: const Duration(milliseconds: 200),
+	);
 
 	/// The connection strength, as a percentage to this [device].
 	final connectionStrength = ValueNotifier<double>(0);
