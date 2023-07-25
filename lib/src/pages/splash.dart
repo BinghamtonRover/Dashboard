@@ -41,11 +41,10 @@ class SplashPageState extends State<SplashPage>{
 
 	/// Starts the SEGA animation.
 	Future<void> initAnimation() async {
-		// await Future<void>.delayed(const Duration(milliseconds: 1000));
 		setState(() => state = SegaState.partTwo);
-		await Future<void>.delayed(const Duration(milliseconds: 1000));
+		await Future<void>.delayed(const Duration(milliseconds: 750));
 		setState(() => state = SegaState.partThree);
-		await Future<void>.delayed(const Duration(milliseconds: 1000));
+		await Future<void>.delayed(const Duration(milliseconds: 750));
 	}
 
 	/// Calls [Services.init] and [Models.init] while monitoring for errors. 
@@ -80,13 +79,13 @@ class SplashPageState extends State<SplashPage>{
 						duration: const Duration(milliseconds: 1000),
 						opacity: switch (state) {
 							SegaState.partOne => 0,
-							SegaState.partTwo => 0.3,
+							SegaState.partTwo => 0.2,
 							SegaState.partThree => 1,
 						},
 						child: Text("Binghamton University\nRover Team", textAlign: TextAlign.center, style: context.textTheme.displayMedium),
 					),
 					AnimatedAlign(
-						duration: const Duration(milliseconds: 750),
+						duration: const Duration(milliseconds: 500),
 						alignment: switch (state) {
 							SegaState.partOne => const Alignment(-1.5, 0),
 							SegaState.partTwo => const Alignment(1.5, 0),
