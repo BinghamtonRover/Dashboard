@@ -74,8 +74,8 @@ class AutonomyModel with ChangeNotifier {
 	List<List<AutonomyCell>> get empty => [
 		for (int i = 0; i < gridSize; i++) [
 			for (int j = 0; j < gridSize; j++) 
-				AutonomyCell.empty
-		]
+				AutonomyCell.empty,
+		],
 	];
 
 	/// A list of markers maanually placed by the user. Useful for the Extreme Retrieval Mission.

@@ -94,7 +94,7 @@ class HomePageState extends State<HomePage>{
 				Builder(builder: (context) => IconButton(
 					icon: const Icon(Icons.menu),
 					onPressed: () => setState(() => showSidebar = !showSidebar),
-				),)
+				),),
         
 			],
       

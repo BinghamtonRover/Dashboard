@@ -76,7 +76,7 @@ class DashboardView {
 				name: name.humanName,
 				key: name,
 				builder: (context) => VideoFeed(name: name),
-			)
+			),
 	];
 
 	/// A list of views that represent all non-camera feeds.

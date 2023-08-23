@@ -47,7 +47,7 @@ class SocketEditor extends StatelessWidget {
 						decoration: InputDecoration(errorText: model.port.error),
 						inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r"\d"))],
 					),),
-				] else const Spacer()
+				] else const Spacer(),
 			],
 		),
 	);

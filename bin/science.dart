@@ -89,7 +89,7 @@ Future<void> logData(WrappedMessage message) async{
 /// Reads logs from the given file.
 Future<List<WrappedMessage>> readLogs(File file) async => [
   for (final line in (await file.readAsString()).trim().split("\n"))
-    WrappedMessage.fromBuffer(base64.decode(line))
+    WrappedMessage.fromBuffer(base64.decode(line)),
 ];
 
 void main() async {

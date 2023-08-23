@@ -108,7 +108,7 @@ class SciencePage extends StatelessWidget {
 			LineChartBarData(
 				spots: [
 					for (final reading in analysis.data.readings) 
-						FlSpot(reading.time, reading.value)
+						FlSpot(reading.time, reading.value),
 				], 
 				color: color,
 				preventCurveOverShooting: true,
@@ -176,7 +176,7 @@ class SciencePage extends StatelessWidget {
 						for (int i = 0; i < model.numSamples; i++) DropdownMenuItem(
 							value: i,
 							child: Text("Sample ${i + 1}"),
-						)
+						),
 					],
 				),
 				if (model.isListening) IconButton(
@@ -215,7 +215,7 @@ class SciencePage extends StatelessWidget {
 							height: 425,
 							analyses: model.analysesForSample,
 							builder: ResultsBox.new,
-						)
+						),
 					],
 				],
 			),),

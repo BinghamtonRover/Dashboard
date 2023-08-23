@@ -57,7 +57,7 @@ class ArmControls extends RoverControls {
 			if (state.normalShoulder != 0) ArmCommand(
 				shoulder: MotorCommand(moveRadians: state.normalShoulder * settings.shoulder * -1),
 				elbow: MotorCommand(moveRadians: state.normalShoulder * settings.elbow),
-			)
+			),
 		],
 
 		// Gripper

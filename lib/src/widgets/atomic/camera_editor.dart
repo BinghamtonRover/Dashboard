@@ -30,7 +30,7 @@ class CameraDetailsEditor extends StatelessWidget {
 						if (result && context.mounted) Navigator.of(context).pop();
 					},
 					child: const Text("Save"),
-				)
+				),
 			],
 			content: SingleChildScrollView(
 				child: Column(
@@ -67,7 +67,7 @@ class CameraDetailsEditor extends StatelessWidget {
 						),
 						const SizedBox(height: 24),
 						if (model.isLoading) const Text("Loading..."),
-						if (model.error != null) Text(model.error!, style: const TextStyle(color: Colors.red))
+						if (model.error != null) Text(model.error!, style: const TextStyle(color: Colors.red)),
 					],
 				),
 			),

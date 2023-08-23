@@ -137,7 +137,7 @@ class StatusIcons extends StatelessWidget {
 					itemBuilder: (_) => [
 						for (final value in RoverStatus.values)
 							if (value != RoverStatus.DISCONNECTED)  // can't select this!
-								PopupMenuItem(value: value, child: Text(value.humanName))
+								PopupMenuItem(value: value, child: Text(value.humanName)),
 					],
 				),
 			),
@@ -167,7 +167,7 @@ class ViewsCounter extends StatelessWidget {
 						for (int i = 1; i <= 4; i++) DropdownMenuItem(
 							value: i,
 							child: Center(child: Text(i.toString())),
-						)
+						),
 					],
 				),
 			],
@@ -198,7 +198,7 @@ class SerialButton extends StatelessWidget {
 						title: Text(port),
 						leading: model.isConnected(port) ? const Icon(Icons.check) : null,
 					),
-				)
+				),
 			],
 		),
 	);
