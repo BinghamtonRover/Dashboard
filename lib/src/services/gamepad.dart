@@ -147,12 +147,12 @@ class GamepadService extends Service {
   /// Non-connected gamepads are represented with [MockGamepad]s, which has the nice benefit of
   /// automatically handling the case where the user is on a non-supported platform.
   final List<Gamepad> gamepads = [
-    for (int i = 0; i < numGamepads; i++) MockGamepad()
+    for (int i = 0; i < numGamepads; i++) MockGamepad(),
   ];
 
   /// The set of all the [Gamepad.controller] IDs.
   Set<int> get ids => {
-    for (final gamepad in gamepads) gamepad.controller
+    for (final gamepad in gamepads) gamepad.controller,
   };
 
   @override

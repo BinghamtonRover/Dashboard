@@ -88,8 +88,8 @@ class ScienceModel with ChangeNotifier {
 	Map<ScienceSensor, List<ScienceAnalysis>> allSamples = {
 		for (final sensor in sensors) sensor: [
 			for (int i = 0; i < models.settings.science.numSamples; i++) 
-				ScienceAnalysis(sensor)
-		]
+				ScienceAnalysis(sensor),
+		],
 	};
 
 	/// The [Metrics] model for science data.
@@ -108,7 +108,7 @@ class ScienceModel with ChangeNotifier {
 
 	/// All the sensors for the current [sample].
 	List<ScienceAnalysis> get analysesForSample => [
-		for (final sensor in sensors) allSamples[sensor]![sample]
+		for (final sensor in sensors) allSamples[sensor]![sample],
 	];
 
 	/// The sample whose stats are being displayed.

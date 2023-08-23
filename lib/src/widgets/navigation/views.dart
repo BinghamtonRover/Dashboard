@@ -30,7 +30,7 @@ class ViewsWidget extends StatelessWidget {
 						// Put the 2nd view on the bottom row or the upper left corner
 						if (model.views.length >= 3) getView(context, 2)
 						else getView(context, 1),
-					if (model.views.length >= 4) getView(context, 3)
+					if (model.views.length >= 4) getView(context, 3),
 				],),
 			),
 		],),

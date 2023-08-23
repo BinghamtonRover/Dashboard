@@ -60,7 +60,7 @@ class GamepadButton extends StatelessWidget {
 						for (final mode in OperatingMode.values) DropdownMenuItem(
 							value: mode,
 							child: Text(mode.name),
-						)
+						),
 					],
 				),
 			],

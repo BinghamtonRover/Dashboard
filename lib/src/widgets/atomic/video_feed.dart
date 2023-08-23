@@ -112,7 +112,7 @@ class VideoFeedState extends State<VideoFeed> {
 				alignment: Alignment.center,
 				child: (models.sockets.video.isConnected || models.sockets.video2.isConnected) && imageLoader.hasImage && data.details.status == CameraStatus.CAMERA_ENABLED 
 					? Row(children: [
-							Expanded(child: RawImage(image: imageLoader.image, fit: BoxFit.contain))
+							Expanded(child: RawImage(image: imageLoader.image, fit: BoxFit.contain)),
 					],)
 					: Text(errorMessage, textAlign: TextAlign.center),
 			),

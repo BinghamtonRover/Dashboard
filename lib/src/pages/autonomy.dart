@@ -109,7 +109,7 @@ class AutonomyPage extends StatelessWidget {
 								value: command.task,
 								items: [
 									for (final task in AutonomyTask.values) 
-										if (task != AutonomyTask.AUTONOMY_TASK_UNDEFINED) task
+										if (task != AutonomyTask.AUTONOMY_TASK_UNDEFINED) task,
 								],
 								onChanged: command.updateTask,
 								humanName: (task) => task.humanName,

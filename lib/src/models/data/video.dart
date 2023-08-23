@@ -21,7 +21,7 @@ class VideoModel extends Model {
 	/// This number is updated every frame. Use [networkFps] in the UI.
 	Map<CameraName, int> framesThisSecond = {
 		for (final name in CameraName.values) 
-			name: 0
+			name: 0,
 	};
 
 	/// How many frames came in the network in the past second.
@@ -59,7 +59,7 @@ class VideoModel extends Model {
 		networkFps = Map.from(framesThisSecond);
 		framesThisSecond = {
 			for (final name in CameraName.values) 
-				name: 0
+				name: 0,
 		};
 		notifyListeners();
 	}
