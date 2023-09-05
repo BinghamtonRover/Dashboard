@@ -133,7 +133,8 @@ class StatusIcons extends StatelessWidget {
               return showDialog(
                 context: context, 
                 builder: (ctx) => AlertDialog(
-                  title: const Text("Confirm Off"),
+                  title: const Text("Are you sure?"),
+                  content: const Text("This will turn off the rover and you must physically turn it back on again"),
                   actions: [
                     TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
                     ElevatedButton(
