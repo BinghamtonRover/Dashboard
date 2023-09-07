@@ -129,8 +129,9 @@ class StatusIcons extends StatelessWidget {
 				valueListenable: models.rover.status,
 				builder: (context, value, child) => PopupMenuButton(
 					tooltip: "Change mode",
-					onSelected: (value) async {if(value == RoverStatus.POWER_OFF){
-              return showDialog(
+					onSelected: (value) async {
+            if (value == RoverStatus.POWER_OFF) {
+              await showDialog<void>(
                 context: context, 
                 builder: (ctx) => AlertDialog(
                   title: const Text("Are you sure?"),
@@ -140,11 +141,10 @@ class StatusIcons extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () { models.rover.settings.setStatus(value); Navigator.of(context).pop(); },
                       child: const Text("Continue"), 
-                      ),
-                    ],
+                    ),
+                  ],
                 ),
               );
-              
             } else {
               await models.rover.settings.setStatus(value);
             }
