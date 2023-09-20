@@ -38,8 +38,8 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: a97367f83749dd3423cdc285b16d7dfc56a486c1
-      url: "https://github.com/BinghamtonRover/Dart-Networking.git"
+      resolved-ref: ab3c4681fddd2cb316cee5cfbbfada2c88a5f622
+      url: "https://github.com/BinghamtonRover/Networking.git"
     source: git
     version: "1.0.0"
   characters:
@@ -158,10 +158,10 @@ packages:
     dependency: "direct main"
     description:
       name: fl_chart
-      sha256: "48a1b69be9544e2b03d9a8e843affd89e43f3194c9248776222efcb4206bb1ec"
+      sha256: c1e26c7e48496be85104c16c040950b0436674cdf0737f3f6e95511b2529b592
       url: "https://pub.dev"
     source: hosted
-    version: "0.62.0"
+    version: "0.63.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -269,10 +269,10 @@ packages:
     dependency: transitive
     description:
       name: logger
-      sha256: "7ad7215c15420a102ec687bb320a7312afd449bac63bfb1c60d9787c27b9767f"
+      sha256: ba3bc83117b2b49bdd723c0ea7848e8285a0fbc597ba09203b20d329d020c24a
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "2.0.2"
   matcher:
     dependency: transitive
     description:
@@ -607,21 +607,21 @@ packages:
     source: hosted
     version: "0.1.4-beta"
   win32:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: win32
-      sha256: a6f0236dbda0f63aa9a25ad1ff9a9d8a4eaaa5012da0dc59d21afdb1dc361ca4
+      sha256: c97defd418eef4ec88c0d1652cdce84b9f7b63dd7198e266d06ac1710d527067
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.4"
+    version: "5.0.8"
   win32_gamepad:
     dependency: "direct main"
     description:
       name: win32_gamepad
-      sha256: f56d6c5e5cae47eb90099dd32501dad118b6014844a337e7ae9c1fcbc6668828
+      sha256: ca2f1d9317fce0b14fdb4a59a4be029b6ae1ad4091571c2e5e32bb549c6df186
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6"
+    version: "1.0.7"
   xdg_directories:
     dependency: transitive
     description:

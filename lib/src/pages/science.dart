@@ -116,8 +116,7 @@ class SciencePage extends StatelessWidget {
 			),
 		], 
 		titlesData: FlTitlesData(
-			show: true, 
-			topTitles: AxisTitles(), 
+			topTitles: const AxisTitles(), 
 			bottomTitles: AxisTitles(
 				sideTitles: SideTitles(
 					showTitles: true, 
@@ -131,8 +130,8 @@ class SciencePage extends StatelessWidget {
 		),
 		extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)], verticalLines: [VerticalLine(x: 0)]),
 		minX: 0, minY: 0,
-		clipData: FlClipData.all(),
-		lineTouchData: LineTouchData(touchTooltipData: LineTouchTooltipData(fitInsideVertically: true, fitInsideHorizontally: true)),
+		clipData: const FlClipData.all(),
+		lineTouchData: const LineTouchData(touchTooltipData: LineTouchTooltipData(fitInsideVertically: true, fitInsideHorizontally: true)),
 	);
 
 	/// The `package:fl_chart` helper class for the summary charts.
@@ -143,8 +142,7 @@ class SciencePage extends StatelessWidget {
 			BarChartGroupData(x: 2, barRods: [BarChartRodData(color: color, fromY: 0, toY: analysis.data.max ?? 0)]),
 		],
 		titlesData: FlTitlesData(
-			show: true, 
-			topTitles: AxisTitles(), 
+			topTitles: const AxisTitles(), 
 			bottomTitles: AxisTitles(
 				sideTitles: SideTitles(
 					showTitles: true, 

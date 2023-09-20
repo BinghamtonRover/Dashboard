@@ -1,7 +1,7 @@
 name: rover_dashboard
 description: Graphical application for remotely operating the rover.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 2023.9.20+1
+version: 2023.9.20+2
 
 environment:
   sdk: "^3.0.0"
@@ -10,7 +10,7 @@ environment:
 dependencies:
   async: ^2.11.0
   file_picker: ^5.2.11
-  fl_chart: ^0.62.0
+  fl_chart: ^0.63.0
   flutter:
     sdk: flutter
   flutter_libserialport: ^0.3.0
@@ -23,7 +23,7 @@ dependencies:
   yaml: ^3.1.1
   yaml_writer: ^1.0.2
   burt_network: 
-    git: https://github.com/BinghamtonRover/Dart-Networking.git
+    git: https://github.com/BinghamtonRover/Networking.git
 
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
@@ -35,11 +35,11 @@ dev_dependencies:
   very_good_analysis: ^5.0.0+1
 
 # Do not modify this section unless you know what it does and why you need it.
-dependency_overrides: 
+# dependency_overrides: 
   # win32_gamepad needs win32 ^4.0.0
   # path_provider_windows needs win32 <4.0.0
   # So, this is the latest version of win32 before 4.0.0
-  win32: 3.1.4
+  # win32: 3.1.4
 
 # Generates icons for the given platforms
 #   Run: flutter pub run icons_launcher:create
@@ -63,7 +63,7 @@ flutter_launcher_icons:
 # Builds a Windows .msix App Installer file for the Dashboard.
 #   Run: flutter pub run msix:create
 msix_config:
-  msix_version: 2023.9.20.1
+  msix_version: 2023.9.20.2
   display_name: Dashboard
   publisher_display_name: Binghamton University Rover Team
   identity_name: edu.binghamton.rover
