@@ -124,8 +124,27 @@ class StatusIcons extends StatelessWidget {
 				valueListenable: models.rover.status,
 				builder: (context, value, child) => PopupMenuButton(
 					tooltip: "Change mode",
-					onSelected: models.rover.settings.setStatus,
-					icon: Icon(
+					onSelected: (value) async {
+            if (value == RoverStatus.POWER_OFF) {
+              await showDialog<void>(
+                context: context, 
+                builder: (ctx) => AlertDialog(
+                  title: const Text("Are you sure?"),
+                  content: const Text("This will turn off the rover and you must physically turn it back on again"),
+                  actions: [
+                    TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
+                    ElevatedButton(
+                      onPressed: () { models.rover.settings.setStatus(value); Navigator.of(context).pop(); },
+                      child: const Text("Continue"), 
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              await models.rover.settings.setStatus(value);
+            }
+          },
+          icon: Icon(
 						getStatusIcon(value),
 						color: getStatusColor(value),
 					),
