@@ -1,5 +1,4 @@
 import "package:rover_dashboard/data.dart";
-import "package:rover_dashboard/models.dart";
 
 /// Metrics about the rover's position and orientation.
 /// 
@@ -51,9 +50,7 @@ class PositionMetrics extends Metrics<RoverPosition> {
 		if(data.orientation.z > 360 || data.orientation.z < -360){
 			data.orientation.z = oldOrientation.z;
 			notifyListeners();
-		}
-		models.sockets.mars.sendMessage(MarsCommand(rover: value.gps));
-		
+		}		
 	}
 
 	/// The angle to orient the rover on the top-down map.
