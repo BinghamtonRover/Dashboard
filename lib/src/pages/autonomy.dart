@@ -9,7 +9,7 @@ import "package:rover_dashboard/widgets.dart";
 /// The UI for the autonomy subsystem.
 /// 
 /// Displays a bird's-eye view of the rover and its path to the goal.
-class AutonomyPage extends StatelessWidget {
+class MapPage extends StatelessWidget {
 	/// Gets the color for a given [AutonomyCell].
 	Color? getColor(AutonomyCell cell) => switch(cell) {
 		AutonomyCell.rover => Colors.blue,
