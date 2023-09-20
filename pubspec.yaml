@@ -1,7 +1,7 @@
 name: rover_dashboard
 description: Graphical application for remotely operating the rover.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 2023.9.20+2
+version: 2023.9.20+3
 
 environment:
   sdk: "^3.0.0"
@@ -35,11 +35,8 @@ dev_dependencies:
   very_good_analysis: ^5.0.0+1
 
 # Do not modify this section unless you know what it does and why you need it.
+# If you do need to override any dependencies, document which ones, which versions, and why.
 # dependency_overrides: 
-  # win32_gamepad needs win32 ^4.0.0
-  # path_provider_windows needs win32 <4.0.0
-  # So, this is the latest version of win32 before 4.0.0
-  # win32: 3.1.4
 
 # Generates icons for the given platforms
 #   Run: flutter pub run icons_launcher:create
@@ -47,9 +44,6 @@ icons_launcher:
   image_path: "assets/logo.png"
   platforms: 
     android:
-      # adaptive_foreground_image: "assets/logo.png"
-      # adaptive_background_color: "#000000"
-      # adaptive_monochrome_image: "assets/logo.png"
       enable: true
     windows: 
       enable: true
@@ -61,9 +55,9 @@ flutter_launcher_icons:
     generate: true
 
 # Builds a Windows .msix App Installer file for the Dashboard.
-#   Run: flutter pub run msix:create
+#   Command: dart run msix:create
 msix_config:
-  msix_version: 2023.9.20.2
+  msix_version: 2023.9.20.3
   display_name: Dashboard
   publisher_display_name: Binghamton University Rover Team
   identity_name: edu.binghamton.rover

@@ -22,14 +22,6 @@ class Sockets extends Model {
 		messageHandler: models.messages.onMessage,
 	);
 
-	/// A UDP socket for receiving video.
-	late final video2 = DashboardSocket(
-		device: Device.VIDEO,
-		onConnect: onConnect, 
-		onDisconnect: onDisconnect,
-		messageHandler: models.messages.onMessage,
-	);
-
 	/// A UDP socket for controlling autonomy.
 	late final autonomy = DashboardSocket(
 		device: Device.AUTONOMY,
@@ -38,16 +30,8 @@ class Sockets extends Model {
 		messageHandler: models.messages.onMessage,
 	);
 
-  /// A UDP socket for controlling the MARS subsystem.
-  late final mars = DashboardSocket(
-  	device: Device.MARS_SERVER,
-  	onConnect: onConnect, 
-		onDisconnect: onDisconnect,
-		messageHandler: models.messages.onMessage,
-	);
-
   /// A list of all the sockets this model manages.
-  List<DashboardSocket> get sockets => [data, video, video2, autonomy, mars];
+  List<DashboardSocket> get sockets => [data, video, autonomy];
 
   /// The rover-like system currently in use.
   RoverType rover = RoverType.rover;
@@ -106,9 +90,7 @@ class Sockets extends Model {
 		final settings = models.settings.network;
 		data.destination = settings.subsystemsSocket.copyWith(address: addressOverride);
 		video.destination = settings.videoSocket.copyWith(address: addressOverride);
-		video2.destination = SocketInfo(address: InternetAddress("192.168.1.30"), port: 8007);
 		autonomy.destination = settings.autonomySocket.copyWith(address: addressOverride);
-		mars.destination = settings.marsSocket.copyWith(address: addressOverride);
 		await reset();
 	}
 

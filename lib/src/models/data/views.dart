@@ -42,7 +42,7 @@ class ViewsSelector extends StatelessWidget {
 			for (final view in DashboardView.cameraViews) PopupMenuItem(
 				value: view,
 				child: Row(children: [
-					if (models.sockets.video.isConnected || models.sockets.video2.isConnected) ...[getCameraStatus(view), const SizedBox(width: 8)],
+					if (models.sockets.video.isConnected) ...[getCameraStatus(view), const SizedBox(width: 8)],
 					Text(view.name),
 				],),
 			),
@@ -83,7 +83,6 @@ class DashboardView {
 	static final List<DashboardView> uiViews = [
 		DashboardView(name: Routes.science, builder: (context) => SciencePage()),
 		DashboardView(name: Routes.autonomy, builder: (context) => MapPage()),
-		DashboardView(name: Routes.mars, builder: (context) => MarsPage()),
 	];
 
 	/// A blank view.

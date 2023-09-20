@@ -8,7 +8,6 @@ library pages;
 
 export "src/pages/autonomy.dart";
 export "src/pages/home.dart";
-export "src/pages/mars.dart";
 export "src/pages/science.dart";
 export "src/pages/settings.dart";
 export "src/pages/splash.dart";

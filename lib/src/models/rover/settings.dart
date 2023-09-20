@@ -51,7 +51,6 @@ class RoverSettings extends Model {
 		final message = UpdateSetting(status: value);
 		models.sockets.video.sendMessage(message);
 		models.sockets.autonomy.sendMessage(message);
-		models.sockets.mars.sendMessage(message);
 		
 		if (!await tryChangeSettings(message)) return;
 		models.home.setMessage(severity: Severity.info, text: "Set mode to ${value.humanName}");
