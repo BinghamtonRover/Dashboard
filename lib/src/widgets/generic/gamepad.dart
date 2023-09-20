@@ -34,6 +34,7 @@ class GamepadButton extends StatelessWidget {
 	Widget build(BuildContext context) => ProviderConsumer<Controller>.value(
 		value: controller,
 		builder: (model) => Row(
+      mainAxisSize: MainAxisSize.min,
 			children: [
 				IconButton(
 					icon: Stack(
@@ -75,6 +76,7 @@ class GamepadButtons extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
 		children: [
 			GamepadButton(controller: models.rover.controller1),
 			const SizedBox(width: 8),
