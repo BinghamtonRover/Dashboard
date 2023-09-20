@@ -9,31 +9,25 @@ import "package:rover_dashboard/widgets.dart";
 /// The footer, responsible for showing vitals and logs. 
 class Footer extends StatelessWidget {
 	@override
-	Widget build(BuildContext context) => Container(
-		height: 48,
+	Widget build(BuildContext context) => ColoredBox(
 		color: Theme.of(context).colorScheme.secondary,
-		child: LayoutBuilder(
-			builder: (context, constraints) => SingleChildScrollView(
-				scrollDirection: Axis.horizontal, 
-				child: SizedBox(
-					width: constraints.maxWidth, 
-					child: const Row(
-						mainAxisSize: MainAxisSize.min,
-						children: [
-							MessageDisplay(),
-							Spacer(),
-							ViewsCounter(),
-							SizedBox(width: 8),
-							GamepadButtons(),
-							SerialButton(),
-							SizedBox(width: 4),
-							StatusIcons(),
-							SizedBox(width: 12),								
-						],
-					),
-				),
-			),
-		),
+    child: const Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      children: [
+        MessageDisplay(),
+        Row(  // Groups these elements together even when wrapping
+          mainAxisSize: MainAxisSize.min, 
+          children: [
+            ViewsCounter(),
+            SizedBox(width: 8),
+            GamepadButtons(),
+            SerialButton(),
+            SizedBox(width: 4),
+            StatusIcons(),
+          ],
+        ),
+      ],
+    ),
 	);
 }
 
@@ -98,6 +92,7 @@ class StatusIcons extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
 		children: [
 			AnimatedBuilder(  // battery level
 				animation: Listenable.merge([models.rover.metrics.electrical, models.rover.status]),
@@ -232,12 +227,12 @@ class MessageDisplay extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => Consumer<HomeModel>(
 		builder: (_, model, __) => model.message == null 
-			? Container()
+      ? const SizedBox.shrink()
 			: Container(
-				height: double.infinity,
-				padding: const EdgeInsets.all(2),
+        height: 48,
 				color: getColor(model.message!.severity),
 				child: Row(
+          mainAxisSize: MainAxisSize.min,
 					children: [
 						Icon(getIcon(model.message!.severity)),
 						const SizedBox(width: 4),

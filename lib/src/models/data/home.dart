@@ -26,11 +26,11 @@ class HomeModel extends Model {
 		if (services.error != null) setMessage(severity: Severity.critical, text: services.error!);
 	}
 
-	/// Sets a new message that will disappear in 5 seconds.
+	/// Sets a new message that will disappear in 3 seconds.
 	void setMessage({required Severity severity, required String text}) {
 		_messageTimer?.cancel();  // the new message might be cleared if the old one were about to
 		message = TaskbarMessage(severity: severity, text: text);
 		notifyListeners();
-		_messageTimer = Timer(const Duration(seconds: 5), () { message = null; notifyListeners(); });
+		_messageTimer = Timer(const Duration(seconds: 3), () { message = null; notifyListeners(); });
 	} 
 }
