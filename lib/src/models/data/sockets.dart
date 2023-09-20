@@ -118,7 +118,10 @@ class Sockets extends Model {
 	/// Resetting the sockets will bypass these errors.
 	Future<void> reset() async {
 		for (final socket in sockets) { 
+      // Sockets lose their destination when disposed, so we save it and restore it.
+      final destination = socket.destination;
 			await socket.dispose();
+      socket.destination = destination;
 			await socket.init();
 		}
 	}
