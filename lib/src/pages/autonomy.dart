@@ -84,15 +84,30 @@ class AutonomyPage extends StatelessWidget {
 						const SizedBox(width: 4),
 						Text("Place marker: ", style: context.textTheme.titleLarge),
 						const SizedBox(width: 8),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.add), 
+              label: const Text("Add Marker"), 
+              onPressed: () => showDialog<void>(context: context, builder: (_) => AlertDialog(
+                title: const Text("Add a Place Marker"),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    GpsEditor(model: model.markerBuilder),
+                  ],
+                ),
+                actions: [
+                  TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
+                  ElevatedButton(
+                    onPressed: model.markerBuilder.isValid ? () { model.placeMarker(); Navigator.of(context).pop(); } : null,
+                    child: const Text("Add"), 
+                  ),
+                ],
+              ),
+            ),),
+            const SizedBox(width: 8),
 						ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text("Clear all"), onPressed: model.clearMarkers),
 						const Spacer(),
-						GpsEditor(model: model.markerBuilder),
-						const SizedBox(width: 8),
-						ElevatedButton(onPressed: model.placeMarker, child: const Text("Place")), 
-						const SizedBox(width: 8),
-					],),
-					const Divider(),
-					ProviderConsumer<AutonomyCommandBuilder>(
+            ProviderConsumer<AutonomyCommandBuilder>(
 						create: AutonomyCommandBuilder.new,
 						builder: (command) => Row(children: [
 							const SizedBox(width: 4),
@@ -103,27 +118,41 @@ class AutonomyPage extends StatelessWidget {
 								onPressed: command.abort,
 								child: const Text("ABORT"), 
 							),
-							const Spacer(),
-							DropdownEditor<AutonomyTask>(
-								name: "Task type",
-								value: command.task,
-								items: [
-									for (final task in AutonomyTask.values) 
-										if (task != AutonomyTask.AUTONOMY_TASK_UNDEFINED) task,
-								],
-								onChanged: command.updateTask,
-								humanName: (task) => task.humanName,
-							),
-							const SizedBox(width: 16),
-							GpsEditor(model: command.gps),
-							const SizedBox(width: 8),
-							ElevatedButton(
-								onPressed: command.isLoading ? null : command.submit, 
-								child: const Text("Submit"),
-							),
-							const SizedBox(width: 8),
+              const SizedBox(width: 8),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.add), 
+                label: const Text("New Task"), 
+                onPressed: () => showDialog<void>(context: context, builder: (_) => AlertDialog(
+                  title: const Text("Create a new Task"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      DropdownEditor<AutonomyTask>(
+                        name: "Task type",
+                        value: command.task,
+                        items: [
+                          for (final task in AutonomyTask.values) 
+                            if (task != AutonomyTask.AUTONOMY_TASK_UNDEFINED) task,
+                        ],
+                        onChanged: command.updateTask,
+                        humanName: (task) => task.humanName,
+                      ),
+                      GpsEditor(model: command.gps),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
+                    ElevatedButton(
+                      onPressed: command.isLoading ? null : () { command.submit(); Navigator.of(context).pop(); },
+                      child: const Text("Submit"), 
+                    ),
+                  ],
+                ),
+              ),),
 						],),
 					),
+						const SizedBox(width: 8),
+					],),
 					const SizedBox(height: 4),
 				],
 			),
