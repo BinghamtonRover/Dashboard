@@ -35,8 +35,10 @@ jobs:
 
     - name: Build MSIX file
       run: |
+        flutter clean
         flutter pub get
-        flutter pub run msix:create
+        dart analyze
+        dart run msix:create
 
     - name: Create Release
       uses: softprops/action-gh-release@v0.1.15
