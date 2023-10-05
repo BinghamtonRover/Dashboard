@@ -59,6 +59,43 @@ class VideoFeed extends StatefulWidget {
 	VideoFeedState createState() => VideoFeedState();
 }
 
+/// Docs
+class SliderSettings extends StatelessWidget {
+  /// Docs
+  final String label;
+  /// Docs
+  final double value;
+  /// Docs
+  final ValueChanged<double> onChanged;
+  
+  /// Docs
+  const SliderSettings({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) => Column(
+      children: <Widget>[
+        Row (
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget> [
+            Text(label),
+            const Text(": "),
+            Text(value.floor().toString()),
+          ],
+        ),
+        Slider(
+          value: value,
+          onChanged: onChanged,
+          min: 0,
+          max: 100,
+        ),
+      ],
+    );
+}
+
 /// The logic for updating a [VideoFeed].
 /// 
 /// This widget listens to [VideoModel.frameUpdater] to sync its framerate with other [VideoFeed]s.
@@ -73,6 +110,80 @@ class VideoFeedState extends State<VideoFeed> {
 	/// A helper class responsible for managing and loading an image.
 	final imageLoader = ImageLoader();
 
+  /// Checks if the current slider for video camera is open
+  bool isOpened = false;
+
+  /// Docs
+  double zoom = 0.0;
+  /// Docs
+  double pan = 0.0;
+  /// Docs
+  double volume = 0.0;
+  /// Docs
+  double brightness = 0.0;
+
+  /// Docs
+  PersistentBottomSheetController? controller;
+  void _showSettingsPanel() {
+    if (!isOpened) {
+      controller = Scaffold.of(context).showBottomSheet(
+        (context) => StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) => Container(
+                padding: const EdgeInsets.all(10),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Row (
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        
+                        children: [
+                            const Text(
+                                "Settings",
+                                style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold,),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () {
+                                controller!.close();
+                                isOpened = false;
+                              },
+                            ),
+                        ],
+                      ),
+                      SliderSettings(
+                        label: "Zoom",
+                        value: zoom,
+                        onChanged: (val) => setState(() => zoom = val),
+                      ),
+                      SliderSettings(
+                        label: "Pan",
+                        value: pan,
+                        onChanged: (val) => setState(() => pan = val),
+                      ),
+                      SliderSettings(
+                        label: "Volume",
+                        value: volume,
+                        onChanged: (val) => setState(() => volume = val),
+                      ),
+                      SliderSettings(
+                        label: "Brightness",
+                        value: brightness,
+                        onChanged: (val) => setState(() => brightness = val),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ),
+        );
+      } else {
+      controller!.close();
+      controller = null;
+    }
+    isOpened = !isOpened;
+  }
 	@override
 	void initState() {
 		super.initState();
@@ -134,7 +245,17 @@ class VideoFeedState extends State<VideoFeed> {
 					ViewsSelector(currentView: widget.name.humanName),
 				],
 			),
-			Positioned(left: 5, bottom: 5, child: Text(data.details.name.humanName)),
+			Positioned(
+        left: 5, 
+        bottom: 5, 
+        child: Row(
+          children: [
+            Text(data.details.name.humanName),
+            IconButton(onPressed: _showSettingsPanel, icon:  const Icon(Icons.tune))
+
+          ],
+        ),
+      ),
 		],
 	);
 
