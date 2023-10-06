@@ -59,16 +59,16 @@ class VideoFeed extends StatefulWidget {
 	VideoFeedState createState() => VideoFeedState();
 }
 
-/// Docs
+/// Class that defines a slider for camera controls
 class SliderSettings extends StatelessWidget {
-  /// Docs
+  /// Name of the slider
   final String label;
-  /// Docs
+  /// Valude corresponding to the slider
   final double value;
-  /// Docs
+  /// Value to change the position of the slider
   final ValueChanged<double> onChanged;
   
-  /// Docs
+  /// Constructor for SliderSettings
   const SliderSettings({
     required this.label,
     required this.value,
@@ -83,6 +83,7 @@ class SliderSettings extends StatelessWidget {
           children: <Widget> [
             Text(label),
             const Text(": "),
+            // Will this incur some computation cost? is doing .floor().toString() fine?
             Text(value.floor().toString()),
           ],
         ),
@@ -113,69 +114,74 @@ class VideoFeedState extends State<VideoFeed> {
   /// Checks if the current slider for video camera is open
   bool isOpened = false;
 
-  /// Docs
-  double zoom = 0.0;
-  /// Docs
-  double pan = 0.0;
-  /// Docs
-  double volume = 0.0;
-  /// Docs
-  double brightness = 0.0;
+  /// Value for zoom
+  double zoom = 0;
+  /// Value for pan
+  double pan = 0;
+  /// Value for focus
+  double focus = 0;
+  /// Value for brightness
+  double brightness = 0;
 
-  /// Docs
-  PersistentBottomSheetController? controller;
+  /// Controller for the BottomSheet
+  PersistentBottomSheetController<VideoFeedState>? controller;
   void _showSettingsPanel() {
     if (!isOpened) {
       controller = Scaffold.of(context).showBottomSheet(
         (context) => StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) => Container(
-                padding: const EdgeInsets.all(10),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Row (
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        
-                        children: [
-                            const Text(
+          builder: (BuildContext context, StateSetter setState) => Container(
+              padding: const EdgeInsets.all(10),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Stack (
+                      alignment: Alignment.center,
+                      children: [
+                        const Align(
+                            child:
+                              Text(
                                 "Settings",
                                 style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold,),
+                              ),
                             ),
-                            IconButton(
-                              icon: const Icon(Icons.close),
-                              onPressed: () {
-                                controller!.close();
-                                isOpened = false;
-                              },
-                            ),
-                        ],
-                      ),
-                      SliderSettings(
-                        label: "Zoom",
-                        value: zoom,
-                        onChanged: (val) => setState(() => zoom = val),
-                      ),
-                      SliderSettings(
-                        label: "Pan",
-                        value: pan,
-                        onChanged: (val) => setState(() => pan = val),
-                      ),
-                      SliderSettings(
-                        label: "Volume",
-                        value: volume,
-                        onChanged: (val) => setState(() => volume = val),
-                      ),
-                      SliderSettings(
-                        label: "Brightness",
-                        value: brightness,
-                        onChanged: (val) => setState(() => brightness = val),
-                      ),
-                    ],
-                  ),
+                        Align(
+                            alignment: Alignment.centerRight,
+                            child: IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () {
+                                  controller!.close();
+                                  isOpened = false;
+                                },
+                              ),
+                          ),
+                      ],
+                    ),
+                    SliderSettings(
+                      label: "Zoom",
+                      value: zoom,
+                      onChanged: (val) => setState(() => zoom = val),
+                    ),
+                    SliderSettings(
+                      label: "Pan",
+                      value: pan,
+                      onChanged: (val) => setState(() => pan = val),
+                    ),
+                    SliderSettings(
+                      label: "Focus",
+                      value: focus,
+                      onChanged: (val) => setState(() => focus = val),
+                    ),
+                    SliderSettings(
+                      label: "Brightness",
+                      value: brightness,
+                      onChanged: (val) => setState(() => brightness = val),
+                    ),
+                  ],
                 ),
               ),
+            ),
           ),
         );
       } else {
@@ -251,8 +257,7 @@ class VideoFeedState extends State<VideoFeed> {
         child: Row(
           children: [
             Text(data.details.name.humanName),
-            IconButton(onPressed: _showSettingsPanel, icon:  const Icon(Icons.tune))
-
+            IconButton(onPressed: _showSettingsPanel, icon:  const Icon(Icons.tune)),
           ],
         ),
       ),
