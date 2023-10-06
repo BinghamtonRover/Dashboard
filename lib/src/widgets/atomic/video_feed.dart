@@ -185,7 +185,7 @@ class VideoFeedState extends State<VideoFeed> {
           ),
         );
       } else {
-      controller!.close();
+      controller?.close();
       controller = null;
     }
     isOpened = !isOpened;
