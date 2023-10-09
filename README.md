@@ -1,7 +1,5 @@
-# Rover Control Dashboard
+# The Dashboard
 The Rover Control Dashboard is a graphical desktop application the Binghamton University Rover Team will use to operate and monitor the rover. It is a vital part of our remote command station.
-
-We are redesigning and rebuilding our remote operating interfaces using more modern toolkits to promote rapid development and deployment. Visit [BinghamtonRover/BurtOS-2](https://github.com/BinghamtonRover/BurtOS-2) for command software from the 2022 competition year.
 
 ## Structure 
 
@@ -30,11 +28,8 @@ A Dart library is technically just a file. To add more complexity, classes and f
 
  ## Compiling
 
-Firstly, we're using [Protobuf](https://developers.google.com/protocol-buffers), which means we need to invoke the Protobuf compiler to generate Dart code before we can compile the dashboard. Thankfully, that's all handled by `package:build_runner`, the de facto code generator for Dart. 
-```
-dart run build_runner build
-```
-
+Note that while Flutter technically supports multiple platforms, we focus our development on Windows. Compiling and launching on Mac or Linux is a plus though, as it lets us work on UI and other non-critical features. 
+ 
 To run a debug build, run the appropriate command for your computer:
 
 ```
