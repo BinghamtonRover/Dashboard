@@ -90,7 +90,6 @@ class SliderSettings extends StatelessWidget {
         Slider(
           value: value,
           onChanged: onChanged,
-          min: 0,
           max: 100,
         ),
       ],
