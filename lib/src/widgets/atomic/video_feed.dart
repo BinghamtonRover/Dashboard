@@ -123,72 +123,51 @@ class VideoFeedState extends State<VideoFeed> {
   double brightness = 0;
 
   /// Controller for the BottomSheet
-  PersistentBottomSheetController<VideoFeedState>? controller;
-  void _showSettingsPanel() {
-    if (!isOpened) {
-      controller = Scaffold.of(context).showBottomSheet(
-        (context) => StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) => Container(
-              padding: const EdgeInsets.all(10),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Stack (
-                      alignment: Alignment.center,
-                      children: [
-                        const Align(
-                            child:
-                              Text(
-                                "Settings",
-                                style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold,),
-                              ),
-                            ),
-                        Align(
-                            alignment: Alignment.centerRight,
-                            child: IconButton(
-                                icon: const Icon(Icons.close),
-                                onPressed: () {
-                                  controller!.close();
-                                  isOpened = false;
-                                },
-                              ),
-                          ),
-                      ],
-                    ),
-                    SliderSettings(
-                      label: "Zoom",
-                      value: zoom,
-                      onChanged: (val) => setState(() => zoom = val),
-                    ),
-                    SliderSettings(
-                      label: "Pan",
-                      value: pan,
-                      onChanged: (val) => setState(() => pan = val),
-                    ),
-                    SliderSettings(
-                      label: "Focus",
-                      value: focus,
-                      onChanged: (val) => setState(() => focus = val),
-                    ),
-                    SliderSettings(
-                      label: "Brightness",
-                      value: brightness,
-                      onChanged: (val) => setState(() => brightness = val),
-                    ),
-                  ],
-                ),
-              ),
+  PersistentBottomSheetController? controller;
+
+  void _showSettingsPanel() => controller = Scaffold.of(context).showBottomSheet(
+    (context) => Container(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(children: [
+            Spacer(),
+            Text("Settings for ${data.details.name.humanName}"),
+            Spacer(),
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                controller!.close();
+                isOpened = false;
+              },
             ),
+          ]),
+          SliderSettings(
+            label: "Zoom",
+            value: zoom,
+            onChanged: (val) => setState(() => zoom = val),
           ),
-        );
-      } else {
-      controller?.close();
-      controller = null;
-    }
-    isOpened = !isOpened;
-  }
+          SliderSettings(
+            label: "Pan",
+            value: pan,
+            onChanged: (val) => setState(() => pan = val),
+          ),
+          SliderSettings(
+            label: "Focus",
+            value: focus,
+            onChanged: (val) => setState(() => focus = val),
+          ),
+          SliderSettings(
+            label: "Brightness",
+            value: brightness,
+            onChanged: (val) => setState(() => brightness = val),
+          ),
+        ],
+      ),
+    ),
+  );
+
 	@override
 	void initState() {
 		super.initState();
@@ -255,8 +234,20 @@ class VideoFeedState extends State<VideoFeed> {
         bottom: 5, 
         child: Row(
           children: [
+            IconButton(
+              onPressed: () {
+                print("Is opened? $isOpened");
+                if (isOpened) { 
+                  controller?.close();
+                  controller = null;
+                } else {
+                  _showSettingsPanel();
+                }
+                isOpened = !isOpened;
+              }, 
+              icon: const Icon(Icons.tune),
+            ),
             Text(data.details.name.humanName),
-            IconButton(onPressed: _showSettingsPanel, icon:  const Icon(Icons.tune)),
           ],
         ),
       ),
