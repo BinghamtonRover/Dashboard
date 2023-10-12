@@ -123,49 +123,10 @@ class VideoFeedState extends State<VideoFeed> {
   double brightness = 0;
 
   /// Controller for the BottomSheet
-  PersistentBottomSheetController? controller;
+  PersistentBottomSheetController<void>? controller;
 
   void _showSettingsPanel() => controller = Scaffold.of(context).showBottomSheet(
-    (context) => Container(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(children: [
-            Spacer(),
-            Text("Settings for ${data.details.name.humanName}"),
-            Spacer(),
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                controller!.close();
-                isOpened = false;
-              },
-            ),
-          ]),
-          SliderSettings(
-            label: "Zoom",
-            value: zoom,
-            onChanged: (val) => setState(() => zoom = val),
-          ),
-          SliderSettings(
-            label: "Pan",
-            value: pan,
-            onChanged: (val) => setState(() => pan = val),
-          ),
-          SliderSettings(
-            label: "Focus",
-            value: focus,
-            onChanged: (val) => setState(() => focus = val),
-          ),
-          SliderSettings(
-            label: "Brightness",
-            value: brightness,
-            onChanged: (val) => setState(() => brightness = val),
-          ),
-        ],
-      ),
-    ),
+    (context) => VideoSettingsWidget(name: data.details.name, onClosed: () { controller?.close(); isOpened = false; }),
   );
 
 	@override
@@ -236,7 +197,6 @@ class VideoFeedState extends State<VideoFeed> {
           children: [
             IconButton(
               onPressed: () {
-                print("Is opened? $isOpened");
                 if (isOpened) { 
                   controller?.close();
                   controller = null;
@@ -271,4 +231,41 @@ class VideoFeedState extends State<VideoFeed> {
 		}
 		return "Unknown error";
 	}
+}
+
+class VideoSettingsWidget extends StatelessWidget {
+  final CameraName name;
+  final VoidCallback onClosed;
+  const VideoSettingsWidget({required this.name, required this.onClosed});
+
+  @override
+  Widget build(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Row(children: [
+        const Spacer(),
+        Text("Settings for ${name.humanName}"),
+        const Spacer(),
+        IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: onClosed,
+        ),
+      ],),
+      SliderSettings(
+        label: "Zoom",
+        value: 0,
+        onChanged: (val) { },
+      ),
+      SliderSettings(
+        label: "Pan",
+        value: 25,
+        onChanged: (val) { },
+      ),
+      SliderSettings(
+        label: "Focus",
+        value: 50,
+        onChanged: (val) { },
+      ),
+    ],
+  );
 }
