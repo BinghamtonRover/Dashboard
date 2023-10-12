@@ -233,10 +233,19 @@ class VideoFeedState extends State<VideoFeed> {
 	}
 }
 
-class VideoSettingsWidget extends StatelessWidget {
+class VideoSettingsWidget extends StatefulWidget {
   final CameraName name;
   final VoidCallback onClosed;
   const VideoSettingsWidget({required this.name, required this.onClosed});
+
+  @override
+  VideoSettingsState createState() => VideoSettingsState();
+}
+
+class VideoSettingsState extends State<VideoSettingsWidget> {
+  // I only did zoom for now but this state is not how we'll actually do it!
+  // This is just for testing the UI, so you don't need to set up all of them.
+  double zoom = 0;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -244,17 +253,17 @@ class VideoSettingsWidget extends StatelessWidget {
     children: [
       Row(children: [
         const Spacer(),
-        Text("Settings for ${name.humanName}"),
+        Text("Settings for ${widget.name.humanName}"),
         const Spacer(),
         IconButton(
           icon: const Icon(Icons.close),
-          onPressed: onClosed,
+          onPressed: widget.onClosed,
         ),
       ],),
       SliderSettings(
         label: "Zoom",
-        value: 0,
-        onChanged: (val) { },
+        value: zoom,
+        onChanged: (val) => setState(() => zoom = val),
       ),
       SliderSettings(
         label: "Pan",
