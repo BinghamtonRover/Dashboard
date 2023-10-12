@@ -20,17 +20,17 @@ class DriveControls extends RoverControls {
   (double, double) getWheelSpeeds(double speed, double direction) {
     const slope = 1 / 90;
     if (-90 <= direction && direction <= -45) {  // [-90, -45]
-      return (slope * direction + 1.5, slope * direction + 0.5);
+      return (slope * direction + 0.5, slope * direction + 1.5);
     } else if (direction > -45 && direction < 45) {  // [-45, 45]
-      return (-1 * slope * direction + 0.5, slope * direction + 0.5);
+      return (slope * direction + 0.5, -1 * slope * direction + 0.5);
     } else {  // [45, 90]
-      return (-1 * slope * direction + 0.5, -1 * slope * direction + 1.5);
+      return (-1 * slope * direction + 1.5, -1 * slope * direction + 0.5);
     }
   }
 
   List<DriveCommand> getWheelCommands(GamepadState state) {
     final speed = state.normalTrigger;  // sum of both triggers, [-1, 1]
-    final direction = state.normalLeftX*90 + 90;  // [-1, 1] --> [-90, 90]
+    final direction = state.normalLeftX*90;  // [-1, 1] --> [-90, 90]
     final (double left, double right) = getWheelSpeeds(speed, direction);
     return [
       DriveCommand(left: speed * left, setLeft: true),
@@ -38,38 +38,36 @@ class DriveControls extends RoverControls {
     ];
   }
 
-  List<DriveCommand> getCameraCommands(GamepadState state) {
-    if (state.normalDpadX != 0) {
-      frontSwivel += state.normalDpadX * cameraSwivelIncrement;
-      frontSwivel = frontSwivel.clamp(0, 180);
-    }
-    if (state.normalDpadY != 0) {
-      frontTilt += state.normalDpadY * cameraTiltIncrement;
-      frontTilt = frontTilt.clamp(0, 180);
-    }
-    if (state.normalRightX != 0) {
-      rearSwivel += state.normalRightX * cameraSwivelIncrement;
-      rearSwivel = rearSwivel.clamp(0, 180);
-    }
-    if (state.normalRightY != 0) {
-      rearTilt += state.normalDpadY * cameraTiltIncrement;
-      rearTilt = rearTilt.clamp(0, 180);
-    }
-    return [
-      DriveCommand(frontSwivel: frontSwivel),
-      DriveCommand(frontTilt: frontTilt),
-      DriveCommand(rearSwivel: rearSwivel),
-      DriveCommand(rearTilt: rearTilt),
-    ];
-  }
+  List<DriveCommand> getCameraCommands(GamepadState state) => [
+    DriveCommand(frontSwivel: frontSwivel),
+    DriveCommand(frontTilt: frontTilt),
+    DriveCommand(rearSwivel: rearSwivel),
+    DriveCommand(rearTilt: rearTilt),
+  ];
 
   @override
   List<Message> parseInputs(GamepadState state) => [
     ...getWheelCommands(state),
     ...getCameraCommands(state),
-    if (state.dpadUp) DriveCommand(throttle: (throttle + throttleIncrement).clamp(0, 1), setThrottle: true)
-    else if (state.dpadDown) DriveCommand(throttle: (throttle - throttleIncrement).clamp(0, 1), setThrottle: true),
+    if (state.normalShoulder != 0) 
+      DriveCommand(setThrottle: true, throttle: throttle),
   ];
+
+  @override
+  void updateState(GamepadState state) {
+    // Update values
+    throttle += state.normalShoulder * throttleIncrement;
+    frontSwivel += state.normalRightX * cameraSwivelIncrement;
+    frontTilt += state.normalRightY * cameraTiltIncrement;
+    rearSwivel += state.normalDpadX * cameraSwivelIncrement;
+    rearTilt += state.normalDpadY * cameraTiltIncrement;
+    // Clamp values to their respective ranges
+    throttle = throttle.clamp(0, 1);
+    frontSwivel = frontSwivel.clamp(0, 180);
+    frontTilt = frontTilt.clamp(0, 180);
+    rearSwivel = rearSwivel.clamp(0, 180);
+    rearTilt = rearTilt.clamp(0, 180);
+  }
 
   @override
   List<Message> get onDispose => [
