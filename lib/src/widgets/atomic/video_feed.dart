@@ -70,11 +70,17 @@ class SliderSettings extends StatelessWidget {
   /// Value to change the position of the slider
   final ValueChanged<double> onChanged;
 
+  final double min;
+
+  final double max;
+
   /// Constructor for SliderSettings
   const SliderSettings({
     required this.label,
     required this.value,
     required this.onChanged,
+    this.min = 0,
+    this.max = 100,
   });
 
   @override
@@ -92,7 +98,8 @@ class SliderSettings extends StatelessWidget {
           Slider(
             value: value,
             onChanged: onChanged,
-            max: 100,
+            max: max,
+            min: min,
           ),
         ],
       );
@@ -133,7 +140,8 @@ class VideoFeedState extends State<VideoFeed> {
   void _showSettingsPanel() =>
       controller = Scaffold.of(context).showBottomSheet(
         (context) => VideoSettingsWidget(
-            name: data.details.name,
+            id: data.id,
+            details: data.details,
             onClosed: () {
               controller?.close();
               isOpened = false;
@@ -263,18 +271,22 @@ class VideoFeedState extends State<VideoFeed> {
 }
 
 class VideoSettingsWidget extends StatefulWidget {
-  final CameraName name;
+  final CameraDetails details;
+  final String id;
   final VoidCallback onClosed;
-  const VideoSettingsWidget({required this.name, required this.onClosed});
+  const VideoSettingsWidget(
+      {required this.details, required this.onClosed, required this.id});
 
   @override
   VideoSettingsState createState() => VideoSettingsState();
 }
 
 class VideoSettingsState extends State<VideoSettingsWidget> {
-  // I only did zoom for now but this state is not how we'll actually do it!
-  // This is just for testing the UI, so you don't need to set up all of them.
-  double zoom = 0;
+  double zoom = 100;
+  double pan = 0;
+  double tilt = 0;
+  double focus = 0;
+  bool? autofocus = true;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -283,7 +295,7 @@ class VideoSettingsState extends State<VideoSettingsWidget> {
           Row(
             children: [
               const Spacer(),
-              Text("Settings for ${widget.name.humanName}"),
+              Text("Settings for ${widget.details.name.humanName}"),
               const Spacer(),
               IconButton(
                 icon: const Icon(Icons.close),
@@ -292,20 +304,64 @@ class VideoSettingsState extends State<VideoSettingsWidget> {
             ],
           ),
           SliderSettings(
-            label: "Zoom",
-            value: zoom,
-            onChanged: (val) => setState(() => zoom = val),
-          ),
+              label: "Zoom",
+              value: zoom,
+              min: 100,
+              max: 800,
+              onChanged: (val) async {
+                setState(() => zoom = val);
+                await models.video.updateCamera(
+                  widget.id,
+                  CameraDetails(name: widget.details.name, zoom: val.round()),
+                );
+              }),
           SliderSettings(
-            label: "Pan",
-            value: 1,
-            onChanged: (val) {},
-          ),
+              label: "Pan",
+              value: pan,
+              min: -180,
+              max: 180,
+              onChanged: (val) async {
+                setState(() => pan = val);
+                await models.video.updateCamera(
+                  widget.id,
+                  CameraDetails(name: widget.details.name, pan: val.round()),
+                );
+              }),
           SliderSettings(
-            label: "Focus",
-            value: 50,
-            onChanged: (val) {},
-          ),
+              label: "Tilt",
+              value: tilt,
+              min: -180,
+              max: 180,
+              onChanged: (val) async {
+                setState(() => tilt = val);
+                await models.video.updateCamera(
+                  widget.id,
+                  CameraDetails(name: widget.details.name, tilt: val.round()),
+                );
+              }),
+          SliderSettings(
+              label: "Focus",
+              value: focus,
+              max: 255,
+              onChanged: (val) async {
+                setState(() => focus = val);
+                await models.video.updateCamera(
+                  widget.id,
+                  CameraDetails(name: widget.details.name, focus: val.round()),
+                );
+              }),
+
+          // Need to debug bool conversion to 1.0 and 2.0
+          Checkbox(
+              value: autofocus,
+              onChanged: (bool? value) async {
+                setState(() => autofocus = value);
+                await models.video.updateCamera(
+                  widget.id,
+                  CameraDetails(
+                      name: widget.details.name, autofocus: autofocus),
+                );
+              }),
         ],
       );
 }

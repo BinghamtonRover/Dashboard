@@ -38,7 +38,7 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
   /// The error that occurrec when changing these settings, if any.
   String? error;
 
-  ///
+  /// Current status of the camera's autofocus
   bool autofocus = true;
 
   @override
@@ -72,8 +72,11 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
         fps: fps.value,
         name: name,
         status: status,
-        autofocus: autofocus,
-        zoom: 400,
+        focus: 0,
+        zoom: 100,
+        pan: 0,
+        tilt: 0,
+        autofocus: true,
       );
 
   /// Updates the [status] field.
