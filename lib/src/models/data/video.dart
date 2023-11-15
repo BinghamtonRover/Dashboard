@@ -144,11 +144,11 @@ class VideoModel extends Model {
 				text: "Could not ${enable ? 'enable' : 'disable'} the ${name.humanName} camera",
 			);
 		}
-	}
+	} 
 }
 
 /// An exception thrown when the rover does not respond to a handshake.
-/// 
+///
 /// Certain changes require a handshake to ensure the rover has received and applied the change.
 /// If the rover fails to acknowledge or apply the change, a response will not be sent. Throw
 /// this error to indicate that. 
