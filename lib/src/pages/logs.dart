@@ -13,20 +13,20 @@ class LogsPage extends ReactiveWidget<LogsViewModel> {
   Widget build(BuildContext context, LogsViewModel model) => Stack(
     children: [
       Column(children: [
-        Row(children: [  // Menu
+        const SizedBox(height: 50),
+        OverflowBar(overflowSpacing: 8, children: [  // Menu
           for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY])  // Reset devices
-            InkWell(
-              onTap: () => model.resetDevice(device), 
-              child: Card(
-                child: ListTile(
-                  leading: const Icon(Icons.restart_alt),
-                  title: Text("Reset the ${device.humanName}"),
-                  subtitle: const Text("The device will reboot and will be unavailable for a minute"),
-                ),
-              ),
+            SizedBox(width: 250, child: Card(
+              child: ListTile(
+                onTap: () => model.resetDevice(device), 
+                leading: const Icon(Icons.restart_alt),
+                title: Text("Reset the ${device.humanName}"),
+                subtitle: const Text("The device will reboot"),
+              ),),
             ),
-          const Text("Select device"),
+          const SizedBox(width: 8),
           DropdownMenu<Device?>(
+            label: const Text("Select device"),
             initialSelection: model.deviceFilter,
             onSelected: model.setDeviceFilter,
             dropdownMenuEntries: [
@@ -34,8 +34,9 @@ class LogsPage extends ReactiveWidget<LogsViewModel> {
                 DropdownMenuEntry(label: device?.humanName ?? "All", value: device),
             ],
           ),
-          const Text("Select severity"),
+          const SizedBox(width: 8),
           DropdownMenu<BurtLogLevel>(
+            label: const Text("Select severity"),
             initialSelection: model.levelFilter,
             onSelected: model.setLevelFilter,
             dropdownMenuEntries: [
@@ -43,9 +44,12 @@ class LogsPage extends ReactiveWidget<LogsViewModel> {
                 DropdownMenuEntry(label: level.humanName, value: level),
             ],
           ),
+          const SizedBox(width: 8),
         ],),
-        Expanded(child: 
+        const Divider(),
+        Expanded(child: model.logs.isEmpty ? const Center(child: Text("No logs yet")) : 
           ListView.builder(
+            itemCount: model.logs.length,
             itemBuilder: (context, index) => LogWidget(model.logs[index]),
           ),
         ),
@@ -58,20 +62,26 @@ class LogsPage extends ReactiveWidget<LogsViewModel> {
           Text("Logs", style: context.textTheme.headlineMedium),
           const Spacer(),
           IconButton(
+            icon: const Icon(Icons.delete_forever),
+            onPressed: models.logs.clear,
+            tooltip: "Clear logs",
+          ),
+          IconButton(
             icon: const Icon(Icons.help),
+            tooltip: "Help",
             onPressed: () => showDialog<void>(
               context: context,
               builder: (context) => AlertDialog(
                 title: const Text("Logs help"),
-                content: Column(children: [
-                  const Text("This page contains all logs received by the dashboard. Here's what all the icons mean:"),
+                content: Column(mainAxisSize: MainAxisSize.min, children: [
+                  const Text("This page contains all logs received by the dashboard. Selecting a level means that only messages of that level or higher will be shown. Here's what all the icons mean:"),
                   ListTile(leading: criticalWidget, title: const Text("Critical"), subtitle: const Text("The rover is in a broken state and may shutdown")),
                   const ListTile(leading: errorWidget, title: Text("Error"), subtitle: Text("Something you tried didn't work, but the rover can still function")),
                   const ListTile(leading: warningWidget, title: Text("Warning"), subtitle: Text("Something may have gone wrong, you should check it out")),
                   ListTile(leading: infoWidget, title: const Text("Info"), subtitle: const Text("The rover is functioning normally")),
                   const ListTile(leading: debugWidget, title: Text("Debug"), subtitle: Text("Extra information that shows what the rover's thinking")),
                   const ListTile(leading: traceWidget, title: Text("Trace"), subtitle: Text("Values from the code to debug specific issues")),
-                  const Text("Selecting a level means that only messages of that level or higher will be shown."),
+                  const SizedBox(height: 12),
                 ],),
                 actions: [
                   ElevatedButton(
@@ -114,6 +124,6 @@ class LogWidget extends StatelessWidget {
   Widget build(BuildContext context) => ListTile(
     leading: icon,
     title: Text(log.title),
-    subtitle: log.body.isEmpty ? null : Text(log.body),
+    subtitle: log.body.isEmpty ? Text(log.device.humanName) : Text("${log.device.humanName}\n${log.body}".trim()),
   );
 }

@@ -250,7 +250,7 @@ class MessageDisplay extends StatelessWidget {
 		builder: (_, model, __) => SizedBox(
       height: 48,
       child: InkWell(
-        onTap: () { },
+        onTap: models.views.openLogs,
         child: Card(
           shadowColor: Colors.transparent,
           color: getColor(model.message?.severity), 

@@ -41,7 +41,9 @@ String getDataName(Device device) => switch (device) {
 	_ => "Unknown",
 };
 
+/// Utilities for a list of Protobuf enums.
 extension UndefinedFilter<T extends ProtobufEnum> on List<T> {
+  /// Filters out `_UNDEFINED` values from the list.
   List<T> get filtered => [
     for (final value in this) 
       if (value.value != 0)
@@ -140,7 +142,7 @@ extension DeviceUtils on Device {
 	/// Gets a user-friendly name for a [Device].
 	String get humanName {
 		switch(this) {
-			case Device.DEVICE_UNDEFINED: return "";
+			case Device.DEVICE_UNDEFINED: return "Unknown device";
 			case Device.DASHBOARD: return "Dashboard";
 			case Device.SUBSYSTEMS: return "Subsystems";
 			case Device.VIDEO: return "Video";
@@ -262,7 +264,9 @@ extension MotorDirectionUtils on MotorDirection {
 	}
 }
 
+/// More human-friendly fields for [BurtLogLevel]s.
 extension LogLevelUtils on BurtLogLevel {
+  /// The human-readable name of this level.
   String get humanName => switch(this) {
     BurtLogLevel.critical => "Critical",
     BurtLogLevel.error => "Error",
@@ -273,23 +277,24 @@ extension LogLevelUtils on BurtLogLevel {
     _ => "Unknown",
   };
 
+  /// The label to represent this log.
   String get label => switch(this) {
-    BurtLogLevel.critical => "C",
-    BurtLogLevel.error => "E",
-    BurtLogLevel.warning => "W",
-    BurtLogLevel.info => "I",
-    BurtLogLevel.debug => "D",
-    BurtLogLevel.trace => "T",
+    BurtLogLevel.critical => "[C]",
+    BurtLogLevel.error => "[E]",
+    BurtLogLevel.warning => "[W]",
+    BurtLogLevel.info => "[I]",
+    BurtLogLevel.debug => "[D]",
+    BurtLogLevel.trace => "[T]",
     _ => "?",
   };
 }
 
+/// Fomats [BurtLog] messages in plain-text. For the UI, use widgets.
 extension LogFormat on BurtLog {
+  /// Fomats [BurtLog] messages in plain-text. For the UI, use widgets.
   String format() {
     final result = StringBuffer()
-      ..write("[")
       ..write(level.label)
-      ..write("] ")
       ..write(title);
     if (body.isNotEmpty) {
       result..write("\n  ")..write(body);
