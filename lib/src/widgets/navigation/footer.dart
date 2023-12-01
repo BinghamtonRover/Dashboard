@@ -237,9 +237,9 @@ class MessageDisplay extends StatelessWidget {
 	Color getColor(Severity severity) {
 		switch (severity) {
 			case Severity.info: return Colors.transparent;
-			case Severity.warning: return Colors.yellow;
-			case Severity.error: return Colors.orange;
-			case Severity.critical: return Colors.red;
+			case Severity.warning: return Colors.orange;
+			case Severity.error: return Colors.red;
+			case Severity.critical: return Colors.red.shade900;
 		}
 	}
 
@@ -253,6 +253,7 @@ class MessageDisplay extends StatelessWidget {
 				child: Row(
           mainAxisSize: MainAxisSize.min,
 					children: [
+            const SizedBox(width: 4),
 						Icon(getIcon(model.message!.severity)),
 						const SizedBox(width: 4),
 						Text(model.message!.text),

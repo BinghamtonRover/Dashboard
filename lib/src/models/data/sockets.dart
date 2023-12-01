@@ -1,5 +1,6 @@
 import "dart:io";
-import "package:burt_network/burt_network.dart";
+
+import "package:burt_network/logging.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
@@ -57,10 +58,10 @@ class Sockets extends Model {
 		for (final socket in sockets) { 
 			await socket.init(); 
 		}
-		final level = BurtLogger.level;
-		BurtLogger.level = LogLevel.warning;
+		final level = Logger.level;
+		Logger.level = LogLevel.warning;
 		await updateSockets();
-		BurtLogger.level = level;
+		Logger.level = level;
 	}
 
 	@override

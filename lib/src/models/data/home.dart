@@ -23,6 +23,7 @@ class HomeModel extends Model {
 	Future<void> init() async { 
 		final info = await PackageInfo.fromPlatform();
 		version = "${info.version}+${info.buildNumber}";
+    models.messages.registerHandler<BurtLog>(name: BurtLog().messageName, decoder: BurtLog.fromBuffer, handler: handleLog);
 		if (services.error != null) setMessage(severity: Severity.critical, text: services.error!);
 	}
 
@@ -33,4 +34,17 @@ class HomeModel extends Model {
 		notifyListeners();
 		_messageTimer = Timer(const Duration(seconds: 3), () { message = null; notifyListeners(); });
 	} 
+
+  /// Sends a log message to be shown in the footer.
+  void handleLog(BurtLog log) {
+    switch (log.level) {
+      case BurtLogLevel.critical: setMessage(severity: Severity.critical, text: log.title);
+      case BurtLogLevel.warning: setMessage(severity: Severity.warning, text: log.title);
+      case BurtLogLevel.error: setMessage(severity: Severity.error, text: log.title);
+      case BurtLogLevel.info: 
+      case BurtLogLevel.debug: 
+      case BurtLogLevel.trace: 
+      case BurtLogLevel.BURT_LOG_LEVEL_UNDEFINED: 
+    }
+  }
 }

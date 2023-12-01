@@ -32,6 +32,7 @@ class DashboardSocket extends ProtoSocket {
 		required super.device, 
 	}) : super(
 		port: null,
+    quiet: true,
 		heartbeatInterval: const Duration(milliseconds: 200),
 	);
 
