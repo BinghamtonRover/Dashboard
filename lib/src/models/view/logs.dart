@@ -17,11 +17,18 @@ class LogsViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Iterable<BurtLog> get logs sync* {
+  List<BurtLog> get logs {
+    final result = <BurtLog>[];
     for (final log in models.logs.allLogs) {
       if (deviceFilter != null && log.device != deviceFilter) continue;
       if (levelFilter != null && log.level.value > levelFilter!.value) continue;
-      yield log;
+      result.add(log);
     }
+    return result;
+  }
+
+  void resetDevice(Device device) {
+    print("Resetting device... $device");
+    // Todo: Implement
   }
 }

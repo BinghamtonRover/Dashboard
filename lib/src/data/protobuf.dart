@@ -1,5 +1,6 @@
 import "dart:math";
 
+import "package:protobuf/protobuf.dart";
 import "package:rover_dashboard/data.dart";
 
 export "package:protobuf/protobuf.dart" show GeneratedMessageGenericExtensions;
@@ -39,6 +40,14 @@ String getDataName(Device device) => switch (device) {
 	Device.MARS => "MarsData",
 	_ => "Unknown",
 };
+
+extension UndefinedFilter<T extends ProtobufEnum> on List<T> {
+  List<T> get filtered => [
+    for (final value in this) 
+      if (value.value != 0)
+        value, 
+  ];
+}
 
 /// Utilities for [Timestamp]s.
 extension TimestampUtils on Timestamp {
@@ -253,23 +262,34 @@ extension MotorDirectionUtils on MotorDirection {
 	}
 }
 
-extension LogLevelPrefix on BurtLogLevel {
+extension LogLevelUtils on BurtLogLevel {
+  String get humanName => switch(this) {
+    BurtLogLevel.critical => "Critical",
+    BurtLogLevel.error => "Error",
+    BurtLogLevel.warning => "Warning",
+    BurtLogLevel.info => "Info",
+    BurtLogLevel.debug => "Debug",
+    BurtLogLevel.trace => "Trace",
+    _ => "Unknown",
+  };
+
   String get label => switch(this) {
-    BurtLogLevel.critical => "[Critical]",
-    BurtLogLevel.error => "[Error]",
-    BurtLogLevel.warning => "[Warning]",
-    BurtLogLevel.info => "[Info]",
-    BurtLogLevel.debug => "[Debug]",
-    BurtLogLevel.trace => "[Trace]",
-    _ => "[???]",
+    BurtLogLevel.critical => "C",
+    BurtLogLevel.error => "E",
+    BurtLogLevel.warning => "W",
+    BurtLogLevel.info => "I",
+    BurtLogLevel.debug => "D",
+    BurtLogLevel.trace => "T",
+    _ => "?",
   };
 }
 
 extension LogFormat on BurtLog {
   String format() {
     final result = StringBuffer()
+      ..write("[")
       ..write(level.label)
-      ..write(" ")
+      ..write("] ")
       ..write(title);
     if (body.isNotEmpty) {
       result..write("\n  ")..write(body);
