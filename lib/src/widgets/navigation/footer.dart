@@ -224,18 +224,20 @@ class MessageDisplay extends StatelessWidget {
 	const MessageDisplay();
 
 	/// Gets the appropriate icon for the given severity.
-	IconData getIcon(Severity severity) {
+	IconData getIcon(Severity? severity) {
 		switch (severity) {
 			case Severity.info: return Icons.info;
 			case Severity.warning: return Icons.warning;
 			case Severity.error: return Icons.error;
 			case Severity.critical: return Icons.dangerous;
+      case null: return Icons.receipt_long;
 		}
 	}	
 
 	/// Gets the appropriate color for the given severity.
-	Color getColor(Severity severity) {
+	Color getColor(Severity? severity) {
 		switch (severity) {
+			case null: return Colors.transparent;
 			case Severity.info: return Colors.transparent;
 			case Severity.warning: return Colors.orange;
 			case Severity.error: return Colors.red;
@@ -245,21 +247,28 @@ class MessageDisplay extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) => Consumer<HomeModel>(
-		builder: (_, model, __) => model.message == null 
-      ? const SizedBox.shrink()
-			: Container(
-        height: 48,
-				color: getColor(model.message!.severity),
-				child: Row(
-          mainAxisSize: MainAxisSize.min,
-					children: [
-            const SizedBox(width: 4),
-						Icon(getIcon(model.message!.severity)),
-						const SizedBox(width: 4),
-						Text(model.message!.text),
-						const SizedBox(width: 4),
-				],
-			),
+		builder: (_, model, __) => SizedBox(
+      height: 48,
+      child: InkWell(
+        onTap: () { },
+        child: Card(
+          shadowColor: Colors.transparent,
+          color: getColor(model.message?.severity), 
+          shape: ContinuousRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(width: 4),
+              Icon(getIcon(model.message?.severity)),
+              const SizedBox(width: 4),
+              Text(model.message?.text ?? "Open logs"),
+              const SizedBox(width: 8),
+            ],
+          ),
+        ),
+      ),
 		),
 	);
 }
