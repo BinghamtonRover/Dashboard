@@ -37,8 +37,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: c5400c4f9be5742be0763d04c06397a5dedcf732
+      ref: logs
+      resolved-ref: "56e255a3fd9f79a444e0a37ec239be04ae83fa00"
       url: "https://github.com/BinghamtonRover/Networking.git"
     source: git
     version: "1.0.0"

@@ -252,3 +252,28 @@ extension MotorDirectionUtils on MotorDirection {
 		throw ArgumentError("Unrecognized MotorDirection: $this");
 	}
 }
+
+extension LogLevelPrefix on BurtLogLevel {
+  String get label => switch(this) {
+    BurtLogLevel.critical => "[Critical]",
+    BurtLogLevel.error => "[Error]",
+    BurtLogLevel.warning => "[Warning]",
+    BurtLogLevel.info => "[Info]",
+    BurtLogLevel.debug => "[Debug]",
+    BurtLogLevel.trace => "[Trace]",
+    _ => "[???]",
+  };
+}
+
+extension LogFormat on BurtLog {
+  String format() {
+    final result = StringBuffer()
+      ..write(level.label)
+      ..write(" ")
+      ..write(title);
+    if (body.isNotEmpty) {
+      result..write("\n  ")..write(body);
+    }
+    return result.toString();
+  }
+}
