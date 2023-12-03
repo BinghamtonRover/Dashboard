@@ -24,6 +24,7 @@ class HomeModel extends Model {
 
 	@override
 	Future<void> init() async { 
+    models.settings.addListener(notifyListeners);
 		final info = await PackageInfo.fromPlatform();
 		version = "${info.version}+${info.buildNumber}";
 		if (services.error != null) setMessage(severity: Severity.critical, text: services.error!);
@@ -45,5 +46,13 @@ class HomeModel extends Model {
     _hasError = false;
     message = null;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _messageTimer?.cancel();
+    mission.cancel();
+    models.settings.removeListener(notifyListeners);
+    super.dispose();
   }
 }

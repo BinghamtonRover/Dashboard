@@ -76,3 +76,4 @@ flutter:
   uses-material-design: true
   assets: 
     - assets/rover.png
+    - assets/clippy.webp

@@ -139,6 +139,11 @@ class SettingsPage extends StatelessWidget {
 									value: model.easterEggs.segaIntro,
 									onChanged: model.easterEggs.updateSegaIntro,
 								),
+                SwitchListTile(
+									title: const Text("Enable Clippy"),
+									value: model.easterEggs.enableClippy,
+									onChanged: model.easterEggs.updateClippy,
+								),
 							],
 						),
 						const Divider(),

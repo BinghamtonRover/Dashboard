@@ -226,9 +226,12 @@ class SerialButton extends StatelessWidget {
 } 
 
 /// Displays the latest [TaskbarMessage] from [HomeModel.message].
-class MessageDisplay extends StatelessWidget {
+class MessageDisplay extends ReactiveWidget<HomeModel> {  
+  @override
+  HomeModel createModel() => models.home;
+  
 	/// Provides a const constructor for this widget.
-	const MessageDisplay();
+	const MessageDisplay() : super(shouldDispose: false);
 
 	/// Gets the appropriate icon for the given severity.
 	IconData getIcon(Severity? severity) {
@@ -253,34 +256,38 @@ class MessageDisplay extends StatelessWidget {
 	}
 
 	@override
-	Widget build(BuildContext context) => Consumer<HomeModel>(
-		builder: (_, model, __) => SizedBox(
-      height: 48,
-      child: InkWell(
-        onTap: models.views.openLogs,
-        child: Card(
-          shadowColor: Colors.transparent,
-          color: getColor(model.message?.severity), 
-          shape: ContinuousRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(width: 4),
-              Icon(getIcon(model.message?.severity)),
-              const SizedBox(width: 4),
-              if (model.message == null) 
-                const Text("Open logs")
-              else Tooltip(
-                message: "Click to open logs",
-                child: Text(model.message!.text),
-              ),
-              const SizedBox(width: 8),
-            ],
-          ),
+	Widget build(BuildContext context, HomeModel model) => SizedBox(
+    height: 48,
+    child: InkWell(
+      onTap: models.views.openLogs,
+      child: Card(
+        shadowColor: Colors.transparent,
+        color: getColor(model.message?.severity), 
+        shape: ContinuousRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(width: 4),
+            Icon(getIcon(model.message?.severity)),
+            const SizedBox(width: 4),
+            if (model.message == null) 
+              const Text("Open logs")
+            else Tooltip(
+              message: "Click to open logs",
+              child: models.settings.easterEggs.enableClippy
+                ? Row(children: [
+                  Image.asset("assets/clippy.webp", width: 36, height: 36),
+                  const Text(" -- "),
+                  Text(model.message!.text),
+                ],)
+                : Text(model.message!.text),
+            ),
+            const SizedBox(width: 8),
+          ],
         ),
       ),
-		),
+    ),
 	);
 }

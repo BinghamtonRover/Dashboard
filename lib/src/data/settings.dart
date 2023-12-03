@@ -202,19 +202,24 @@ class AutonomySettings {
 class EasterEggsSettings {
   /// Whether to do a SEGA-like intro during boot.
   final bool segaIntro;
+  /// Whether clippy should appear by log messages.
+  final bool enableClippy;
 
   /// A const constructor.
   const EasterEggsSettings({
     required this.segaIntro,
+    required this.enableClippy,
   });
 
   /// Parses easter eggs settings from JSON.
   EasterEggsSettings.fromJson(Json? json) : 
-    segaIntro = json?["segaIntro"] ?? true;
+    segaIntro = json?["segaIntro"] ?? true,
+    enableClippy = json?["enableClippy"] ?? true;
 
   /// Serializes these settings to JSON.
   Json toJson() => {
     "segaIntro": segaIntro,
+    "enableClippy": enableClippy,
   };
 }
 
