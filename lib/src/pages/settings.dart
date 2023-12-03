@@ -57,7 +57,6 @@ class SettingsPage extends StatelessWidget {
 								SocketEditor(name: "Subsystems socket", model: model.network.dataSocket),
 								SocketEditor(name: "Video socket", model: model.network.videoSocket),
 								SocketEditor(name: "Autonomy socket", model: model.network.autonomySocket),
-								SocketEditor(name: "MARS socket", model: model.network.marsSocket),
 								SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
 								ListTile(
 									title: const Text("Restart the network sockets"),
@@ -144,20 +143,29 @@ class SettingsPage extends StatelessWidget {
 						),
 						const Divider(),
 						Text("Misc", style: Theme.of(context).textTheme.titleLarge),
+            ListTile(
+							title: const Text("Open logs"),
+              subtitle: const Text("Opens all files created by this session"),
+							trailing: const Icon(Icons.launch),
+							onTap: () => launchUrl(services.files.loggingDir.uri),
+						),
 						ListTile(
 							title: const Text("Open the output folder"),
+              subtitle: const Text("Contains logs, screenshots, and settings"),
 							trailing: const Icon(Icons.launch),
 							onTap: () => launchUrl(services.files.outputDir.uri),
 						),
 						ListTile(
 							title: const Text("Change the LED strip color"),
+              subtitle: const Text("Opens an RGB picker"),
 							trailing: const Icon(Icons.launch),
 							onTap: () => showDialog<void>(context: context, builder: (_) => ColorEditor(ColorBuilder())),
 						),
             ListTile(
 							title: const Text("Set a timer"),
+              subtitle: const Text("Shows a timer for the current mission"),
 							trailing: const Icon(Icons.launch),
-							onTap: () => showDialog<void>(context: context, builder: (_) => TimerEditor(TimerBuilder())),
+							onTap: () => showDialog<void>(context: context, builder: (_) => TimerEditor()),
 						),
 					],
 				),),

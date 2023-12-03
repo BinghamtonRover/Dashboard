@@ -137,7 +137,7 @@ class FilesService extends Service {
 
   /// Outputs a log to its device's respective log file.
   Future<void> logMessage(BurtLog log) async {
-    final file = loggingDir / "{log.device.humanName}.log";
-    await file.writeAsString(log.format(), mode: FileMode.writeOnlyAppend);
+    final file = loggingDir / "${log.device.humanName}.log";
+    await file.writeAsString("${log.format()}\n", mode: FileMode.writeOnlyAppend);
   }
 }

@@ -1,46 +1,111 @@
-import "package:flutter/foundation.dart";
+import "dart:async";
+import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
-class LogsViewModel with ChangeNotifier {
+/// A view model to track options for the logs page.
+/// 
+/// This view model is needed to separate the menus from the main logs page as whenever a new log
+/// message is added to the page, the currently-selected menu item would flicker. 
+class LogsOptionsViewModel with ChangeNotifier {
+  /// Only show logs from this device. If null, show all devices.
   Device? deviceFilter;
+  /// The level at which to show logs. All logs at this level or above are shown.
   BurtLogLevel levelFilter = BurtLogLevel.info;
+  /// Whether this page should autoscroll.
+  /// 
+  /// When scrolling manually, this will be set to false for convenience.
+  bool autoscroll = true;
 
-  LogsViewModel() {
-    models.logs.addListener(notifyListeners);
-  }
-
-  @override
-  void dispose() {
-    models.logs.removeListener(notifyListeners);
-    super.dispose();
-  }
-
+  /// Sets [deviceFilter] and updates the UI.
   void setDeviceFilter(Device? input) {
     deviceFilter = input;
     notifyListeners();
   }
 
+  /// Enables or disables [autoscroll].
+  void setAutoscroll({bool? input}) {
+    if (input == null || autoscroll == input) return;
+    autoscroll = input;
+   Timer.run(notifyListeners);
+  }
+
+  /// Sets [levelFilter] and updates the UI.
   void setLevelFilter(BurtLogLevel? input) {
     if (input == null) return;
     levelFilter = input;
     notifyListeners();
   }
 
+  /// Resets the given device by sending [RoverStatus.RESTART]. 
+  void resetDevice(Device device) {
+    models.home.clear(clearErrors: true);
+    final socket = switch(device) {
+      Device.SUBSYSTEMS => models.sockets.data,
+      Device.AUTONOMY => models.sockets.autonomy,
+      Device.VIDEO => models.sockets.video,
+      _ => null,
+    };
+    final message = UpdateSetting(status: RoverStatus.RESTART);
+    socket?.sendMessage(message);
+  }
+}
+
+/// A view model for the logs page to control which logs are shown.
+class LogsViewModel with ChangeNotifier {
+  /// The options for the log page.
+  final options = LogsOptionsViewModel();
+
+  /// The scroll controller used to implement autoscroll.
+  late final ScrollController scrollController;
+
+  void _listenForScroll(ScrollPosition position) => 
+    position.isScrollingNotifier.addListener(onScroll);
+
+  void _stopListeningForScroll(ScrollPosition position) => 
+    position.isScrollingNotifier.removeListener(onScroll);
+
+  /// Listens for incoming logs.
+  LogsViewModel() {
+    scrollController = ScrollController(
+      onAttach: _listenForScroll,
+      onDetach: _stopListeningForScroll,
+    );
+    models.logs.addListener(onNewLog);
+  }
+
+  @override
+  void dispose() {
+    models.logs.removeListener(onNewLog);
+    super.dispose();
+  }
+
+  /// Disables [LogsOptionsViewModel.autoscroll] when the user scrolls manually.
+  void onScroll() {
+    final enableAutoscroll = scrollController.position.pixels == scrollController.position.maxScrollExtent;
+    options.setAutoscroll(input: enableAutoscroll);
+  }
+
+  /// Scrolls to the bottom when a new log appears (if [LogsOptionsViewModel.autoscroll] is true).
+  void onNewLog() {
+    notifyListeners();
+    if (options.autoscroll && scrollController.hasClients) {
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    }
+  }
+  
+  /// Updates the UI.
+  void update() => notifyListeners();
+
+  /// The logs that should be shown, according to [LogsOptionsViewModel].
   List<BurtLog> get logs {
     final result = <BurtLog>[];
     for (final log in models.logs.allLogs) {
-      if (deviceFilter != null && log.device != deviceFilter) continue;
-      if (log.level.value > levelFilter.value) continue;
+      if (options.deviceFilter != null && log.device != options.deviceFilter) continue;
+      if (log.level.value > options.levelFilter.value) continue;
       result.add(log);
     }
     return result;
-  }
-
-  void resetDevice(Device device) {
-    print("Resetting device... $device");
-    models.home.clear(clearErrors: true);
-    // Todo: Implement
   }
 }

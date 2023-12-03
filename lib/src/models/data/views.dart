@@ -86,7 +86,7 @@ class DashboardView {
     logView, 
 	];
 
-  /// The [LogPage] view.
+  /// The [LogsPage] view.
   static final logView = DashboardView(name: Routes.logs, builder: (context) => LogsPage());
 
 	/// A blank view.

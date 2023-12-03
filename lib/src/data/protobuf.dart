@@ -76,6 +76,7 @@ extension RoverStatusHumanName on RoverStatus {
 			case RoverStatus.MANUAL: return "Manual";
 			case RoverStatus.AUTONOMOUS: return "Autonomous";
 			case RoverStatus.POWER_OFF: return "Off";
+      case RoverStatus.RESTART: return "Restart";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized rover status: $this");
@@ -295,6 +296,7 @@ extension LogFormat on BurtLog {
   String format() {
     final result = StringBuffer()
       ..write(level.label)
+      ..write(" ")
       ..write(title);
     if (body.isNotEmpty) {
       result..write("\n  ")..write(body);

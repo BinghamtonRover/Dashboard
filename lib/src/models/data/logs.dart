@@ -5,8 +5,7 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
-// TODO: Implement reboot, autoscroll
-
+/// The maximum amount of logs (to prevent consuming too much memory).
 const maxLogCount = 1000;
 
 extension <E> on ListQueue<E> {
@@ -16,6 +15,11 @@ extension <E> on ListQueue<E> {
   }
 }
 
+/// A data model that collects and stores logs from the rover.
+/// 
+/// The logs are kept in-memory in the [allLogs] list and are also saved to disk for retroactive
+/// debugging. To prevent slowing down the dashboard or consuming too much memory, the in-memory
+/// list is limited to [maxLogCount], and logs are only saved to disk every [saveToFileInterval].
 class LogsModel extends Model {
   /// How often to save the buffered logs to the log file.
   static const saveToFileInterval = Duration(seconds: 5);
@@ -54,7 +58,7 @@ class LogsModel extends Model {
   /// Saves all the logs in [saveToFileBuffer] to disk.
   Future<void> saveToFile(_) async {
     if (saveToFileBuffer.isEmpty) return;
-    for (final log in saveToFileBuffer) {
+    for (final log in List<BurtLog>.from(saveToFileBuffer)) {
       await services.files.logMessage(log);
     }
     saveToFileBuffer.clear();

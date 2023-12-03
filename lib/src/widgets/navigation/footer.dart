@@ -11,19 +11,24 @@ class Footer extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => ColoredBox(
 		color: Theme.of(context).colorScheme.secondary,
-    child: const Wrap(
+    child: Wrap(
       alignment: WrapAlignment.spaceBetween,
       children: [
-        MessageDisplay(),
-        Row(  // Groups these elements together even when wrapping
-          mainAxisSize: MainAxisSize.min, 
+        const MessageDisplay(),
+        Wrap(  // Groups these elements together even when wrapping
+          // mainAxisSize: MainAxisSize.min, 
           children: [
-            ViewsCounter(),
-            SizedBox(width: 8),
-            GamepadButtons(),
-            SerialButton(),
-            SizedBox(width: 4),
-            StatusIcons(),
+            const ViewsCounter(),
+            const SizedBox(width: 8),
+            // GamepadButtons(),
+            GamepadButton(controller: models.rover.controller1),
+            const SizedBox(width: 8),
+            GamepadButton(controller: models.rover.controller2),
+            const SizedBox(width: 8),
+            GamepadButton(controller: models.rover.controller3),
+            const SerialButton(),
+            const SizedBox(width: 4),
+            const StatusIcons(),
           ],
         ),
       ],
@@ -65,6 +70,7 @@ class StatusIcons extends StatelessWidget {
 			case RoverStatus.IDLE: return Icons.pause_circle;
 			case RoverStatus.MANUAL: return Icons.play_circle;
 			case RoverStatus.AUTONOMOUS: return Icons.smart_toy;
+			case RoverStatus.RESTART: return Icons.restart_alt;
 		}
 		throw ArgumentError("Unrecognized rover status: $status");
 	}
@@ -86,6 +92,7 @@ class StatusIcons extends StatelessWidget {
 			case RoverStatus.MANUAL: return Colors.green;
 			case RoverStatus.AUTONOMOUS: return Colors.blueGrey;
 			case RoverStatus.POWER_OFF: return Colors.red;
+			case RoverStatus.RESTART: return Colors.yellow;
 		}
 		throw ArgumentError("Unrecognized rover status: $status");
 	}
@@ -263,7 +270,12 @@ class MessageDisplay extends StatelessWidget {
               const SizedBox(width: 4),
               Icon(getIcon(model.message?.severity)),
               const SizedBox(width: 4),
-              Text(model.message?.text ?? "Open logs"),
+              if (model.message == null) 
+                const Text("Open logs")
+              else Tooltip(
+                message: "Click to open logs",
+                child: Text(model.message!.text),
+              ),
               const SizedBox(width: 8),
             ],
           ),

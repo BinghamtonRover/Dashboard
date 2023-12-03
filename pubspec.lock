@@ -38,7 +38,7 @@ packages:
     description:
       path: "."
       ref: logs
-      resolved-ref: "56e255a3fd9f79a444e0a37ec239be04ae83fa00"
+      resolved-ref: "6d4c401b5f8bf85a02fa3555b01973eed571cd19"
       url: "https://github.com/BinghamtonRover/Networking.git"
     source: git
     version: "1.0.0"
