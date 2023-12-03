@@ -43,7 +43,7 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v0.1.15
       with: 
-        files: build/windows/runner/Release/Dashboard.msix
+        files: build/windows/x64/runner/Release/Dashboard.msix
         name: ${{ github.ref_name }}
         generate_release_notes: true
         fail_on_unmatched_files: true
