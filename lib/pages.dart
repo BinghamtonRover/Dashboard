@@ -9,6 +9,7 @@ library pages;
 export "src/pages/autonomy.dart";
 export "src/pages/home.dart";
 export "src/pages/science.dart";
+export "src/pages/logs.dart";
 export "src/pages/settings.dart";
 export "src/pages/splash.dart";
 
@@ -30,6 +31,9 @@ class Routes {
 
 	/// The name of the MARS page.
 	static const String mars = "MARS";
+
+  /// The name of the logs page.
+  static const String logs = "Logs";
 
 	/// The name of the blank page.
 	static const String blank = "blank";

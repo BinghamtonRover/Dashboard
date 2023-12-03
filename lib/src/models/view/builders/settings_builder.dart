@@ -216,21 +216,34 @@ class EasterEggsSettingsBuilder extends ValueBuilder<EasterEggsSettings> {
 	/// Whether to show a SEGA intro. See [EasterEggsSettings.segaIntro].
 	bool segaIntro;
 
+  /// Whether Clippy should appear by log messages. See [EasterEggsSettings.enableClippy].
+  bool enableClippy;
+
 	/// Fills in the fields with the given [initial] settings.
 	EasterEggsSettingsBuilder(EasterEggsSettings initial) : 
+    enableClippy = initial.enableClippy,
 		segaIntro = initial.segaIntro;
 
 	@override
 	bool get isValid => true;
 
 	@override
-	EasterEggsSettings get value => EasterEggsSettings(segaIntro: segaIntro);
+	EasterEggsSettings get value => EasterEggsSettings(
+    segaIntro: segaIntro,
+    enableClippy: enableClippy,
+  );
 
 	/// Updates the value of [EasterEggsSettings.segaIntro].
 	void updateSegaIntro(bool input) {  // ignore: avoid_positional_boolean_parameters
 		segaIntro = input;
 		notifyListeners();
 	}
+
+  /// Updates the value of [EasterEggsSettings.enableClippy].
+  void updateClippy(bool input) {  // ignore: avoid_positional_boolean_parameters
+    enableClippy = input;
+    notifyListeners();
+  }
 }
 
 /// A [ValueBuilder] representing an [ArmSettings].

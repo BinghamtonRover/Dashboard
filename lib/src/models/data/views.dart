@@ -83,7 +83,11 @@ class DashboardView {
 	static final List<DashboardView> uiViews = [
 		DashboardView(name: Routes.science, builder: (context) => SciencePage()),
 		DashboardView(name: Routes.autonomy, builder: (context) => MapPage()),
+    logView, 
 	];
+
+  /// The [LogsPage] view.
+  static final logView = DashboardView(name: Routes.logs, builder: (context) => LogsPage());
 
 	/// A blank view.
 	static final blank = DashboardView(
@@ -139,4 +143,9 @@ class ViewsModel extends Model {
 		notifyListeners();
 	}
 
+  /// Opens the log page in a full-screen view.
+  void openLogs() {    
+    views = [DashboardView.logView];
+    notifyListeners();
+  }
 }

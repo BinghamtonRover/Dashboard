@@ -68,21 +68,3 @@ class GamepadButton extends StatelessWidget {
 		),
 	);
 }
-
-/// An icon to indicate whether the gamepad is connected.
-class GamepadButtons extends StatelessWidget {
-	/// Provides a const constructor for this widget.
-	const GamepadButtons();
-
-	@override
-	Widget build(BuildContext context) => Row(
-    mainAxisSize: MainAxisSize.min,
-		children: [
-			GamepadButton(controller: models.rover.controller1),
-			const SizedBox(width: 8),
-			GamepadButton(controller: models.rover.controller2),
-      const SizedBox(width: 8),
-			GamepadButton(controller: models.rover.controller3),
-		],
-	);
-}

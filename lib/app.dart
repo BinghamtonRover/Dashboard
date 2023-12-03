@@ -33,10 +33,16 @@ class RoverControlDashboard extends StatelessWidget {
 				home: SplashPage(),
 				debugShowCheckedModeBanner: false,
 				theme: ThemeData(
+          useMaterial3: false,
 					colorScheme: const ColorScheme.light(
 						primary: binghamtonGreen,
 						secondary: binghamtonGreen,
 					),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: binghamtonGreen,
+            // titleTextStyle: TextStyle(color: Colors.white),
+            foregroundColor: Colors.white,
+          ),
 				),
 				darkTheme: ThemeData.from(
 					colorScheme: const ColorScheme.dark(
