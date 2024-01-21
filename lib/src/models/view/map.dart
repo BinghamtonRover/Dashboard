@@ -78,7 +78,7 @@ class AutonomyModel with ChangeNotifier {
 		],
 	];
 
-	/// A list of markers maanually placed by the user. Useful for the Extreme Retrieval Mission.
+	/// A list of markers manually placed by the user. Useful for the Extreme Retrieval Mission.
 	List<GpsCoordinates> markers = [];
 	/// The view model to edit the coordinate of the marker.
 	GpsBuilder markerBuilder = GpsBuilder();

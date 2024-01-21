@@ -39,7 +39,7 @@ export "src/models/rover/metrics.dart";
 export "src/models/rover/rover.dart";
 
 // View models
-export "src/models/view/autonomy.dart";
+export 'src/models/view/map.dart';
 export "src/models/view/logs.dart";
 export "src/models/view/mars.dart";
 export "src/models/view/science.dart";

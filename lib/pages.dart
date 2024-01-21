@@ -6,7 +6,7 @@
 /// This library may depend on the data, services, models, and widgets libraries. 
 library pages;
 
-export "src/pages/autonomy.dart";
+export 'src/pages/map.dart';
 export "src/pages/home.dart";
 export "src/pages/science.dart";
 export "src/pages/logs.dart";
