@@ -92,8 +92,6 @@ class AutonomyModel with ChangeNotifier {
 	/// The grid of size [gridSize] with the rover in the center, ready to draw on the UI.
 	List<List<AutonomyCell>> get grid {
 		final result = empty;
-		markCell(result, data.destination, AutonomyCell.destination);
-		markCell(result, roverPosition, AutonomyCell.rover);	
 		for (final obstacle in data.obstacles) {
 			markCell(result, obstacle, AutonomyCell.obstacle);
 		}
@@ -103,6 +101,10 @@ class AutonomyModel with ChangeNotifier {
 		for (final marker in markers) {
 			markCell(result, marker, AutonomyCell.marker);
 		}
+    print("Rover at ${roverPosition}");
+    // Marks the rover and destination -- these should be last
+		markCell(result, data.destination, AutonomyCell.destination);
+		markCell(result, roverPosition, AutonomyCell.rover);	
 		return result;
 	}
 
@@ -122,6 +124,7 @@ class AutonomyModel with ChangeNotifier {
 		final y = gpsToBlock(gps.latitude) + offset.y;
 		if (x < 0 || x >= gridSize) return;
 		if (y < 0 || y >= gridSize) return;
+    if (value == AutonomyCell.rover) print("Value: ${list[y][x]}");
 		list[y][x] = value;
 	}
 
