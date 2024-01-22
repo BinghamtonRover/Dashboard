@@ -10,7 +10,7 @@ environment:
 dependencies:
   async: ^2.11.0
   file_picker: ^6.1.1
-  fl_chart: ^0.65.0
+  fl_chart: ^0.66.0
   flutter:
     sdk: flutter
   flutter_libserialport: ^0.3.0
@@ -21,7 +21,7 @@ dependencies:
   url_launcher: ^6.1.10
   win32_gamepad: ^1.0.3
   yaml: ^3.1.1
-  yaml_writer: ^1.0.2
+  yaml_writer: ^2.0.0
   burt_network: 
     git: https://github.com/BinghamtonRover/Networking.git
 
