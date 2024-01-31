@@ -59,6 +59,43 @@ class VideoFeed extends StatefulWidget {
 	VideoFeedState createState() => VideoFeedState();
 }
 
+/// Class that defines a slider for camera controls
+class SliderSettings extends StatelessWidget {
+  /// Name of the slider
+  final String label;
+  /// Valude corresponding to the slider
+  final double value;
+  /// Value to change the position of the slider
+  final ValueChanged<double> onChanged;
+  
+  /// Constructor for SliderSettings
+  const SliderSettings({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) => Column(
+      children: <Widget>[
+        Row (
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget> [
+            Text(label),
+            const Text(": "),
+            // Will this incur some computation cost? is doing .floor().toString() fine?
+            Text(value.floor().toString()),
+          ],
+        ),
+        Slider(
+          value: value,
+          onChanged: onChanged,
+          max: 100,
+        ),
+      ],
+    );
+}
+
 /// The logic for updating a [VideoFeed].
 /// 
 /// This widget listens to [VideoModel.frameUpdater] to sync its framerate with other [VideoFeed]s.
@@ -72,6 +109,25 @@ class VideoFeedState extends State<VideoFeed> {
 
 	/// A helper class responsible for managing and loading an image.
 	final imageLoader = ImageLoader();
+
+  /// Checks if the current slider for video camera is open
+  bool isOpened = false;
+
+  /// Value for zoom
+  double zoom = 0;
+  /// Value for pan
+  double pan = 0;
+  /// Value for focus
+  double focus = 0;
+  /// Value for brightness
+  double brightness = 0;
+
+  /// Controller for the BottomSheet
+  PersistentBottomSheetController<void>? controller;
+
+  void _showSettingsPanel() => controller = Scaffold.of(context).showBottomSheet(
+    (context) => VideoSettingsWidget(name: data.details.name, onClosed: () { controller?.close(); isOpened = false; }),
+  );
 
 	@override
 	void initState() {
@@ -134,7 +190,27 @@ class VideoFeedState extends State<VideoFeed> {
 					ViewsSelector(currentView: widget.name.humanName),
 				],
 			),
-			Positioned(left: 5, bottom: 5, child: Text(data.details.name.humanName)),
+			Positioned(
+        left: 5, 
+        bottom: 5, 
+        child: Row(
+          children: [
+            IconButton(
+              onPressed: () {
+                if (isOpened) { 
+                  controller?.close();
+                  controller = null;
+                } else {
+                  _showSettingsPanel();
+                }
+                isOpened = !isOpened;
+              }, 
+              icon: const Icon(Icons.tune),
+            ),
+            Text(data.details.name.humanName),
+          ],
+        ),
+      ),
 		],
 	);
 
@@ -155,4 +231,50 @@ class VideoFeedState extends State<VideoFeed> {
 		}
 		return "Unknown error";
 	}
+}
+
+class VideoSettingsWidget extends StatefulWidget {
+  final CameraName name;
+  final VoidCallback onClosed;
+  const VideoSettingsWidget({required this.name, required this.onClosed});
+
+  @override
+  VideoSettingsState createState() => VideoSettingsState();
+}
+
+class VideoSettingsState extends State<VideoSettingsWidget> {
+  // I only did zoom for now but this state is not how we'll actually do it!
+  // This is just for testing the UI, so you don't need to set up all of them.
+  double zoom = 0;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Row(children: [
+        const Spacer(),
+        Text("Settings for ${widget.name.humanName}"),
+        const Spacer(),
+        IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: widget.onClosed,
+        ),
+      ],),
+      SliderSettings(
+        label: "Zoom",
+        value: zoom,
+        onChanged: (val) => setState(() => zoom = val),
+      ),
+      SliderSettings(
+        label: "Pan",
+        value: 25,
+        onChanged: (val) { },
+      ),
+      SliderSettings(
+        label: "Focus",
+        value: 50,
+        onChanged: (val) { },
+      ),
+    ],
+  );
 }
