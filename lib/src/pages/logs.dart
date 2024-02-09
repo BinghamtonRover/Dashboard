@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A widget to show the options for the logs page.
@@ -65,6 +64,7 @@ class LogsOptions extends ReactiveWidget<LogsOptionsViewModel> {
         value: model.autoscroll,
         onChanged: (input) {
           model.setAutoscroll(input: input);
+          if (input ?? false) viewModel.jumpToBottom();
           viewModel.update();
         },
       ),),
@@ -86,57 +86,56 @@ class LogsState extends State<LogsPage> {
   final model = LogsViewModel();
 
   @override
-  Widget build(BuildContext context) => Stack(
-    children: [
-      Column(children: [
-        const SizedBox(height: 50),
-        LogsOptions(model),
-        const Divider(),
-        Expanded(child: LogsBody(model)),
-      ],),
-      Container(
-        color: context.colorScheme.surface,
-        height: 50,
-        child: Row(children: [
-          const SizedBox(width: 8),
-          Text("Logs", style: context.textTheme.headlineMedium),
-          const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.delete_forever),
-            onPressed: models.logs.clear,
-            tooltip: "Clear logs",
-          ),
-          IconButton(
-            icon: const Icon(Icons.help),
-            tooltip: "Help",
-            onPressed: () => showDialog<void>(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text("Logs help"),
-                content: Column(mainAxisSize: MainAxisSize.min, children: [
-                  const Text("This page contains all logs received by the dashboard.\nSelecting a level means that only messages of that level or higher will be shown.", textAlign: TextAlign.center,),
-                  const SizedBox(height: 4),
-                  ListTile(leading: criticalWidget, title: const Text("Critical"), subtitle: const Text("The rover is in a broken state and may shutdown")),
-                  const ListTile(leading: errorWidget, title: Text("Error"), subtitle: Text("Something you tried didn't work, but the rover can still function")),
-                  const ListTile(leading: warningWidget, title: Text("Warning"), subtitle: Text("Something may have gone wrong, you should check it out")),
-                  ListTile(leading: infoWidget, title: const Text("Info"), subtitle: const Text("The rover is functioning normally")),
-                  const ListTile(leading: debugWidget, title: Text("Debug"), subtitle: Text("Extra information that shows what the rover's thinking")),
-                  const ListTile(leading: traceWidget, title: Text("Trace"), subtitle: Text("Values from the code to debug specific issues")),
-                  const SizedBox(height: 12),
-                ],),
-                actions: [
-                  ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(), 
-                    child: const Text("Close"),
-                  ),
-                ],
-              ),
+  Widget build(BuildContext context) => Scaffold(
+    body: Column(children: [
+      const SizedBox(height: 12),
+      LogsOptions(model),
+      const Divider(),
+      Expanded(child: LogsBody(model)),
+    ],),
+    appBar: AppBar(
+      title: const Text("Logs"),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.help),
+          tooltip: "Help",
+          onPressed: () => showDialog<void>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text("Logs help"),
+              content: Column(mainAxisSize: MainAxisSize.min, children: [
+                const Text("This page contains all logs received by the dashboard.\nSelecting a level means that only messages of that level or higher will be shown.", textAlign: TextAlign.center,),
+                const SizedBox(height: 4),
+                ListTile(leading: criticalWidget, title: const Text("Critical"), subtitle: const Text("The rover is in a broken state and may shutdown")),
+                const ListTile(leading: errorWidget, title: Text("Error"), subtitle: Text("Something you tried didn't work, but the rover can still function")),
+                const ListTile(leading: warningWidget, title: Text("Warning"), subtitle: Text("Something may have gone wrong, you should check it out")),
+                ListTile(leading: infoWidget, title: const Text("Info"), subtitle: const Text("The rover is functioning normally")),
+                const ListTile(leading: debugWidget, title: Text("Debug"), subtitle: Text("Extra information that shows what the rover's thinking")),
+                const ListTile(leading: traceWidget, title: Text("Trace"), subtitle: Text("Values from the code to debug specific issues")),
+                const SizedBox(height: 12),
+              ],),
+              actions: [
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(), 
+                  child: const Text("Close"),
+                ),
+              ],
             ),
           ),
-          const ViewsSelector(currentView: Routes.logs),
-        ],),
-      ),
-    ],
+        ),
+        IconButton(
+          icon: const Icon(Icons.vertical_align_bottom),
+          onPressed: model.jumpToBottom,
+          tooltip: "Jump to bottom",
+        ),
+        IconButton(
+          icon: const Icon(Icons.delete_forever),
+          onPressed: models.logs.clear,
+          tooltip: "Clear logs",
+        ),
+      ],
+    ),
+    bottomNavigationBar: const Footer(showLogs: false),
   );
 }
 
@@ -158,6 +157,7 @@ class LogsBody extends ReactiveWidget<LogsViewModel> {
     : ListView.builder(
       itemCount: model.logs.length,
       controller: model.scrollController,
+      reverse: true,
       itemBuilder: (context, index) => LogWidget(model.logs[index]),
     );
 }

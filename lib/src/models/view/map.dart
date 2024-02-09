@@ -102,7 +102,7 @@ class AutonomyModel with ChangeNotifier {
 			markCell(result, marker, AutonomyCell.marker);
 		}
     // Marks the rover and destination -- these should be last
-		markCell(result, data.destination, AutonomyCell.destination);
+    if (data.hasDestination()) markCell(result, data.destination, AutonomyCell.destination);
 		markCell(result, roverPosition, AutonomyCell.rover);	
 		return result;
 	}
@@ -152,7 +152,7 @@ class AutonomyModel with ChangeNotifier {
 
 	/// A handler to call when new data arrives. Updates [data] and the UI.
 	void onNewData(AutonomyData value) {
-		data.mergeFromMessage(value);
+		data = value;
 		services.files.logData(value);
 		notifyListeners();
 	}

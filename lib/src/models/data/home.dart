@@ -32,7 +32,7 @@ class HomeModel extends Model {
 
 	/// Sets a new message that will disappear in 3 seconds.
 	void setMessage({required Severity severity, required String text, bool permanent = false}) {
-    if (_hasError) return;  // Don't replace error messages
+    if (_hasError && severity != Severity.critical) return;  // Don't replace critical messages
 		_messageTimer?.cancel();  // the new message might be cleared if the old one were about to
 		message = TaskbarMessage(severity: severity, text: text);
 		notifyListeners();

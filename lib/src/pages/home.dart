@@ -95,11 +95,9 @@ class HomePageState extends State<HomePage>{
 					icon: const Icon(Icons.menu),
 					onPressed: () => setState(() => showSidebar = !showSidebar),
 				),),
-        
 			],
-      
 		),
-		bottomNavigationBar: Footer(),
+		bottomNavigationBar: const Footer(),
 		body: Row(
 			children: [
 				const Expanded(child: ViewsWidget()),
