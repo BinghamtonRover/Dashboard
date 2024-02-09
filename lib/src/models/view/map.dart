@@ -78,7 +78,7 @@ class AutonomyModel with ChangeNotifier {
 		],
 	];
 
-	/// A list of markers maanually placed by the user. Useful for the Extreme Retrieval Mission.
+	/// A list of markers manually placed by the user. Useful for the Extreme Retrieval Mission.
 	List<GpsCoordinates> markers = [];
 	/// The view model to edit the coordinate of the marker.
 	GpsBuilder markerBuilder = GpsBuilder();
@@ -92,8 +92,6 @@ class AutonomyModel with ChangeNotifier {
 	/// The grid of size [gridSize] with the rover in the center, ready to draw on the UI.
 	List<List<AutonomyCell>> get grid {
 		final result = empty;
-		markCell(result, data.destination, AutonomyCell.destination);
-		markCell(result, roverPosition, AutonomyCell.rover);	
 		for (final obstacle in data.obstacles) {
 			markCell(result, obstacle, AutonomyCell.obstacle);
 		}
@@ -103,6 +101,9 @@ class AutonomyModel with ChangeNotifier {
 		for (final marker in markers) {
 			markCell(result, marker, AutonomyCell.marker);
 		}
+    // Marks the rover and destination -- these should be last
+    if (data.hasDestination()) markCell(result, data.destination, AutonomyCell.destination);
+		markCell(result, roverPosition, AutonomyCell.rover);	
 		return result;
 	}
 
@@ -151,7 +152,7 @@ class AutonomyModel with ChangeNotifier {
 
 	/// A handler to call when new data arrives. Updates [data] and the UI.
 	void onNewData(AutonomyData value) {
-		data.mergeFromMessage(value);
+		data = value;
 		services.files.logData(value);
 		notifyListeners();
 	}

@@ -78,7 +78,7 @@ class MapPage extends StatelessWidget {
 		builder: (model) => Stack(children: [
 			Column(children: [
         const SizedBox(height: 48),
-        for (final row in model.grid) Expanded(
+        for (final row in model.grid.reversed) Expanded(
           child: Row(children: [
             for (final cell in row) Expanded(
               child: Container(
@@ -88,7 +88,7 @@ class MapPage extends StatelessWidget {
                 child: cell != AutonomyCell.rover ? null : ProviderConsumer<PositionMetrics>.value(
                   value: models.rover.metrics.position, 
                   builder: (position) => Transform.rotate(
-                    angle: position.angle * pi / 180, 
+                    angle: -position.angle * pi / 180, 
                     child: const Icon(Icons.arrow_upward, size: 24),
                   ),
                 ),

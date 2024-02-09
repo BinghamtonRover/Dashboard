@@ -92,7 +92,6 @@ class Sockets extends Model {
 		data.destination = settings.subsystemsSocket.copyWith(address: addressOverride);
 		video.destination = settings.videoSocket.copyWith(address: addressOverride);
 		autonomy.destination = settings.autonomySocket.copyWith(address: addressOverride);
-		await reset();
 	}
 
 	/// Resets all the sockets.
@@ -101,12 +100,11 @@ class Sockets extends Model {
 	/// Resetting the sockets will bypass these errors.
 	Future<void> reset() async {
 		for (final socket in sockets) { 
-      // Sockets lose their destination when disposed, so we save it and restore it.
-      final destination = socket.destination;
 			await socket.dispose();
-      socket.destination = destination;
 			await socket.init();
 		}
+    // Sockets lose their destination when disposed, so we restore it.
+    await updateSockets();
 	}
 
 	/// Change which rover is being used.
@@ -114,7 +112,7 @@ class Sockets extends Model {
 		if (value == null) return;
 		rover = value;
 		models.home.setMessage(severity: Severity.info, text: "Using: ${rover.name}");
-		await updateSockets();
+    await reset();
 		notifyListeners();
 	}
 }

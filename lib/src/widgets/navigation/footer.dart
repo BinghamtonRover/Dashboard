@@ -3,18 +3,24 @@ import "package:provider/provider.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// The footer, responsible for showing vitals and logs. 
 class Footer extends StatelessWidget {
+  /// Whether to show logs. Disable this when on the logs page.
+  final bool showLogs;
+  /// Creates the footer.
+  const Footer({this.showLogs = true});
+  
 	@override
 	Widget build(BuildContext context) => ColoredBox(
 		color: Theme.of(context).colorScheme.secondary,
     child: Wrap(
       alignment: WrapAlignment.spaceBetween,
       children: [
-        const MessageDisplay(),
+        MessageDisplay(showLogs: showLogs),
         Wrap(  // Groups these elements together even when wrapping
           // mainAxisSize: MainAxisSize.min, 
           children: [
@@ -227,12 +233,15 @@ class SerialButton extends StatelessWidget {
 
 /// Displays the latest [TaskbarMessage] from [HomeModel.message].
 class MessageDisplay extends ReactiveWidget<HomeModel> {  
+  /// Whether to show an option to open the logs page.
+  final bool showLogs;
+  
+  /// Provides a const constructor for this widget.
+	const MessageDisplay({required this.showLogs}) : super(shouldDispose: false);
+
   @override
   HomeModel createModel() => models.home;
   
-	/// Provides a const constructor for this widget.
-	const MessageDisplay() : super(shouldDispose: false);
-
 	/// Gets the appropriate icon for the given severity.
 	IconData getIcon(Severity? severity) {
 		switch (severity) {
@@ -259,21 +268,20 @@ class MessageDisplay extends ReactiveWidget<HomeModel> {
 	Widget build(BuildContext context, HomeModel model) => SizedBox(
     height: 48,
     child: InkWell(
-      onTap: models.views.openLogs,
+      onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (context) => LogsPage())),
       child: Card(
         shadowColor: Colors.transparent,
         color: getColor(model.message?.severity), 
         shape: ContinuousRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Row(
+        child: (model.message == null && !showLogs) ? const SizedBox() : Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(width: 4),
             Icon(getIcon(model.message?.severity)),
             const SizedBox(width: 4),
-            if (model.message == null) 
-              const Text("Open logs")
+            if (model.message == null) const Text("Open logs")
             else Tooltip(
               message: "Click to open logs",
               child: models.settings.easterEggs.enableClippy

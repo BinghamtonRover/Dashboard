@@ -83,16 +83,21 @@ class LogsViewModel with ChangeNotifier {
 
   /// Disables [LogsOptionsViewModel.autoscroll] when the user scrolls manually.
   void onScroll() {
-    final enableAutoscroll = scrollController.position.pixels == scrollController.position.maxScrollExtent;
+    final enableAutoscroll = scrollController.position.pixels == 0;
     options.setAutoscroll(input: enableAutoscroll);
   }
 
   /// Scrolls to the bottom when a new log appears (if [LogsOptionsViewModel.autoscroll] is true).
   void onNewLog() {
     notifyListeners();
-    if (options.autoscroll && scrollController.hasClients) {
-      scrollController.jumpTo(scrollController.position.maxScrollExtent);
-    }
+    if (!scrollController.hasClients) return;
+    scrollController.jumpTo(options.autoscroll ? 0 : scrollController.offset + 64);
+  }
+
+  /// Jumps to the bottom of the logs.
+  void jumpToBottom() {
+    if (!scrollController.hasClients) return;
+    scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.easeOutBack);
   }
   
   /// Updates the UI.
@@ -106,6 +111,6 @@ class LogsViewModel with ChangeNotifier {
       if (log.level.value > options.levelFilter.value) continue;
       result.add(log);
     }
-    return result;
+    return result.reversed.toList();
   }
 }

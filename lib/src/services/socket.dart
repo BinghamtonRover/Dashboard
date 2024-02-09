@@ -15,7 +15,7 @@ import "package:rover_dashboard/data.dart";
 /// - Check [connectionStrength] or [isConnected] for the connection to the given [device].
 /// - To send a message, call [sendMessage].
 /// - Call [dispose] to close the socket.
-class DashboardSocket extends ProtoSocket {
+class DashboardSocket extends BurtUdpProtocol {
 	/// A callback to run when the [device] has connected.
 	void Function(Device device) onConnect;
 	/// A callback to run when the [device] has disconnected.
@@ -33,8 +33,10 @@ class DashboardSocket extends ProtoSocket {
 	}) : super(
 		port: null,
     quiet: true,
-		heartbeatInterval: const Duration(milliseconds: 200),
 	);
+
+  @override
+  Duration get heartbeatInterval => const Duration(milliseconds: 200);
 
 	/// The connection strength, as a percentage to this [device].
 	final connectionStrength = ValueNotifier<double>(0);
@@ -46,10 +48,8 @@ class DashboardSocket extends ProtoSocket {
 	bool _isChecking = false;
 
 	/// Whether this socket has a stable connection to the [device].
+  @override
 	bool get isConnected => connectionStrength.value > 0;
-
-	@override
-	void updateSettings(UpdateSetting settings) { }
 
 	@override
 	void onMessage(WrappedMessage wrapper) => messageHandler(wrapper);
