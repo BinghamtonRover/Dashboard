@@ -38,7 +38,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "566cb25e55663cc0fdafc5d94a44a482fbdb1cb8"
+      resolved-ref: "8499c7d1e41c7f6cac00f25b5fe00e6480af7dd5"
       url: "https://github.com/BinghamtonRover/Networking.git"
     source: git
     version: "1.1.0"
@@ -158,10 +158,10 @@ packages:
     dependency: "direct main"
     description:
       name: fl_chart
-      sha256: fe6fec7d85975a99c73b9515a69a6e291364accfa0e4a5b3ce6de814d74b9a1c
+      sha256: b5e2b0f13d93f8c532b5a2786bfb44580de1f50b927bf95813fa1af617e9caf8
       url: "https://pub.dev"
     source: hosted
-    version: "0.66.0"
+    version: "0.66.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -237,10 +237,10 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: "004a2e90ce080f8627b5a04aecb4cdfac87d2c3f3b520aa291260be5a32c033d"
+      sha256: "49a0d4b0c12402853d3f227fe7c315601b238d126aa4caa5dbb2dcf99421aa4a"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.4"
+    version: "4.1.6"
   js:
     dependency: transitive
     description:
@@ -522,10 +522,10 @@ packages:
     dependency: "direct main"
     description:
       name: url_launcher
-      sha256: d25bb0ca00432a5e1ee40e69c36c85863addf7cc45e433769d61bed3fe81fd96
+      sha256: c512655380d241a337521703af62d2c122bf7b77a46ff7dd750092aa9433499c
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.3"
+    version: "6.2.4"
   url_launcher_android:
     dependency: transitive
     description:
