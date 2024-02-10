@@ -41,6 +41,29 @@ class MapPage extends StatelessWidget {
     ),
   );
 
+  /// Opens a dialog to prompt the user for GPS coordinates and removes the marker there. 
+  void removeMarker(BuildContext context, AutonomyModel model) => showDialog<void>(
+    context: context, 
+    builder: (_) => AlertDialog(
+      title: const Text("Remove a Marker"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GpsEditor(model: model.markerBuilder),
+        ],
+      ),
+      actions: [
+        TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
+        ElevatedButton(
+          onPressed: model.markerBuilder.isValid ? () { model.removeMarker(); Navigator.of(context).pop(); } : null,
+          child: const Text("Remove"), 
+        ),
+      ],
+    ),
+  );
+
+
+
   /// Opens a dialog to prompt the user to create an [AutonomyCommand] and sends it to the rover.
   void createTask(BuildContext context, AutonomyCommandBuilder command) => showDialog<void>(
     context: context, 
@@ -139,6 +162,12 @@ class MapPage extends StatelessWidget {
             icon: const Icon(Icons.add), 
             label: const Text("Add Marker"), 
             onPressed: () => placeMarker(context, model),
+          ),
+          const SizedBox(width: 8),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.remove), 
+            label: const Text("Remove Marker"), 
+            onPressed: () => removeMarker(context, model),
           ),
           const SizedBox(width: 8),
           ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text("Clear all"), onPressed: model.clearMarkers),

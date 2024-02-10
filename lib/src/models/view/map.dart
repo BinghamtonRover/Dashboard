@@ -164,6 +164,16 @@ class AutonomyModel with ChangeNotifier {
 		notifyListeners();
 	}
 
+  /// Removes a marker in [markerBuilder].
+	void removeMarker() {
+		if(markers.remove(markerBuilder.value)){
+      markerBuilder.clear();
+		  notifyListeners();
+    } else {
+      models.home.setMessage(severity: Severity.info, text: "Marker not found");
+    }
+	}
+
 	/// Deletes all the markers in [markers].
 	void clearMarkers() {
 		markers.clear();
