@@ -40,30 +40,7 @@ class MapPage extends StatelessWidget {
       ],
     ),
   );
-
-  /// Opens a dialog to prompt the user for GPS coordinates and removes the marker there. 
-  void removeMarker(BuildContext context, AutonomyModel model) => showDialog<void>(
-    context: context, 
-    builder: (_) => AlertDialog(
-      title: const Text("Remove a Marker"),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          GpsEditor(model: model.markerBuilder),
-        ],
-      ),
-      actions: [
-        TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
-        ElevatedButton(
-          onPressed: model.markerBuilder.isValid ? () { model.removeMarker(); Navigator.of(context).pop(); } : null,
-          child: const Text("Remove"), 
-        ),
-      ],
-    ),
-  );
-
-
-
+  
   /// Opens a dialog to prompt the user to create an [AutonomyCommand] and sends it to the rover.
   void createTask(BuildContext context, AutonomyCommandBuilder command) => showDialog<void>(
     context: context, 
@@ -104,15 +81,18 @@ class MapPage extends StatelessWidget {
         for (final row in model.grid.reversed) Expanded(
           child: Row(children: [
             for (final cell in row) Expanded(
-              child: Container(
-                height: double.infinity,
-                width: 24,
-                decoration: BoxDecoration(color: getColor(cell), border: Border.all()),
-                child: cell != AutonomyCell.rover ? null : ProviderConsumer<PositionMetrics>.value(
-                  value: models.rover.metrics.position, 
-                  builder: (position) => Transform.rotate(
-                    angle: -position.angle * pi / 180, 
-                    child: const Icon(Icons.arrow_upward, size: 24),
+              child: GestureDetector(
+                onTap: () => cell.$2 != AutonomyCell.marker ? () : model.updateMarker(cell.$1),
+                child: Container(
+                  height: double.infinity,
+                  width: 24,
+                  decoration: BoxDecoration(color: getColor(cell.$2), border: Border.all()),
+                  child: cell.$2 != AutonomyCell.rover ? null : ProviderConsumer<PositionMetrics>.value(
+                    value: models.rover.metrics.position, 
+                    builder: (position) => Transform.rotate(
+                      angle: -position.angle * pi / 180, 
+                      child: const Icon(Icons.arrow_upward, size: 24),
+                    ),
                   ),
                 ),
               ),
@@ -162,12 +142,6 @@ class MapPage extends StatelessWidget {
             icon: const Icon(Icons.add), 
             label: const Text("Add Marker"), 
             onPressed: () => placeMarker(context, model),
-          ),
-          const SizedBox(width: 8),
-          ElevatedButton.icon(
-            icon: const Icon(Icons.remove), 
-            label: const Text("Remove Marker"), 
-            onPressed: () => removeMarker(context, model),
           ),
           const SizedBox(width: 8),
           ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text("Clear all"), onPressed: model.clearMarkers),
