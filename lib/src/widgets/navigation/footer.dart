@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:provider/provider.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -24,15 +23,15 @@ class Footer extends StatelessWidget {
         Wrap(  // Groups these elements together even when wrapping
           // mainAxisSize: MainAxisSize.min, 
           children: [
-            const ViewsCounter(),
+            ViewsCounter(),
             const SizedBox(width: 8),
             // GamepadButtons(),
-            GamepadButton(controller: models.rover.controller1),
+            GamepadButton(models.rover.controller1),
             const SizedBox(width: 8),
-            GamepadButton(controller: models.rover.controller2),
+            GamepadButton(models.rover.controller2),
             const SizedBox(width: 8),
-            GamepadButton(controller: models.rover.controller3),
-            const SerialButton(),
+            GamepadButton(models.rover.controller3),
+            SerialButton(),
             const SizedBox(width: 4),
             const StatusIcons(),
           ],
@@ -174,73 +173,65 @@ class StatusIcons extends StatelessWidget {
 }
 
 /// A dropdown to select more or less views.
-class ViewsCounter extends StatelessWidget {
+class ViewsCounter extends ReusableReactiveWidget<ViewsModel> {
 	/// Provides a const constructor for this widget.
-	const ViewsCounter();
+	ViewsCounter() : super(models.views);
 
 	@override
-	Widget build(BuildContext context) => ProviderConsumer<ViewsModel>.value(
-		value: models.views,
-		builder: (model) => Row(
-			mainAxisSize: MainAxisSize.min,
-			children: [
-				const Text("Views:"),
-				const SizedBox(width: 4),
-				DropdownButton<int>(
-					iconEnabledColor: Colors.black,
-					value: model.views.length,
-					onChanged: model.setNumViews,
-					items: [
-						for (int i = 1; i <= 4; i++) DropdownMenuItem(
-							value: i,
-							child: Center(child: Text(i.toString())),
-						),
-					],
-				),
-			],
-		),
+	Widget build(BuildContext context, ViewsModel model) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      const Text("Views:"),
+      const SizedBox(width: 4),
+      DropdownButton<int>(
+        iconEnabledColor: Colors.black,
+        value: model.views.length,
+        onChanged: model.setNumViews,
+        items: [
+          for (int i = 1; i <= 4; i++) DropdownMenuItem(
+            value: i,
+            child: Center(child: Text(i.toString())),
+          ),
+        ],
+      ),
+    ],
 	);
 }
 
 /// Allows the user to connect to the firmware directly, over Serial.
 /// 
 /// See [SerialModel] for an implementation.
-class SerialButton extends StatelessWidget {
+class SerialButton extends ReusableReactiveWidget<SerialModel> {
 	/// Provides a const constructor.
-	const SerialButton();
+	SerialButton() : super(models.serial);
 
 	@override
-	Widget build(BuildContext context) => Consumer<SerialModel>(
-		builder: (_, model, __) => PopupMenuButton(
-			icon: Icon(
-				Icons.usb, 
-				color: model.hasDevice ? Colors.green : context.colorScheme.onSecondary,
-			),
-			tooltip: "Select device",
-			onSelected: model.toggle,
-			itemBuilder: (_) => [
-				for (final String port in SerialDevice.availablePorts) PopupMenuItem(
-					value: port,
-					child: ListTile(
-						title: Text(port),
-						leading: model.isConnected(port) ? const Icon(Icons.check) : null,
-					),
-				),
-			],
-		),
+	Widget build(BuildContext context, SerialModel model) => PopupMenuButton(
+    icon: Icon(
+      Icons.usb, 
+      color: model.hasDevice ? Colors.green : context.colorScheme.onSecondary,
+    ),
+    tooltip: "Select device",
+    onSelected: model.toggle,
+    itemBuilder: (_) => [
+      for (final String port in SerialDevice.availablePorts) PopupMenuItem(
+        value: port,
+        child: ListTile(
+          title: Text(port),
+          leading: model.isConnected(port) ? const Icon(Icons.check) : null,
+        ),
+      ),
+    ],
 	);
 } 
 
 /// Displays the latest [TaskbarMessage] from [HomeModel.message].
-class MessageDisplay extends ReactiveWidget<HomeModel> {  
+class MessageDisplay extends ReusableReactiveWidget<HomeModel> {  
   /// Whether to show an option to open the logs page.
   final bool showLogs;
   
   /// Provides a const constructor for this widget.
-	const MessageDisplay({required this.showLogs}) : super(shouldDispose: false);
-
-  @override
-  HomeModel createModel() => models.home;
+	MessageDisplay({required this.showLogs}) : super(models.home);
   
 	/// Gets the appropriate icon for the given severity.
 	IconData getIcon(Severity? severity) {

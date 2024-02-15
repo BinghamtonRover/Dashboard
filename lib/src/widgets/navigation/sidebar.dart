@@ -17,8 +17,9 @@ class Sidebar extends StatelessWidget {
 			padding: const EdgeInsets.symmetric(horizontal: 4),
 			children: [
 				Text("Metrics", style: context.textTheme.displaySmall, textAlign: TextAlign.center),
-				const MetricsList(),
-				const Divider(),
+        for (final metrics in models.rover.metrics.allMetrics)
+          MetricsList(metrics),
+        const Divider(),
 				Text("Controls", style: context.textTheme.displaySmall, textAlign: TextAlign.center),
 				const SizedBox(height: 4),
 				ControlsDisplay(controller: models.rover.controller1, gamepadNum: 1),
@@ -30,61 +31,49 @@ class Sidebar extends StatelessWidget {
 }
 
 /// Displays metrics of all sorts in a collapsible list.
-class MetricsList extends StatelessWidget {
+class MetricsList extends ReusableReactiveWidget<Metrics> {
 	/// A const constructor for this widget.
-	const MetricsList();
+	const MetricsList(super.model);
 
 	@override
-	Widget build(BuildContext context) => Column(
-		children: [
-			for (final metrics in models.rover.metrics.allMetrics) ProviderConsumer<Metrics<dynamic>>.value(
-				value: metrics,
-				builder: (metrics) => ExpansionTile(
-				expandedCrossAxisAlignment: CrossAxisAlignment.start,
-				expandedAlignment: Alignment.centerLeft,
-				childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
-				title: Text(
-					metrics.name,
-					style: Theme.of(context).textTheme.headlineSmall,
-				),
-				children: [
-					for (final String metric in metrics.allMetrics) Text(metric),
-					const SizedBox(height: 4),
-				],
-			),),
-		],
-	);
+	Widget build(BuildContext context, Metrics model) => ExpansionTile(
+    expandedCrossAxisAlignment: CrossAxisAlignment.start,
+    expandedAlignment: Alignment.centerLeft,
+    childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
+    title: Text(
+      model.name,
+      style: Theme.of(context).textTheme.headlineSmall,
+    ),
+    children: [
+      for (final String metric in model.allMetrics) Text(metric),
+      const SizedBox(height: 4),
+    ],
+  );
 }
 
 /// Displays controls for the given [Controller].
-class ControlsDisplay extends StatelessWidget {
-	/// The controller to display controls for.
-	final Controller controller;
-
+class ControlsDisplay extends ReusableReactiveWidget<Controller> {
 	/// The number gamepad being used.
 	final int gamepadNum;
 
 	/// A const constructor for this widget.
-	const ControlsDisplay({required this.controller, required this.gamepadNum});
+	const ControlsDisplay({required Controller controller, required this.gamepadNum}) : super(controller);
 
 	@override
-	Widget build(BuildContext context) => ProviderConsumer<Controller>.value(
-		value: controller,
-		builder: (_) => ExpansionTile(
-			expandedCrossAxisAlignment: CrossAxisAlignment.start,
-			expandedAlignment: Alignment.centerLeft,
-			childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-			title: Text(
-				controller.controls.mode.name, 
-				style: Theme.of(context).textTheme.titleLarge,
-				textAlign: TextAlign.start,
-			),
-			children: [
-				for (final entry in controller.controls.buttonMapping.entries) ...[
-					Text(entry.key, style: Theme.of(context).textTheme.labelLarge),
-					Text("  ${entry.value}", style: Theme.of(context).textTheme.titleMedium),
-				],
-			],
-		),
+	Widget build(BuildContext context, Controller model) => ExpansionTile(
+    expandedCrossAxisAlignment: CrossAxisAlignment.start,
+    expandedAlignment: Alignment.centerLeft,
+    childrenPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    title: Text(
+      model.controls.mode.name, 
+      style: Theme.of(context).textTheme.titleLarge,
+      textAlign: TextAlign.start,
+    ),
+    children: [
+      for (final entry in model.controls.buttonMapping.entries) ...[
+        Text(entry.key, style: Theme.of(context).textTheme.labelLarge),
+        Text("  ${entry.value}", style: Theme.of(context).textTheme.titleMedium),
+      ],
+    ],
 	);
 }

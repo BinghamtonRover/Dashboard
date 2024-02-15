@@ -7,9 +7,6 @@
 library app;
 
 import "package:flutter/material.dart";
-import "package:provider/provider.dart";
-
-import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 
 /// The classic Binghamton green.
@@ -18,43 +15,31 @@ const binghamtonGreen = Color(0xff005943);
 /// The main class for the app. 
 class RoverControlDashboard extends StatelessWidget {
 	@override
-	Widget build(BuildContext context) => MultiProvider(
-		providers: [
-			ChangeNotifierProvider.value(value: models),
-			ChangeNotifierProvider.value(value: models.video),
-			ChangeNotifierProvider.value(value: models.home),
-			ChangeNotifierProvider.value(value: models.rover),
-			ChangeNotifierProvider.value(value: models.serial),
-			ChangeNotifierProvider.value(value: models.settings),
-		],
-		child: Consumer<Models>(
-			builder: (context, models, _) => MaterialApp(
-				title: "Binghamton University Rover Team",
-				home: SplashPage(),
-				debugShowCheckedModeBanner: false,
-				theme: ThemeData(
-          useMaterial3: false,
-					colorScheme: const ColorScheme.light(
-						primary: binghamtonGreen,
-						secondary: binghamtonGreen,
-					),
-          appBarTheme: const AppBarTheme(
-            backgroundColor: binghamtonGreen,
-            // titleTextStyle: TextStyle(color: Colors.white),
-            foregroundColor: Colors.white,
-          ),
-				),
-				darkTheme: ThemeData.from(
-					colorScheme: const ColorScheme.dark(
-						primary: binghamtonGreen,
-						secondary: binghamtonGreen,
-					),
-				),
-				routes: {
-					Routes.home: (_) => HomePage(),
-					Routes.settings: (_) => SettingsPage(),
-				},
-			),
-		),
+	Widget build(BuildContext context) => MaterialApp(
+    title: "Binghamton University Rover Team",
+    home: SplashPage(),
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      useMaterial3: false,
+      colorScheme: const ColorScheme.light(
+        primary: binghamtonGreen,
+        secondary: binghamtonGreen,
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: binghamtonGreen,
+        // titleTextStyle: TextStyle(color: Colors.white),
+        foregroundColor: Colors.white,
+      ),
+    ),
+    darkTheme: ThemeData.from(
+      colorScheme: const ColorScheme.dark(
+        primary: binghamtonGreen,
+        secondary: binghamtonGreen,
+      ),
+    ),
+    routes: {
+      Routes.home: (_) => HomePage(),
+      Routes.settings: (_) => SettingsPage(),
+    },
 	);
 }

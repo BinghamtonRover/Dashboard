@@ -27,7 +27,7 @@ class AutonomyCommandEditor extends ReactiveWidget<AutonomyCommandBuilder> {
             onChanged: command.updateTask,
             humanName: (task) => task.humanName,
           ),
-          GpsEditor(model: command.gps),
+          GpsEditor(command.gps),
         ],
       ),
       actions: [

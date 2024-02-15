@@ -28,7 +28,7 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          GpsEditor(model: model.markerBuilder),
+          GpsEditor(model.markerBuilder),
         ],
       ),
       actions: [

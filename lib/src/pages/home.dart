@@ -58,7 +58,7 @@ class HomePageState extends State<HomePage>{
 		bottomNavigationBar: const Footer(),
 		body: Row(
 			children: [
-				const Expanded(child: ViewsWidget()),
+				Expanded(child: ViewsWidget()),
 				// An AnimatedSize widget automatically shrinks the widget away
 				AnimatedSize(
 					duration: const Duration(milliseconds: 250),
