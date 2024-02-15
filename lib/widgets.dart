@@ -23,6 +23,7 @@ export "src/widgets/atomic/video_feed.dart";
 
 export "src/widgets/generic/gamepad.dart";
 export "src/widgets/generic/reactive_widget.dart";
+export "src/widgets/generic/timer.dart";
 
 export "src/widgets/navigation/footer.dart";
 export "src/widgets/navigation/sidebar.dart";
