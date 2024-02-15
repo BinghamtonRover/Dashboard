@@ -20,6 +20,7 @@ import "package:flutter/material.dart";
 export "src/widgets/atomic/autonomy_command.dart";
 export "src/widgets/atomic/camera_editor.dart";
 export "src/widgets/atomic/editors.dart";
+export "src/widgets/atomic/science_command.dart";
 export "src/widgets/atomic/video_feed.dart";
 
 export "src/widgets/generic/gamepad.dart";
