@@ -24,6 +24,7 @@ dependencies:
   yaml_writer: ^2.0.0
   burt_network: 
     git: https://github.com/BinghamtonRover/Networking.git
+  flutter_resizable_container: ^0.3.0
 
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
