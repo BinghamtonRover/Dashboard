@@ -272,3 +272,40 @@ class GpsEditor extends StatelessWidget {
     ),
 	);
 }
+
+/// An [AlertDialog] to prompt the user for a throttle value and send it to the rover.
+class ThrottleEditor extends ReactiveWidget<ThrottleBuilder> {
+  @override
+  ThrottleBuilder createModel() => ThrottleBuilder();
+
+  @override
+  Widget build(BuildContext context, ThrottleBuilder model) => AlertDialog(
+    title: const Text("Adjust throttle"),
+    content: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        NumberEditor(name: "Throttle", model: model.controller),
+        const SizedBox(height: 12),
+        if (model.errorText != null) Text(
+          model.errorText!,
+          style: const TextStyle(color: Colors.red),
+        ),
+      ],
+    ),
+    actions: [
+      ElevatedButton(
+        onPressed: !model.isValid || model.isLoading ? null : () async {
+          await model.save(); 
+          if (!context.mounted) return;
+          Navigator.of(context).pop();
+         },
+        child: const Text("Save"),
+      ),
+      TextButton(
+        onPressed: () => Navigator.of(context).pop(),
+        child: const Text("Cancel"),
+      ),
+    ],
+  ); 
+}

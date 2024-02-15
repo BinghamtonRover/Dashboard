@@ -16,21 +16,21 @@ class DriveControls extends RoverControls {
 
 	@override
 	List<Message> parseInputs(GamepadState state) => [
-		// Adjust throttle
-		if (state.dpadUp) updateThrottle(throttleIncrement)
-		else if (state.dpadDown) updateThrottle(-throttleIncrement),
+		// // Adjust throttle
+		// if (state.dpadUp) updateThrottle(throttleIncrement)
+		// else if (state.dpadDown) updateThrottle(-throttleIncrement),
 		// Adjust wheels 
 		DriveCommand(setLeft: true, left: state.normalLeftY),
 		DriveCommand(setRight: true, right: -1*state.normalRightY),
 		// More intuitive controls
-		if (state.normalShoulder != 0) ...[
-			DriveCommand(setLeft: true, left: state.normalShoulder),
-			DriveCommand(setRight: true, right: state.normalShoulder),
-		],
-		if (state.normalTrigger != 0) ...[
-			DriveCommand(setLeft: true, left: state.normalTrigger),
-			DriveCommand(setRight: true, right: -1 * state.normalTrigger),
-		],
+		// if (state.normalShoulder != 0) ...[
+		// 	DriveCommand(setLeft: true, left: state.normalShoulder),
+		// 	DriveCommand(setRight: true, right: state.normalShoulder),
+		// ],
+		// if (state.normalTrigger != 0) ...[
+		// 	DriveCommand(setLeft: true, left: state.normalTrigger),
+		// 	DriveCommand(setRight: true, right: -1 * state.normalTrigger),
+		// ],
 	];
 
 	/// Updates the throttle by [throttleIncrement], clamping at [0, 1].
