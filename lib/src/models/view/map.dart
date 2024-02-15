@@ -88,6 +88,9 @@ class AutonomyModel with ChangeNotifier {
 	/// The rover's current position.
 	GpsCoordinates get roverPosition => models.rover.metrics.position.data.gps;
 
+  /// The rover's heading
+  double get roverHeading => models.rover.metrics.position.angle;
+
 	/// The autonomy data as received from the rover.
 	AutonomyData data = AutonomyData();
 
