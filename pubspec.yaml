@@ -1,7 +1,7 @@
 name: rover_dashboard
 description: Graphical application for remotely operating the rover.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 2024.2.9+1
+version: 2024.2.15+1
 
 environment:
   sdk: "^3.0.0"
@@ -50,7 +50,7 @@ flutter_launcher_icons:
 # Builds a Windows .msix App Installer file for the Dashboard.
 #   Command: dart run msix:create
 msix_config:
-  msix_version: 2024.2.9.1
+  msix_version: 2024.2.15.1
   display_name: Dashboard
   publisher_display_name: Binghamton University Rover Team
   identity_name: edu.binghamton.rover
