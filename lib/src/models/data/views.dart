@@ -112,7 +112,15 @@ class ViewsModel extends Model {
 	];
 
 	@override
-	Future<void> init() async { }
+	Future<void> init() async {
+    models.settings.addListener(notifyListeners);
+  }
+
+  @override
+  void dispose() {
+    models.settings.removeListener(notifyListeners);
+    super.dispose();
+  }
 
 	/// Replaces the [oldView] with the [newView].
 	void replaceView(String oldView, DashboardView newView) {

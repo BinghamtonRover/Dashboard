@@ -32,7 +32,7 @@ class ValueEditor<T> extends StatelessWidget {
 					name,
 					style: Theme.of(context).textTheme.titleLarge,
 					textAlign: TextAlign.start,
-				),			
+				),
 			),
 			const SizedBox(height: 4),
 			...children,
@@ -74,17 +74,6 @@ class SettingsPage extends StatelessWidget {
 							],
 						),
 						const Divider(),
-						ValueEditor<VideoSettings>(
-							name: "Video settings",
-							children: [
-								NumberEditor(
-									name: "Frames per second", 
-									subtitle: "This does not affect the rover's cameras. Useful for limiting the CPU of the dashboard",
-									model: model.video.fps,
-								),
-							],
-						),
-						const Divider(),
 						ValueEditor<ArmSettings>(
 							name: "Arm settings",
 							children: [
@@ -120,17 +109,41 @@ class SettingsPage extends StatelessWidget {
 							],
 						),
 						const Divider(),
-						ValueEditor<AutonomySettings>(
-							name: "Autonomy settings",
-							children: [
-								NumberEditor(
-									name: "Block size", 
-									subtitle: "The precision of the GPS grid", 
-									model: model.autonomy.blockSize,
-								),
-							],
-						),
-						const Divider(),
+            ValueEditor<DashboardSettings>(
+              name: "Dashboard Settings",
+              children: [
+                NumberEditor(
+                  name: "Frames per second", 
+                  subtitle: "This does not affect the rover's cameras. Useful for limiting the CPU of the dashboard",
+                  model: model.dashboard.fps,
+                ),
+                NumberEditor(
+                  name: "Block size", 
+                  subtitle: "The precision of the GPS grid", 
+                  model: model.dashboard.blockSize,
+                ),
+                Row(children: [
+                  const SizedBox(
+                    width: 200,
+                    child: ListTile(
+                      title: Text("Split mode"),
+                    ),
+                  ),
+                  const Spacer(),
+                  DropdownMenu<SplitMode>(
+                    initialSelection: model.dashboard.splitMode,
+                    onSelected: model.dashboard.updateSplitMode,
+                    dropdownMenuEntries: [
+                      for (final value in SplitMode.values) DropdownMenuEntry(
+                        value: value,
+                        label: value.humanName,
+                      ),
+                    ],
+                  ),
+                ],),
+              ],
+            ),
+            const Divider(),
 						ValueEditor<EasterEggsSettings>(
 							name: "Easter eggs",
 							children: [
@@ -149,7 +162,16 @@ class SettingsPage extends StatelessWidget {
 						const Divider(),
 						Text("Misc", style: Theme.of(context).textTheme.titleLarge),
             ListTile(
-							title: const Text("Open logs"),
+							title: const Text("Adjust throttle"),
+              subtitle: const Text("Sets the max speed on the rover"),
+							trailing: const Icon(Icons.speed),
+							onTap: () => showDialog<void>(
+                context: context,
+                builder: (_) => ThrottleEditor(),
+              ),
+						),
+            ListTile(
+							title: const Text("Open session output"),
               subtitle: const Text("Opens all files created by this session"),
 							trailing: const Icon(Icons.launch),
 							onTap: () => launchUrl(services.files.loggingDir.uri),

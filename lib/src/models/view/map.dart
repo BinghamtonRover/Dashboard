@@ -58,6 +58,7 @@ class AutonomyModel with ChangeNotifier {
 			handler: onNewData, 
 		);
 		models.rover.metrics.position.addListener(recenterRover);
+    models.settings.addListener(notifyListeners);
 		// Force the initial update, even with no new data.
 		recenterRover();
 		onNewData(AutonomyData());
@@ -66,6 +67,7 @@ class AutonomyModel with ChangeNotifier {
 	@override
 	void dispose() {
 		models.messages.removeHandler(AutonomyData().messageName);
+		models.settings.removeListener(notifyListeners);
 		models.rover.metrics.position.removeListener(recenterRover);
 		super.dispose();
 	}
@@ -108,7 +110,7 @@ class AutonomyModel with ChangeNotifier {
 	}
 
 	/// Converts a decimal GPS coordinate to an index representing the block in the grid.
-	int gpsToBlock(double value) => (value / models.settings.autonomy.blockSize).round();
+	int gpsToBlock(double value) => (value / models.settings.dashboard.mapBlockSize).round();
 
 	/// Calculates a new position for [gps] based on [offset] and adds it to the [list].
 	/// 
