@@ -36,7 +36,7 @@ class HomeModel extends Model {
 		_messageTimer?.cancel();  // the new message might be cleared if the old one were about to
 		message = TaskbarMessage(severity: severity, text: text);
 		notifyListeners();
-    if (permanent) _hasError = true;
+    _hasError = permanent;
     _messageTimer = Timer(const Duration(seconds: 3), clear);
 	} 
 

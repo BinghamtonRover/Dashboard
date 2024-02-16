@@ -52,6 +52,7 @@ export "src/models/view/builders/science_command.dart";
 export "src/models/view/builders/builder.dart";
 export "src/models/view/builders/color_builder.dart";
 export "src/models/view/builders/settings_builder.dart";
+export "src/models/view/builders/throttle.dart";
 export "src/models/view/builders/timer_builder.dart";
 export "src/models/view/builders/video_builder.dart";
 

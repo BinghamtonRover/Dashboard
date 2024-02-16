@@ -7,14 +7,12 @@ import "package:rover_dashboard/widgets.dart";
 /// A widget to show the options for the logs page.
 /// 
 /// This is separate from the logs display so that the menu doesn't flicker when new logs arrive.
-class LogsOptions extends ReactiveWidget<LogsOptionsViewModel> {
-  /// The view model that contains the options for the logs page.
+class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
+  /// The view model for the whole page.
   final LogsViewModel viewModel;
-  /// Listens to the view model without disposing it.
-  const LogsOptions(this.viewModel) : super(shouldDispose: false);
   
-  @override
-  LogsOptionsViewModel createModel() => viewModel.options;
+  /// Listens to the view model without disposing it.
+  LogsOptions(this.viewModel) : super(viewModel.options);
   
   @override
   Widget build(BuildContext context, LogsOptionsViewModel model) => Wrap(
@@ -142,15 +140,10 @@ class LogsState extends State<LogsPage> {
 /// The widget that actually contains the logs for the page.
 /// 
 /// This is a separate widget to prevent updating the rest of the page when new logs come in.
-class LogsBody extends ReactiveWidget<LogsViewModel> {
-  /// The view model for this page. 
-  final LogsViewModel model;
+class LogsBody extends ReusableReactiveWidget<LogsViewModel> {
   /// Listens to the given view model.
-  const LogsBody(this.model) : super(shouldDispose: false);
+  const LogsBody(super.model);
   
-  @override
-  LogsViewModel createModel() => model;
-
   @override
   Widget build(BuildContext context, LogsViewModel model) => model.logs.isEmpty 
     ? const Center(child: Text("No logs yet")) 

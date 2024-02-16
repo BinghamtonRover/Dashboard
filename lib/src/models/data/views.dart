@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_resizable_container/flutter_resizable_container.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -106,13 +107,43 @@ class DashboardView {
 
 /// A data model for keeping track of the on-screen views.
 class ViewsModel extends Model {
+  /// The controller for the resizable row on top.
+  final horizontalController1 = ResizableController(shouldDispose: false);
+  /// The controller for the resizable row on bottom.
+  final horizontalController2 = ResizableController(shouldDispose: false);
+  /// The controller for the resizable column.
+  final verticalController = ResizableController(shouldDispose: false);
+  
 	/// The current views on the screen.
 	List<DashboardView> views = [
 		DashboardView.cameraViews[0],
 	];
 
 	@override
-	Future<void> init() async { }
+	Future<void> init() async {
+    models.settings.addListener(notifyListeners);
+  }
+
+  @override
+  void dispose() {
+    models.settings.removeListener(notifyListeners);
+    super.dispose();
+  }
+
+  /// Resets the size of all the views.
+  void resetSizes() {
+    if (views.length == 2 && models.settings.dashboard.splitMode == SplitMode.horizontal) {
+      verticalController.setRatios([0.5, 0.5]);
+    } else if (views.length > 2) {
+      verticalController.setRatios([0.5, 0.5]);
+    }
+    if (views.length == 2 && models.settings.dashboard.splitMode == SplitMode.vertical) {
+      horizontalController1.setRatios([0.5, 0.5]);
+    } else if (views.length > 2) {
+      horizontalController1.setRatios([0.5, 0.5]);
+    }
+    if (views.length == 4) horizontalController2.setRatios([0.5, 0.5]);
+  }
 
 	/// Replaces the [oldView] with the [newView].
 	void replaceView(String oldView, DashboardView newView) {
