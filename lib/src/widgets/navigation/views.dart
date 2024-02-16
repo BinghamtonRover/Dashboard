@@ -14,11 +14,16 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
 	Widget build(BuildContext context, ViewsModel model) => switch (model.views.length) {
     1 => Column(children: [Expanded(child: models.views.views.first.builder(context))]),
     2 => ResizableContainer(
+      key: const ValueKey(2),
       direction: switch (models.settings.dashboard.splitMode) {
         SplitMode.horizontal => Axis.vertical,
         SplitMode.vertical => Axis.horizontal,
       },
       dividerWidth: 5, 
+      controller: switch (models.settings.dashboard.splitMode) {
+        SplitMode.horizontal => model.verticalController,
+        SplitMode.vertical => model.horizontalController1,
+      },
       dividerColor: Colors.black,
       children: [
         ResizableChildData(
@@ -32,6 +37,8 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
       ],
     ),
     3 || 4 => ResizableContainer(
+      key: const ValueKey(3),
+      controller: model.verticalController,
       direction: Axis.vertical,
       dividerWidth: 5, 
       dividerColor: Colors.black,
@@ -39,6 +46,8 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
         ResizableChildData(
           startingRatio: 0.5,
           child: ResizableContainer(
+            key: const ValueKey(4),
+            controller: model.horizontalController1,
             direction: Axis.horizontal,
             dividerWidth: 5, 
             dividerColor: Colors.black,
@@ -60,6 +69,7 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
         ) else ResizableChildData(
           startingRatio: 0.5,
           child: ResizableContainer(
+            controller: model.horizontalController2,
             direction: Axis.horizontal,
             dividerWidth: 5, 
             dividerColor: Colors.black,

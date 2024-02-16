@@ -48,6 +48,7 @@ class RoverSettings extends Model {
 	/// 
 	/// See [RoverStatus] for details.
 	Future<void> setStatus(RoverStatus value) async {
+    if (!models.rover.isConnected) return;
     if (value == RoverStatus.AUTONOMOUS || value == RoverStatus.IDLE) {
       models.rover.controller1.setMode(OperatingMode.none);
       models.rover.controller2.setMode(OperatingMode.none);

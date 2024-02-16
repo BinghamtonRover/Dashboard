@@ -45,6 +45,11 @@ class HomePageState extends State<HomePage>{
       flexibleSpace: Center(child: TimerWidget()),
 			actions: [
 				SocketSwitcher(),
+        IconButton(
+          icon: const Icon(Icons.aspect_ratio),
+          tooltip: "Reset view sizes",
+          onPressed: models.views.resetSizes,
+        ),
 				IconButton(
 					icon: const Icon(Icons.settings),
 					onPressed: () => Navigator.of(context).pushNamed(Routes.settings),

@@ -194,10 +194,11 @@ packages:
   flutter_resizable_container:
     dependency: "direct main"
     description:
-      name: flutter_resizable_container
-      sha256: d3f11e7b88271a00282804ee528fbd90790b2b2db340f9ff76b0504c4cdfa297
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: controller
+      resolved-ref: "88f29aac86981df77dc76cf4e9d33e7fed05604d"
+      url: "https://github.com/Levi-Lesches/flutter_resizable_container.git"
+    source: git
     version: "0.3.0"
   flutter_test:
     dependency: "direct dev"
