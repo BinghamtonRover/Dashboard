@@ -75,7 +75,12 @@ class Sockets extends Model {
 	/// Notifies the user when a new device has connected.
 	void onConnect(Device device) {
 		models.home.setMessage(severity: Severity.info, text: "The ${device.humanName} has connected");
-		if (device == Device.SUBSYSTEMS) models.rover.status.value = models.rover.settings.status;
+		if (device == Device.SUBSYSTEMS) {
+      models.rover.status.value = models.rover.settings.status;
+      models.rover.controller1.gamepad.pulse();
+      models.rover.controller2.gamepad.pulse();
+      models.rover.controller3.gamepad.pulse();
+    }
 	}
 
 	/// Notifies the user when a device has disconnected.

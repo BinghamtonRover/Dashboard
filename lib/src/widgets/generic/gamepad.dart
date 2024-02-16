@@ -25,38 +25,44 @@ class GamepadButton extends ReusableReactiveWidget<Controller> {
 		}
 	}
 
+  /// Whether the gamepad should be disabled in this mode.
+  bool isDisabled(RoverStatus status) => status == RoverStatus.AUTONOMOUS || status == RoverStatus.IDLE;
+
 	@override
-	Widget build(BuildContext context, Controller model) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      IconButton(
-        icon: Stack(
-          children: [
-            const Icon(Icons.sports_esports), 
-            Positioned(
-              bottom: -2,
-              right: -2,
-              child: Text("${model.gamepadIndex + 1}", style: const TextStyle(fontSize: 12, color: Colors.white)),
+	Widget build(BuildContext context, Controller model) => ValueListenableBuilder(
+    valueListenable: models.rover.status,
+    builder: (context, status, _) => Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          icon: Stack(
+            children: [
+              const Icon(Icons.sports_esports), 
+              Positioned(
+                bottom: -2,
+                right: -2,
+                child: Text("${model.gamepadIndex + 1}", style: const TextStyle(fontSize: 12, color: Colors.white)),
+              ),
+            ],
+          ),
+          color: isDisabled(status) ? Colors.grey : model.isConnected 
+            ? getColor(model.gamepad.battery)
+            : Colors.black,
+          constraints: const BoxConstraints(maxWidth: 36),
+          onPressed: model.connect,
+        ),
+        DropdownButton<OperatingMode>(
+          iconEnabledColor: Colors.black,
+          value: model.mode,
+          onChanged: isDisabled(status) ? null : model.setMode,
+          items: [
+            for (final mode in OperatingMode.values) DropdownMenuItem(
+              value: mode,
+              child: Text(mode.name),
             ),
           ],
         ),
-        color: model.isConnected 
-          ? getColor(model.gamepad.battery)
-          : Colors.black,
-        constraints: const BoxConstraints(maxWidth: 36),
-        onPressed: model.connect,
-      ),
-      DropdownButton<OperatingMode>(
-        iconEnabledColor: Colors.black,
-        value: model.mode,
-        onChanged: model.setMode,
-        items: [
-          for (final mode in OperatingMode.values) DropdownMenuItem(
-            value: mode,
-            child: Text(mode.name),
-          ),
-        ],
-      ),
-    ],
-	);
+      ],
+    ),
+  );
 }
