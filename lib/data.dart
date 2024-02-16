@@ -2,7 +2,7 @@
 
 /// The data library.
 ///
-/// This library defines any data types needed by the rest of the app. While the dataclasses may
+/// This library defines any data types needed by the rest of the app. While the data classes may
 /// have methods, the logic within should be simple, and any broad logic that changes state should
 /// happen in the models library.
 ///
@@ -21,7 +21,6 @@ export "src/data/metrics/mars.dart";
 export "src/data/metrics/metrics.dart";
 export "src/data/metrics/science.dart";
 
-export "src/data/constants.dart";
 export "src/data/modes.dart";
 export "src/data/protobuf.dart";
 export "src/data/science.dart";
