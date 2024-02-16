@@ -1,3 +1,4 @@
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -61,15 +62,19 @@ class HomePageState extends State<HomePage>{
 			],
 		),
 		bottomNavigationBar: const Footer(),
-		body: Row(
-			children: [
-				Expanded(child: ViewsWidget()),
-				// An AnimatedSize widget automatically shrinks the widget away
-				AnimatedSize(
-					duration: const Duration(milliseconds: 250),
-					child: showSidebar ? const Sidebar() : Container(),
-				),
-			],
-		),
+		body: Stack(children: [
+      Row(
+        children: [
+          Expanded(child: ViewsWidget()),
+          // An AnimatedSize widget automatically shrinks the widget away
+          AnimatedSize(
+            duration: const Duration(milliseconds: 250),
+            child: showSidebar ? const Sidebar() : Container(),
+          ),
+        ],
+      ),
+      if (defaultTargetPlatform == TargetPlatform.android) 
+        MobileControls(),
+    ],),
 	);
 }
