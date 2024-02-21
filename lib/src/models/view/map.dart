@@ -55,7 +55,12 @@ class AutonomyModel with ChangeNotifier {
 	GridOffset offset = const GridOffset(0, 0);
 
 	/// Listens for incoming autonomy or position data.
-	AutonomyModel() {
+	AutonomyModel() { init(); }
+
+  /// Initializes the view model.
+  Future<void> init() async {
+		recenterRover();
+    await Future<void>.delayed(const Duration(seconds: 1));
 		models.messages.registerHandler<AutonomyData>(
 			name: AutonomyData().messageName,
 			decoder: AutonomyData.fromBuffer,
