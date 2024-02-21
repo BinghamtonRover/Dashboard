@@ -153,12 +153,13 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                 value: model.easterEggs.segaIntro,
                 onChanged: model.easterEggs.updateSegaIntro,
               ),
-              SwitchListTile(
-                title: const Text("Enable SEGA sound"),
-                subtitle: const Text('Says "Binghamton" in the SEGA style'),
-                value: model.easterEggs.segaSound,
-                onChanged: model.easterEggs.segaIntro ? model.easterEggs.updateSegaSound : null,
-              ),
+              // Disabled because the sound is horrible. Please find a better sound :)
+              // SwitchListTile(
+              //   title: const Text("Enable SEGA sound"),
+              //   subtitle: const Text('Says "Binghamton" in the SEGA style'),
+              //   value: model.easterEggs.segaSound,
+              //   onChanged: model.easterEggs.segaIntro ? model.easterEggs.updateSegaSound : null,
+              // ),
               SwitchListTile(
                 title: const Text("Enable Clippy"),
                 value: model.easterEggs.enableClippy,
