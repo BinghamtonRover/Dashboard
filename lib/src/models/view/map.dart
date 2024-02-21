@@ -185,6 +185,9 @@ class AutonomyModel with ChangeNotifier {
 	}
 
   // ==================== Bad Apple Easter Egg ====================
+  // 
+  // This Easter Egg renders the Bad Apple video in the map page by grabbing 
+  // each frame and assigning an obstacle to each black pixel.
 
   /// Whether the UI is currently playing Bad Apple
   bool isPlayingBadApple = false;
@@ -192,6 +195,7 @@ class AutonomyModel with ChangeNotifier {
   Timer? badAppleTimer;
   /// Which frame in the Bad Apple video we are up to right now
   int badAppleFrame = 0;
+  /// The audio player for the Bad Apple music
   final badAppleAudioPlayer = AudioPlayer();
   /// How many frames in a second are being shown
   static const badAppleFps = 6;
@@ -199,14 +203,14 @@ class AutonomyModel with ChangeNotifier {
   static const badAppleLastFrame = 6570;
 
   /// Starts playing Bad Apple.
-  void startBadApple() {
+  Future<void> startBadApple() async {
     isPlayingBadApple = true;
     notifyListeners();
     zoom(50);
     badAppleFrame = 0;
     badAppleTimer = Timer.periodic(const Duration(milliseconds: 1000 ~/ 5), _loadBadAppleFrame);
-    badAppleAudioPlayer.setAsset("assets/bad_apple.mp3");
-    badAppleAudioPlayer.play();
+    await badAppleAudioPlayer.setAsset("assets/bad_apple2.mp3");
+    badAppleAudioPlayer.play().ignore();
   }
 
   Future<void> _loadBadAppleFrame(_) async {

@@ -210,12 +210,20 @@ class EasterEggsSettingsBuilder extends ValueBuilder<EasterEggsSettings> {
 	/// Whether to show a SEGA intro. See [EasterEggsSettings.segaIntro].
 	bool segaIntro;
 
+  /// Whether to say "Binghamton" in the SEGA style. See [EasterEggsSettings.segaSound].
+  bool segaSound;
+
   /// Whether Clippy should appear by log messages. See [EasterEggsSettings.enableClippy].
   bool enableClippy;
 
+  /// Whether to render Bad Apple in the Map page. See [EasterEggsSettings.badApple].
+  bool badApple;
+
 	/// Fills in the fields with the given [initial] settings.
 	EasterEggsSettingsBuilder(EasterEggsSettings initial) : 
+    badApple = initial.badApple,
     enableClippy = initial.enableClippy,
+    segaSound = initial.segaSound,
 		segaIntro = initial.segaIntro;
 
 	@override
@@ -224,7 +232,9 @@ class EasterEggsSettingsBuilder extends ValueBuilder<EasterEggsSettings> {
 	@override
 	EasterEggsSettings get value => EasterEggsSettings(
     segaIntro: segaIntro,
+    segaSound: segaSound,
     enableClippy: enableClippy,
+    badApple: badApple,
   );
 
 	/// Updates the value of [EasterEggsSettings.segaIntro].
@@ -233,9 +243,21 @@ class EasterEggsSettingsBuilder extends ValueBuilder<EasterEggsSettings> {
 		notifyListeners();
 	}
 
+  /// Updates the value of [segaSound].
+  void updateSegaSound(bool input) {  // ignore: avoid_positional_boolean_parameters
+    segaSound = input;
+    notifyListeners();
+  }
+
   /// Updates the value of [EasterEggsSettings.enableClippy].
   void updateClippy(bool input) {  // ignore: avoid_positional_boolean_parameters
     enableClippy = input;
+    notifyListeners();
+  }
+
+  /// Updates the value of [badApple].
+  void updateBadApple(bool input) {  // ignore: avoid_positional_boolean_parameters
+    badApple = input;
     notifyListeners();
   }
 }

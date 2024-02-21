@@ -154,9 +154,20 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                 onChanged: model.easterEggs.updateSegaIntro,
               ),
               SwitchListTile(
+                title: const Text("Enable SEGA sound"),
+                subtitle: const Text('Says "Binghamton" in the SEGA style'),
+                value: model.easterEggs.segaSound,
+                onChanged: model.easterEggs.segaIntro ? model.easterEggs.updateSegaSound : null,
+              ),
+              SwitchListTile(
                 title: const Text("Enable Clippy"),
                 value: model.easterEggs.enableClippy,
                 onChanged: model.easterEggs.updateClippy,
+              ),
+              SwitchListTile(
+                title: const Text("Bad Apple in the Map"),
+                value: model.easterEggs.badApple,
+                onChanged: model.easterEggs.updateBadApple,
               ),
             ],
           ),

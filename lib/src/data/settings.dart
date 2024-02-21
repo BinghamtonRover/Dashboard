@@ -153,24 +153,34 @@ class NetworkSettings {
 class EasterEggsSettings {
   /// Whether to do a SEGA-like intro during boot.
   final bool segaIntro;
+  /// Whether to say "Binghamton" in the SEGA style.
+  final bool segaSound;
   /// Whether clippy should appear by log messages.
   final bool enableClippy;
+  /// Whether to render Bad Apple in the Map page.
+  final bool badApple;  
 
   /// A const constructor.
   const EasterEggsSettings({
     required this.segaIntro,
+    required this.segaSound,
     required this.enableClippy,
+    required this.badApple,
   });
 
   /// Parses easter eggs settings from JSON.
   EasterEggsSettings.fromJson(Json? json) : 
     segaIntro = json?["segaIntro"] ?? true,
-    enableClippy = json?["enableClippy"] ?? true;
+    segaSound = json?["segaSound"] ?? true,
+    enableClippy = json?["enableClippy"] ?? true,
+    badApple = json?["badApple"] ?? true;
 
   /// Serializes these settings to JSON.
   Json toJson() => {
     "segaIntro": segaIntro,
+    "segaSound": segaSound,
     "enableClippy": enableClippy,
+    "badApple": badApple,
   };
 }
 

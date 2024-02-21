@@ -121,7 +121,7 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
       child: Row(children: [  // The header at the top
         const SizedBox(width: 8),
         Text("Map", style: context.textTheme.headlineMedium), 
-        if (true) IconButton(  // TODO: Add a setting here
+        if (models.settings.easterEggs.badApple) IconButton(
           iconSize: 48,
             icon: CircleAvatar(
             backgroundImage: const AssetImage("assets/bad_apple_thumbnail.webp"),
