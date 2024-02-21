@@ -1,4 +1,8 @@
+import "dart:async";
+import "dart:ui";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:just_audio/just_audio.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -69,6 +73,7 @@ class AutonomyModel with ChangeNotifier {
 		models.messages.removeHandler(AutonomyData().messageName);
 		models.settings.removeListener(notifyListeners);
 		models.rover.metrics.position.removeListener(recenterRover);
+    badAppleAudioPlayer.dispose();
 		super.dispose();
 	}
 
@@ -100,6 +105,7 @@ class AutonomyModel with ChangeNotifier {
 		for (final obstacle in data.obstacles) {
 			markCell(result, obstacle, AutonomyCell.obstacle);
 		}
+    if (isPlayingBadApple) return result;
 		for (final path in data.path) {
 			markCell(result, path, AutonomyCell.path);
 		}
@@ -142,9 +148,11 @@ class AutonomyModel with ChangeNotifier {
 	/// `(3, 2)` to get it there. That means we should also add `(3, 2)` to the obstacle's position
 	/// so it remains `(-1, -1)` away from the rover's new position, yielding `(4, 4)`.
 	void recenterRover() {
+    // final position = isPlayingBadApple ? GpsCoordinates() : roverPosition; 
+    final position = isPlayingBadApple ? GpsCoordinates(latitude: (gridSize ~/ 2).toDouble(), longitude: (gridSize ~/ 2).toDouble()) : roverPosition; 
 		final midpoint = ((gridSize - 1) / 2).floor();
-		final offsetX = midpoint - gpsToBlock(roverPosition.longitude);
-		final offsetY = midpoint - gpsToBlock(roverPosition.latitude);
+		final offsetX = midpoint - gpsToBlock(position.longitude);
+		final offsetY = midpoint - gpsToBlock(position.latitude);
 		offset = GridOffset(offsetX, offsetY);
 		notifyListeners();
 	}
@@ -175,4 +183,80 @@ class AutonomyModel with ChangeNotifier {
 		markerBuilder.clear();
 		notifyListeners();
 	}
+
+  // ==================== Bad Apple Easter Egg ====================
+  // 
+  // This Easter Egg renders the Bad Apple video in the map page by grabbing 
+  // each frame and assigning an obstacle to each black pixel.
+
+  /// Whether the UI is currently playing Bad Apple
+  bool isPlayingBadApple = false;
+  /// A timer to update the map for every frame of Bad Apple
+  Timer? badAppleTimer;
+  /// Which frame in the Bad Apple video we are up to right now
+  int badAppleFrame = 0;
+  /// The audio player for the Bad Apple music
+  final badAppleAudioPlayer = AudioPlayer();
+  /// How many frames in a second are being shown
+  static const badAppleFps = 6;
+  /// The last frame of Bad Apple
+  static const badAppleLastFrame = 6570;
+
+  /// Starts playing Bad Apple.
+  Future<void> startBadApple() async {
+    isPlayingBadApple = true;
+    notifyListeners();
+    zoom(50);
+    badAppleFrame = 0;
+    badAppleTimer = Timer.periodic(const Duration(milliseconds: 1000 ~/ 5), _loadBadAppleFrame);
+    await badAppleAudioPlayer.setAsset("assets/bad_apple2.mp3");
+    badAppleAudioPlayer.play().ignore();
+  }
+
+  Future<void> _loadBadAppleFrame(_) async {
+    // final filename = "assets/bad_apple/image_480.jpg";
+    final filename = "assets/bad_apple/image_$badAppleFrame.jpg";
+    final buffer = await rootBundle.loadBuffer(filename);
+    final codec = await instantiateImageCodecWithSize(buffer);
+    final frame = await codec.getNextFrame();
+    final image = frame.image;
+    if (image.height != 50 || image.width != 50) {
+      models.home.setMessage(severity: Severity.error, text: "Wrong Bad Apple frame size");
+      stopBadApple();
+      return;
+    }
+    final imageData = await image.toByteData();
+    if (imageData == null) {
+      models.home.setMessage(severity: Severity.error, text: "Could not load Bad Apple frame");
+      stopBadApple();
+      return;
+    }
+    var offset = 0;
+    final obstacles = <GpsCoordinates>[];
+    for (var row = 0; row < image.height; row++) {
+      for (var col = 0; col < image.width; col++) {
+        final pixel = [
+          for (var channel = 0; channel < 4; channel++)
+            imageData.getUint8(offset++),
+        ];
+        final isBlack = pixel.first < 100;  // dealing with lossy compression, not 255 and 0
+        final coordinate = GpsCoordinates(latitude: (row - image.height).abs().toDouble(), longitude: col.toDouble());
+        if (isBlack) obstacles.add(coordinate);
+      }
+    }
+    data = AutonomyData(obstacles: obstacles);
+    notifyListeners();
+    badAppleFrame += badAppleFps;
+    if (badAppleFrame >= badAppleLastFrame) stopBadApple();
+  }
+
+  /// Stops playing Bad Apple and resets the UI.
+  void stopBadApple() {
+    isPlayingBadApple = false;
+    badAppleTimer?.cancel();
+    data = AutonomyData();
+    badAppleAudioPlayer.stop();
+    zoom(11);
+    notifyListeners();
+  }
 }

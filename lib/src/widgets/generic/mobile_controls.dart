@@ -27,7 +27,7 @@ class MobileControlsModel with ChangeNotifier {
 
   void _sendSpeeds(_) {
     final command1 = DriveCommand(setLeft: true, left: left);
-    final command2 = DriveCommand(setRight: true, right: right);
+    final command2 = DriveCommand(setRight: true, right: -1 * right);
     models.messages.sendMessage(command1);
     models.messages.sendMessage(command2);
   }

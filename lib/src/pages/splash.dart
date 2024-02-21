@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:just_audio/just_audio.dart";
 
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
@@ -33,14 +34,28 @@ class SplashPageState extends State<SplashPage>{
 	/// The state of the SEGA animation.
 	SegaState state = SegaState.partOne;
 
+  /// The Audio player.
+  final audioPlayer = AudioPlayer();
+
 	@override
 	void initState() {
 		super.initState();
 		init();
 	}
 
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
 	/// Starts the SEGA animation.
 	Future<void> initAnimation() async {
+    if (models.settings.easterEggs.segaSound) {
+      await audioPlayer.setAsset("assets/binghamton2.wav");
+      await audioPlayer.setVolume(0.5);
+      audioPlayer.play().ignore();
+    }
 		setState(() => state = SegaState.partTwo);
 		await Future<void>.delayed(const Duration(milliseconds: 750));
 		setState(() => state = SegaState.partThree);
