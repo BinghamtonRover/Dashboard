@@ -21,6 +21,7 @@ dependencies:
   protobuf: ^3.0.0
   url_launcher: ^6.1.10
   win32_gamepad: ^1.0.3
+  just_audio: ^0.9.36
 
 dependency_overrides: 
   # Waiting for PR to merge: https://github.com/andyhorn/flutter_resizable_container/pull/5
@@ -75,3 +76,5 @@ flutter:
   assets: 
     - assets/rover.png
     - assets/clippy.webp
+    - assets/bad_apple/
+    - assets/bad_apple_thumbnail.webp

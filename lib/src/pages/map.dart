@@ -64,7 +64,7 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
         ],),
       ),
       const SizedBox(height: 4),
-      Row(children: [  // Legend
+      if (!model.isPlayingBadApple) Row(children: [  // Legend
         const SizedBox(width: 4),
         Text("Legend:", style: context.textTheme.titleLarge),
         const SizedBox(width: 8),
@@ -98,7 +98,7 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
           onChanged: (value) => model.zoom(value.toInt()),
         ),),
       ],),
-      Row(children: [  // Controls
+      if (!model.isPlayingBadApple) Row(children: [  // Controls
         const SizedBox(width: 4),
         Text("Place marker: ", style: context.textTheme.titleLarge),
         const SizedBox(width: 8),
@@ -121,8 +121,19 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
       child: Row(children: [  // The header at the top
         const SizedBox(width: 8),
         Text("Map", style: context.textTheme.headlineMedium), 
+        if (true) IconButton(  // TODO: Add a setting here
+          iconSize: 48,
+            icon: CircleAvatar(
+            backgroundImage: const AssetImage("assets/bad_apple_thumbnail.webp"),
+            child: model.isPlayingBadApple ? const Icon(Icons.block, color: Colors.red, size: 36) : null,
+          ),
+          onPressed: model.isPlayingBadApple ? model.stopBadApple : model.startBadApple,
+        ),
         const Spacer(),
-        Text("Autonomy status: ${model.data.state.humanName}, ${model.data.task.humanName}", style: context.textTheme.headlineSmall),
+        if (model.isPlayingBadApple) 
+          Text("Autonomy status: Bad Apple", style: context.textTheme.headlineSmall)
+        else 
+          Text("Autonomy status: ${model.data.state.humanName}, ${model.data.task.humanName}", style: context.textTheme.headlineSmall),
         const VerticalDivider(),
         const ViewsSelector(currentView: Routes.autonomy),
       ],),
