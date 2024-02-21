@@ -2,6 +2,7 @@ import "dart:async";
 import "dart:ui";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:just_audio/just_audio.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -72,6 +73,7 @@ class AutonomyModel with ChangeNotifier {
 		models.messages.removeHandler(AutonomyData().messageName);
 		models.settings.removeListener(notifyListeners);
 		models.rover.metrics.position.removeListener(recenterRover);
+    badAppleAudioPlayer.dispose();
 		super.dispose();
 	}
 
@@ -190,18 +192,21 @@ class AutonomyModel with ChangeNotifier {
   Timer? badAppleTimer;
   /// Which frame in the Bad Apple video we are up to right now
   int badAppleFrame = 0;
+  final badAppleAudioPlayer = AudioPlayer();
   /// How many frames in a second are being shown
   static const badAppleFps = 6;
   /// The last frame of Bad Apple
-  static const badAppleLastFrame = 6930;
+  static const badAppleLastFrame = 6570;
 
   /// Starts playing Bad Apple.
   void startBadApple() {
     isPlayingBadApple = true;
     notifyListeners();
-    zoom(49);
+    zoom(50);
     badAppleFrame = 0;
     badAppleTimer = Timer.periodic(const Duration(milliseconds: 1000 ~/ 5), _loadBadAppleFrame);
+    badAppleAudioPlayer.setAsset("assets/bad_apple.mp3");
+    badAppleAudioPlayer.play();
   }
 
   Future<void> _loadBadAppleFrame(_) async {
@@ -246,6 +251,7 @@ class AutonomyModel with ChangeNotifier {
     isPlayingBadApple = false;
     badAppleTimer?.cancel();
     data = AutonomyData();
+    badAppleAudioPlayer.stop();
     zoom(11);
     notifyListeners();
   }
