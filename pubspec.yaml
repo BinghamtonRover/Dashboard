@@ -4,7 +4,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 2024.2.21+2  # Always increment the build number, never go down, even on new versions
 
 environment:
-  sdk: "^3.0.0"
+  sdk: ^3.3.0
 
 # Prefer to use `flutter pub add packageName` rather than modify this section by hand.
 dependencies:
