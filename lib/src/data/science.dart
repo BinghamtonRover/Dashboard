@@ -14,7 +14,7 @@ enum ScienceResult {
 	/// There used to be life in this ecosystem, but not anymore.
 	notPresent, 
 
-	/// This test cannot determine the precense of life.
+	/// This test cannot determine the presence of life.
 	inconclusive, 
 
 	/// This test is awaiting more data.
@@ -109,18 +109,9 @@ ScienceResult temperatureTest(SampleData data) => (data.average! > -15 && data.a
 ScienceResult humidityTest(SampleData data) => (data.average! > 20) 
 	? ScienceResult.extant : ScienceResult.notPresent;
 
-/// The test to determine the presence of life based on pH data.
-ScienceResult pHTest(SampleData data) => (data.average! > 3 && data.average! < 12) 
-	? ScienceResult.extant : ScienceResult.notPresent;
-
 /// The test to determine the presence of life based on CO2 data.
 /// The max has to be greater than 10% greater than min for life to exist
 ScienceResult co2Test(SampleData data) => (data.max! >= (data.min! * 1.1)) 
-	? ScienceResult.extant : ScienceResult.notPresent;
-
-/// The test to determine the presence of life based on methane data.
-/// The max has to be greater than 1
-ScienceResult methaneTest(SampleData data) => (data.min! > 1) 
 	? ScienceResult.extant : ScienceResult.notPresent;
 
 /// The temperature sensor.
@@ -129,29 +120,20 @@ const temperature = ScienceSensor(
 	test: temperatureTest,
 	testDescription: "Average between -15°C and 122°C: Extinct",
 );
+
 /// The humidity sensor.
 const humidity = ScienceSensor(
 	name: "Humidity", 
 	test: humidityTest,
 	testDescription: "Average above 20%: Extant",
 );
-/// The pH sensor.
-const pH = ScienceSensor(
-	name: "pH", 
-	test: pHTest,
-	testDescription: "Average between 3 and 12: Extant",
-);
+
 /// The co2 sensor.
 const co2 = ScienceSensor(
 	name: "CO2", 
 	test: co2Test,
 	testDescription: "Max CO2 greater than 10% of Min CO2: Extant",
 );
-/// The methane sensor.
-const methane = ScienceSensor(
-	name: "Methane", 
-	test: methaneTest,
-	testDescription: "Methane above 1: Extant",
-);
+
 /// A list of all the sensors on the Science subsystem.
-const sensors = [temperature, humidity, pH, co2, methane];
+const sensors = [temperature, humidity, co2];
