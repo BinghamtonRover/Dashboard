@@ -84,6 +84,7 @@ class DashboardView {
 	static final List<DashboardView> uiViews = [
 		DashboardView(name: Routes.science, builder: (context) => SciencePage()),
 		DashboardView(name: Routes.autonomy, builder: (context) => MapPage()),
+    DashboardView(name: Routes.electrical, builder: (context) => ElectricalPage()),
 	];
 
 	/// A blank view.

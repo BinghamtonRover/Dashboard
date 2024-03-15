@@ -12,6 +12,7 @@ export "src/pages/science.dart";
 export "src/pages/logs.dart";
 export "src/pages/settings.dart";
 export "src/pages/splash.dart";
+export "src/pages/electrical.dart";
 
 /// The names of all the pages available in the app.
 /// 
@@ -25,6 +26,9 @@ class Routes {
 
 	/// The name of the science analysis page.
 	static const String science = "Science Analysis"; 
+
+  /// The name of the electrical data page
+  static const String electrical = "Electrical";
 
 	/// The name of the autonomy page.
 	static const String autonomy = "Map"; 
