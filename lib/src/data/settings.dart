@@ -10,26 +10,6 @@ extension SettingsParser on Json {
   }
 }
 
-/// Settings relating to video.
-class VideoSettings {
-  /// How many frames to render per second.
-  /// 
-  /// This does not affect how many frames are sent by the rover per second.
-  final int fps;
-
-  /// A const constructor.
-  const VideoSettings({required this.fps});
-
-  /// Parses a [VideoSettings] from JSON.
-  VideoSettings.fromJson(Json? json) : 
-    fps = (json?["fps"] ?? 60) as int;
-
-  /// Serializes these settings in JSON format.
-  Json toJson() => {
-    "fps": fps,
-  };
-}
-
 /// Settings relating to science.
 class ScienceSettings {
   /// How many frames to render per second.
@@ -140,16 +120,12 @@ class NetworkSettings {
   /// the tank when it's being used.
   final SocketInfo tankSocket;
 
-  /// The address and port of the Rover's GPS
-  final SocketInfo marsSocket;
-
   /// Creates a new network settings object.
   NetworkSettings({
     required this.subsystemsSocket,
     required this.videoSocket,
     required this.autonomySocket,
     required this.tankSocket,
-    required this.marsSocket,
     required this.connectionTimeout,
   });
 
@@ -159,7 +135,6 @@ class NetworkSettings {
     videoSocket = json?.getSocket("videoSocket") ?? SocketInfo.raw("192.168.1.30", 8002),
     autonomySocket = json?.getSocket("autonomySocket") ?? SocketInfo.raw("192.168.1.30", 8003),
     tankSocket = json?.getSocket("tankSocket") ?? SocketInfo.raw("192.168.1.40", 8000),
-    marsSocket = json?.getSocket("marsSocket") ?? SocketInfo.raw("192.168.1.50", 8006),
     connectionTimeout = json?["connectionTimeout"] ?? 5;
 
   /// Serializes these settings to JSON.
@@ -168,31 +143,7 @@ class NetworkSettings {
     "videoSocket": videoSocket.toJson(),
     "autonomySocket": autonomySocket.toJson(),
     "tankSocket": tankSocket.toJson(),
-    "marsSocket": marsSocket.toJson(),
     "connectionTimeout": connectionTimeout,
-  };
-}
-
-/// Settings relating to autonomy.
-class AutonomySettings {
-  /// The precision of the GPS grid.
-  /// 
-  /// Since GPS coordinates are decimal values, we divide by this value to get the index of the cell
-  /// each coordinate belongs to. Smaller sizes means more blocks, but we should be careful that the
-  /// blocks are big enough to the margin of error of our GPS. This value must be synced with the
-  /// value in the autonomy program, or else the UI will not be accurate to the rover's logic.
-  final double blockSize;
-
-  /// A const constructor.
-  const AutonomySettings({required this.blockSize});
-
-  /// Parses autonomy settings from a JSON map.
-  AutonomySettings.fromJson(Json? json) : 
-    blockSize = json?["blockSize"] ?? 1.0;
-
-  /// Serializes these settings to JSON.
-  Json toJson() => {
-    "blockSize": blockSize,
   };
 }
 
@@ -202,24 +153,86 @@ class AutonomySettings {
 class EasterEggsSettings {
   /// Whether to do a SEGA-like intro during boot.
   final bool segaIntro;
+  /// Whether to say "Binghamton" in the SEGA style.
+  final bool segaSound;
   /// Whether clippy should appear by log messages.
   final bool enableClippy;
+  /// Whether to render Bad Apple in the Map page.
+  final bool badApple;  
 
   /// A const constructor.
   const EasterEggsSettings({
     required this.segaIntro,
+    required this.segaSound,
     required this.enableClippy,
+    required this.badApple,
   });
 
   /// Parses easter eggs settings from JSON.
   EasterEggsSettings.fromJson(Json? json) : 
     segaIntro = json?["segaIntro"] ?? true,
-    enableClippy = json?["enableClippy"] ?? true;
+    segaSound = json?["segaSound"] ?? true,
+    enableClippy = json?["enableClippy"] ?? true,
+    badApple = json?["badApple"] ?? true;
 
   /// Serializes these settings to JSON.
   Json toJson() => {
     "segaIntro": segaIntro,
+    "segaSound": segaSound,
     "enableClippy": enableClippy,
+    "badApple": badApple,
+  };
+}
+
+/// Controls the way the Dashboard views split.
+enum SplitMode {
+  /// Two views are split horizontally, one atop the other.
+  horizontal("Top and bottom"),
+  /// Two views are split vertically, side-by-side. 
+  vertical("Side by side");
+  
+  /// The name to show in the UI.
+  final String humanName;
+  /// A const constructor.
+  const SplitMode(this.humanName);
+}
+
+/// Settings related to the dashboard itself, not the rover.
+class DashboardSettings {
+  /// How the Dashboard should split when only two views are present.
+  final SplitMode splitMode;
+
+  /// The precision of the GPS grid.
+  /// 
+  /// Since GPS coordinates are decimal values, we divide by this value to get the index of the cell
+  /// each coordinate belongs to. Smaller sizes means more blocks, but we should be careful that the
+  /// blocks are big enough to the margin of error of our GPS. This value must be synced with the
+  /// value in the autonomy program, or else the UI will not be accurate to the rover's logic.
+  final double mapBlockSize;
+
+  /// How many frames to render per second.
+  /// 
+  /// This does not affect how many frames are sent by the rover per second.
+  final int maxFps;
+
+  /// A const constructor.
+  const DashboardSettings({
+    required this.splitMode,
+    required this.mapBlockSize,
+    required this.maxFps,
+  });
+
+  /// Parses Dashboard settings from JSON.
+  DashboardSettings.fromJson(Json? json) : 
+    splitMode = SplitMode.values[json?["splitMode"] ?? SplitMode.horizontal.index],
+    mapBlockSize = json?["mapBlockSize"] ?? 1.0,
+    maxFps = (json?["maxFps"] ?? 60) as int;
+
+  /// Serializes these settings to JSON.
+  Json toJson() => {
+    "splitMode": splitMode.index,
+    "mapBlockSize": mapBlockSize,
+    "maxFps": maxFps,
   };
 }
 
@@ -227,9 +240,6 @@ class EasterEggsSettings {
 class Settings {
   /// Settings for the network, like IP addresses and ports.
   final NetworkSettings network;
-
-  /// Settings for video display.
-  final VideoSettings video;
 
   /// Settings for easter eggs.
   /// 
@@ -242,35 +252,32 @@ class Settings {
   /// Settings for the science analysis.
   final ScienceSettings science;
 
-  /// Settings for the autonomy display.
-  final AutonomySettings autonomy;
+  /// Settings related to the dashboard itself.
+  final DashboardSettings dashboard;
 
   /// A const constructor.
   const Settings({
     required this.network,
-    required this.video,
     required this.easterEggs,
     required this.science,
     required this.arm,
-    required this.autonomy,
+    required this.dashboard,
   });
 
   /// Initialize settings from Json.
   Settings.fromJson(Json json) : 
-    autonomy = AutonomySettings.fromJson(json["autonomy"]),
     network = NetworkSettings.fromJson(json["network"]),
-    video = VideoSettings.fromJson(json["video"]),
     easterEggs = EasterEggsSettings.fromJson(json["easterEggs"]),
     science = ScienceSettings.fromJson(json["science"]),
-    arm = ArmSettings.fromJson(json["arm"]);
+    arm = ArmSettings.fromJson(json["arm"]),
+    dashboard = DashboardSettings.fromJson(json["dashboard"]);
 
   /// Converts the data from the settings instance to Json.
   Json toJson() => { 
-    "autonomy": autonomy.toJson(),
     "network": network.toJson(),
-    "video": video.toJson(),
     "easterEggs": easterEggs.toJson(),
     "science": science.toJson(),
     "arm": arm.toJson(),
+    "dashboard": dashboard.toJson(),
   };
 }

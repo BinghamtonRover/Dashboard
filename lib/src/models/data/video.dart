@@ -80,7 +80,7 @@ class VideoModel extends Model {
 
 		frameUpdater?.cancel();
 		frameUpdater = Timer.periodic(
-			Duration(milliseconds: (1000/models.settings.video.fps).round()),
+			Duration(milliseconds: (1000/models.settings.dashboard.maxFps).round()),
 			(_) => notifyListeners(),
 		);
 	}

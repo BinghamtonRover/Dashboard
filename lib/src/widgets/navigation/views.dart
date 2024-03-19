@@ -1,38 +1,110 @@
 import "package:flutter/material.dart";
+import "package:flutter_resizable_container/flutter_resizable_container.dart";
 
+import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A widget to render all the views the user selected.
-class ViewsWidget extends StatelessWidget {
+class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
 	/// A const constructor.
-	const ViewsWidget();
-
-	/// Renders the view at the given [index] in [ViewsModel.views].
-	Widget getView(BuildContext context, int index) => Expanded(child: Container(
-		decoration: BoxDecoration(border: Border.all(width: 3)),
-		child: models.views.views[index].builder(context),
-	),);
+	ViewsWidget() : super(models.views);
 
 	@override
-	Widget build(BuildContext context) => ProviderConsumer<ViewsModel>.value(
-		value: models.views,
-		builder: (model) => Column(children: [
-			Expanded(
-				child: Row(children: [
-					if (model.views.isNotEmpty) getView(context, 0),
-					if (model.views.length >= 3) getView(context, 1),
-				],
-			),),
-			if (model.views.length >= 2) Expanded(
-				child: Row(children: [
-					if (model.views.length >= 2) 
-						// Put the 2nd view on the bottom row or the upper left corner
-						if (model.views.length >= 3) getView(context, 2)
-						else getView(context, 1),
-					if (model.views.length >= 4) getView(context, 3),
-				],),
-			),
-		],),
-	);
+	Widget build(BuildContext context, ViewsModel model) => switch (model.views.length) {
+    1 => Column(children: [Expanded(
+      key: ValueKey(models.views.views[0].key),
+      child: models.views.views.first.builder(context),
+    ),],),
+    2 => ResizableContainer(
+      // key: const ValueKey(2),
+      direction: switch (models.settings.dashboard.splitMode) {
+        SplitMode.horizontal => Axis.vertical,
+        SplitMode.vertical => Axis.horizontal,
+      },
+      dividerWidth: 8, 
+      controller: switch (models.settings.dashboard.splitMode) {
+        SplitMode.horizontal => model.verticalController,
+        SplitMode.vertical => model.horizontalController1,
+      },
+      dividerColor: Colors.black,
+      children: [
+        ResizableChildData(
+          minSize: 100,
+          startingRatio: 0.5,
+          child: Container(
+            key: ValueKey(models.views.views[1].key),
+            child: models.views.views[0].builder(context),
+          ),
+        ),
+        ResizableChildData(
+          minSize: 100,
+          startingRatio: 0.5,
+          child: Container(
+            key: ValueKey(models.views.views[1].key),
+            child: models.views.views[1].builder(context),
+          ),
+        ),
+      ],
+    ),
+    3 || 4 => ResizableContainer(
+      // key: const ValueKey(3),
+      controller: model.verticalController,
+      direction: Axis.vertical,
+      dividerWidth: 8, 
+      dividerColor: Colors.black,
+      children: [
+        ResizableChildData(
+          minSize: 100,
+          startingRatio: 0.5,
+          child: ResizableContainer(
+            // key: const ValueKey(4),
+            controller: model.horizontalController1,
+            direction: Axis.horizontal,
+            dividerWidth: 8, 
+            dividerColor: Colors.black,
+            children: [
+              ResizableChildData(
+                minSize: 100,
+                startingRatio: 0.5,
+                child: models.views.views[0].builder(context),
+              ),
+              ResizableChildData(
+                minSize: 100,
+                startingRatio: 0.5,
+                child: models.views.views[1].builder(context),
+              ),
+            ],
+          ),
+        ),
+        if (model.views.length == 3) ResizableChildData(
+          minSize: 100,
+          startingRatio: 0.5,
+          child: models.views.views[2].builder(context),
+        ) else ResizableChildData(
+          minSize: 100,
+          startingRatio: 0.5,
+          child: ResizableContainer(
+            controller: model.horizontalController2,
+            direction: Axis.horizontal,
+            dividerWidth: 8, 
+            dividerColor: Colors.black,
+            children: [
+              ResizableChildData(
+                minSize: 100,
+                startingRatio: 0.5,
+                child: models.views.views[2].builder(context),
+              ),
+              ResizableChildData(
+                minSize: 100,
+                startingRatio: 0.5,
+                child: models.views.views[3].builder(context),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+    _ => throw StateError("Too many views: ${model.views.length}"),
+  };
 }

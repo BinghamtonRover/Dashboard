@@ -15,8 +15,12 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 	/// Whether the dashboard is awaiting a response from the rover.
 	bool isLoading = false;
 
+  /// A constructor to call [init] when created.
+	AutonomyCommandBuilder() { init(); }
+
 	/// Listens for incoming confirmations from the rover that it received the command.
-	AutonomyCommandBuilder() {
+  Future<void> init() async {
+    await Future<void>.delayed(const Duration(seconds: 1));
 		models.messages.registerHandler<AutonomyCommand>(
 			name: AutonomyCommand().messageName,
 			decoder: AutonomyCommand.fromBuffer,
