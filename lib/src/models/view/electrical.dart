@@ -13,10 +13,10 @@ class ElectricalModel with ChangeNotifier {
 	ElectricalMetrics get metrics => models.rover.metrics.electrical;
   
   /// Voltage Data
-  Map<DateTime, double> voltageData = {DateTime.now() : 1.0};
+  Map<DateTime, double> voltageData = {DateTime.now() : 1.0, DateTime.now().subtract(const Duration(milliseconds: 10)) : 0.5};
 
   /// Current Data
-  Map<DateTime, double> currentData = {};
+  Map<DateTime, double> currentData = {DateTime.now() : 0.5};
 
 	/// Whether to listen for new data from the rover. This is false after loading a file.
 	bool isListening = true;

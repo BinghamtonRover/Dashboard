@@ -69,18 +69,36 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
         const Spacer(),
         const ViewsSelector(currentView: Routes.electrical),
       ],),
-      const SizedBox(
-        height: 10,
+      const SizedBox(height: 10,),
+      const Text(
+        "Voltage Graph", 
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1,
+        ),
       ),
+      const SizedBox(height: 10,),
       Expanded(
         child: Padding(
           padding: const EdgeInsets.only(right: 16, left: 6),
           child: _LineChart(coordinates: model.voltageData),
         ),
       ),
-      const SizedBox(
-        height: 10,
+      const SizedBox(height: 10,),
+      const Text(
+        "Current Graph", 
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1,
+        ),
       ),
+      const SizedBox(height: 10,),
       Expanded(
         child: Padding(
           padding: const EdgeInsets.only(right: 16, left: 6),
