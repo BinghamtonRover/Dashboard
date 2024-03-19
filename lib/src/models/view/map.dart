@@ -83,10 +83,10 @@ class AutonomyModel with ChangeNotifier {
 	}
 
 	/// An empty grid of size [gridSize].
-	List<List<AutonomyCell>> get empty => [
+	List<List<(GpsCoordinates, AutonomyCell)>> get empty => [
 		for (int i = 0; i < gridSize; i++) [
 			for (int j = 0; j < gridSize; j++) 
-				AutonomyCell.empty,
+				(GpsCoordinates(), AutonomyCell.empty),
 		],
 	];
 
@@ -105,7 +105,7 @@ class AutonomyModel with ChangeNotifier {
 	AutonomyData data = AutonomyData();
 
 	/// The grid of size [gridSize] with the rover in the center, ready to draw on the UI.
-	List<List<AutonomyCell>> get grid {
+	List<List<(GpsCoordinates, AutonomyCell)>> get grid {
 		final result = empty;
 		for (final obstacle in data.obstacles) {
 			markCell(result, obstacle, AutonomyCell.obstacle);
@@ -129,7 +129,7 @@ class AutonomyModel with ChangeNotifier {
 	/// Calculates a new position for [gps] based on [offset] and adds it to the [list].
 	/// 
 	/// This function filters out any coordinates that shouldn't be shown based on [gridSize].
-	void markCell(List<List<AutonomyCell>> list, GpsCoordinates gps, AutonomyCell value) {
+	void markCell(List<List<(GpsCoordinates, AutonomyCell)>> list, GpsCoordinates gps, AutonomyCell value) {
 		// Latitude is y-axis, longitude is x-axis
 		// The rover will occupy the center of the grid, so
 		// - rover.longitude => (gridSize - 1) / 2
@@ -139,7 +139,7 @@ class AutonomyModel with ChangeNotifier {
 		final y = gpsToBlock(gps.latitude) + offset.y;
 		if (x < 0 || x >= gridSize) return;
 		if (y < 0 || y >= gridSize) return;
-		list[y][x] = value;
+		list[y][x] = (gps, value);
 	}
 
 	/// Determines the new [offset] based on the current [roverPosition].
@@ -180,6 +180,15 @@ class AutonomyModel with ChangeNotifier {
 		markers.add(markerBuilder.value);
 		markerBuilder.clear();
 		notifyListeners();
+	}
+
+  /// Removes a marker in [gps]
+	void updateMarker(GpsCoordinates gps) {
+		if(markers.remove(gps)){
+		  notifyListeners();
+    } else {
+      models.home.setMessage(severity: Severity.info, text: "Marker not found");
+    }
 	}
 
 	/// Deletes all the markers in [markers].
