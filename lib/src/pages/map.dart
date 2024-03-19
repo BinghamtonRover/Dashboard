@@ -27,9 +27,7 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
       title: const Text("Add a Marker"),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          GpsEditor(model.markerBuilder),
-        ],
+        children: [ GpsEditor(model.markerBuilder) ],
       ),
       actions: [
         TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
@@ -51,13 +49,16 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
       for (final row in model.grid.reversed) Expanded(
         child: Row(children: [
           for (final cell in row) Expanded(
-            child: Container(
-              height: double.infinity,
-              width: 24,
-              decoration: BoxDecoration(color: getColor(cell), border: Border.all()),
-              child: cell != AutonomyCell.rover ? null : Transform.rotate(
-                angle: -model.roverHeading * pi / 180, 
-                child: const Icon(Icons.arrow_upward, size: 24),
+            child: GestureDetector(
+              onTap: () => cell.$2 != AutonomyCell.marker ? () : model.updateMarker(cell.$1),
+              child: Container(
+                height: double.infinity,
+                width: 24,
+                decoration: BoxDecoration(color: getColor(cell.$2), border: Border.all()),
+                child: cell.$2 != AutonomyCell.rover ? null : Transform.rotate(
+                  angle: -model.roverHeading * pi / 180, 
+                  child: const Icon(Icons.arrow_upward, size: 24),
+                ),
               ),
             ),
           ),
