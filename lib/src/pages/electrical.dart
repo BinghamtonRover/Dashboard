@@ -1,29 +1,33 @@
 import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 
+import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
-import "package:rover_dashboard/src/models/view/electrical.dart";
 import "package:rover_dashboard/widgets.dart";
 
-
 class _LineChart extends StatelessWidget {
-  const _LineChart({required this.coordinates});
-
-  final Map<DateTime, double> coordinates;
+  final List<SensorReading> readings;
+  final String unitName;
+  final double minY;
+  final double? maxY;
+  const _LineChart({
+    required this.readings,
+    required this.unitName,
+    this.minY = 0,
+    this.maxY,
+  });
 
   @override
   Widget build(BuildContext context) => LineChart(
       LineChartData(
         lineBarsData: [
           LineChartBarData(
-            spots: [
-              for(final entry in coordinates.entries)
-                FlSpot(entry.key.difference(DateTime.now()).inMilliseconds.toDouble() , entry.value),
-            ],
             color: Colors.blue,
-            preventCurveOverShooting: true,
-            isCurved: true,
+            spots: [
+              for (final reading in readings)
+                FlSpot(reading.time, reading.value),
+            ],
           ),
         ],
         titlesData: FlTitlesData(
@@ -40,19 +44,21 @@ class _LineChart extends StatelessWidget {
           ),
         ),
         extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)], verticalLines: [VerticalLine(x: 0)]),
-        minX: 0, minY: 0,
+        minX: 0, minY: minY, maxY: maxY,
         clipData: const FlClipData.all(),
-        lineTouchData: const LineTouchData(touchTooltipData: LineTouchTooltipData(fitInsideVertically: true, fitInsideHorizontally: true)),
+        lineTouchData: LineTouchData(
+          touchTooltipData: LineTouchTooltipData(
+            fitInsideVertically: true, 
+            fitInsideHorizontally: true,
+            getTooltipItems:(touchedSpots) => [LineTooltipItem("${touchedSpots.first.y.toStringAsFixed(2)} $unitName", const TextStyle(color: Colors.white))],
+          ),
+        ),
       ),
       duration: const Duration(milliseconds: 250),
     );
 }
 
-
-
 /// The UI for the electrical subsystem.
-/// 
-/// Displays a bird's-eye view of the rover and its path to the goal.
 class ElectricalPage extends ReactiveWidget<ElectricalModel> {
   @override
   ElectricalModel createModel() => ElectricalModel();
@@ -86,7 +92,12 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
       Expanded(
         child: Padding(
           padding: const EdgeInsets.only(right: 16, left: 6),
-          child: _LineChart(coordinates: model.voltageData),
+          child: _LineChart(
+            readings: model.voltageReadings, 
+            minY: 20, 
+            maxY: 35,
+            unitName: "V",
+          ),
         ),
       ),
       const SizedBox(height: 10,),
@@ -104,7 +115,10 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
       Expanded(
         child: Padding(
           padding: const EdgeInsets.only(right: 16, left: 6),
-          child: _LineChart(coordinates: model.currentData),
+          child: _LineChart(
+            readings: model.currentReadings,
+            unitName: "A",
+          ),
         ),
       ),
   ],);

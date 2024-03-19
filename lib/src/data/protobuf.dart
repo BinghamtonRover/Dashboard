@@ -19,12 +19,12 @@ typedef WrappedMessageHandler = void Function(WrappedMessage);
 /// A callback to execute with raw Protobuf data.
 typedef RawDataHandler = void Function(List<int> data);
 
-/// Gets the name of the command message 1for the given device.
+/// Gets the name of the command message for the given device.
 String getCommandName(Device device) => switch (device) {
 	Device.ARM => "ArmCommand",
 	Device.GRIPPER => "GripperCommand",
 	Device.SCIENCE => "ScienceCommand",
-	Device.ELECTRICAL => "ElecticalCommand",
+	Device.ELECTRICAL => "ElectricalCommand",
 	Device.DRIVE => "DriveCommand",
 	Device.MARS => "MarsCommand",
 	_ => "Unknown",
@@ -58,6 +58,9 @@ extension TimestampUtils on Timestamp {
 
 	/// Adds a [Duration] to a [Timestamp].
 	Timestamp operator +(Duration duration) => Timestamp.fromDateTime(toDateTime().add(duration));
+
+  /// Subtracts the 
+	double operator -(Timestamp other) => (seconds - other.seconds).toDouble();
 }
 
 /// Decodes a wrapped Protobuf message. 
@@ -290,9 +293,9 @@ extension LogLevelUtils on BurtLogLevel {
   };
 }
 
-/// Fomats [BurtLog] messages in plain-text. For the UI, use widgets.
+/// Formats [BurtLog] messages in plain-text. For the UI, use widgets.
 extension LogFormat on BurtLog {
-  /// Fomats [BurtLog] messages in plain-text. For the UI, use widgets.
+  /// Formats [BurtLog] messages in plain-text. For the UI, use widgets.
   String format() {
     final result = StringBuffer()
       ..write(level.label)

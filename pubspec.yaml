@@ -4,7 +4,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 2024.2.21+2  # Always increment the build number, never go down, even on new versions
 
 environment:
-  sdk: "^3.0.0"
+  sdk: ^3.3.0
 
 # Prefer to use `flutter pub add packageName` rather than modify this section by hand.
 dependencies:
@@ -16,20 +16,13 @@ dependencies:
   fl_chart: ^0.66.0
   flutter_libserialport: ^0.3.0
   package_info_plus: ^5.0.1
-  flutter_resizable_container: ^0.3.0
+  flutter_resizable_container: ^0.4.1
   path_provider: ^2.0.14
   protobuf: ^3.0.0
   url_launcher: ^6.1.10
   win32_gamepad: ^1.0.3
   just_audio: ^0.9.36
   just_audio_windows: ^0.2.0
-
-dependency_overrides: 
-  # Waiting for PR to merge: https://github.com/andyhorn/flutter_resizable_container/pull/5
-  flutter_resizable_container: 
-    git: 
-      url: https://github.com/Levi-Lesches/flutter_resizable_container.git
-      ref: controller
 
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:

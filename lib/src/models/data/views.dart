@@ -109,11 +109,11 @@ class DashboardView {
 /// A data model for keeping track of the on-screen views.
 class ViewsModel extends Model {
   /// The controller for the resizable row on top.
-  final horizontalController1 = ResizableController(shouldDispose: false);
+  final horizontalController1 = ResizableController();
   /// The controller for the resizable row on bottom.
-  final horizontalController2 = ResizableController(shouldDispose: false);
+  final horizontalController2 = ResizableController();
   /// The controller for the resizable column.
-  final verticalController = ResizableController(shouldDispose: false);
+  final verticalController = ResizableController();
   
 	/// The current views on the screen.
 	List<DashboardView> views = [
@@ -128,6 +128,9 @@ class ViewsModel extends Model {
   @override
   void dispose() {
     models.settings.removeListener(notifyListeners);
+    horizontalController1.dispose();
+    horizontalController2.dispose();
+    verticalController.dispose();
     super.dispose();
   }
 

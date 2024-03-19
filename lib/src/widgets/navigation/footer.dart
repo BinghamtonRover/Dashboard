@@ -82,11 +82,9 @@ class StatusIcons extends StatelessWidget {
 
 	/// A color representing a meter's fill.
 	Color getColor(double percentage) {
-		if (percentage > 0.75) { return Colors.green; }
-		else if (percentage > 0.5) { return Colors.yellow; }
-		else if (percentage > 0.25) { return Colors.orange; }
-		else if (percentage > 0.0) { return Colors.red; }
-		else { return Colors.black; }
+		if (percentage > 0.45) { return Colors.green; }
+		else if (percentage > 0.2) { return Colors.orange; }
+		else { return Colors.red; }
 	}
 
 	/// The color of the rover's status icon.
@@ -102,6 +100,9 @@ class StatusIcons extends StatelessWidget {
 		throw ArgumentError("Unrecognized rover status: $status");
 	}
 
+  /// A shorthand to refer to the current electrical metrics.
+  ElectricalMetrics get electrical => models.rover.metrics.electrical;
+
 	@override
 	Widget build(BuildContext context) => Row(
     mainAxisSize: MainAxisSize.min,
@@ -109,12 +110,15 @@ class StatusIcons extends StatelessWidget {
 			AnimatedBuilder(  // battery level
 				animation: Listenable.merge([models.rover.metrics.electrical, models.rover.status]),
 				builder: (context, _) => Tooltip(
-					message: "Battery: ${(models.rover.metrics.electrical.battery*100).toStringAsFixed(0)}%",
+					message: "Battery: ${electrical.batteryVoltage.toStringAsPrecision(2)}V"
+            " (${(electrical.batteryPercentage*100).toStringAsFixed(0)}%)",
 					child: Icon(
 						models.rover.isConnected
-							? getBatteryIcon(models.rover.metrics.electrical.battery)
+							? getBatteryIcon(electrical.batteryPercentage)
 							: Icons.battery_unknown,
-						color: getColor(models.rover.metrics.electrical.battery),
+						color: models.rover.isConnected
+              ? getColor(electrical.batteryPercentage)
+              : Colors.black,
 					),
 				),
 			),

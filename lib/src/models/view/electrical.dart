@@ -1,22 +1,21 @@
-import "dart:io";
-import "package:file_picker/file_picker.dart";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/services.dart";
-
 
 /// The view model for the electrical analysis page.
 class ElectricalModel with ChangeNotifier {
 	/// The [Metrics] model for electrical data.
 	ElectricalMetrics get metrics => models.rover.metrics.electrical;
   
-  /// Voltage Data
-  Map<DateTime, double> voltageData = {DateTime.now() : 1.0, DateTime.now().subtract(const Duration(minutes: -10)) : 0.5};
+  /// The timestamp of the first or earliest reading. All other timestamps are based on this.
+  Timestamp? firstTimestamp;
+  
+  /// Voltage readings over time.
+  final List<SensorReading> voltageReadings = [];
 
-  /// Current Data
-  Map<DateTime, double> currentData = {DateTime.now() : 0.5};
+  /// Current readings over time.
+  final List<SensorReading> currentReadings = [];
 
 	/// Whether to listen for new data from the rover. This is false after loading a file.
 	bool isListening = true;
@@ -49,18 +48,19 @@ class ElectricalModel with ChangeNotifier {
 	void addMessage(WrappedMessage wrapper) {
 		if (wrapper.name != ElectricalData().messageName) throw ArgumentError("Incorrect log type: ${wrapper.name}");
     if (!wrapper.hasTimestamp()) { throw ArgumentError("Data is missing a timestamp"); }
+    firstTimestamp ??= wrapper.timestamp;
     final data = wrapper.decode(ElectricalData.fromBuffer);
-    final time = wrapper.timestamp.toDateTime();
-    if(data.batteryVoltage != 0) voltageData[time] = data.batteryVoltage;
-    if(data.batteryCurrent != 0) currentData[time] = data.batteryCurrent;
+    final time = wrapper.timestamp - firstTimestamp!;
+    if (data.hasBatteryVoltage()) voltageReadings.add(SensorReading(time: time, value: data.batteryVoltage));
+    if (data.hasBatteryCurrent()) currentReadings.add(SensorReading(time: time, value: data.batteryCurrent));
 	}
 
 	/// Clears all the readings from all the samples.
 	void clear() {
 		isListening = true;
-    voltageData = {};
-    currentData = {};
+    voltageReadings.clear();
+    currentReadings.clear();
+    firstTimestamp = null;
     notifyListeners();
-		models.home.setMessage(severity: Severity.info, text: "Electrical UI will update on new data");
 	}
 }
