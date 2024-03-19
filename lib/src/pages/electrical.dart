@@ -93,7 +93,7 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
         child: Padding(
           padding: const EdgeInsets.only(right: 16, left: 6),
           child: _LineChart(
-            readings: model.voltageReadings, 
+            readings: model.voltageReadings.toList(), 
             minY: 20, 
             maxY: 35,
             unitName: "V",
@@ -116,7 +116,7 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
         child: Padding(
           padding: const EdgeInsets.only(right: 16, left: 6),
           child: _LineChart(
-            readings: model.currentReadings,
+            readings: model.currentReadings.toList(),
             unitName: "A",
           ),
         ),
