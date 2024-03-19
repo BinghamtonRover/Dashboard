@@ -55,7 +55,12 @@ class AutonomyModel with ChangeNotifier {
 	GridOffset offset = const GridOffset(0, 0);
 
 	/// Listens for incoming autonomy or position data.
-	AutonomyModel() {
+	AutonomyModel() { init(); }
+
+  /// Initializes the view model.
+  Future<void> init() async {
+		recenterRover();
+    await Future<void>.delayed(const Duration(seconds: 1));
 		models.messages.registerHandler<AutonomyData>(
 			name: AutonomyData().messageName,
 			decoder: AutonomyData.fromBuffer,
@@ -198,7 +203,7 @@ class AutonomyModel with ChangeNotifier {
   /// The audio player for the Bad Apple music
   final badAppleAudioPlayer = AudioPlayer();
   /// How many frames in a second are being shown
-  static const badAppleFps = 6;
+  static const badAppleFps = 1;
   /// The last frame of Bad Apple
   static const badAppleLastFrame = 6570;
 
@@ -208,7 +213,7 @@ class AutonomyModel with ChangeNotifier {
     notifyListeners();
     zoom(50);
     badAppleFrame = 0;
-    badAppleTimer = Timer.periodic(const Duration(milliseconds: 1000 ~/ 5), _loadBadAppleFrame);
+    badAppleTimer = Timer.periodic(const Duration(milliseconds: 1000 ~/ 30), _loadBadAppleFrame);
     await badAppleAudioPlayer.setAsset("assets/bad_apple2.mp3");
     badAppleAudioPlayer.play().ignore();
   }

@@ -51,11 +51,12 @@ class SplashPageState extends State<SplashPage>{
 
 	/// Starts the SEGA animation.
 	Future<void> initAnimation() async {
-    if (models.settings.easterEggs.segaSound) {
-      await audioPlayer.setAsset("assets/binghamton2.wav");
-      await audioPlayer.setVolume(0.5);
-      audioPlayer.play().ignore();
-    }
+    // Disabled because the sound is horrible. Please find a better sound :)
+    // if (models.settings.easterEggs.segaSound) {
+    //   await audioPlayer.setAsset("assets/binghamton2.wav");
+    //   await audioPlayer.setVolume(0.5);
+    //   audioPlayer.play().ignore();
+    // }
 		setState(() => state = SegaState.partTwo);
 		await Future<void>.delayed(const Duration(milliseconds: 750));
 		setState(() => state = SegaState.partThree);

@@ -143,6 +143,10 @@ class ScienceModel with ChangeNotifier {
 	/// The error, if any, that occurred while loading the data.
 	String? errorText;
 
+  /// Adds a value to the correct analysis for the sensor and sample.
+  void addReading(ScienceSensor sensor, int sample, Timestamp timestamp, double value) => 
+    allSamples[sensor]![sample].addReading(timestamp, value);
+
 	/// Adds a [WrappedMessage] containing a [ScienceData] to the UI.
 	void addMessage(WrappedMessage wrapper) {
 		if (wrapper.name != ScienceData().messageName) throw ArgumentError("Incorrect log type: ${wrapper.name}");
@@ -150,11 +154,9 @@ class ScienceModel with ChangeNotifier {
 		final sample = data.sample;
 		if (!wrapper.hasTimestamp()) { throw ArgumentError("Data is missing a timestamp"); }
 		if (sample >= numSamples) throw RangeError("Got data for sample #${sample + 1}, but there are only $numSamples samples.\nChange the number of samples in the settings and reload.");
-		if (data.methane != 0) allSamples[methane]![sample].addReading(wrapper.timestamp, data.methane); 
-		if (data.co2 != 0) allSamples[co2]![sample].addReading(wrapper.timestamp, data.co2); 
-		if (data.humidity != 0) allSamples[humidity]![sample].addReading(wrapper.timestamp, data.humidity); 
-		if (data.temperature != 0) allSamples[temperature]![sample].addReading(wrapper.timestamp, data.temperature); 
-		if (data.pH != 0) allSamples[pH]![sample].addReading(wrapper.timestamp, data.pH); 
+		if (data.co2 != 0) addReading(co2, sample, wrapper.timestamp, data.co2); 
+		if (data.humidity != 0) addReading(humidity, sample, wrapper.timestamp, data.humidity); 
+		if (data.temperature != 0) addReading(temperature, sample, wrapper.timestamp, data.temperature); 
 	}
 
 	/// Clears all the readings from all the samples.
