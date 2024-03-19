@@ -84,7 +84,8 @@ class StatusIcons extends StatelessWidget {
 	Color getColor(double percentage) {
 		if (percentage > 0.45) { return Colors.green; }
 		else if (percentage > 0.2) { return Colors.orange; }
-		else { return Colors.red; }
+		else if (percentage > 0.0) { return Colors.red; }
+		else { return Colors.black; }
 	}
 
 	/// The color of the rover's status icon.
