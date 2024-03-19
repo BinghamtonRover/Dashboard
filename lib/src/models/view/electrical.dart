@@ -13,10 +13,10 @@ class ElectricalModel with ChangeNotifier {
 	ElectricalMetrics get metrics => models.rover.metrics.electrical;
   
   /// Voltage Data
-  Map<Timestamp, double> voltageData = {Timestamp.fromDateTime(DateTime.now()) : 1.0};
+  Map<DateTime, double> voltageData = {DateTime.now() : 1.0};
 
   /// Current Data
-  Map<Timestamp, double> currentData = {};
+  Map<DateTime, double> currentData = {};
 
 	/// Whether to listen for new data from the rover. This is false after loading a file.
 	bool isListening = true;
@@ -50,7 +50,7 @@ class ElectricalModel with ChangeNotifier {
 		if (wrapper.name != ElectricalData().messageName) throw ArgumentError("Incorrect log type: ${wrapper.name}");
     if (!wrapper.hasTimestamp()) { throw ArgumentError("Data is missing a timestamp"); }
     final data = wrapper.decode(ElectricalData.fromBuffer);
-    final time = wrapper.timestamp;
+    final time = wrapper.timestamp.toDateTime();
     if(data.batteryVoltage != 0) voltageData[time] = data.batteryVoltage;
     if(data.batteryCurrent != 0) currentData[time] = data.batteryCurrent;
 	}
