@@ -67,6 +67,8 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
         const SizedBox(width: 12),
         if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
         const Spacer(),
+        ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text("Clear all"), onPressed: model.clear),
+        const SizedBox(width: 8),
         const ViewsSelector(currentView: Routes.electrical),
       ],),
       const SizedBox(height: 10,),

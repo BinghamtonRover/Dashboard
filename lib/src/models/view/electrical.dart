@@ -13,7 +13,7 @@ class ElectricalModel with ChangeNotifier {
 	ElectricalMetrics get metrics => models.rover.metrics.electrical;
   
   /// Voltage Data
-  Map<DateTime, double> voltageData = {DateTime.now() : 1.0, DateTime.now().subtract(const Duration(milliseconds: 10)) : 0.5};
+  Map<DateTime, double> voltageData = {DateTime.now() : 1.0, DateTime.now().subtract(const Duration(minutes: -10)) : 0.5};
 
   /// Current Data
   Map<DateTime, double> currentData = {DateTime.now() : 0.5};
@@ -60,6 +60,7 @@ class ElectricalModel with ChangeNotifier {
 		isListening = true;
     voltageData = {};
     currentData = {};
+    notifyListeners();
 		models.home.setMessage(severity: Severity.info, text: "Electrical UI will update on new data");
 	}
 }
