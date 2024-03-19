@@ -11,6 +11,12 @@ import "package:rover_dashboard/services.dart";
 class ElectricalModel with ChangeNotifier {
 	/// The [Metrics] model for electrical data.
 	ElectricalMetrics get metrics => models.rover.metrics.electrical;
+  
+  /// Voltage Data
+  Map<Timestamp, double> voltageData = {Timestamp.fromDateTime(DateTime.now()) : 1.0};
+
+  /// Current Data
+  Map<Timestamp, double> currentData = {};
 
 	/// Whether to listen for new data from the rover. This is false after loading a file.
 	bool isListening = true;
@@ -42,14 +48,18 @@ class ElectricalModel with ChangeNotifier {
 	/// Adds a [WrappedMessage] containing a [ElectricalData] to the UI.
 	void addMessage(WrappedMessage wrapper) {
 		if (wrapper.name != ElectricalData().messageName) throw ArgumentError("Incorrect log type: ${wrapper.name}");
-		final data = wrapper.decode(ElectricalData.fromBuffer);
     if (!wrapper.hasTimestamp()) { throw ArgumentError("Data is missing a timestamp"); }
-
+    final data = wrapper.decode(ElectricalData.fromBuffer);
+    final time = wrapper.timestamp;
+    if(data.batteryVoltage != 0) voltageData[time] = data.batteryVoltage;
+    if(data.batteryCurrent != 0) currentData[time] = data.batteryCurrent;
 	}
 
 	/// Clears all the readings from all the samples.
 	void clear() {
 		isListening = true;
+    voltageData = {};
+    currentData = {};
 		models.home.setMessage(severity: Severity.info, text: "Electrical UI will update on new data");
 	}
 }
