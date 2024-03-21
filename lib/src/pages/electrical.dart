@@ -7,13 +7,18 @@ import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
 class _LineChart extends StatelessWidget {
-  final List<SensorReading> readings;
+  final Iterable<SensorReading> readings;
   final String unitName;
+  final double? minX;
+  final double? maxX;
   final double minY;
   final double? maxY;
+  
   const _LineChart({
     required this.readings,
     required this.unitName,
+    this.minX,
+    this.maxX,
     this.minY = 0,
     this.maxY,
   });
@@ -26,7 +31,7 @@ class _LineChart extends StatelessWidget {
             color: Colors.blue,
             spots: [
               for (final reading in readings)
-                FlSpot(reading.time, reading.value),
+                if(reading.time > 0) FlSpot(reading.time, reading.value),
             ],
           ),
         ],
@@ -44,7 +49,7 @@ class _LineChart extends StatelessWidget {
           ),
         ),
         extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)], verticalLines: [VerticalLine(x: 0)]),
-        minX: 0, minY: minY, maxY: maxY,
+        minX: minX, maxX: maxX, minY: minY, maxY: maxY,
         clipData: const FlClipData.all(),
         lineTouchData: LineTouchData(
           touchTooltipData: LineTouchTooltipData(
@@ -54,7 +59,7 @@ class _LineChart extends StatelessWidget {
           ),
         ),
       ),
-      duration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 100),
     );
 }
 
@@ -77,7 +82,6 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
         const SizedBox(width: 8),
         const ViewsSelector(currentView: Routes.electrical),
       ],),
-      const SizedBox(height: 10,),
       const Text(
         "Voltage Graph", 
         textAlign: TextAlign.center,
@@ -93,9 +97,7 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
         child: Padding(
           padding: const EdgeInsets.only(right: 16, left: 6),
           child: _LineChart(
-            readings: model.voltageReadings.toList(), 
-            minY: 20, 
-            maxY: 35,
+            readings: model.voltageReadings, 
             unitName: "V",
           ),
         ),
@@ -116,10 +118,11 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
         child: Padding(
           padding: const EdgeInsets.only(right: 16, left: 6),
           child: _LineChart(
-            readings: model.currentReadings.toList(),
+            readings: model.currentReadings,
             unitName: "A",
           ),
         ),
       ),
+      const SizedBox(height: 15,),
   ],);
 }

@@ -39,32 +39,6 @@ class ElectricalModel with ChangeNotifier {
 		notifyListeners();
 	}
 
-  /// Update Sensor Reading to keep track of past 10 minutes only 
-  void updateReadings(ElectricalData data, double time){
-    if (data.hasBatteryVoltage()){
-      if(voltageReadings.isNotEmpty){
-        if(voltageReadings.length > 999){
-          voltageReadings.removeFirst();
-        }
-        while(voltageReadings.isNotEmpty && time - voltageReadings.first.time > 600){
-          voltageReadings.removeFirst();
-        }
-      }
-      voltageReadings.add(SensorReading(time: time, value: data.batteryVoltage));
-    }
-    if (data.hasBatteryCurrent()){
-      if(currentReadings.isNotEmpty){
-        if(currentReadings.length > 999){
-          currentReadings.removeFirst();
-        }
-        while(currentReadings.isNotEmpty && time - currentReadings.first.time > 600){
-          currentReadings.removeFirst();
-        }
-      }
-      currentReadings.add(SensorReading(time: time, value: data.batteryCurrent));
-    } 
-  }
-
 	/// Whether the page is currently loading.
 	bool isLoading = false;
 
@@ -78,7 +52,8 @@ class ElectricalModel with ChangeNotifier {
     firstTimestamp ??= wrapper.timestamp;
     final data = wrapper.decode(ElectricalData.fromBuffer);
     final time = wrapper.timestamp - firstTimestamp!;
-    updateReadings(data, time);
+    if(data.hasBatteryCurrent()) currentReadings.pushWithLimit(SensorReading(time: time, value: data.batteryCurrent), 30);
+    if(data.hasBatteryVoltage()) voltageReadings.pushWithLimit(SensorReading(time: time, value: data.batteryVoltage), 30);
 	}
 
 	/// Clears all the readings from all the samples.
