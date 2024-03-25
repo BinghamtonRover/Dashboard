@@ -14,11 +14,11 @@ class ElectricalMetrics extends Metrics<ElectricalData> {
 
 	@override
 	List<String> get allMetrics => [  
-		"Battery: ${data.batteryVoltage}V, ${data.batteryCurrent}A, ${data.batteryTemperature}°F",
-		"12V supply: ${data.v12Voltage}V, ${data.v12Current}A, ${data.v12Temperature}°F",
-		"5V supply: ${data.v5Voltage}V, ${data.v5Current}A, ${data.v5Temperature}°F",
+		"Battery: ${data.batteryVoltage.toStringAsPrecision(2)}V, ${data.batteryCurrent.toStringAsPrecision(2)}A, ${data.batteryTemperature}°F",
 	];
 
-	/// Shorthand for accessing the battery.
-	double get battery => data.batteryVoltage;
+  /// The voltage of the battery.
+  double get batteryVoltage => data.batteryVoltage;
+  /// The charge of the battery, as a percentage.
+  double get batteryPercentage => (batteryVoltage - 24) / 6;  // 24-30 as a percentage
 }

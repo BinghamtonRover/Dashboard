@@ -21,18 +21,6 @@ enum ScienceResult {
 	loading,
 }
 
-/// A sensor reading with a timestamp.
-class SensorReading {
-	/// The time this reading was taken, relative to the first reading.
-	final double time;
-
-	/// The value from the sensor.
-	final double value;
-
-	/// A const constructor.
-	const SensorReading({required this.time, required this.value});
-}
-
 /// A sensor in the science subsystem.
 class ScienceSensor {
 	/// The name of this sensor.
@@ -95,10 +83,6 @@ class SampleData {
 		min = average = max = null;
 		sum = 0;
 	}
-}
-
-extension on Timestamp {
-	double operator -(Timestamp other) => (seconds - other.seconds).toDouble();
 }
 
 /// The test to determine the presence of life based on temperature data.
