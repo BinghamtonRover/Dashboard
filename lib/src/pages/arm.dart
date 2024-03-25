@@ -1,3 +1,5 @@
+import "dart:ui";
+
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
@@ -37,17 +39,51 @@ class ArmPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Color.fromARGB(255, 59, 42, 88)
-      ..strokeWidth = 30;
+      ..strokeWidth = 20;
 
     // Side view x, y joint locations
-    const shoulderJoint = Offset.zero;
-    final elbowJoint = Offset(shoulderJoint.dx+shoulderToElbowLength, 5);
-    final wristJoint = Offset(elbowJoint.dx+elbowToWristLength, 5);
-    final gripLocation = Offset(wristJoint.dx+wristToGripLength, 5);
+    final shoulderJoint = Offset(0,size.height);
+    final elbowJoint = Offset(shoulderJoint.dx+shoulderToElbowLength, size.height/1.5);
+    final wristJoint = Offset(elbowJoint.dx+elbowToWristLength, size.height/1.7);
+    final gripLocation = Offset(wristJoint.dx+wristToGripLength, size.height/1.7+ 40);
 
-    canvas.drawLine(shoulderJoint, elbowJoint, paint);
-    canvas.drawLine(elbowJoint, wristJoint, paint);
-    canvas.drawLine(wristJoint, gripLocation, paint);
+    final points = [
+      shoulderJoint,
+      elbowJoint,
+      wristJoint,
+      gripLocation,
+    ];
+
+    final lineColors = [
+      Colors.red,
+      Colors.green,
+      Colors.blue,
+    ];
+    
+    final firstCirclePaint = Paint()
+      ..color = Colors.red 
+      ..style = PaintingStyle.fill;
+
+    canvas.drawCircle(points[0], 25, firstCirclePaint);
+
+    for (var i = 0; i < points.length - 1; i++) {
+      final paint = Paint()
+        ..color = lineColors[i] 
+        ..strokeWidth = 15;
+      canvas.drawLine(points[i], points[i + 1], paint);
+    }
+
+    for (var i = 0; i < points.length - 1; i++) {
+      final circlePaint = Paint()
+        ..color = lineColors[i] 
+        ..style = PaintingStyle.fill;
+      canvas.drawCircle(points[i+1], 15, circlePaint); 
+    }
+  
+    // canvas.drawPoints(PointMode.polygon, points, paint);
+    // canvas.drawLine(shoulderJoint, elbowJoint, paint);
+    // canvas.drawLine(elbowJoint, wristJoint, paint);
+    // canvas.drawLine(wristJoint, gripLocation, paint);
   }
 
   @override
@@ -85,14 +121,14 @@ class ArmPage extends ReactiveWidget<ArmModel> {
       const SizedBox(height: 10,),
       Expanded(
         child: Padding(
-          padding: EdgeInsets.only(right: 16, left: 16),
+          padding: const EdgeInsets.only(right: 16, left: 16, bottom: 16),
           child: Container(
             color: Color.fromARGB(204, 112, 108, 108),
             child: const CustomPaint(
             painter: ArmPainter(
-              shoulderToElbowLength: 100,
-              elbowToWristLength: 80,
-              wristToGripLength: 40,
+              shoulderToElbowLength: 350,
+              elbowToWristLength: 300,
+              wristToGripLength: 140,
               ),
             ), 
           ),
