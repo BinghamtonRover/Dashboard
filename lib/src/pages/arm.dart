@@ -9,9 +9,9 @@ import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/src/models/view/arm.dart";
 import "package:rover_dashboard/widgets.dart";
 
-/// CustomPainter to represent arm IK
-class ArmPainter extends CustomPainter {
-  // pass data from the arm model to the painter
+// I probably should make a class that can be extended to fit both views but I am too tired
+class ArmPainterTop extends CustomPainter{
+  
   // band lengths (defined by the rover's physical design)
   final double shoulderToElbowLength;
   final double elbowToWristLength;
@@ -23,8 +23,7 @@ class ArmPainter extends CustomPainter {
   final double? wristRollAngle;
   final double? wristPitchAngle;
 
-
-  const ArmPainter({
+  ArmPainterTop({
     required this.shoulderToElbowLength,
     required this.elbowToWristLength,
     required this.wristToGripLength,
@@ -32,6 +31,35 @@ class ArmPainter extends CustomPainter {
     this.shoulderYawAngle,
     this.elbowPitchAngle,
     this.wristRollAngle,
+    this.wristPitchAngle,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {}
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+/// CustomPainter to represent arm IK
+class ArmPainterSide extends CustomPainter {
+  // pass data from the arm model to the painter
+  // band lengths (defined by the rover's physical design)
+  final double shoulderToElbowLength;
+  final double elbowToWristLength;
+  final double wristToGripLength;
+  // joint angles (variable)
+  final double? shoulderPitchAngle;
+  final double? elbowPitchAngle;
+  final double? wristPitchAngle;
+
+
+  const ArmPainterSide({
+    required this.shoulderToElbowLength,
+    required this.elbowToWristLength,
+    required this.wristToGripLength,
+    this.shoulderPitchAngle,
+    this.elbowPitchAngle,
     this.wristPitchAngle,
     });
 
@@ -42,6 +70,7 @@ class ArmPainter extends CustomPainter {
       ..strokeWidth = 20;
 
     // Side view x, y joint locations
+    // placeholders
     final shoulderJoint = Offset(0,size.height);
     final elbowJoint = Offset(shoulderJoint.dx+shoulderToElbowLength, size.height/1.5);
     final wristJoint = Offset(elbowJoint.dx+elbowToWristLength, size.height/1.7);
@@ -90,6 +119,7 @@ class ArmPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
+  
 /// The view model for the arm inverse kinematics analysis page.
 /// Based off of the eletrical page
 class ArmPage extends ReactiveWidget<ArmModel> {
@@ -125,10 +155,36 @@ class ArmPage extends ReactiveWidget<ArmModel> {
           child: Container(
             color: Color.fromARGB(204, 112, 108, 108),
             child: const CustomPaint(
-            painter: ArmPainter(
+            painter: ArmPainterSide(
               shoulderToElbowLength: 350,
               elbowToWristLength: 300,
               wristToGripLength: 140,
+              ),
+            ), 
+          ),
+        ),
+      ),
+      const Text(
+        "Top View", 
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1,
+        ),
+      ),
+      const SizedBox(height: 10,),
+      Expanded(
+        child: Padding(
+          padding: const EdgeInsets.only(right: 16, left: 16, bottom: 16),
+          child: Container(
+            color: Color.fromARGB(204, 112, 108, 108),
+            child: const CustomPaint(
+            painter: ArmPainterSide(
+              shoulderToElbowLength: 200,
+              elbowToWristLength: 200,
+              wristToGripLength: 200,
               ),
             ), 
           ),
