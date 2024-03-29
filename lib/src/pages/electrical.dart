@@ -11,7 +11,6 @@ class _LineChart extends StatelessWidget {
   final String bottomUnitName;
   final String sideUnitName;
   final String title;
-  final bool axis;
   final double? minX;
   final double? maxX;
   final double minY;
@@ -22,7 +21,6 @@ class _LineChart extends StatelessWidget {
     required this.bottomUnitName,
     required this.sideUnitName,
     required this.title,
-    required this.axis,
     this.minX,
     this.maxX,
     this.minY = 0,
@@ -57,9 +55,7 @@ class _LineChart extends StatelessWidget {
           ), 
           leftTitles: AxisTitles(
             axisNameWidget: Text(sideUnitName),
-            sideTitles: SideTitles(reservedSize: 25, 
-              showTitles: axis,
-            ),
+            sideTitles: const SideTitles(reservedSize: 25),
           ),
           bottomTitles: AxisTitles(
             axisNameWidget: Text(bottomUnitName),
@@ -102,14 +98,12 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
         bottomUnitName: "Time",
         sideUnitName: "V",
         title: "Voltage Graph",
-        axis: model.axis,
       ),
       _LineChart(
         readings: model.currentReadings,
         bottomUnitName: "Time",
         sideUnitName: "A",
         title: "Curent Graph",
-        axis: model.axis,
       ),
     ];
 
