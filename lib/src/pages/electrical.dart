@@ -8,7 +8,10 @@ import "package:rover_dashboard/widgets.dart";
 
 class _LineChart extends StatelessWidget {
   final Iterable<SensorReading> readings;
-  final String unitName;
+  final String bottomUnitName;
+  final String sideUnitName;
+  final String title;
+  final bool axis;
   final double? minX;
   final double? maxX;
   final double minY;
@@ -16,7 +19,10 @@ class _LineChart extends StatelessWidget {
   
   const _LineChart({
     required this.readings,
-    required this.unitName,
+    required this.bottomUnitName,
+    required this.sideUnitName,
+    required this.title,
+    required this.axis,
     this.minX,
     this.maxX,
     this.minY = 0,
@@ -36,10 +42,29 @@ class _LineChart extends StatelessWidget {
           ),
         ],
         titlesData: FlTitlesData(
-          topTitles: const AxisTitles(), 
+          topTitles: AxisTitles(
+            axisNameSize: 30,
+            axisNameWidget: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.blue,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1,
+              ),
+            ),
+          ), 
+          leftTitles: AxisTitles(
+            axisNameWidget: Text(sideUnitName),
+            sideTitles: SideTitles(reservedSize: 25, 
+              showTitles: axis,
+            ),
+          ),
           bottomTitles: AxisTitles(
+            axisNameWidget: Text(bottomUnitName),
             sideTitles: SideTitles(
-              showTitles: true, 
+              showTitles: true,
               getTitlesWidget: (double value, TitleMeta meta) => SideTitleWidget(
                 axisSide: AxisSide.bottom,
                 space: 3,
@@ -55,11 +80,12 @@ class _LineChart extends StatelessWidget {
           touchTooltipData: LineTouchTooltipData(
             fitInsideVertically: true, 
             fitInsideHorizontally: true,
-            getTooltipItems:(touchedSpots) => [LineTooltipItem("${touchedSpots.first.y.toStringAsFixed(2)} $unitName", const TextStyle(color: Colors.white))],
+            getTooltipItems:(touchedSpots) => [LineTooltipItem("${touchedSpots.first.y.toStringAsFixed(2)} $sideUnitName", const TextStyle(color: Colors.white))],
           ),
         ),
+        
       ),
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 10),
     );
 }
 
@@ -69,60 +95,54 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
   ElectricalModel createModel() => ElectricalModel();
 
 	@override
-	Widget build(BuildContext context, ElectricalModel model) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      Row(children: [  // The header at the top
-        const SizedBox(width: 8),
-        Text("Electrical Analytics", style: context.textTheme.headlineMedium), 
-        const SizedBox(width: 12),
-        if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
-        const Spacer(),
-        ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text("Clear all"), onPressed: model.clear),
-        const SizedBox(width: 8),
-        const ViewsSelector(currentView: Routes.electrical),
-      ],),
-      const Text(
-        "Voltage Graph", 
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Colors.blue,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1,
-        ),
+	Widget build(BuildContext context, ElectricalModel model) {
+    final graphs = <Widget>[
+      _LineChart(
+        readings: model.voltageReadings, 
+        bottomUnitName: "Time",
+        sideUnitName: "V",
+        title: "Voltage Graph",
+        axis: model.axis,
       ),
-      const SizedBox(height: 10,),
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.only(right: 16, left: 6),
-          child: _LineChart(
-            readings: model.voltageReadings, 
-            unitName: "V",
-          ),
-        ),
+      _LineChart(
+        readings: model.currentReadings,
+        bottomUnitName: "Time",
+        sideUnitName: "A",
+        title: "Curent Graph",
+        axis: model.axis,
       ),
-      const SizedBox(height: 10,),
-      const Text(
-        "Current Graph", 
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Colors.blue,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1,
-        ),
-      ),
-      const SizedBox(height: 10,),
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.only(right: 16, left: 6),
-          child: _LineChart(
-            readings: model.currentReadings,
-            unitName: "A",
-          ),
-        ),
-      ),
-      const SizedBox(height: 15,),
-  ],);
+    ];
+
+    
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(children: [  // The header at the top
+            const SizedBox(width: 8),
+            Text("Electrical Analytics", style: context.textTheme.headlineMedium), 
+            const SizedBox(width: 12),
+            if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
+            const Spacer(),
+            Switch(
+              value: model.axis,
+              onChanged: (bool value) => model.changeDirection(),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text("Clear all"), onPressed: model.clear),
+            const SizedBox(width: 8),
+            const ViewsSelector(currentView: Routes.electrical),
+          ],),
+          if(model.axis)
+            Expanded(child:
+              Row(children: [
+                for(final graph in graphs)
+                  Expanded(child: graph,),
+              ],),
+            )
+          else
+            for(final graph in graphs)
+              Expanded(child: graph,),
+        ],
+      );
+  }
 }

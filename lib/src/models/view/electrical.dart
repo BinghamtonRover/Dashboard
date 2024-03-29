@@ -21,6 +21,9 @@ class ElectricalModel with ChangeNotifier {
 	/// Whether to listen for new data from the rover. This is false after loading a file.
 	bool isListening = true;
 
+  /// Orientation for the graphs on page. true is column, false is stacked
+  bool axis = true;
+
 	/// Listens to all the [ScienceTestBuilder]s in the UI.
 	ElectricalModel() {
 		metrics.addListener(updateData);
@@ -64,4 +67,9 @@ class ElectricalModel with ChangeNotifier {
     firstTimestamp = null;
     notifyListeners();
 	}
+
+  void changeDirection(){
+    axis = !axis;
+    notifyListeners();
+  }
 }
