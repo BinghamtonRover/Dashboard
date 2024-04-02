@@ -7,7 +7,8 @@ import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
 class _LineChart extends StatelessWidget {
-  final Iterable<SensorReading> readings;
+  final List<Iterable<SensorReading>> readings;
+  final List<Color> colors;
   final String bottomUnitName;
   final String sideUnitName;
   final String title;
@@ -18,6 +19,7 @@ class _LineChart extends StatelessWidget {
   
   const _LineChart({
     required this.readings,
+    required this.colors,
     required this.bottomUnitName,
     required this.sideUnitName,
     required this.title,
@@ -31,13 +33,14 @@ class _LineChart extends StatelessWidget {
   Widget build(BuildContext context) => LineChart(
       LineChartData(
         lineBarsData: [
-          LineChartBarData(
-            color: Colors.blue,
-            spots: [
-              for (final reading in readings)
-                if(reading.time > 0) FlSpot(reading.time, reading.value),
-            ],
-          ),
+          for(int i = 0; i < readings.length; i++)
+            LineChartBarData(
+              color: colors[i],
+              spots: [
+                for (final reading in readings[i])
+                  if(reading.time > 0) FlSpot(reading.time, reading.value),
+              ],
+            ),
         ],
         titlesData: FlTitlesData(
           topTitles: AxisTitles(
@@ -54,8 +57,11 @@ class _LineChart extends StatelessWidget {
             ),
           ), 
           leftTitles: AxisTitles(
-            axisNameWidget: Text(sideUnitName),
-            sideTitles: const SideTitles(reservedSize: 25),
+            axisNameWidget: Text(
+              sideUnitName,
+              style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+            ),
+            sideTitles: const SideTitles(showTitles: true, reservedSize: 25),
           ),
           bottomTitles: AxisTitles(
             axisNameWidget: Text(bottomUnitName),
@@ -76,10 +82,12 @@ class _LineChart extends StatelessWidget {
           touchTooltipData: LineTouchTooltipData(
             fitInsideVertically: true, 
             fitInsideHorizontally: true,
-            getTooltipItems:(touchedSpots) => [LineTooltipItem("${touchedSpots.first.y.toStringAsFixed(2)} $sideUnitName", const TextStyle(color: Colors.white))],
+            getTooltipItems:(touchedSpots) => [
+              for(final spot in touchedSpots)
+                LineTooltipItem("${spot.y.toStringAsFixed(2)} $sideUnitName", const TextStyle(color: Colors.white))
+            ],
           ),
         ),
-        
       ),
       duration: const Duration(milliseconds: 10),
     );
@@ -94,17 +102,26 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
 	Widget build(BuildContext context, ElectricalModel model) {
     final graphs = <Widget>[
       _LineChart(
-        readings: model.voltageReadings, 
+        readings: [model.voltageReadings], 
+        colors: const [Colors.blue],
         bottomUnitName: "Time",
         sideUnitName: "V",
         title: "Voltage Graph",
       ),
       _LineChart(
-        readings: model.currentReadings,
+        readings: [model.currentReadings],
+        colors: const [Colors.blue],
         bottomUnitName: "Time",
         sideUnitName: "A",
-        title: "Curent Graph",
+        title: "Current Graph",
       ),
+      _LineChart(
+        readings: [model.rightSpeeds, model.leftSpeeds], 
+        colors: const [Colors.red, Colors.black],
+        bottomUnitName: "Time", 
+        sideUnitName: "RPM", 
+        title: "Speeds",
+      )
     ];
 
     
@@ -136,6 +153,7 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
           else
             for(final graph in graphs)
               Expanded(child: graph,),
+          const SizedBox(height: 8),
         ],
       );
   }

@@ -8,6 +8,9 @@ import "package:rover_dashboard/models.dart";
 class ElectricalModel with ChangeNotifier {
 	/// The [Metrics] model for electrical data.
 	ElectricalMetrics get metrics => models.rover.metrics.electrical;
+
+  /// The [Metrics] model for drive data used for graphs.
+  DriveMetrics get driveMetrics => models.rover.metrics.drive; 
   
   /// The timestamp of the first or earliest reading. All other timestamps are based on this.
   Timestamp? firstTimestamp;
@@ -18,6 +21,12 @@ class ElectricalModel with ChangeNotifier {
   /// Current readings over time.
   final DoubleLinkedQueue<SensorReading> currentReadings = DoubleLinkedQueue<SensorReading>();
 
+  /// Left speed readings over time.
+  final DoubleLinkedQueue<SensorReading> leftSpeeds = DoubleLinkedQueue<SensorReading>();
+
+  /// Right speed readings over time.
+  final DoubleLinkedQueue<SensorReading> rightSpeeds = DoubleLinkedQueue<SensorReading>();
+
 	/// Whether to listen for new data from the rover. This is false after loading a file.
 	bool isListening = true;
 
@@ -27,11 +36,13 @@ class ElectricalModel with ChangeNotifier {
 	/// Listens to all the [ScienceTestBuilder]s in the UI.
 	ElectricalModel() {
 		metrics.addListener(updateData);
+    driveMetrics.addListener(updateData);
 	}
 
 	@override
 	void dispose() {
 		metrics.removeListener(updateData);
+    driveMetrics.removeListener(updateData);
 		super.dispose();
 	}
 
@@ -39,6 +50,7 @@ class ElectricalModel with ChangeNotifier {
 	void updateData() {
 		if (!isListening) return;
 		addMessage(metrics.data.wrap());
+    addMessage(driveMetrics.data.wrap());
 		notifyListeners();
 	}
 
@@ -50,24 +62,43 @@ class ElectricalModel with ChangeNotifier {
 
 	/// Adds a [WrappedMessage] containing a [ElectricalData] to the UI.
 	void addMessage(WrappedMessage wrapper) {
-		if (wrapper.name != ElectricalData().messageName) throw ArgumentError("Incorrect log type: ${wrapper.name}");
     if (!wrapper.hasTimestamp()) { throw ArgumentError("Data is missing a timestamp"); }
     firstTimestamp ??= wrapper.timestamp;
-    final data = wrapper.decode(ElectricalData.fromBuffer);
-    final time = wrapper.timestamp - firstTimestamp!;
-    if(data.hasBatteryCurrent()) currentReadings.pushWithLimit(SensorReading(time: time, value: data.batteryCurrent), 30);
-    if(data.hasBatteryVoltage()) voltageReadings.pushWithLimit(SensorReading(time: time, value: data.batteryVoltage), 30);
-	}
+    switch (wrapper.name){
+      case "ElectricalData":
+        final data = wrapper.decode(ElectricalData.fromBuffer);
+        final time = wrapper.timestamp - firstTimestamp!;
+        if(data.hasBatteryCurrent()) currentReadings.pushWithLimit(SensorReading(time: time, value: data.batteryCurrent), 30);
+        if(data.hasBatteryVoltage()) voltageReadings.pushWithLimit(SensorReading(time: time, value: data.batteryVoltage), 30);
+      case "DriveData":
+        print("got drive data");
+        final data = wrapper.decode(DriveData.fromBuffer);
+        final time = wrapper.timestamp - firstTimestamp!;
+        /*print("has right ${data.hasRight()}");
+        print("has left ${data.hasLeft()}");
+        print("has throttle ${data.hasThrottle()}");
+        //if(!data.hasThrottle()) break;
+        */
+        print(data.left);
+        if(data.hasLeft()) leftSpeeds.pushWithLimit(SensorReading(time: time, value: data.throttle * data.left), 30); 
+        if(data.hasRight()) rightSpeeds.pushWithLimit(SensorReading(time: time, value: data.throttle * data.right), 30); 
+      default:
+        throw ArgumentError("Incorrect log type: ${wrapper.name}");
+    }
+  }  
 
 	/// Clears all the readings from all the samples.
 	void clear() {
 		isListening = true;
     voltageReadings.clear();
     currentReadings.clear();
+    leftSpeeds.clear();
+    rightSpeeds.clear();
     firstTimestamp = null;
     notifyListeners();
 	}
 
+  /// Changes the axis that the UI displays the graphsy
   void changeDirection(){
     axis = !axis;
     notifyListeners();
