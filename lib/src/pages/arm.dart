@@ -14,11 +14,11 @@ import "package:rover_dashboard/widgets.dart";
 /// CustomPainter to represent arm IK top view
 class ArmPainterTop extends CustomPainter {
   /// Length of the arm band from the shoulder to elbow joints
-  final double shoulderToElbowLength = 530;
+  final double shoulderToElbowLength = 530/8;
   /// Length of the arm band  from the elbow to wrist joints
-  final double elbowToWristLength = 440;
+  final double elbowToWristLength = 440/8;
   /// Length of the wrist to the tip of the gripper
-  final double wristToGripLength = 310;
+  final double wristToGripLength = 310/8;
 
   /// Angle of the base/swivel joint
   final double swivelAngle;
@@ -43,13 +43,20 @@ class ArmPainterSide extends CustomPainter {
   // pass data from the arm model to the painter
   // Band lengths (defined by the rover's physical design) 
   /// Band lengths are in mm (actual) represented in pixels 
+  // shoulder to elbow: 530mm
+  // elbow to wrist: 440mm
+  // wrist to grip: 310mm 
 
+  /// The multiplied value is arbitrary - the ratios are the important things
   /// Length of the arm band from the shoulder to elbow joints
-  final double shoulderToElbowLength = 1;
+  /// L1 (constant) : physical measurement 530mm
+  final double shoulderToElbow = 1*200;
   /// Length of the arm band  from the elbow to wrist joints
-  final double elbowToWristLength = 440/4;
+  /// L2 = .8302 * L1 : physical measurement 440mm
+  final double elbowToWrist = .8302*200;
   /// Length of the wrist to the tip of the gripper
-  final double wristToGripLength = 310/4;
+  /// L3 = .7045 * L2 : physical measurement 310mm
+  final double wristToGrip = .7045*200;
 
 
   // All angles are 2D - only 3 joints
@@ -76,26 +83,42 @@ class ArmPainterSide extends CustomPainter {
       ..color = Color.fromARGB(255, 59, 42, 88)
       ..strokeWidth = 15;
 
+    // need to figure this stuff out: 
+    // I think relative should be [0 , 1] in the desmos graph, but I'm not sure
+    // (If the arm is )
     final r = min(size.width, size.height);
     double toAbsolute(double relative) =>  // relative is [-1, 1]
       (relative + 1) / 2 * r;
     
-    // Side view x, y joint locations
-    // placeholders 
+    // Side view x, y joint positions
+    // shoulder is anchor joint at (0,0) 
+    const shoulderX = 0.0;
+    const shoulderY = 0.0;
+    // limit the elbow angle to 0 to pi
     final a2 = shoulderAngle - pi + elbowAngle;
-    final shoulderLength = 1;
-    final shoulderX = 0.0;
-    final shoulderY = 0.0;
-    final double elbowX = elbowToWristLength * cos(shoulderAngle);
-    final double elbowY = elbowToWristLength * sin(shoulderAngle);
-    final wristX = 0.5;
-    final wristY = 0.5;
-    final gripperX = 0.75;
-    final gripperY = 0.75;
-    final shoulderJoint = Offset(toAbsolute(shoulderX), toAbsolute(shoulderY));
-    final elbowJoint = Offset(toAbsolute(elbowX), toAbsolute(elbowY));
-    final wristJoint = Offset(toAbsolute(wristX), toAbsolute(wristY));
-    final gripLocation = Offset(toAbsolute(gripperX), toAbsolute(gripperY));
+    /// calculate the x and y positions of the elbow, wrist, and gripper joints 
+    /// most of this is straight from the desmos graph
+    /// a2 messes stuff up, my guess is that its related to canvas since mathematically it should work
+    final elbowX = shoulderToElbow * cos(shoulderAngle);
+    final elbowY = shoulderToElbow * sin(shoulderAngle);
+    final wristX = elbowToWrist * cos(elbowAngle) + elbowX;
+    final wristY = elbowToWrist * sin(elbowAngle) + elbowY;
+    final gripperX = wristToGrip * cos(liftAngle) + wristX;
+    final gripperY = wristToGrip * sin(liftAngle) + wristY;
+
+    const shoulderJoint = Offset(shoulderX, shoulderY);
+    final elbowJoint = Offset(elbowX, elbowY );
+    final wristJoint = Offset(wristX, wristY);
+    final gripLocation = Offset(gripperX, gripperY);
+    // final shoulderJoint = Offset(toAbsolute(shoulderX), toAbsolute(shoulderY));
+    // final elbowJoint = Offset(toAbsolute(elbowX), toAbsolute(elbowY));
+    // final wristJoint = Offset(toAbsolute(wristX), toAbsolute(wristY));
+    // final gripLocation = Offset(toAbsolute(gripperX), toAbsolute(gripperY));
+
+    /// UPDATE: 
+    /// I need help converting x and y joint positions to the canvas
+
+
     print("shoulderAngle $shoulderAngle, elbowX $elbowX, elbowY: $elbowY");
 
     final points = [
@@ -115,13 +138,13 @@ class ArmPainterSide extends CustomPainter {
       ..color = Colors.red 
       ..style = PaintingStyle.fill;
 
-    canvas.drawCircle(points[0], 20, firstCirclePaint);
+    canvas.drawCircle(points[0], 12, firstCirclePaint);
 
     // /// Draw lines based off joint position
     for (var i = 0; i < points.length - 1; i++) {
       final paint = Paint()
         ..color = lineColors[i] 
-        ..strokeWidth = 15;
+        ..strokeWidth = 10;
       canvas.drawLine(points[i], points[i + 1], paint);
     }
 
@@ -130,7 +153,7 @@ class ArmPainterSide extends CustomPainter {
       final circlePaint = Paint()
         ..color = lineColors[i] 
         ..style = PaintingStyle.fill;
-      canvas.drawCircle(points[i+1], 15, circlePaint); 
+      canvas.drawCircle(points[i+1], 10, circlePaint); 
     }
   }
   @override
