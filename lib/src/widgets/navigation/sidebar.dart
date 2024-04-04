@@ -45,7 +45,16 @@ class MetricsList extends ReusableReactiveWidget<Metrics> {
       style: Theme.of(context).textTheme.headlineSmall,
     ),
     children: [
-      for (final String metric in model.allMetrics) Text(metric),
+      for (final MetricLine metric in model.allMetrics) Text(
+      	metric.text, 
+      	style: TextStyle(
+      		color: switch (metric.severity) {
+      			Severity.info => null,
+      			Severity.warning => Colors.orange,
+      			Severity.critical => Colors.red,
+      		},
+    		),
+    	),
       const SizedBox(height: 4),
     ],
   );
