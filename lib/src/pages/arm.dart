@@ -54,8 +54,8 @@ class ArmPainterTop extends CustomPainter {
     final elbowX = shoulderToElbow * cos(swivelAngle+pi/2);
     final elbowY = shoulderToElbow * sin(swivelAngle+pi/2);
 
-    final shoulderJoint = Offset(toAbsolute(shoulderX) + size.width/2, -toAbsolute(shoulderY)+size.height);
-    final elbowJoint = Offset(toAbsolute(elbowX) + size.width/2, -toAbsolute(elbowY)+size.height);
+    final shoulderJoint = Offset(toAbsolute(shoulderX) + size.width/2, -toAbsolute(shoulderY)+size.height/2);
+    final elbowJoint = Offset(toAbsolute(elbowX) + size.width/2, -toAbsolute(elbowY)+size.height/2);
 
     final points = [
       shoulderJoint,
