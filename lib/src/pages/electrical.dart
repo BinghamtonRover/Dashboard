@@ -61,7 +61,7 @@ class _LineChart extends StatelessWidget {
               sideUnitName,
               style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
             ),
-            sideTitles: const SideTitles(showTitles: true, reservedSize: 25),
+            sideTitles: const SideTitles(showTitles: true, reservedSize: 35),
           ),
           bottomTitles: AxisTitles(
             axisNameWidget: Text(bottomUnitName),

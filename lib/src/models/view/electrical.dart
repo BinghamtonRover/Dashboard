@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "dart:collection"; 
+import "dart:async";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -11,6 +12,9 @@ class ElectricalModel with ChangeNotifier {
 
   /// The [Metrics] model for drive data used for graphs.
   DriveMetrics get driveMetrics => models.rover.metrics.drive; 
+
+  /// [WrappedMessage] of incoming drive data
+  WrappedMessage driveData = WrappedMessage();
   
   /// The timestamp of the first or earliest reading. All other timestamps are based on this.
   Timestamp? firstTimestamp;
@@ -37,6 +41,7 @@ class ElectricalModel with ChangeNotifier {
 	ElectricalModel() {
 		metrics.addListener(updateData);
     driveMetrics.addListener(updateData);
+    Timer.periodic(const Duration(seconds: 1), updateDrive);
 	}
 
 	@override
@@ -54,13 +59,25 @@ class ElectricalModel with ChangeNotifier {
 		notifyListeners();
 	}
 
+  /// Function called periodically to updata [driveData]
+  void updateDrive(Timer time) {
+    if(driveData.hasTimestamp()){
+      final data = driveData.decode(DriveData.fromBuffer);
+      final time = driveData.timestamp - firstTimestamp!;
+      if(data.hasLeft()) leftSpeeds.pushWithLimit(SensorReading(time: time, value: data.throttle * data.left), 30); 
+      if(data.hasRight()) rightSpeeds.pushWithLimit(SensorReading(time: time, value: data.throttle * data.right), 30); 
+      notifyListeners();
+      driveData = WrappedMessage();
+    }
+  }
+
 	/// Whether the page is currently loading.
 	bool isLoading = false;
 
 	/// The error, if any, that occurred while loading the data.
 	String? errorText;
 
-	/// Adds a [WrappedMessage] containing a [ElectricalData] to the UI.
+	/// Adds a [WrappedMessage] containing a [ElectricalData] and or [DriveData] to the UI.
 	void addMessage(WrappedMessage wrapper) {
     if (!wrapper.hasTimestamp()) { throw ArgumentError("Data is missing a timestamp"); }
     firstTimestamp ??= wrapper.timestamp;
@@ -71,17 +88,7 @@ class ElectricalModel with ChangeNotifier {
         if(data.hasBatteryCurrent()) currentReadings.pushWithLimit(SensorReading(time: time, value: data.batteryCurrent), 30);
         if(data.hasBatteryVoltage()) voltageReadings.pushWithLimit(SensorReading(time: time, value: data.batteryVoltage), 30);
       case "DriveData":
-        print("got drive data");
-        final data = wrapper.decode(DriveData.fromBuffer);
-        final time = wrapper.timestamp - firstTimestamp!;
-        /*print("has right ${data.hasRight()}");
-        print("has left ${data.hasLeft()}");
-        print("has throttle ${data.hasThrottle()}");
-        //if(!data.hasThrottle()) break;
-        */
-        print(data.left);
-        if(data.hasLeft()) leftSpeeds.pushWithLimit(SensorReading(time: time, value: data.throttle * data.left), 30); 
-        if(data.hasRight()) rightSpeeds.pushWithLimit(SensorReading(time: time, value: data.throttle * data.right), 30); 
+        driveData.mergeFromMessage(wrapper);
       default:
         throw ArgumentError("Incorrect log type: ${wrapper.name}");
     }
