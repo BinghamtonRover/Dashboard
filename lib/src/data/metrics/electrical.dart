@@ -13,10 +13,10 @@ class ElectricalMetrics extends Metrics<ElectricalData> {
 	String get name => "Electrical";
 
 	@override
-	List<String> get allMetrics => [  
-		"Battery: ${data.batteryVoltage}V, ${data.batteryCurrent}A, ${data.batteryTemperature}°F",
-		"12V supply: ${data.v12Voltage}V, ${data.v12Current}A, ${data.v12Temperature}°F",
-		"5V supply: ${data.v5Voltage}V, ${data.v5Current}A, ${data.v5Temperature}°F",
+	List<MetricLine> get allMetrics => [  
+		MetricLine("Battery: ${data.batteryVoltage}V, ${data.batteryCurrent}A, ${data.batteryTemperature}°F", severity: Severity.error,),
+		MetricLine("12V supply: ${data.v12Voltage}V, ${data.v12Current}A, ${data.v12Temperature}°F", severity: Severity.error,),
+		MetricLine("5V supply: ${data.v5Voltage}V, ${data.v5Current}A, ${data.v5Temperature}°F", severity: Severity.error,),
 	];
 
 	/// Shorthand for accessing the battery.

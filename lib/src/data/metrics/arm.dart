@@ -31,7 +31,9 @@ class ArmMetrics extends Metrics<ArmData> {
 		MetricLine("  Target: ${data.targetPosition.prettyPrint}", 
     severity: data.targetPosition.x < 0 ? Severity.warning : Severity.info,),
 		...getMotorData(data.base, "Swivel"),
+    MetricLine("------------------------------",),
 		...getMotorData(data.shoulder, "Shoulder"),
+    MetricLine("------------------------------",),
 		...getMotorData(data.elbow, "Elbow"),
 	];
 }

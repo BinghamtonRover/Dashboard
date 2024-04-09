@@ -14,14 +14,14 @@ class MarsMetrics extends Metrics<MarsData> {
 	String get name => "MARS";
 
 	@override
-	List<String> get allMetrics => [
-		"Swivel: ${data.swivel}",
-		"Tilt: ${data.tilt}",
-		"Teensy: ${data.status.humanName}",
-		"GPS:",
-		"  Latitude: ${data.coordinates.latitude}",
-		"  Longitude: ${data.coordinates.longitude}",
-		"  Altitude: ${data.coordinates.altitude}",
+	List<MetricLine> get allMetrics => [
+		MetricLine("Swivel: ${data.swivel}", severity: Severity.error,),
+		MetricLine("Tilt: ${data.tilt}", severity: Severity.error,),
+		MetricLine("Teensy: ${data.status.humanName}", severity: Severity.error,),
+		// "GPS:",
+		MetricLine("  Latitude: ${data.coordinates.latitude}", severity: Severity.error,),
+		MetricLine("  Longitude: ${data.coordinates.longitude}", severity: Severity.error,),
+		MetricLine("  Altitude: ${data.coordinates.altitude}", severity: Severity.error,),
 	];
 
 	/// Clears [MarsData.status], because the Teensy cannot be observed when the Pi is disconnected.

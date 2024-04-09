@@ -14,12 +14,14 @@ class DriveMetrics extends Metrics<DriveData> {
 	String get name => "Drive";
 
 	@override
-	List<String> get allMetrics => [  
-		"Throttle: ${data.throttle.toStringAsFixed(2)}",
-		"Left: ${data.left.toStringAsFixed(2)}",
-		"Right: ${data.right.toStringAsFixed(2)}",
-		"Left sensor: ${data.leftSensorValue.toStringAsFixed(2)}",
-		"Right sensor: ${data.rightSensorValue.toStringAsFixed(2)}",
+	List<MetricLine> get allMetrics => [  
+		MetricLine("Throttle: ${data.throttle.toStringAsFixed(2)}", severity: Severity.critical),
+		MetricLine("Left: ${data.left.toStringAsFixed(2)}",
+    severity: Severity.critical),
+		MetricLine("Right: ${data.right.toStringAsFixed(2)}",
+    severity: Severity.critical,),
+		MetricLine("Left sensor: ${data.leftSensorValue.toStringAsFixed(2)}",severity: Severity.critical),
+		MetricLine("Right sensor: ${data.rightSensorValue.toStringAsFixed(2)}", severity: Severity.critical),
 	];
 
 	@override

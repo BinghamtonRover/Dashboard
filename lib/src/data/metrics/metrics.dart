@@ -1,13 +1,17 @@
-import "package:math";
+// import "package:math";
 
 import "package:flutter/foundation.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 
+/// Class to construct a Metric
 class MetricLine {
+  /// Severity of the Metric
 	final Severity severity;
+  /// Message for the Metric
 	final String text;
+  /// Constructor for the MetricLine class
 	MetricLine(this.text, {this.severity = Severity.info});
 }
 
@@ -34,9 +38,10 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
 	/// user-friendly explanation per metric. 
 	List<MetricLine> get allMetrics;
 
+  /// Fetch the overall Security
 	Severity get overallSeverity {
 		final indexes = [for (final metric in allMetrics) metric.severity.index];
-		final index = indexes.reduce(max);
+		final index = indexes.reduce((max, current) => current > max ? current : max);
 		return Severity.values[index];
 	}
 
