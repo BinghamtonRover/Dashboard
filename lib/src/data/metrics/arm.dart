@@ -1,5 +1,4 @@
 import "package:rover_dashboard/data.dart";
-import "package:rover_dashboard/src/data/metrics/metrics.dart";
 
 /// Metrics reported by the HREI subsystem about the arm. Does not include the gripper.
 class ArmMetrics extends Metrics<ArmData> {

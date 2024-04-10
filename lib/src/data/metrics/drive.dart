@@ -17,7 +17,7 @@ class DriveMetrics extends Metrics<DriveData> {
 	List<MetricLine> get allMetrics => [  
 		MetricLine("Throttle: ${data.throttle.toStringAsFixed(2)}", severity: Severity.critical),
 		MetricLine("Left: ${data.left.toStringAsFixed(2)}",
-    severity: Severity.critical),
+    severity: Severity.critical,),
 		MetricLine("Right: ${data.right.toStringAsFixed(2)}",
     severity: Severity.critical,),
 		MetricLine("Left sensor: ${data.leftSensorValue.toStringAsFixed(2)}",severity: Severity.critical),

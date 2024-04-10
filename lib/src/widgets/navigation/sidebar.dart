@@ -50,6 +50,7 @@ class MetricsList extends ReusableReactiveWidget<Metrics> {
       	style: TextStyle(
       		color: switch (metric.severity) {
       			Severity.info => null,
+            Severity.error => Colors.yellow,
       			Severity.warning => Colors.orange,
       			Severity.critical => Colors.red,
       		},
