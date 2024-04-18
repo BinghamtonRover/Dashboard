@@ -100,9 +100,11 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
     children: [
       Row(children: [  // The header at the top
         const SizedBox(width: 8),
-        Text("Electrical Analytics", style: context.textTheme.headlineMedium), 
+        Text("Electrical", style: context.textTheme.headlineMedium), 
         const SizedBox(width: 12),
         const Spacer(),
+        Text(model.axis ? "Horizontal" : "Vertical", style: context.textTheme.labelLarge),
+        const SizedBox(width: 12),
         Switch(
           value: model.axis,
           onChanged: (bool value) => model.changeDirection(),

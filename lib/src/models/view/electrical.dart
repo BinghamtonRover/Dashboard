@@ -7,6 +7,7 @@ import "package:rover_dashboard/models.dart";
 
 /// The view model for the electrical analysis page.
 class ElectricalModel with ChangeNotifier {
+  /// The maximum amount of readings on-screen before the data starts scrolling.
   static const maxReadings = 300;
   
 	/// The [Metrics] model for electrical data.
@@ -30,9 +31,10 @@ class ElectricalModel with ChangeNotifier {
 	/// Whether to listen for new data from the rover. This is false after loading a file.
 	bool isListening = true;
 
-  /// Orientation for the graphs on page. true is column, false is stacked
-  bool axis = true;
+  /// Orientation for the graphs on page. true is row, false is column
+  bool axis = false;
 
+  /// The timer that grabs new data for these graphs.
   Timer? timer;
 
 	/// Listens to all the [ScienceTestBuilder]s in the UI.
@@ -64,7 +66,6 @@ class ElectricalModel with ChangeNotifier {
     voltageReadings.pushWithLimit(SensorReading(time: offsetTime, value: data.batteryVoltage), maxReadings);
     notifyListeners();
     _dataReceived = false;
-    print("Cleared flag");
   }
 
 	/// Clears all the readings from all the samples.
