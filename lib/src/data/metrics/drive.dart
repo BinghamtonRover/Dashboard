@@ -18,8 +18,7 @@ class DriveMetrics extends Metrics<DriveData> {
 		"Throttle: ${data.throttle.toStringAsFixed(2)}",
 		"Left: ${data.left.toStringAsFixed(2)}",
 		"Right: ${data.right.toStringAsFixed(2)}",
-		"Left sensor: ${data.leftSensorValue.toStringAsFixed(2)}",
-		"Right sensor: ${data.rightSensorValue.toStringAsFixed(2)}",
+    "Battery: ${data.batteryVoltage.toStringAsFixed(2)}V, ${data.batteryCurrent.toStringAsFixed(2)}A, ${data.batteryTemperature.toStringAsFixed(2)}°F",
 	];
 
 	@override
@@ -28,8 +27,12 @@ class DriveMetrics extends Metrics<DriveData> {
 		if (value.setLeft) data.left = value.left;
 		if (value.setRight) data.right = value.right;
 		if (value.setThrottle) data.throttle = value.throttle;
-		if (value.leftSensorValue != 0) data.leftSensorValue = value.leftSensorValue;
-		if (value.rightSensorValue!= 0) data.rightSensorValue = value.rightSensorValue;
+    if (value.hasBatteryCurrent()) data.batteryCurrent = value.batteryCurrent;
+    if (value.hasBatteryVoltage()) data.batteryVoltage = value.batteryVoltage;
+    if (value.hasBatteryTemperature()) data.batteryTemperature = value.batteryTemperature;
 		notifyListeners();
 	}
+
+  /// The battery voltage.
+  double get battery => data.batteryVoltage;
 }
