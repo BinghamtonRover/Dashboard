@@ -28,9 +28,6 @@ class ElectricalModel with ChangeNotifier {
   /// Right speed readings over time.
   final DoubleLinkedQueue<SensorReading> rightSpeeds = DoubleLinkedQueue<SensorReading>();
 
-	/// Whether to listen for new data from the rover. This is false after loading a file.
-	bool isListening = true;
-
   /// Orientation for the graphs on page. true is row, false is column
   bool axis = false;
 
@@ -54,7 +51,6 @@ class ElectricalModel with ChangeNotifier {
 	}
 
 	void _updateData([_]) {
-		if (!isListening) return;
     if (!_dataReceived) return;
     final data = metrics.data;
     final timestamp = DateTime.now();
@@ -70,7 +66,6 @@ class ElectricalModel with ChangeNotifier {
 
 	/// Clears all the readings from all the samples.
 	void clear() {
-		isListening = true;
     voltageReadings.clear();
     currentReadings.clear();
     leftSpeeds.clear();
