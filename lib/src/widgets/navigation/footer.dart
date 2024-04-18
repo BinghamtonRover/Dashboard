@@ -107,14 +107,14 @@ class StatusIcons extends StatelessWidget {
     mainAxisSize: MainAxisSize.min,
 		children: [
 			AnimatedBuilder(  // battery level
-				animation: Listenable.merge([models.rover.metrics.electrical, models.rover.status]),
+				animation: Listenable.merge([models.rover.metrics.drive, models.rover.status]),
 				builder: (context, _) => Tooltip(
-					message: "Battery: ${(models.rover.metrics.electrical.battery*100).toStringAsFixed(0)}%",
+					message: "Battery: ${models.rover.metrics.drive.battery.toStringAsFixed(2)}%",
 					child: Icon(
 						models.rover.isConnected
-							? getBatteryIcon(models.rover.metrics.electrical.battery)
+							? getBatteryIcon(models.rover.metrics.drive.battery)
 							: Icons.battery_unknown,
-						color: getColor(models.rover.metrics.electrical.battery),
+						color: getColor(models.rover.metrics.drive.battery),
 					),
 				),
 			),

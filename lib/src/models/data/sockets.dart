@@ -88,7 +88,6 @@ class Sockets extends Model {
 		models.home.setMessage(severity: Severity.critical, text: "The ${device.humanName} has disconnected");
 		if (device == Device.SUBSYSTEMS) models.rover.status.value = RoverStatus.DISCONNECTED;
 		if (device == Device.VIDEO) models.video.reset();
-		if (device == Device.MARS_SERVER) models.rover.metrics.mars.clearStatus();
 	}
 
 	/// Set the right IP addresses for the rover or tank.
