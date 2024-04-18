@@ -67,8 +67,12 @@ class DashboardView {
 	final Object? key;
 	/// A function to build this view.
 	final WidgetBuilder builder;
+  /// The Flutter widget key for this view.
+  final Key flutterKey;
+
 	/// A const constructor.
-	const DashboardView({required this.name, required this.builder, this.key});
+	DashboardView({required this.name, required this.builder, this.key}) : 
+    flutterKey = UniqueKey();
 
 	/// A list of views that represent all the camera feeds.
 	static final List<DashboardView> cameraViews = [
