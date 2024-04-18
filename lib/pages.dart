@@ -30,9 +30,6 @@ class Routes {
   /// The name of the electrical data page
   static const String electrical = "Electrical";
 
-  /// The name of the arm IK page.
-  static const String arm = "Arm IK";
-
 	/// The name of the autonomy page.
 	static const String autonomy = "Map"; 
 
