@@ -1,4 +1,5 @@
 import "dart:collection";
+import "dart:math";
 
 /// Helpful extensions on maps.
 extension MapRecords<K, V> on Map<K, V> {
@@ -23,4 +24,12 @@ extension LimitedList<E> on DoubleLinkedQueue<E> {
     if (length >= limit) removeFirst();
     addLast(element);
   }
+}
+
+/// Helpful utils on doubles.
+extension NumUtils on double {
+  /// Formats this number by rounding to 2 decimal points.
+  String format() => toStringAsFixed(2);
+  /// Converts this number (as radians) to degrees.
+  int toDegrees() => (this * (180 / pi)).truncate();
 }

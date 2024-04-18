@@ -21,20 +21,21 @@ class RoverControlDashboard extends StatelessWidget {
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
       useMaterial3: false,
-      colorScheme: const ColorScheme.light(
+      colorScheme: ColorScheme.light(
         primary: binghamtonGreen,
         secondary: binghamtonGreen,
+        surfaceVariant: Colors.blueGrey.shade400,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: binghamtonGreen,
-        // titleTextStyle: TextStyle(color: Colors.white),
         foregroundColor: Colors.white,
       ),
     ),
     darkTheme: ThemeData.from(
-      colorScheme: const ColorScheme.dark(
+      colorScheme: ColorScheme.dark(
         primary: binghamtonGreen,
         secondary: binghamtonGreen,
+        surfaceVariant: Colors.blueGrey.shade700,
       ),
     ),
     routes: {
