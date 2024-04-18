@@ -109,7 +109,7 @@ class StatusIcons extends StatelessWidget {
 				animation: Listenable.merge([models.rover.metrics.drive, models.rover.status]),
 				builder: (context, _) => Tooltip(
 					message: "Battery: ${models.rover.metrics.drive.batteryVoltage.toStringAsFixed(2)} "
-            "(${models.rover.metrics.drive.batteryPercentage.toStringAsFixed(2)}%)",
+            "(${(models.rover.metrics.drive.batteryPercentage * 100).toStringAsFixed(0)}%)",
 					child: Icon(
 						models.rover.isConnected
 							? getBatteryIcon(models.rover.metrics.drive.batteryPercentage)

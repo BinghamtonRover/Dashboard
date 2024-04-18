@@ -12,9 +12,7 @@ class _LineChart extends StatelessWidget {
   final String bottomUnitName;
   final String sideUnitName;
   final String title;
-  final double? minX;
-  final double? maxX;
-  final double minY;
+  final double? minY;
   final double? maxY;
   
   const _LineChart({
@@ -23,9 +21,7 @@ class _LineChart extends StatelessWidget {
     required this.bottomUnitName,
     required this.sideUnitName,
     required this.title,
-    this.minX,
-    this.maxX,
-    this.minY = 0,
+    this.minY,
     this.maxY,
   });
 
@@ -38,7 +34,7 @@ class _LineChart extends StatelessWidget {
               color: colors[i],
               spots: [
                 for (final reading in readings[i])
-                  if(reading.time > 0) FlSpot(reading.time, reading.value),
+                  if(reading.time > 0) FlSpot(reading.time / 1000, reading.value),
               ],
             ),
         ],
@@ -76,7 +72,7 @@ class _LineChart extends StatelessWidget {
           ),
         ),
         extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)], verticalLines: [VerticalLine(x: 0)]),
-        minX: minX, maxX: maxX, minY: minY, maxY: maxY,
+        minY: minY, maxY: maxY,
         clipData: const FlClipData.all(),
         lineTouchData: LineTouchData(
           touchTooltipData: LineTouchTooltipData(
@@ -84,7 +80,7 @@ class _LineChart extends StatelessWidget {
             fitInsideHorizontally: true,
             getTooltipItems:(touchedSpots) => [
               for(final spot in touchedSpots)
-                LineTooltipItem("${spot.y.toStringAsFixed(2)} $sideUnitName", const TextStyle(color: Colors.white))
+                LineTooltipItem("${spot.y.toStringAsFixed(2)} $sideUnitName", const TextStyle(color: Colors.white)),
             ],
           ),
         ),
@@ -99,62 +95,62 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
   ElectricalModel createModel() => ElectricalModel();
 
 	@override
-	Widget build(BuildContext context, ElectricalModel model) {
-    final graphs = <Widget>[
-      _LineChart(
-        readings: [model.voltageReadings], 
-        colors: const [Colors.blue],
-        bottomUnitName: "Time",
-        sideUnitName: "V",
-        title: "Voltage Graph",
-      ),
-      _LineChart(
-        readings: [model.currentReadings],
-        colors: const [Colors.blue],
-        bottomUnitName: "Time",
-        sideUnitName: "A",
-        title: "Current Graph",
-      ),
-      _LineChart(
-        readings: [model.rightSpeeds, model.leftSpeeds], 
-        colors: const [Colors.red, Colors.black],
-        bottomUnitName: "Time", 
-        sideUnitName: "RPM", 
-        title: "Speeds",
-      )
-    ];
+	Widget build(BuildContext context, ElectricalModel model) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Row(children: [  // The header at the top
+        const SizedBox(width: 8),
+        Text("Electrical Analytics", style: context.textTheme.headlineMedium), 
+        const SizedBox(width: 12),
+        const Spacer(),
+        Switch(
+          value: model.axis,
+          onChanged: (bool value) => model.changeDirection(),
+        ),
+        const SizedBox(width: 8),
+        ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text("Clear all"), onPressed: model.clear),
+        const SizedBox(width: 8),
+        const ViewsSelector(currentView: Routes.electrical),
+      ],),
+      if (model.axis) Expanded(child:
+        Row(children: [
+          for (final graph in _getGraphs(model))
+            Expanded(child: graph),
+        ],),
+      ) 
+      else
+        for (final graph in _getGraphs(model))
+          Expanded(child: graph),
+      const SizedBox(height: 8),
+    ],
+  );
 
-    
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(children: [  // The header at the top
-            const SizedBox(width: 8),
-            Text("Electrical Analytics", style: context.textTheme.headlineMedium), 
-            const SizedBox(width: 12),
-            if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
-            const Spacer(),
-            Switch(
-              value: model.axis,
-              onChanged: (bool value) => model.changeDirection(),
-            ),
-            const SizedBox(width: 8),
-            ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text("Clear all"), onPressed: model.clear),
-            const SizedBox(width: 8),
-            const ViewsSelector(currentView: Routes.electrical),
-          ],),
-          if(model.axis)
-            Expanded(child:
-              Row(children: [
-                for(final graph in graphs)
-                  Expanded(child: graph,),
-              ],),
-            )
-          else
-            for(final graph in graphs)
-              Expanded(child: graph,),
-          const SizedBox(height: 8),
-        ],
-      );
-  }
+  List<Widget> _getGraphs(ElectricalModel model) => [
+    _LineChart(
+      readings: [model.voltageReadings], 
+      colors: const [Colors.blue],
+      bottomUnitName: "Time",
+      sideUnitName: "V",
+      title: "Voltage Graph",
+      minY: 23, 
+      maxY: 35,
+    ),
+    _LineChart(
+      readings: [model.currentReadings],
+      colors: const [Colors.blue],
+      bottomUnitName: "Time",
+      sideUnitName: "A",
+      title: "Current Graph",
+      minY: 0,
+    ),
+    _LineChart(
+      readings: [model.rightSpeeds, model.leftSpeeds], 
+      colors: const [Colors.red, Colors.blue],
+      bottomUnitName: "Time", 
+      sideUnitName: "RPM", 
+      title: "Speeds",
+      minY: -1,
+      maxY: 1,
+    ),
+  ];
 }
