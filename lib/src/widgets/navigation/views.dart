@@ -5,8 +5,11 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
+/// A widget to show one [DashboardView].
 class ViewWidget extends StatefulWidget {
+  /// The view to show.
   final DashboardView view;
+  /// Shows a [DashboardView].
   ViewWidget(this.view) : super(key: view.flutterKey);
 
   @override
