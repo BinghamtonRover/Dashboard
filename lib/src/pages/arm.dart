@@ -40,7 +40,7 @@ class ArmPainterTop extends CustomPainter {
   void paint(Canvas canvas, Size size){
     screen = min(size.width, size.height);
     final paint = Paint()
-      ..color = Colors.purple
+      ..color = Colors.grey.shade800
       ..strokeWidth = screen / 50
       ..strokeCap = StrokeCap.round;
 
@@ -110,13 +110,13 @@ class ArmPainterSide extends CustomPainter {
     ];
 
     final lineColors = [
-      Colors.red,
-      Colors.green,
-      Colors.blue,
+      Colors.grey.shade800,
+      Colors.grey.shade700,
+      Colors.grey.shade600,
     ];
     
     final firstCirclePaint = Paint()
-      ..color = Colors.red 
+      ..color = Colors.grey.shade800 
       ..style = PaintingStyle.fill;
 
     canvas.drawCircle(points[0], screen / 40, firstCirclePaint);
