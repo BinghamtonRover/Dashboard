@@ -10,9 +10,9 @@ import "package:rover_dashboard/models.dart";
 /// This view model gets its data from [RoverMetrics.arm] and [RoverMetrics.position].
 class ArmModel with ChangeNotifier{
   /// The [Metrics] model for arm data.
-  ArmMetrics get arm => models.rover.metrics.arm;
+  ArmData get arm => models.rover.metrics.arm.data;
   /// The [Metrics] model for gripper data.
-  GripperMetrics get gripper => models.rover.metrics.gripper;
+  GripperData get gripper => models.rover.metrics.gripper.data;
 
   /// The timer that updates this page.
   Timer? timer;
