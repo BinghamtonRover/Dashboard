@@ -42,13 +42,31 @@ class MetricsList extends ReusableReactiveWidget<Metrics> {
     childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
     title: Text(
       model.name,
-      style: Theme.of(context).textTheme.headlineSmall,
+      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+        color: model.overallSeverity?.color,
+      ),
     ),
     children: [
-      for (final String metric in model.allMetrics) Text(metric),
+      for (final MetricLine metric in model.allMetrics) Text(
+      	metric.text, 
+      	style: TextStyle(
+      		color: metric.severity?.color,
+    		),
+    	),
       const SizedBox(height: 4),
     ],
   );
+}
+
+/// Extension for COlors on Severity
+extension SeverityUtil on Severity {
+  /// Fetch the color based on the severity
+  Color? get color => switch (this) {
+    Severity.info => Colors.blueGrey,
+    Severity.warning => Colors.orange,
+    Severity.error => Colors.red,
+    Severity.critical => Colors.red.shade900,
+  };
 }
 
 /// Displays controls for the given [Controller].

@@ -13,12 +13,37 @@ class DriveMetrics extends Metrics<DriveData> {
 	@override
 	String get name => "Drive";
 
+  /// The severity based on the throttle speed.
+  Severity? get throttleSeverity {
+    if (data.throttle == 0) {
+      return null;
+    } else if (data.throttle <= 0.3) {
+      return Severity.info;
+    } else if (data.throttle <= 0.75) {
+      return Severity.warning;
+    } else {
+      return Severity.critical;
+    }
+  }
+
+  /// The severity for the electrical metrics.
+  Severity? get electricalSeverity {
+    if (data.batteryVoltage == 0) return null;
+    if (data.batteryVoltage <= 25) {
+      return Severity.critical;
+    } else if (data.batteryVoltage <= 26) {
+      return Severity.warning;
+    } else {
+      return null;
+    }
+  }
+
 	@override
-	List<String> get allMetrics => [  
-		"Throttle: ${data.throttle.toStringAsFixed(2)}",
-		"Left: ${data.left.toStringAsFixed(2)}",
-		"Right: ${data.right.toStringAsFixed(2)}",
-    "Battery: ${data.batteryVoltage.toStringAsFixed(2)}V, ${data.batteryCurrent.toStringAsFixed(2)}A, ${data.batteryTemperature.toStringAsFixed(2)}°F",
+	List<MetricLine> get allMetrics => [  
+		MetricLine("Throttle: ${data.throttle.toStringAsFixed(2)}", severity: throttleSeverity),
+		MetricLine("Left: ${data.left.toStringAsFixed(2)}"),
+		MetricLine("Right: ${data.right.toStringAsFixed(2)}"),
+    MetricLine("Battery: ${data.batteryVoltage.toStringAsFixed(2)}V,${data.batteryCurrent.toStringAsFixed(2)}A, ${data.batteryTemperature.toStringAsFixed(2)}°F", severity: electricalSeverity),
 	];
 
 	@override

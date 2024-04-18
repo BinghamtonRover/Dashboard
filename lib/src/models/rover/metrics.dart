@@ -13,9 +13,6 @@ class RoverMetrics extends Model {
   /// Data from the drive subsystem.
   final drive = DriveMetrics();
 
-  /// Data from the MARS subsystem.
-  final mars = MarsMetrics();
-
   /// Data from the HREI subsystem about the arm base.
   final arm = ArmMetrics();
 
@@ -26,7 +23,7 @@ class RoverMetrics extends Model {
 	///
 	/// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
 	/// when new data is received. As a getter, every time it is called it will use new data.
-	List<Metrics> get allMetrics => [position, mars, drive, science, arm, gripper];
+	List<Metrics> get allMetrics => [position, drive, science, arm, gripper];
 
 	@override
 	Future<void> init() async {
@@ -44,11 +41,6 @@ class RoverMetrics extends Model {
 			name: RoverPosition().messageName,
 			decoder: RoverPosition.fromBuffer,
 			handler: position.update,
-		);
-		models.messages.registerHandler<MarsData>(
-			name: MarsData().messageName,
-			decoder: MarsData.fromBuffer,
-			handler: mars.update,
 		);
 		models.messages.registerHandler<ArmData>(
 			name: ArmData().messageName,
