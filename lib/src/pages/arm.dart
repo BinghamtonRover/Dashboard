@@ -1,10 +1,6 @@
-import "dart:ui";
 import "dart:math";
 
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
-import "package:flutter/widgets.dart";
-import "package:rover_dashboard/data.dart";
 
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
@@ -33,9 +29,7 @@ class ArmPainterTop extends CustomPainter {
   /// Angle of the base/swivel joint
   final double swivelAngle;
   /// Constructor for ArmPainterTop, takes in 1 angle
-  ArmPainterTop({
-    required this.swivelAngle
-  });
+  ArmPainterTop({required this.swivelAngle});
 
   @override
   void paint(Canvas canvas, Size size){
@@ -61,13 +55,8 @@ class ArmPainterTop extends CustomPainter {
       shoulderJoint,
       elbowJoint,
     ];
-
-
     canvas.drawLine(shoulderJoint, elbowJoint, paint);
     canvas.drawCircle(points[0], screen / 40, paint);
-    print(swivelAngle);
-
-
   }
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
@@ -76,23 +65,16 @@ class ArmPainterTop extends CustomPainter {
 
 /// CustomPainter to represent arm IK side view
 class ArmPainterSide extends CustomPainter {
-  // Pass data from the arm model to the painter
-  /// Band lengths are in mm (actual) represented in pixels 
-  // shoulder to elbow: 530mm
-  // elbow to wrist: 440mm
-  // wrist to grip: 310mm 
-
   /// The multiplied value is arbitrary - the ratios are the important things
   /// Length of the arm band from the shoulder to elbow joints
   /// L1 (constant) : physical measurement 530mm
-  final double shoulderToElbow = 1;
+  static const shoulderToElbow = 1;
   /// Length of the arm band  from the elbow to wrist joints
   /// L2 = .8302 * L1 : physical measurement 440mm
-  final double elbowToWrist = .83027;
+  static const elbowToWrist = 1;
   /// Length of the wrist to the tip of the gripper
   /// L3 = .7045 * L2 : physical measurement 310mm
-  final double wristToGrip = .7045;
-
+  static const wristToGrip = 1;
 
   // All angles are 2D - only 3 joints
   // Shoulder joint is the base (0,max_height) 
@@ -115,19 +97,12 @@ class ArmPainterSide extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // need to figure this stuff out: 
-    // I think relative should be [0 , 1] in the desmos graph, but I'm not sure
+    // I think relative should be [0 , 1] in the Desmos graph, but I'm not sure
     // (If the arm is )
     final screen = min(size.width, size.height);
     double toAbsolute(double relative) =>  // relative is [-1, 1]
-      relative / 2 * screen;
+      relative / 3 * (screen - 12);  // 12px of padding
     
-    const shoulderToElbow = 1;
-    /// Length of the arm band  from the elbow to wrist joints
-    /// L2 = .8302 * L1 : physical measurement 440mm
-    const elbowToWrist = .83027;
-    /// Length of the wrist to the tip of the gripper
-    /// L3 = .7045 * L2 : physical measurement 310mm
-    const wristToGrip = .7045;
     // Side view x, y joint positions
     // shoulder is anchor joint at (0,0) 
     const shoulderX = 0.0;
@@ -139,10 +114,12 @@ class ArmPainterSide extends CustomPainter {
     /// a2 messes stuff up, my guess is that its related to canvas since mathematically it should work
     final elbowX = shoulderToElbow * cos(shoulderAngle);
     final elbowY = shoulderToElbow * sin(shoulderAngle);
-    final wristX = elbowToWrist * cos(elbowAngle) + elbowX;
-    final wristY = elbowToWrist * sin(elbowAngle) + elbowY;
-    final gripperX = wristToGrip * cos(liftAngle) + wristX;
-    final gripperY = wristToGrip * sin(liftAngle) + wristY;
+    final a2 = shoulderAngle - pi + elbowAngle;
+    final a3 = a2 + liftAngle - pi;
+    final wristX = elbowToWrist * cos(a2) + elbowX;
+    final wristY = elbowToWrist * sin(a2) + elbowY;
+    final gripperX = wristToGrip * cos(a3) + wristX;
+    final gripperY = wristToGrip * sin(a3) + wristY;
 
     final shoulderJoint = Offset(toAbsolute(shoulderX) + size.width/2, -toAbsolute(shoulderY)+size.height);
     final elbowJoint = Offset(toAbsolute(elbowX) + size.width/2, -toAbsolute(elbowY)+size.height);
@@ -150,10 +127,9 @@ class ArmPainterSide extends CustomPainter {
     final gripLocation = Offset(toAbsolute(gripperX) + size.width/2, -toAbsolute(gripperY)+size.height);
 
     // Debug stuff
-    print("shoulderAngle $shoulderAngle, elbowX $elbowX, elbowY: $elbowY");
-    print("elbowAngle $elbowAngle, wristX $wristX, wristY: $wristY");
-    // wrist angle = lift angle
-    print("wristAngle $liftAngle, gripperX $gripperX, gripperY: $gripperY");
+    // print("shoulderAngle $shoulderAngle, elbowX $elbowX, elbowY: $elbowY");
+    // print("elbowAngle $elbowAngle, wristX $wristX, wristY: $wristY");
+    // print("wristAngle $liftAngle, gripperX $gripperX, gripperY: $gripperY");
 
     final points = [
       shoulderJoint,
@@ -174,7 +150,7 @@ class ArmPainterSide extends CustomPainter {
 
     canvas.drawCircle(points[0], screen / 40, firstCirclePaint);
 
-    // /// Draw lines based off joint position
+    // Draw lines based off joint position
     for (var i = 0; i < points.length - 1; i++) {
       final paint = Paint()
         ..color = lineColors[i] 
@@ -182,7 +158,7 @@ class ArmPainterSide extends CustomPainter {
       canvas.drawLine(points[i], points[i + 1], paint);
     }
 
-    // /// Draw circles on each joint
+    // Draw circles on each joint
     for (var i = 0; i < points.length - 1; i++) {
       final circlePaint = Paint()
         ..color = lineColors[i] 
@@ -196,7 +172,6 @@ class ArmPainterSide extends CustomPainter {
 
   
 /// The view model for the arm inverse kinematics analysis page.
-/// Based off of the eletrical page
 class ArmPage extends ReactiveWidget<ArmModel> {
   @override
   ArmModel createModel() => ArmModel();
@@ -227,15 +202,15 @@ class ArmPage extends ReactiveWidget<ArmModel> {
       Expanded(
         child: Padding(
           padding: const EdgeInsets.only(right: 16, left: 16, bottom: 16),
-          child: Container(
+          child: ColoredBox(
             color: Color.fromARGB(204, 112, 108, 108),
             child: CustomPaint(
               painter: ArmPainterSide(
                 shoulderAngle: model.arm.data.shoulder.angle,
                 elbowAngle: model.arm.data.elbow.angle,
                 liftAngle: model.gripper.data.lift.angle,
-                ),
-              ), 
+              ),
+            ), 
           ),
         ),
       ),
@@ -249,20 +224,11 @@ class ArmPage extends ReactiveWidget<ArmModel> {
           letterSpacing: 1,
         ),
       ),
-      // OutlinedButton(
-      //       style: OutlinedButton.styleFrom(
-      //         side: const BorderSide(
-      //           color: Colors.red,
-      //         ),
-      //       ),
-      //       onPressed: model.animateArm,
-      //       child: const Text("Animatation Test"),
-      //     ),
       const SizedBox(height: 10,),
       Expanded(
         child: Padding(
           padding: const EdgeInsets.only(right: 16, left: 16, bottom: 16),
-          child: Container(
+          child: ColoredBox(
             color: Color.fromARGB(204, 112, 108, 108),
             child: CustomPaint(
             painter: ArmPainterTop(
@@ -275,5 +241,3 @@ class ArmPage extends ReactiveWidget<ArmModel> {
     ],
   );
 }
-
-
