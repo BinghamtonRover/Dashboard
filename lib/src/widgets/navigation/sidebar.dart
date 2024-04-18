@@ -43,14 +43,14 @@ class MetricsList extends ReusableReactiveWidget<Metrics> {
     title: Text(
       model.name,
       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-        color: model.overallSeverity.color,
+        color: model.overallSeverity?.color,
       ),
     ),
     children: [
       for (final MetricLine metric in model.allMetrics) Text(
       	metric.text, 
       	style: TextStyle(
-      		color: metric.severity.color,
+      		color: metric.severity?.color,
     		),
     	),
       const SizedBox(height: 4),
@@ -62,10 +62,10 @@ class MetricsList extends ReusableReactiveWidget<Metrics> {
 extension SeverityUtil on Severity {
   /// Fetch the color based on the severity
   Color? get color => switch (this) {
-    Severity.info => null,
-    Severity.error => Colors.yellow,
+    Severity.info => Colors.blueGrey,
     Severity.warning => Colors.orange,
-    Severity.critical => Colors.red,
+    Severity.error => Colors.red,
+    Severity.critical => Colors.red.shade900,
   };
 }
 

@@ -10,8 +10,8 @@ class ArmMetrics extends Metrics<ArmData> {
 
 	/// Returns a description of a [MotorData].
 	List<MetricLine> getMotorData(MotorData motor, String part) => [
-		MetricLine("$part:   Is moving? ${motor.isMoving}"),
-		MetricLine("$part:   Limit? ${motor.isLimitSwitchPressed}"),
+		MetricLine("$part:   Is moving? ${motor.isMoving}", severity: motor.isMoving ? Severity.info : null),
+		MetricLine("$part:   Limit? ${motor.isLimitSwitchPressed}", severity: motor.isLimitSwitchPressed ? Severity.warning : null),
 		MetricLine("$part:   Direction: ${motor.direction.humanName}"),
 		MetricLine("$part:   Steps: ${motor.currentStep} --> ${motor.targetStep}"),
 		MetricLine("$part:   Angle: ${motor.angle}"),
