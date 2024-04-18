@@ -45,8 +45,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: drive
-      resolved-ref: a473efba21d7e1ffd90d8622d10d16604ddec998
+      ref: HEAD
+      resolved-ref: c2fd170e7a9567cd81b479863a7b666d7359eaba
       url: "https://github.com/BinghamtonRover/Networking.git"
     source: git
     version: "1.1.0"
