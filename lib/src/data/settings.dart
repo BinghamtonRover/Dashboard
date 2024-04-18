@@ -1,3 +1,5 @@
+import "package:flutter/material.dart";
+
 import "socket.dart";
 
 /// A collection of functions for parsing [Settings]. 
@@ -197,6 +199,16 @@ enum SplitMode {
   const SplitMode(this.humanName);
 }
 
+/// Helpful methods on [ThemeMode]s.
+extension ThemeModeUtils on ThemeMode {
+  /// A human-friendly name for this mode.
+  String get humanName => switch (this) {
+    ThemeMode.system => "Match system",
+    ThemeMode.light => "Light theme",
+    ThemeMode.dark => "Dark theme",
+  };
+}
+
 /// Settings related to the dashboard itself, not the rover.
 class DashboardSettings {
   /// How the Dashboard should split when only two views are present.
@@ -215,24 +227,30 @@ class DashboardSettings {
   /// This does not affect how many frames are sent by the rover per second.
   final int maxFps;
 
+  /// The theme of the Dashboard. 
+  final ThemeMode themeMode;
+
   /// A const constructor.
   const DashboardSettings({
     required this.splitMode,
     required this.mapBlockSize,
     required this.maxFps,
+    required this.themeMode,
   });
 
   /// Parses Dashboard settings from JSON.
   DashboardSettings.fromJson(Json? json) : 
     splitMode = SplitMode.values[json?["splitMode"] ?? SplitMode.horizontal.index],
     mapBlockSize = json?["mapBlockSize"] ?? 1.0,
-    maxFps = (json?["maxFps"] ?? 60) as int;
+    maxFps = (json?["maxFps"] ?? 60) as int,
+    themeMode = ThemeMode.values.byName(json?["theme"] ?? ThemeMode.system.name);
 
   /// Serializes these settings to JSON.
   Json toJson() => {
     "splitMode": splitMode.index,
     "mapBlockSize": mapBlockSize,
     "maxFps": maxFps,
+    "theme": themeMode.name,
   };
 }
 

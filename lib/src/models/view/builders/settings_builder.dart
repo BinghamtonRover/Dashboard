@@ -1,3 +1,4 @@
+import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
@@ -181,11 +182,15 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   /// How the Dashboard should split when only two views are present.
   SplitMode splitMode;
 
+  /// The theme of the Dashboard. See [DashboardSettings.themeMode].
+  ThemeMode themeMode;
+
 	/// Modifies the given [DashboardSettings].
   DashboardSettingsBuilder(DashboardSettings initial) : 
 		fps = NumberBuilder(initial.maxFps),
 		blockSize = NumberBuilder(initial.mapBlockSize),
-    splitMode = initial.splitMode;
+    splitMode = initial.splitMode,
+    themeMode = initial.themeMode;
 
   @override
   bool get isValid => fps.isValid && blockSize.isValid;
@@ -195,12 +200,20 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     maxFps: fps.value,
     mapBlockSize: blockSize.value,
     splitMode: splitMode,
+    themeMode: themeMode,
   );
 
   /// Updates the [splitMode] when a new one is selected.
   void updateSplitMode(SplitMode? mode) {
     if (mode == null) return;
     splitMode = mode;
+    notifyListeners();
+  }
+
+  /// Updates the [themeMode]. 
+  void updateThemeMode(ThemeMode? input) {
+    if (input == null) return;
+    themeMode = input;
     notifyListeners();
   }
 }

@@ -142,6 +142,25 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                   ],
                 ),
               ],),
+              Row(children: [
+                const SizedBox(
+                  width: 200,
+                  child: ListTile(
+                    title: Text("Theme mode"),
+                  ),
+                ),
+                const Spacer(),
+                DropdownMenu<ThemeMode>(
+                  initialSelection: model.dashboard.themeMode,
+                  onSelected: model.dashboard.updateThemeMode,
+                  dropdownMenuEntries: [
+                    for (final value in ThemeMode.values) DropdownMenuEntry<ThemeMode>(
+                      value: value,
+                      label: value.humanName,
+                    ),
+                  ],
+                ),
+              ],),
             ],
           ),
           const Divider(),
