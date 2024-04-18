@@ -114,7 +114,9 @@ class StatusIcons extends StatelessWidget {
 						models.rover.isConnected
 							? getBatteryIcon(models.rover.metrics.drive.battery)
 							: Icons.battery_unknown,
-						color: getColor(models.rover.metrics.drive.battery),
+						color: models.rover.isConnected 
+              ? getColor(models.rover.metrics.drive.battery)
+              : Colors.black,
 					),
 				),
 			),
