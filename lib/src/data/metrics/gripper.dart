@@ -10,11 +10,11 @@ class GripperMetrics extends Metrics<GripperData> {
 
 	/// Returns a human-readable description of a [MotorData].
 	List<MetricLine> getMotorData(MotorData motor, String functionality) => [
-		MetricLine("$functionality  Is moving? ${motor.isMoving}", severity: Severity.error,),
-		MetricLine("$functionality  Limit? ${motor.isLimitSwitchPressed}", severity: Severity.error,),
-		MetricLine("$functionality  Direction: ${motor.direction.humanName}", severity: Severity.error,),
-		MetricLine("$functionality  Steps: ${motor.currentStep} --> ${motor.targetStep}", severity: Severity.error,),
-		MetricLine("$functionality  Angle: ${motor.angle}",),
+		MetricLine("$functionality  Is moving? ${motor.isMoving}"),
+		MetricLine("$functionality  Limit? ${motor.isLimitSwitchPressed}"),
+		MetricLine("$functionality  Direction: ${motor.direction.humanName}"),
+		MetricLine("$functionality  Steps: ${motor.currentStep} --> ${motor.targetStep}"),
+		MetricLine("$functionality  Angle: ${motor.angle}"),
 	];
 
 	@override

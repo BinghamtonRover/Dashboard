@@ -13,15 +13,11 @@ class ScienceMetrics extends Metrics<ScienceData> {
 
 	@override
 	List<MetricLine> get allMetrics => [  
-		MetricLine("Methane: ${data.methane.toStringAsFixed(3)}",
-    severity: Severity.error,),
-		MetricLine("CO2: ${data.co2.toStringAsFixed(3)}",
-    severity: Severity.error,),
-		MetricLine("Temperature: ${data.temperature.toStringAsFixed(3)}", severity: Severity.error,),
-		MetricLine("Humidity: ${data.humidity.toStringAsFixed(3)}",
-    severity: Severity.error,),
-		MetricLine("pH: ${data.pH.toStringAsFixed(3)}",
-    severity: Severity.error,),
+		MetricLine("Methane: ${data.methane.toStringAsFixed(3)}"),
+		MetricLine("CO2: ${data.co2.toStringAsFixed(3)}"),
+		MetricLine("Temperature: ${data.temperature.toStringAsFixed(3)}"),
+		MetricLine("Humidity: ${data.humidity.toStringAsFixed(3)}"),
+		MetricLine("pH: ${data.pH.toStringAsFixed(3)}"),
 	];
 
 	@override

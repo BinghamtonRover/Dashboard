@@ -19,7 +19,6 @@ class DriveMetrics extends Metrics<DriveData> {
 		MetricLine("Left: ${data.left.toStringAsFixed(2)}"),
 		MetricLine("Right: ${data.right.toStringAsFixed(2)}"),
     MetricLine("Battery: ${data.batteryVoltage.toStringAsFixed(2)}V, ${data.batteryCurrent.toStringAsFixed(2)}A, ${data.batteryTemperature.toStringAsFixed(2)}°F"),
-
 	];
 
 	@override
