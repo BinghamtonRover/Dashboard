@@ -16,7 +16,6 @@ export "src/data/metrics/arm.dart";
 export "src/data/metrics/drive.dart";
 export "src/data/metrics/gripper.dart";
 export "src/data/metrics/position.dart";
-export "src/data/metrics/mars.dart";
 export "src/data/metrics/metrics.dart";
 export "src/data/metrics/science.dart";
 
