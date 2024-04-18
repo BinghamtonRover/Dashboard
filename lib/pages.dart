@@ -31,7 +31,7 @@ class Routes {
   static const String electrical = "Electrical";
 
   /// The name of the arm IK page.
-  static const String arm = "Arm IK";
+  static const String arm = "Arm";
 
 	/// The name of the autonomy page.
 	static const String autonomy = "Map"; 

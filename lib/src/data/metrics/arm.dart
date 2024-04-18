@@ -14,7 +14,7 @@ class ArmMetrics extends Metrics<ArmData> {
 		MetricLine("  Limit? ${motor.isLimitSwitchPressed}", severity: motor.isLimitSwitchPressed ? Severity.warning : null),
 		MetricLine("  Direction: ${motor.direction.humanName}"),
 		MetricLine("  Steps: ${motor.currentStep} --> ${motor.targetStep}"),
-		MetricLine("  Angle: ${motor.angle}"),
+		MetricLine("  Angle: ${motor.angle.toDegrees()} degrees"),
 	];
 
 	@override

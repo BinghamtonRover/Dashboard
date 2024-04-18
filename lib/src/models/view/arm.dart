@@ -14,8 +14,10 @@ class ArmModel with ChangeNotifier{
   /// The [Metrics] model for gripper data.
   GripperMetrics get gripper => models.rover.metrics.gripper;
 
+  /// The timer that updates this page.
   Timer? timer;
 
+  /// Starts a timer to refresh at 100 Hz.
   ArmModel() {
     timer = Timer.periodic(const Duration(milliseconds: 10), _update);
   }

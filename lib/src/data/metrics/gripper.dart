@@ -8,21 +8,24 @@ class GripperMetrics extends Metrics<GripperData> {
 	@override
 	String get name => "Gripper";
 
-	/// Returns a human-readable description of a [MotorData].
-	List<MetricLine> getMotorData(MotorData motor, String functionality) => [
-		MetricLine("$functionality  Is moving? ${motor.isMoving}", severity: motor.isMoving ? Severity.info : null),
-		MetricLine("$functionality  Limit? ${motor.isLimitSwitchPressed}", severity: motor.isLimitSwitchPressed ? Severity.warning : null),
-		MetricLine("$functionality  Direction: ${motor.direction.humanName}"),
-		MetricLine("$functionality  Steps: ${motor.currentStep} --> ${motor.targetStep}"),
-		MetricLine("$functionality  Angle: ${motor.angle}"),
+	/// Returns a description of a [MotorData].
+	List<MetricLine> getMotorData(MotorData motor) => [
+		MetricLine("  Is moving? ${motor.isMoving}", severity: motor.isMoving ? Severity.info : null),
+		MetricLine("  Limit? ${motor.isLimitSwitchPressed}", severity: motor.isLimitSwitchPressed ? Severity.warning : null),
+		MetricLine("  Direction: ${motor.direction.humanName}"),
+		MetricLine("  Steps: ${motor.currentStep} --> ${motor.targetStep}"),
+		MetricLine("  Angle: ${motor.angle.toDegrees()} degrees"),
 	];
 
 	@override
 	List<MetricLine> get allMetrics => [
-		...getMotorData(data.lift, "Lift",),
+    MetricLine("Lift:"),
+		...getMotorData(data.lift,),
 		MetricLine("------------------------------",),
-		...getMotorData(data.rotate, "Rotate"),
+    MetricLine("Rotate"),
+		...getMotorData(data.rotate),
 		MetricLine("------------------------------",),
-		...getMotorData(data.pinch, "Pinch"),
+    MetricLine("Pinch:"),
+		...getMotorData(data.pinch),
 	];
 }

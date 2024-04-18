@@ -182,7 +182,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
     children: [
       Row(children: [  // The header at the top
         const SizedBox(width: 8),
-        Text("Arm Inverse Kinematics", style: context.textTheme.headlineMedium), 
+        Text("Arm Graphs", style: context.textTheme.headlineMedium), 
         const SizedBox(width: 12),
         const Spacer(),
         const SizedBox(width: 8),
@@ -203,7 +203,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
         child: Padding(
           padding: const EdgeInsets.only(right: 16, left: 16, bottom: 16),
           child: ColoredBox(
-            color: Color.fromARGB(204, 112, 108, 108),
+            color: const Color.fromARGB(204, 112, 108, 108),
             child: CustomPaint(
               painter: ArmPainterSide(
                 shoulderAngle: model.arm.data.shoulder.angle,
@@ -229,7 +229,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
         child: Padding(
           padding: const EdgeInsets.only(right: 16, left: 16, bottom: 16),
           child: ColoredBox(
-            color: Color.fromARGB(204, 112, 108, 108),
+            color: const Color.fromARGB(204, 112, 108, 108),
             child: CustomPaint(
             painter: ArmPainterTop(
               swivelAngle: model.arm.data.base.angle,
