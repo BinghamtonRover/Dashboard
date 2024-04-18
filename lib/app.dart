@@ -7,18 +7,24 @@
 library app;
 
 import "package:flutter/material.dart";
+import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
+import "package:rover_dashboard/widgets.dart";
 
 /// The classic Binghamton green.
 const binghamtonGreen = Color(0xff005943);
 
 /// The main class for the app. 
-class RoverControlDashboard extends StatelessWidget {
+class RoverControlDashboard extends ReusableReactiveWidget<SettingsModel> {
+  /// Creates the main app.
+  RoverControlDashboard() : super(models.settings);
+
 	@override
-	Widget build(BuildContext context) => MaterialApp(
+	Widget build(BuildContext context, SettingsModel model) => MaterialApp(
     title: "Binghamton University Rover Team",
     home: SplashPage(),
     debugShowCheckedModeBanner: false,
+    themeMode: models.isReady ? model.dashboard.themeMode : ThemeMode.system,
     theme: ThemeData(
       useMaterial3: false,
       colorScheme: ColorScheme.light(
