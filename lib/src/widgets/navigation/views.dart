@@ -5,6 +5,22 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
+/// A widget to show one [DashboardView].
+class ViewWidget extends StatefulWidget {
+  /// The view to show.
+  final DashboardView view;
+  /// Shows a [DashboardView].
+  ViewWidget(this.view) : super(key: view.flutterKey);
+
+  @override
+  State<ViewWidget> createState() => _ViewWidgetState();
+}
+
+class _ViewWidgetState extends State<ViewWidget> {
+  @override
+  Widget build(BuildContext context) => widget.view.builder(context);
+}
+
 /// A widget to render all the views the user selected.
 class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
 	/// A const constructor.
@@ -13,11 +29,9 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
 	@override
 	Widget build(BuildContext context, ViewsModel model) => switch (model.views.length) {
     1 => Column(children: [Expanded(
-      key: ValueKey(models.views.views[0].key),
-      child: models.views.views.first.builder(context),
+      child: ViewWidget(models.views.views[0]),
     ),],),
     2 => ResizableContainer(
-      // key: const ValueKey(2),
       direction: switch (models.settings.dashboard.splitMode) {
         SplitMode.horizontal => Axis.vertical,
         SplitMode.vertical => Axis.horizontal,
@@ -32,23 +46,16 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
         ResizableChildData(
           minSize: 100,
           startingRatio: 0.5,
-          child: Container(
-            key: ValueKey(models.views.views[1].key),
-            child: models.views.views[0].builder(context),
-          ),
+          child: ViewWidget(models.views.views[0]),
         ),
         ResizableChildData(
           minSize: 100,
           startingRatio: 0.5,
-          child: Container(
-            key: ValueKey(models.views.views[1].key),
-            child: models.views.views[1].builder(context),
-          ),
+          child: ViewWidget(models.views.views[1]),
         ),
       ],
     ),
     3 || 4 => ResizableContainer(
-      // key: const ValueKey(3),
       controller: model.verticalController,
       direction: Axis.vertical,
       dividerWidth: 8, 
@@ -58,7 +65,6 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
           minSize: 100,
           startingRatio: 0.5,
           child: ResizableContainer(
-            // key: const ValueKey(4),
             controller: model.horizontalController1,
             direction: Axis.horizontal,
             dividerWidth: 8, 
@@ -67,12 +73,12 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
               ResizableChildData(
                 minSize: 100,
                 startingRatio: 0.5,
-                child: models.views.views[0].builder(context),
+                child: ViewWidget(models.views.views[0]),
               ),
               ResizableChildData(
                 minSize: 100,
                 startingRatio: 0.5,
-                child: models.views.views[1].builder(context),
+                child: ViewWidget(models.views.views[1]),
               ),
             ],
           ),
@@ -80,7 +86,7 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
         if (model.views.length == 3) ResizableChildData(
           minSize: 100,
           startingRatio: 0.5,
-          child: models.views.views[2].builder(context),
+          child: ViewWidget(models.views.views[2]),
         ) else ResizableChildData(
           minSize: 100,
           startingRatio: 0.5,
@@ -93,12 +99,12 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
               ResizableChildData(
                 minSize: 100,
                 startingRatio: 0.5,
-                child: models.views.views[2].builder(context),
+                child: ViewWidget(models.views.views[2]),
               ),
               ResizableChildData(
                 minSize: 100,
                 startingRatio: 0.5,
-                child: models.views.views[3].builder(context),
+                child: ViewWidget(models.views.views[3]),
               ),
             ],
           ),

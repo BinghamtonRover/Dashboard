@@ -19,7 +19,7 @@ typedef WrappedMessageHandler = void Function(WrappedMessage);
 /// A callback to execute with raw Protobuf data.
 typedef RawDataHandler = void Function(List<int> data);
 
-/// Gets the name of the command message 1for the given device.
+/// Gets the name of the command message for the given device.
 String getCommandName(Device device) => switch (device) {
 	Device.ARM => "ArmCommand",
 	Device.GRIPPER => "GripperCommand",
@@ -54,6 +54,9 @@ extension TimestampUtils on Timestamp {
 
 	/// Adds a [Duration] to a [Timestamp].
 	Timestamp operator +(Duration duration) => Timestamp.fromDateTime(toDateTime().add(duration));
+
+  /// Subtracts the 
+	double operator -(Timestamp other) => (seconds - other.seconds).toDouble();
 }
 
 /// Decodes a wrapped Protobuf message. 

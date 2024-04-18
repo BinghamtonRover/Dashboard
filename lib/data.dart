@@ -22,6 +22,7 @@ export "src/data/metrics/science.dart";
 export "src/data/modes.dart";
 export "src/data/protobuf.dart";
 export "src/data/science.dart";
+export "src/data/sensor.dart";
 export "src/data/settings.dart";
 export "src/data/socket.dart";
 export "src/data/taskbar_message.dart";

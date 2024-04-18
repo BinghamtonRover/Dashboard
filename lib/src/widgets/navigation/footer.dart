@@ -82,9 +82,8 @@ class StatusIcons extends StatelessWidget {
 
 	/// A color representing a meter's fill.
 	Color getColor(double percentage) {
-		if (percentage > 0.75) { return Colors.green; }
-		else if (percentage > 0.5) { return Colors.yellow; }
-		else if (percentage > 0.25) { return Colors.orange; }
+		if (percentage > 0.45) { return Colors.green; }
+		else if (percentage > 0.2) { return Colors.orange; }
 		else if (percentage > 0.0) { return Colors.red; }
 		else { return Colors.black; }
 	}
@@ -109,13 +108,14 @@ class StatusIcons extends StatelessWidget {
 			AnimatedBuilder(  // battery level
 				animation: Listenable.merge([models.rover.metrics.drive, models.rover.status]),
 				builder: (context, _) => Tooltip(
-					message: "Battery: ${models.rover.metrics.drive.battery.toStringAsFixed(2)}%",
+					message: "Battery: ${models.rover.metrics.drive.batteryVoltage.toStringAsFixed(2)} "
+            "(${(models.rover.metrics.drive.batteryPercentage * 100).toStringAsFixed(0)}%)",
 					child: Icon(
 						models.rover.isConnected
-							? getBatteryIcon(models.rover.metrics.drive.battery)
+							? getBatteryIcon(models.rover.metrics.drive.batteryPercentage)
 							: Icons.battery_unknown,
 						color: models.rover.isConnected 
-              ? getColor(models.rover.metrics.drive.battery)
+              ? getColor(models.rover.metrics.drive.batteryPercentage)
               : Colors.black,
 					),
 				),
