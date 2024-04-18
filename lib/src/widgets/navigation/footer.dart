@@ -101,24 +101,21 @@ class StatusIcons extends StatelessWidget {
 		throw ArgumentError("Unrecognized rover status: $status");
 	}
 
-  /// A shorthand to refer to the current electrical metrics.
-  ElectricalMetrics get electrical => models.rover.metrics.electrical;
-
 	@override
 	Widget build(BuildContext context) => Row(
     mainAxisSize: MainAxisSize.min,
 		children: [
 			AnimatedBuilder(  // battery level
-				animation: Listenable.merge([models.rover.metrics.electrical, models.rover.status]),
+				animation: Listenable.merge([models.rover.metrics.drive, models.rover.status]),
 				builder: (context, _) => Tooltip(
-					message: "Battery: ${electrical.batteryVoltage.toStringAsPrecision(2)}V"
-            " (${(electrical.batteryPercentage*100).toStringAsFixed(0)}%)",
+					message: "Battery: ${models.rover.metrics.drive.batteryVoltage.toStringAsFixed(2)} "
+            "(${models.rover.metrics.drive.batteryPercentage.toStringAsFixed(2)}%)",
 					child: Icon(
 						models.rover.isConnected
-							? getBatteryIcon(electrical.batteryPercentage)
+							? getBatteryIcon(models.rover.metrics.drive.batteryPercentage)
 							: Icons.battery_unknown,
-						color: models.rover.isConnected
-              ? getColor(electrical.batteryPercentage)
+						color: models.rover.isConnected 
+              ? getColor(models.rover.metrics.drive.batteryPercentage)
               : Colors.black,
 					),
 				),

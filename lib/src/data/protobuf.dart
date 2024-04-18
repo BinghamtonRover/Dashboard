@@ -24,9 +24,7 @@ String getCommandName(Device device) => switch (device) {
 	Device.ARM => "ArmCommand",
 	Device.GRIPPER => "GripperCommand",
 	Device.SCIENCE => "ScienceCommand",
-	Device.ELECTRICAL => "ElectricalCommand",
 	Device.DRIVE => "DriveCommand",
-	Device.MARS => "MarsCommand",
 	_ => "Unknown",
 };
 
@@ -35,9 +33,7 @@ String getDataName(Device device) => switch (device) {
 	Device.ARM => "ArmData",
 	Device.GRIPPER => "GripperData",
 	Device.SCIENCE => "ScienceData",
-	Device.ELECTRICAL => "ElectricalData",
 	Device.DRIVE => "DriveData",
-	Device.MARS => "MarsData",
 	_ => "Unknown",
 };
 
@@ -155,10 +151,7 @@ extension DeviceUtils on Device {
 			case Device.ARM: return "Arm";
 			case Device.GRIPPER: return "Gripper";
 			case Device.SCIENCE: return "Science";
-			case Device.ELECTRICAL: return "Electrical";
 			case Device.DRIVE: return "Drive";
-			case Device.MARS: return "MARS";
-			case Device.MARS_SERVER: return "MARS Pi";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized device: $this");

@@ -9,24 +9,23 @@ class ArmMetrics extends Metrics<ArmData> {
 	String get name => "Arm Base";
 
 	/// Returns a description of a [MotorData].
-	List<String> getMotorData(MotorData motor) => [
-		"  Is moving? ${motor.isMoving}",
-		"  Limit? ${motor.isLimitSwitchPressed}",
-		"  Direction: ${motor.direction.humanName}",
-		"  Steps: ${motor.currentStep} --> ${motor.targetStep}",
-		"  Angle: ${motor.angle}",
+	List<MetricLine> getMotorData(MotorData motor, String part) => [
+		MetricLine("$part:   Is moving? ${motor.isMoving}", severity: motor.isMoving ? Severity.info : null),
+		MetricLine("$part:   Limit? ${motor.isLimitSwitchPressed}", severity: motor.isLimitSwitchPressed ? Severity.warning : null),
+		MetricLine("$part:   Direction: ${motor.direction.humanName}"),
+		MetricLine("$part:   Steps: ${motor.currentStep} --> ${motor.targetStep}"),
+		MetricLine("$part:   Angle: ${motor.angle}"),
 	];
 
 	@override
-	List<String> get allMetrics => [
-		"IK: ",
-		"  Current: ${data.currentPosition.prettyPrint}",
-		"  Target: ${data.targetPosition.prettyPrint}",
-		"------------------------------",
-		"Swivel: ", ...getMotorData(data.base),
-		"------------------------------",
-		"Shoulder: ", ...getMotorData(data.shoulder),
-		"------------------------------",
-		"Elbow: ", ...getMotorData(data.elbow),
+	List<MetricLine> get allMetrics => [
+		MetricLine("IK: "),
+		MetricLine("  Current: ${data.currentPosition.prettyPrint}"),
+		MetricLine("  Target: ${data.targetPosition.prettyPrint}"),
+		...getMotorData(data.base, "Swivel"),
+    MetricLine("------------------------------",),
+		...getMotorData(data.shoulder, "Shoulder"),
+    MetricLine("------------------------------",),
+		...getMotorData(data.elbow, "Elbow"),
 	];
 }

@@ -8,7 +8,7 @@ import "package:rover_dashboard/models.dart";
 /// The view model for the electrical analysis page.
 class ElectricalModel with ChangeNotifier {
 	/// The [Metrics] model for electrical data.
-	ElectricalMetrics get metrics => models.rover.metrics.electrical;
+	DriveMetrics get metrics => models.rover.metrics.drive;
 
   /// The [Metrics] model for drive data used for graphs.
   DriveMetrics get driveMetrics => models.rover.metrics.drive; 
@@ -59,7 +59,7 @@ class ElectricalModel with ChangeNotifier {
 		notifyListeners();
 	}
 
-  /// Function called periodically to updata [driveData]
+  /// Function called periodically to update [driveData]
   void updateDrive(Timer time) {
     if(driveData.hasTimestamp()){
       final data = driveData.decode(DriveData.fromBuffer);
@@ -77,18 +77,17 @@ class ElectricalModel with ChangeNotifier {
 	/// The error, if any, that occurred while loading the data.
 	String? errorText;
 
-	/// Adds a [WrappedMessage] containing a [ElectricalData] and or [DriveData] to the UI.
+	/// Adds a [WrappedMessage] containing a [DriveData] to the UI.
 	void addMessage(WrappedMessage wrapper) {
     if (!wrapper.hasTimestamp()) { throw ArgumentError("Data is missing a timestamp"); }
     firstTimestamp ??= wrapper.timestamp;
     switch (wrapper.name){
-      case "ElectricalData":
-        final data = wrapper.decode(ElectricalData.fromBuffer);
+      case "DriveData":
+        driveData.mergeFromMessage(wrapper);
+        final data = wrapper.decode(DriveData.fromBuffer);
         final time = wrapper.timestamp - firstTimestamp!;
         if(data.hasBatteryCurrent()) currentReadings.pushWithLimit(SensorReading(time: time, value: data.batteryCurrent), 30);
         if(data.hasBatteryVoltage()) voltageReadings.pushWithLimit(SensorReading(time: time, value: data.batteryVoltage), 30);
-      case "DriveData":
-        driveData.mergeFromMessage(wrapper);
       default:
         throw ArgumentError("Incorrect log type: ${wrapper.name}");
     }
@@ -105,7 +104,7 @@ class ElectricalModel with ChangeNotifier {
     notifyListeners();
 	}
 
-  /// Changes the axis that the UI displays the graphsy
+  /// Changes the axis that the UI displays the graphs
   void changeDirection(){
     axis = !axis;
     notifyListeners();
