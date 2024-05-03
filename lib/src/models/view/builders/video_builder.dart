@@ -32,7 +32,7 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
 	/// Whether changes are loading.
 	bool isLoading = false;
 
-	/// The error that occurrec when changing these settings, if any.
+	/// The error that occurred when changing these settings, if any.
 	String? error;
 
   /// Current status of the camera's autofocus
@@ -59,6 +59,7 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
 		&& okStatuses.contains(status);
 
 
+  @override
 	CameraDetails get value => CameraDetails(
 		resolutionHeight: resolutionHeight.value, 
 		resolutionWidth: resolutionWidth.value, 

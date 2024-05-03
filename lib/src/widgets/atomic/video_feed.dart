@@ -32,8 +32,8 @@ class ImageLoader {
 	/// Processes the next frame and stores the result in [image].
 	Future<void> load(List<int> bytes) async {
 		isLoading = true;
-		final ulist = Uint8List.fromList(bytes.toList());
-		codec = await ui.instantiateImageCodec(ulist);
+		final buffer = Uint8List.fromList(bytes.toList());
+		codec = await ui.instantiateImageCodec(buffer);
 		final frame = await codec!.getNextFrame();
 		image = frame.image;
 		isLoading = false;
@@ -64,14 +64,16 @@ class SliderSettings extends StatelessWidget {
   /// Name of the slider
   final String label;
 
-  /// Valude corresponding to the slider
+  /// Value corresponding to the slider
   final double value;
 
   /// Value to change the position of the slider
   final ValueChanged<double> onChanged;
 
+  /// The min value on this slider.
   final double min;
 
+  /// The max value on this slider.
   final double max;
 
   /// Constructor for SliderSettings
@@ -85,24 +87,23 @@ class SliderSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
+    children: <Widget>[
+      Row(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(label),
-              const Text(": "),
-              // Will this incur some computation cost? is doing .floor().toString() fine?
-              Text(value.floor().toString()),
-            ],
-          ),
-          Slider(
-            value: value,
-            onChanged: onChanged,
-            max: max,
-            min: min,
-          ),
+          Text(label),
+          const Text(": "),
+          Text(value.floor().toString()),
         ],
-      );
+      ),
+      Slider(
+        value: value,
+        onChanged: onChanged,
+        max: max,
+        min: min,
+      ),
+    ],
+  );
 }
 
 /// The logic for updating a [VideoFeed].
@@ -135,18 +136,7 @@ class VideoFeedState extends State<VideoFeed> {
 	double brightness = 0;
 
 	/// Controller for the BottomSheet
-	PersistentBottomSheetController<void>? controller;
-
-	void _showSettingsPanel() =>
-		controller = Scaffold.of(context).showBottomSheet(
-			(context) => VideoSettingsWidget(
-				id: data.id,
-				details: data.details,
-				onClosed: () {
-				controller?.close();
-				isOpened = false;
-				}),
-		);
+	PersistentBottomSheetController? controller;
 
 	@override
 	void initState() {
@@ -174,76 +164,88 @@ class VideoFeedState extends State<VideoFeed> {
 		if (mounted) setState(() {});
 	}
 
+  /// Whether there is a frame ready to display.
+  bool get isReady => models.sockets.video.isConnected
+    && imageLoader.hasImage
+    && data.details.status == CameraStatus.CAMERA_ENABLED;
+
+  /// Builds the inside of the video feed. Either a video frame or an error message.
+  Widget buildChild(BuildContext context) => isReady
+    ? SizedBox.expand(child: RawImage(image: imageLoader.image, fit: BoxFit.contain))
+    : Text(errorMessage, textAlign: TextAlign.center);
+
   @override
   Widget build(BuildContext context) => Stack(
+    children: [
+      Container(
+        // TODO: Replace with color scheme
+        color: context.colorScheme.brightness == Brightness.light
+          ? Colors.blueGrey
+          : Colors.blueGrey[700],
+        height: double.infinity,
+        width: double.infinity,
+        padding: const EdgeInsets.all(4),
+        alignment: Alignment.center,
+        child: buildChild(context),
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Container(
-            color: context.colorScheme.brightness == Brightness.light
-                ? Colors.blueGrey
-                : Colors.blueGrey[700],
-            height: double.infinity,
-            width: double.infinity,
-            padding: const EdgeInsets.all(4),
-            alignment: Alignment.center,
-            child: models.sockets.video.isConnected &&
-                    imageLoader.hasImage &&
-                    data.details.status == CameraStatus.CAMERA_ENABLED
-                ? Row(
-                    children: [
-                      Expanded(
-                          child: RawImage(
-                              image: imageLoader.image, fit: BoxFit.contain)),
-                    ],
-                  )
-                : Text(errorMessage, textAlign: TextAlign.center),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text("${models.video.networkFps[data.details.name]!} FPS"),
-              if (data.hasFrame())
-                IconButton(
-                  icon: const Icon(Icons.add_a_photo),
-                  onPressed: () => models.video.saveFrame(widget.name),
-                ),
-              IconButton(
-                icon: const Icon(Icons.settings),
-                onPressed: () async => showDialog(
-                  context: context,
-                  builder: (_) => CameraDetailsEditor(data),
-                ),
-              ),
-              ViewsSelector(currentView: widget.name.humanName),
-            ],
-          ),
-          Positioned(
-            left: 5,
-            bottom: 5,
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    if (isOpened) {
-                      controller?.close();
-                      controller = null;
-                    } else {
-                      _showSettingsPanel();
-                    }
-                    isOpened = !isOpened;
-                  },
-                  icon: const Icon(Icons.tune),
-                ),
-                Text(data.details.name.humanName),
-              ],
+          Text("${models.video.networkFps[data.details.name]!} FPS"),
+          if (data.hasFrame())
+            IconButton(
+              icon: const Icon(Icons.add_a_photo),
+              onPressed: () => models.video.saveFrame(widget.name),
+            ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () async => showDialog(
+              context: context,
+              builder: (_) => CameraDetailsEditor(data),
             ),
           ),
+          ViewsSelector(currentView: widget.name.humanName),
         ],
-      );
+      ),
+      Positioned(
+        left: 5,
+        bottom: 5,
+        child: Row(
+          children: [
+            IconButton(
+              onPressed: toggleSettings,
+              icon: const Icon(Icons.tune),
+            ),
+            Text(data.details.name.humanName),
+          ],
+        ),
+      ),
+    ],
+  );
+
+  /// Closes the settings panel.
+  void closeSettings() {
+    controller?.close();
+    controller = null;
+    isOpened = false;
+  }
+
+  /// Opens or closes the settings panel.
+  void toggleSettings() {
+    if (isOpened) return closeSettings();
+    isOpened = true;
+    controller = Scaffold.of(context).showBottomSheet(
+      (context) => VideoSettingsWidget(
+        id: data.id,
+        details: data.details,
+        onClosed: closeSettings,
+      ),
+    );
+  }
 
   /// Displays an error message describing why `image == null`.
   String get errorMessage {
-    if (!models.sockets.video.isConnected)
-      return "The video program is not connected";
+    if (!models.sockets.video.isConnected) return "The video program is not connected";
     switch (data.details.status) {
       case CameraStatus.CAMERA_LOADING:
         return "Camera is loading...";
@@ -274,8 +276,11 @@ class VideoSettingsWidget extends StatefulWidget {
   final CameraDetails details;
   final String id;
   final VoidCallback onClosed;
-  const VideoSettingsWidget(
-      {required this.details, required this.onClosed, required this.id});
+  const VideoSettingsWidget({
+    required this.details, 
+    required this.onClosed, 
+    required this.id,
+  });
 
   @override
   VideoSettingsState createState() => VideoSettingsState();
@@ -311,10 +316,11 @@ class VideoSettingsState extends State<VideoSettingsWidget> {
 				onChanged: (val) async {
 					setState(() => zoom = val);
 					await models.video.updateCamera(
-					widget.id,
-					CameraDetails(name: widget.details.name, zoom: val.round()),
+            widget.id,
+            CameraDetails(name: widget.details.name, zoom: val.round()),
 					);
-				}),
+				},
+      ),
 			SliderSettings(
 				label: "Pan",
 				value: pan,
@@ -326,7 +332,8 @@ class VideoSettingsState extends State<VideoSettingsWidget> {
 					widget.id,
 					CameraDetails(name: widget.details.name, pan: val.round()),
 					);
-				}),
+				},
+      ),
 			SliderSettings(
 				label: "Tilt",
 				value: tilt,
@@ -338,7 +345,8 @@ class VideoSettingsState extends State<VideoSettingsWidget> {
 					widget.id,
 					CameraDetails(name: widget.details.name, tilt: val.round()),
 					);
-				}),
+				},
+      ),
 			SliderSettings(
 				label: "Focus",
 				value: focus,
@@ -349,19 +357,19 @@ class VideoSettingsState extends State<VideoSettingsWidget> {
 					widget.id,
 					CameraDetails(name: widget.details.name, focus: val.round()),
 					);
-				}),
-
+				},
+      ),
 			// Need to debug bool conversion to 1.0 and 2.0
 			Checkbox(
 				value: autofocus,
 				onChanged: (bool? value) async {
 					setState(() => autofocus = value);
 					await models.video.updateCamera(
-					widget.id,
-					CameraDetails(
-						name: widget.details.name, autofocus: autofocus),
-					);
-				}),
-			],
-		);
-	}
+            widget.id,
+            CameraDetails(name: widget.details.name, autofocus: autofocus),
+          );
+        },
+      ),
+    ],
+  );
+}
