@@ -23,8 +23,7 @@ dependencies:
   yaml: ^3.1.1
   yaml_writer: ^1.0.2
   burt_network: 
-    # git: https://github.com/BinghamtonRover/Networking.git
-    path: ../SecondaryPi/burt_network
+    git: https://github.com/BinghamtonRover/Networking.git
 
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
