@@ -149,7 +149,7 @@ class ScienceModel with ChangeNotifier {
 
 	/// Adds a [WrappedMessage] containing a [ScienceData] to the UI.
 	void addMessage(WrappedMessage wrapper) {
-		if (wrapper.name != ScienceData().messageName) throw ArgumentError("Incorrect log type: ${wrapper.name}");
+		if (!wrapper.name.contains(ScienceData().messageName)) throw ArgumentError("Incorrect log type: ${wrapper.name}");
 		final data = wrapper.decode(ScienceData.fromBuffer);
 		final sample = data.sample;
 		if (!wrapper.hasTimestamp()) { throw ArgumentError("Data is missing a timestamp"); }
