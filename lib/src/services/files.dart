@@ -59,7 +59,12 @@ class FilesService extends Service {
   }
 
   @override
-  Future<void> dispose() async { }
+  Future<void> dispose() async {
+    for (final file in logFiles.values) {
+      await file.flush();
+      await file.close();
+    }
+  }
 
   /// Saves the [Settings] object to the [settingsFile], as JSON.
   Future<void> writeSettings(Settings? value) async {
