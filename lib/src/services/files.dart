@@ -34,6 +34,9 @@ class FilesService extends Service {
   /// This includes all the different operating modes with specified folders inside
   late final Directory loggingDir;
 
+  /// A map from filename to an [IOSink] for faster writes.
+  final Map<String, IOSink> logFiles = {};
+
   /// The directory where screenshots are stored.
   /// 
   /// These are only screenshots of video feeds, not of the dashboard itself.
@@ -53,13 +56,10 @@ class FilesService extends Service {
     outputDir = await Directory("${appDir.path}/Dashboard").create();
     loggingDir = await Directory("${outputDir.path}/logs/${DateTime.now().timeStamp}").create(recursive: true);
     if (!settingsFile.existsSync()) await writeSettings(null);
-    dataLogger = Timer.periodic(const Duration(seconds: 5), logAllData);
   }
 
   @override
-  Future<void> dispose() async {
-    dataLogger.cancel();
-  }
+  Future<void> dispose() async { }
 
   /// Saves the [Settings] object to the [settingsFile], as JSON.
   Future<void> writeSettings(Settings? value) async {
@@ -93,51 +93,42 @@ class FilesService extends Service {
     await File("${dir.path}/$number.jpg").writeAsBytes(image); 
   }
 
-  /// Saves all the data in [batchedLogs] to a file by calling [logAllData].
-  late final Timer dataLogger;
-  
-  /// Holds data to be logged by [logData] when [dataLogger] fires.
-  /// 
-  /// This is used by [logData] instead of writing the data immediately because data can come in at
-  /// an unpredictable and burdensome rate, which would make the dashboard write a lot of data at
-  /// once to the same file(s) and overload the user's device.
-  Map<String, List<WrappedMessage>> batchedLogs = {};
-
-  /// Logs all the data saved in [batchedLogs] and resets it.
-  Future<void> logAllData(Timer timer) async {
-    for (final name in batchedLogs.keys) {
-      final file = loggingDir / "$name.log";
-      final data = batchedLogs[name]!;
-      final copy = List<WrappedMessage>.from(data);
-      data.clear();
-      for (final wrapper in copy) {
-        final encoded = base64.encode(wrapper.writeToBuffer());
-        await file.writeAsString("$encoded\n", mode: FileMode.writeOnlyAppend);
-      }
-    }
-  }
-
-  /// Outputs log data to the correct file based on message
-  Future<void> logData(Message message) async {
-    batchedLogs[message.messageName] ??= [];
-    batchedLogs[message.messageName]!.add(message.wrap());
-  }
-
   /// Reads logs from the given file.
   Future<List<WrappedMessage>> readLogs(File file) async => [
     for (final line in (await file.readAsString()).trim().split("\n"))
       WrappedMessage.fromBuffer(base64.decode(line)),
   ];
 
-  /// Outputs error to log file
+  /// Outputs log data to the correct file based on message
+  Future<void> logData(Message message) async {
+    final name = message.messageName;
+    final wrapper = message.wrap();
+    final content = base64Encode(wrapper.writeToBuffer());
+    await _log(name, content);
+  }
+
+  /// Outputs an error to the Dashboard log file.
   Future<void> logError(Object error, StackTrace stack) async{
-    final file = loggingDir / "errors.log";
-    await file.writeAsString("${DateTime.now().timeStamp} $error $stack\n", mode: FileMode.writeOnlyAppend);
+    final content = "${DateTime.now().timeStamp} $error\n  $stack\n";
+    await _log("Dashboard", content);
   }
 
   /// Outputs a log to its device's respective log file.
   Future<void> logMessage(BurtLog log) async {
-    final file = loggingDir / "${log.device.humanName}.log";
-    await file.writeAsString("${log.format()}\n", mode: FileMode.writeOnlyAppend);
+    final name = log.device.humanName;
+    final content = log.format();
+    await _log(name, content);
+  }
+
+  Future<void> _log(String name, String content) async {
+    final filename = "$name.log";
+    var sink = logFiles[filename];
+    if (sink == null) {
+      final file = loggingDir / filename;
+      await file.create(recursive: true);
+      sink = file.openWrite(mode: FileMode.writeOnlyAppend);
+      logFiles[filename] = sink;
+    }
+    sink.writeln(content);
   }
 }
