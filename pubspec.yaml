@@ -4,7 +4,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 2024.4.18+5  # Always increment the build number, never go down, even on new versions
 
 environment:
-  sdk: ^3.2.2
+  sdk: ^3.3.0
+  flutter: ^3.19.6
 
 # Prefer to use `flutter pub add packageName` rather than modify this section by hand.
 dependencies:
@@ -15,7 +16,7 @@ dependencies:
   file_picker: ^8.0.0+1
   fl_chart: ^0.67.0
   flutter_libserialport: ^0.4.0
-  package_info_plus: ^7.0.0
+  package_info_plus: ^8.0.0
   flutter_resizable_container: ^0.4.1
   path_provider: ^2.0.14
   protobuf: ^3.0.0
