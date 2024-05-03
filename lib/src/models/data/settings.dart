@@ -13,17 +13,14 @@ class SettingsModel extends Model {
 	/// The user's arm settings.
 	ArmSettings get arm => all.arm;
 
-	/// The user's video settings.
-	VideoSettings get video => all.video;
-
 	/// The user's science settings.
 	ScienceSettings get science => all.science;
 
-	/// The user's autonomy settings.
-	AutonomySettings get autonomy => all.autonomy;
-
 	/// The user's easter egg settings.
 	EasterEggsSettings get easterEggs => all.easterEggs;
+
+  /// The user's dashboard settings.
+  DashboardSettings get dashboard => all.dashboard;
 
 	@override
 	Future<void> init() async {

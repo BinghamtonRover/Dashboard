@@ -10,7 +10,7 @@ import "package:rover_dashboard/models.dart";
 /// - Override [allowedFallthrough] to allow certain massages to pass unhandled.
 class MessagesModel {
 	/// A set of message types that are allowed to pass through without being handled.
-	static const Set<String> allowedFallthrough = {"AutonomyData"};
+	static const Set<String> allowedFallthrough = {"AutonomyData", "Disconnect"};
 
 	/// A set of handlers to be called based on [WrappedMessage.name].
 	final Map<String, RawDataHandler> _handlers = {};

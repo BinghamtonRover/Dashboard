@@ -1,5 +1,6 @@
 import "dart:math";
 
+import "package:protobuf/protobuf.dart";
 import "package:rover_dashboard/data.dart";
 
 export "package:protobuf/protobuf.dart" show GeneratedMessageGenericExtensions;
@@ -18,14 +19,12 @@ typedef WrappedMessageHandler = void Function(WrappedMessage);
 /// A callback to execute with raw Protobuf data.
 typedef RawDataHandler = void Function(List<int> data);
 
-/// Gets the name of the command message 1for the given device.
+/// Gets the name of the command message for the given device.
 String getCommandName(Device device) => switch (device) {
 	Device.ARM => "ArmCommand",
 	Device.GRIPPER => "GripperCommand",
 	Device.SCIENCE => "ScienceCommand",
-	Device.ELECTRICAL => "ElecticalCommand",
 	Device.DRIVE => "DriveCommand",
-	Device.MARS => "MarsCommand",
 	_ => "Unknown",
 };
 
@@ -34,11 +33,19 @@ String getDataName(Device device) => switch (device) {
 	Device.ARM => "ArmData",
 	Device.GRIPPER => "GripperData",
 	Device.SCIENCE => "ScienceData",
-	Device.ELECTRICAL => "ElectricalData",
 	Device.DRIVE => "DriveData",
-	Device.MARS => "MarsData",
 	_ => "Unknown",
 };
+
+/// Utilities for a list of Protobuf enums.
+extension UndefinedFilter<T extends ProtobufEnum> on List<T> {
+  /// Filters out `_UNDEFINED` values from the list.
+  List<T> get filtered => [
+    for (final value in this) 
+      if (value.value != 0)
+        value, 
+  ];
+}
 
 /// Utilities for [Timestamp]s.
 extension TimestampUtils on Timestamp {
@@ -47,6 +54,9 @@ extension TimestampUtils on Timestamp {
 
 	/// Adds a [Duration] to a [Timestamp].
 	Timestamp operator +(Duration duration) => Timestamp.fromDateTime(toDateTime().add(duration));
+
+  /// Subtracts the 
+	double operator -(Timestamp other) => (seconds - other.seconds).toDouble();
 }
 
 /// Decodes a wrapped Protobuf message. 
@@ -65,6 +75,7 @@ extension RoverStatusHumanName on RoverStatus {
 			case RoverStatus.MANUAL: return "Manual";
 			case RoverStatus.AUTONOMOUS: return "Autonomous";
 			case RoverStatus.POWER_OFF: return "Off";
+      case RoverStatus.RESTART: return "Restart";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized rover status: $this");
@@ -131,7 +142,7 @@ extension DeviceUtils on Device {
 	/// Gets a user-friendly name for a [Device].
 	String get humanName {
 		switch(this) {
-			case Device.DEVICE_UNDEFINED: return "";
+			case Device.DEVICE_UNDEFINED: return "Unknown device";
 			case Device.DASHBOARD: return "Dashboard";
 			case Device.SUBSYSTEMS: return "Subsystems";
 			case Device.VIDEO: return "Video";
@@ -140,10 +151,7 @@ extension DeviceUtils on Device {
 			case Device.ARM: return "Arm";
 			case Device.GRIPPER: return "Gripper";
 			case Device.SCIENCE: return "Science";
-			case Device.ELECTRICAL: return "Electrical";
 			case Device.DRIVE: return "Drive";
-			case Device.MARS: return "MARS";
-			case Device.MARS_SERVER: return "MARS Pi";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized device: $this");
@@ -251,4 +259,44 @@ extension MotorDirectionUtils on MotorDirection {
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized MotorDirection: $this");
 	}
+}
+
+/// More human-friendly fields for [BurtLogLevel]s.
+extension LogLevelUtils on BurtLogLevel {
+  /// The human-readable name of this level.
+  String get humanName => switch(this) {
+    BurtLogLevel.critical => "Critical",
+    BurtLogLevel.error => "Error",
+    BurtLogLevel.warning => "Warning",
+    BurtLogLevel.info => "Info",
+    BurtLogLevel.debug => "Debug",
+    BurtLogLevel.trace => "Trace",
+    _ => "Unknown",
+  };
+
+  /// The label to represent this log.
+  String get label => switch(this) {
+    BurtLogLevel.critical => "[C]",
+    BurtLogLevel.error => "[E]",
+    BurtLogLevel.warning => "[W]",
+    BurtLogLevel.info => "[I]",
+    BurtLogLevel.debug => "[D]",
+    BurtLogLevel.trace => "[T]",
+    _ => "?",
+  };
+}
+
+/// Formats [BurtLog] messages in plain-text. For the UI, use widgets.
+extension LogFormat on BurtLog {
+  /// Formats [BurtLog] messages in plain-text. For the UI, use widgets.
+  String format() {
+    final result = StringBuffer()
+      ..write(level.label)
+      ..write(" ")
+      ..write(title);
+    if (body.isNotEmpty) {
+      result..write("\n  ")..write(body);
+    }
+    return result.toString();
+  }
 }

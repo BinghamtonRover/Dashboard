@@ -10,6 +10,7 @@
 library models;
 
 import "src/models/model.dart";
+import "src/models/data/logs.dart";
 import "src/models/data/home.dart";
 import "src/models/data/messages.dart";
 import "src/models/data/serial.dart";
@@ -23,6 +24,7 @@ export "src/models/model.dart";
 
 // Data models
 export "src/models/data/home.dart";
+export "src/models/data/logs.dart";
 export "src/models/data/messages.dart";
 export "src/models/data/serial.dart";
 export "src/models/data/settings.dart";
@@ -37,8 +39,9 @@ export "src/models/rover/metrics.dart";
 export "src/models/rover/rover.dart";
 
 // View models
-export "src/models/view/autonomy.dart";
-export "src/models/view/mars.dart";
+export "src/models/view/electrical.dart";
+export "src/models/view/logs.dart";
+export "src/models/view/map.dart";
 export "src/models/view/science.dart";
 export "src/models/view/timer.dart";
 
@@ -49,6 +52,7 @@ export "src/models/view/builders/science_command.dart";
 export "src/models/view/builders/builder.dart";
 export "src/models/view/builders/color_builder.dart";
 export "src/models/view/builders/settings_builder.dart";
+export "src/models/view/builders/throttle.dart";
 export "src/models/view/builders/timer_builder.dart";
 export "src/models/view/builders/video_builder.dart";
 
@@ -89,12 +93,16 @@ class Models extends Model {
 
 	/// The messages model.
 	final messages = MessagesModel();
+  
+  /// The logs model.
+  final logs = LogsModel();
 
 	@override
 	Future<void> init() async {
 		// initialize all models here
 		await settings.init();
 		await home.init();
+    await logs.init();
 		await video.init();
 		await rover.init();
 		await serial.init();

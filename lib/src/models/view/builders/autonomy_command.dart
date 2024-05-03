@@ -15,8 +15,12 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 	/// Whether the dashboard is awaiting a response from the rover.
 	bool isLoading = false;
 
+  /// A constructor to call [init] when created.
+	AutonomyCommandBuilder() { init(); }
+
 	/// Listens for incoming confirmations from the rover that it received the command.
-	AutonomyCommandBuilder() {
+  Future<void> init() async {
+    await Future<void>.delayed(const Duration(seconds: 1));
 		models.messages.registerHandler<AutonomyCommand>(
 			name: AutonomyCommand().messageName,
 			decoder: AutonomyCommand.fromBuffer,
@@ -56,7 +60,7 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 		if (_handshake != null) {
 			models.home.setMessage(severity: Severity.info, text: "Command received");
 		} else {
-			models.home.setMessage(severity: Severity.error, text: "The rover did not receive that command");
+			models.home.setMessage(severity: Severity.error, text: "Command not received");
 		}
 		isLoading = false;
 		notifyListeners();
@@ -72,12 +76,12 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 		models.sockets.autonomy.sendMessage(message);
 		models.sockets.autonomy.sendMessage(message);
 		models.sockets.autonomy.sendMessage(message);
-		models.home.setMessage(severity: Severity.info, text: "Aborting autonomy...");
+		models.home.setMessage(severity: Severity.info, text: "Aborting...");
 		await Future<void>.delayed(const Duration(seconds: 1));
 		if (_handshake != null) {
 			models.home.setMessage(severity: Severity.info, text: "Command received");
 		} else {
-			models.home.setMessage(severity: Severity.critical, text: "The rover did not receive that command");
+			models.home.setMessage(severity: Severity.critical, text: "Command not received");
 		}
 		isLoading = false;
 		notifyListeners();

@@ -1,7 +1,21 @@
+// import "package:math";
+
+import "dart:math";
+
 import "package:flutter/foundation.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
+
+/// Class to construct a Metric
+class MetricLine {
+  /// Severity of the Metric
+	final Severity? severity;
+  /// Message for the Metric
+	final String text;
+  /// Constructor for the MetricLine class
+	MetricLine(this.text, {this.severity});
+}
 
 /// A readout of metrics reported by one of the rover's subsystems. 
 /// 
@@ -24,7 +38,15 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
 	/// 
 	/// Be sure to store the actual values as fields. This property should be a list of one 
 	/// user-friendly explanation per metric. 
-	List<String> get allMetrics;
+	List<MetricLine> get allMetrics;
+
+  /// Fetch the overall Security
+	Severity? get overallSeverity {
+		final indexes = [for (final metric in allMetrics) metric.severity?.index ?? -1];
+		final index = indexes.reduce(max);
+    if (index == -1) return null;
+		return Severity.values[index];
+	}
 
 	/// Updates [data] with new data.
 	void update(T value) {

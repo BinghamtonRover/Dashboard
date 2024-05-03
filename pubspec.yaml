@@ -1,29 +1,28 @@
 name: rover_dashboard
 description: Graphical application for remotely operating the rover.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 2023.9.20+3
+version: 2024.4.18+5  # Always increment the build number, never go down, even on new versions
 
 environment:
-  sdk: "^3.0.0"
+  sdk: ^3.2.2
 
 # Prefer to use `flutter pub add packageName` rather than modify this section by hand.
 dependencies:
-  async: ^2.11.0
-  file_picker: ^5.2.11
-  fl_chart: ^0.63.0
   flutter:
     sdk: flutter
-  flutter_libserialport: ^0.3.0
-  package_info_plus: ^4.0.0
-  path_provider: ^2.0.14
-  protobuf: ^3.0.0
-  provider: ^6.0.5
-  url_launcher: ^6.1.10
-  win32_gamepad: ^1.0.3
-  yaml: ^3.1.1
-  yaml_writer: ^1.0.2
   burt_network: 
     git: https://github.com/BinghamtonRover/Networking.git
+  file_picker: ^8.0.0+1
+  fl_chart: ^0.67.0
+  flutter_libserialport: ^0.4.0
+  package_info_plus: ^7.0.0
+  flutter_resizable_container: ^0.4.1
+  path_provider: ^2.0.14
+  protobuf: ^3.0.0
+  url_launcher: ^6.1.10
+  win32_gamepad: ^1.0.3
+  just_audio: ^0.9.36
+  just_audio_windows: ^0.2.0
 
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
@@ -33,10 +32,6 @@ dev_dependencies:
   icons_launcher: ^2.1.0
   msix: ^3.9.1
   very_good_analysis: ^5.0.0+1
-
-# Do not modify this section unless you know what it does and why you need it.
-# If you do need to override any dependencies, document which ones, which versions, and why.
-# dependency_overrides: 
 
 # Generates icons for the given platforms
 #   Run: flutter pub run icons_launcher:create
@@ -57,7 +52,7 @@ flutter_launcher_icons:
 # Builds a Windows .msix App Installer file for the Dashboard.
 #   Command: dart run msix:create
 msix_config:
-  msix_version: 2023.9.20.3
+  msix_version: 2024.4.18.5
   display_name: Dashboard
   publisher_display_name: Binghamton University Rover Team
   identity_name: edu.binghamton.rover
@@ -74,3 +69,8 @@ flutter:
   uses-material-design: true
   assets: 
     - assets/rover.png
+    - assets/clippy.webp
+    - assets/bad_apple/
+    - assets/bad_apple_thumbnail.webp
+    - assets/bad_apple2.mp3
+    - assets/binghamton2.wav

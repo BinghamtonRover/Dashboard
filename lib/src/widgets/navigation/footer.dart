@@ -1,29 +1,39 @@
 import "package:flutter/material.dart";
-import "package:provider/provider.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// The footer, responsible for showing vitals and logs. 
 class Footer extends StatelessWidget {
+  /// Whether to show logs. Disable this when on the logs page.
+  final bool showLogs;
+  /// Creates the footer.
+  const Footer({this.showLogs = true});
+  
 	@override
 	Widget build(BuildContext context) => ColoredBox(
 		color: Theme.of(context).colorScheme.secondary,
-    child: const Wrap(
+    child: Wrap(
       alignment: WrapAlignment.spaceBetween,
       children: [
-        MessageDisplay(),
-        Row(  // Groups these elements together even when wrapping
-          mainAxisSize: MainAxisSize.min, 
+        MessageDisplay(showLogs: showLogs),
+        Wrap(  // Groups these elements together even when wrapping
+          // mainAxisSize: MainAxisSize.min, 
           children: [
             ViewsCounter(),
-            SizedBox(width: 8),
-            GamepadButtons(),
+            const SizedBox(width: 8),
+            // GamepadButtons(),
+            GamepadButton(models.rover.controller1),
+            const SizedBox(width: 8),
+            GamepadButton(models.rover.controller2),
+            const SizedBox(width: 8),
+            GamepadButton(models.rover.controller3),
             SerialButton(),
-            SizedBox(width: 4),
-            StatusIcons(),
+            const SizedBox(width: 4),
+            const StatusIcons(),
           ],
         ),
       ],
@@ -65,15 +75,15 @@ class StatusIcons extends StatelessWidget {
 			case RoverStatus.IDLE: return Icons.pause_circle;
 			case RoverStatus.MANUAL: return Icons.play_circle;
 			case RoverStatus.AUTONOMOUS: return Icons.smart_toy;
+			case RoverStatus.RESTART: return Icons.restart_alt;
 		}
 		throw ArgumentError("Unrecognized rover status: $status");
 	}
 
 	/// A color representing a meter's fill.
 	Color getColor(double percentage) {
-		if (percentage > 0.75) { return Colors.green; }
-		else if (percentage > 0.5) { return Colors.yellow; }
-		else if (percentage > 0.25) { return Colors.orange; }
+		if (percentage > 0.45) { return Colors.green; }
+		else if (percentage > 0.2) { return Colors.orange; }
 		else if (percentage > 0.0) { return Colors.red; }
 		else { return Colors.black; }
 	}
@@ -86,6 +96,7 @@ class StatusIcons extends StatelessWidget {
 			case RoverStatus.MANUAL: return Colors.green;
 			case RoverStatus.AUTONOMOUS: return Colors.blueGrey;
 			case RoverStatus.POWER_OFF: return Colors.red;
+			case RoverStatus.RESTART: return Colors.yellow;
 		}
 		throw ArgumentError("Unrecognized rover status: $status");
 	}
@@ -95,14 +106,17 @@ class StatusIcons extends StatelessWidget {
     mainAxisSize: MainAxisSize.min,
 		children: [
 			AnimatedBuilder(  // battery level
-				animation: Listenable.merge([models.rover.metrics.electrical, models.rover.status]),
+				animation: Listenable.merge([models.rover.metrics.drive, models.rover.status]),
 				builder: (context, _) => Tooltip(
-					message: "Battery: ${(models.rover.metrics.electrical.battery*100).toStringAsFixed(0)}%",
+					message: "Battery: ${models.rover.metrics.drive.batteryVoltage.toStringAsFixed(2)} "
+            "(${(models.rover.metrics.drive.batteryPercentage * 100).toStringAsFixed(0)}%)",
 					child: Icon(
 						models.rover.isConnected
-							? getBatteryIcon(models.rover.metrics.electrical.battery)
+							? getBatteryIcon(models.rover.metrics.drive.batteryPercentage)
 							: Icons.battery_unknown,
-						color: getColor(models.rover.metrics.electrical.battery),
+						color: models.rover.isConnected 
+              ? getColor(models.rover.metrics.drive.batteryPercentage)
+              : Colors.black,
 					),
 				),
 			),
@@ -161,104 +175,120 @@ class StatusIcons extends StatelessWidget {
 }
 
 /// A dropdown to select more or less views.
-class ViewsCounter extends StatelessWidget {
+class ViewsCounter extends ReusableReactiveWidget<ViewsModel> {
 	/// Provides a const constructor for this widget.
-	const ViewsCounter();
+	ViewsCounter() : super(models.views);
 
 	@override
-	Widget build(BuildContext context) => ProviderConsumer<ViewsModel>.value(
-		value: models.views,
-		builder: (model) => Row(
-			mainAxisSize: MainAxisSize.min,
-			children: [
-				const Text("Views:"),
-				const SizedBox(width: 4),
-				DropdownButton<int>(
-					iconEnabledColor: Colors.black,
-					value: model.views.length,
-					onChanged: model.setNumViews,
-					items: [
-						for (int i = 1; i <= 4; i++) DropdownMenuItem(
-							value: i,
-							child: Center(child: Text(i.toString())),
-						),
-					],
-				),
-			],
-		),
+	Widget build(BuildContext context, ViewsModel model) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      const Text("Views:"),
+      const SizedBox(width: 4),
+      DropdownButton<int>(
+        iconEnabledColor: Colors.black,
+        value: model.views.length,
+        onChanged: model.setNumViews,
+        items: [
+          for (int i = 1; i <= 4; i++) DropdownMenuItem(
+            value: i,
+            child: Center(child: Text(i.toString())),
+          ),
+        ],
+      ),
+    ],
 	);
 }
 
 /// Allows the user to connect to the firmware directly, over Serial.
 /// 
 /// See [SerialModel] for an implementation.
-class SerialButton extends StatelessWidget {
+class SerialButton extends ReusableReactiveWidget<SerialModel> {
 	/// Provides a const constructor.
-	const SerialButton();
+	SerialButton() : super(models.serial);
 
 	@override
-	Widget build(BuildContext context) => Consumer<SerialModel>(
-		builder: (_, model, __) => PopupMenuButton(
-			icon: Icon(
-				Icons.usb, 
-				color: model.hasDevice ? Colors.green : context.colorScheme.onSecondary,
-			),
-			tooltip: "Select device",
-			onSelected: model.toggle,
-			itemBuilder: (_) => [
-				for (final String port in SerialDevice.availablePorts) PopupMenuItem(
-					value: port,
-					child: ListTile(
-						title: Text(port),
-						leading: model.isConnected(port) ? const Icon(Icons.check) : null,
-					),
-				),
-			],
-		),
+	Widget build(BuildContext context, SerialModel model) => PopupMenuButton(
+    icon: Icon(
+      Icons.usb, 
+      color: model.hasDevice ? Colors.green : context.colorScheme.onSecondary,
+    ),
+    tooltip: "Select device",
+    onSelected: model.toggle,
+    itemBuilder: (_) => [
+      for (final String port in SerialDevice.availablePorts) PopupMenuItem(
+        value: port,
+        child: ListTile(
+          title: Text(port),
+          leading: model.isConnected(port) ? const Icon(Icons.check) : null,
+        ),
+      ),
+    ],
 	);
 } 
 
 /// Displays the latest [TaskbarMessage] from [HomeModel.message].
-class MessageDisplay extends StatelessWidget {
-	/// Provides a const constructor for this widget.
-	const MessageDisplay();
-
+class MessageDisplay extends ReusableReactiveWidget<HomeModel> {  
+  /// Whether to show an option to open the logs page.
+  final bool showLogs;
+  
+  /// Provides a const constructor for this widget.
+	MessageDisplay({required this.showLogs}) : super(models.home);
+  
 	/// Gets the appropriate icon for the given severity.
-	IconData getIcon(Severity severity) {
+	IconData getIcon(Severity? severity) {
 		switch (severity) {
 			case Severity.info: return Icons.info;
 			case Severity.warning: return Icons.warning;
 			case Severity.error: return Icons.error;
 			case Severity.critical: return Icons.dangerous;
+      case null: return Icons.receipt_long;
 		}
 	}	
 
 	/// Gets the appropriate color for the given severity.
-	Color getColor(Severity severity) {
+	Color getColor(Severity? severity) {
 		switch (severity) {
+			case null: return Colors.transparent;
 			case Severity.info: return Colors.transparent;
-			case Severity.warning: return Colors.yellow;
-			case Severity.error: return Colors.orange;
-			case Severity.critical: return Colors.red;
+			case Severity.warning: return Colors.orange;
+			case Severity.error: return Colors.red;
+			case Severity.critical: return Colors.red.shade900;
 		}
 	}
 
 	@override
-	Widget build(BuildContext context) => Consumer<HomeModel>(
-		builder: (_, model, __) => model.message == null 
-      ? const SizedBox.shrink()
-			: Container(
-        height: 48,
-				color: getColor(model.message!.severity),
-				child: Row(
+	Widget build(BuildContext context, HomeModel model) => SizedBox(
+    height: 48,
+    child: InkWell(
+      onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (context) => LogsPage())),
+      child: Card(
+        shadowColor: Colors.transparent,
+        color: getColor(model.message?.severity), 
+        shape: ContinuousRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: (model.message == null && !showLogs) ? const SizedBox() : Row(
           mainAxisSize: MainAxisSize.min,
-					children: [
-						Icon(getIcon(model.message!.severity)),
-						const SizedBox(width: 4),
-						Text(model.message!.text),
-						const SizedBox(width: 4),
-				],
-			),
-		),
+          children: [
+            const SizedBox(width: 4),
+            Icon(getIcon(model.message?.severity)),
+            const SizedBox(width: 4),
+            if (model.message == null) const Text("Open logs")
+            else Tooltip(
+              message: "Click to open logs",
+              child: models.settings.easterEggs.enableClippy
+                ? Row(children: [
+                  Image.asset("assets/clippy.webp", width: 36, height: 36),
+                  const Text(" -- "),
+                  Text(model.message!.text),
+                ],)
+                : Text(model.message!.text),
+            ),
+            const SizedBox(width: 8),
+          ],
+        ),
+      ),
+    ),
 	);
 }

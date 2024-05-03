@@ -8,21 +8,24 @@ class GripperMetrics extends Metrics<GripperData> {
 	@override
 	String get name => "Gripper";
 
-	/// Returns a human-readable description of a [MotorData].
-	List<String> getMotorData(MotorData motor) => [
-		"  Is moving? ${motor.isMoving}",
-		"  Limit? ${motor.isLimitSwitchPressed}",
-		"  Direction: ${motor.direction.humanName}",
-		"  Steps: ${motor.currentStep} --> ${motor.targetStep}",
-		"  Angle: ${motor.angle}",
+	/// Returns a description of a [MotorData].
+	List<MetricLine> getMotorData(MotorData motor) => [
+		MetricLine("  Is moving? ${motor.isMoving}", severity: motor.isMoving ? Severity.info : null),
+		MetricLine("  Limit? ${motor.isLimitSwitchPressed}", severity: motor.isLimitSwitchPressed ? Severity.warning : null),
+		MetricLine("  Direction: ${motor.direction.humanName}"),
+		MetricLine("  Steps: ${motor.currentStep} --> ${motor.targetStep}"),
+		MetricLine("  Angle: ${motor.angle.toDegrees()} degrees"),
 	];
 
 	@override
-	List<String> get allMetrics => [
-		"Lift: ", ...getMotorData(data.lift),
-		"------------------------------",
-		"Rotate: ", ...getMotorData(data.rotate),
-		"------------------------------",
-		"Pinch: ", ...getMotorData(data.pinch),
+	List<MetricLine> get allMetrics => [
+    MetricLine("Lift:"),
+		...getMotorData(data.lift,),
+		MetricLine("------------------------------",),
+    MetricLine("Rotate"),
+		...getMotorData(data.rotate),
+		MetricLine("------------------------------",),
+    MetricLine("Pinch:"),
+		...getMotorData(data.pinch),
 	];
 }
