@@ -19,18 +19,24 @@ class ModernDriveControls extends RoverControls {
 
   (double, double) getWheelSpeeds(double speed, double direction) {
     const slope = 1 / 90;
-    if (-90 <= direction && direction <= -45) {  // [-90, -45]
-      return (slope * direction + 0.5, slope * direction + 1.5);
+    // if (-90 <= direction && direction <= -45) {  // [-90, -45]
+    //   return (slope * direction + 0.5, slope * direction + 1.5);
+    // } else {  // [45, 90]
+    //   return (-1 * slope * direction + 1.5, -1 * slope * direction + 0.5);
+    // }
+
+    if (direction < -45) {  // trying to turn too far left
+      return (-1, 1);
     } else if (direction > -45 && direction < 45) {  // [-45, 45]
-      return (slope * direction + 0.5, -1 * slope * direction + 0.5);
-    } else {  // [45, 90]
-      return (-1 * slope * direction + 1.5, -1 * slope * direction + 0.5);
+      return (slope * direction + speed, -1 * slope * direction + speed);
+    } else {
+      return (1, -1);
     }
   }
 
   List<DriveCommand> getWheelCommands(GamepadState state) {
     final speed = state.normalTrigger;  // sum of both triggers, [-1, 1]
-    final direction = state.normalLeftX*90;  // [-1, 1] --> [-90, 90]
+    final direction = state.normalLeftX * 45;  // [-1, 1] --> [-45, 45]
     final (double left, double right) = getWheelSpeeds(speed, direction);
     return [
       DriveCommand(left: speed * left, setLeft: true),
