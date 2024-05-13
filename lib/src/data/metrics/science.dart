@@ -20,7 +20,6 @@ class ScienceMetrics extends Metrics<ScienceData> {
 
 	@override
 	void update(ScienceData value){
-    print("Got science message");
 		if (value.state == ScienceState.STOP_COLLECTING) return;
 		super.update(value);
 	}

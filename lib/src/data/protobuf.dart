@@ -304,7 +304,7 @@ extension LogFormat on BurtLog {
 /// Helpful methods on [Version]s.
 extension VersionUtils on Version {
   /// Formats the version in a human-readable format.
-  String format() => "$major.$minor";
+  String format() => hasMajor() ? "$major.$minor" : "unknown";
   /// Whether another version is compatible with this one.
   bool isCompatible(Version other) => major == other.major;
 }
