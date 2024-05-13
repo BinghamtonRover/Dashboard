@@ -49,20 +49,24 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
 		return Severity.values[index];
 	}
 
+  /// Checks this message's version and checks for support.
+  bool checkVersion(T data) {
+    final newVersion = parseVersion(data);
+    if (newVersion.hasMajor()) version = newVersion;
+    if (version == null) return true;
+    final major = version!.major;
+    final minor = version!.minor;
+    final supportedMajor = supportedVersion.major;
+    final result = major == supportedMajor;
+    if (!result) {
+      models.home.setMessage(severity: Severity.critical, text: "Received $name v$major.$minor, expected ^$supportedMajor.0");
+    }
+    return result;
+  }
+
 	/// Updates [data] with new data.
 	void update(T value) {
-    if (version == null) {
-      version = parseVersion(value);
-      final major = version!.major;
-      final minor = version!.minor;
-      if (major == supportedVersion.major) {
-        models.home.setMessage(severity: Severity.info, text: "Connected to $name v$major.$minor");
-      } else {
-        models.home.setMessage(severity: Severity.critical, text: "Received $name v$major.$minor, expected ^$supportedVersion.0");
-        return;
-      }
-    }
-    
+    if (!checkVersion(value)) return;    
 		data.mergeFromMessage(value);
 		notifyListeners();
 		services.files.logData(value);
