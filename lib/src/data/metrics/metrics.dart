@@ -54,12 +54,9 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
     final newVersion = parseVersion(data);
     if (newVersion.hasMajor()) version = newVersion;
     if (version == null) return true;
-    final major = version!.major;
-    final minor = version!.minor;
-    final supportedMajor = supportedVersion.major;
-    final result = major == supportedMajor;
+    final result = supportedVersion.isCompatible(version!);
     if (!result) {
-      models.home.setMessage(severity: Severity.critical, text: "Received $name v$major.$minor, expected ^$supportedMajor.0");
+      models.home.setMessage(severity: Severity.critical, text: "Received $name v${version!.format()}, expected ^${supportedVersion.format()}");
     }
     return result;
   }

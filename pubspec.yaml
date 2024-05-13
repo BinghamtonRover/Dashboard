@@ -68,6 +68,7 @@ msix_config:
 flutter:
   uses-material-design: true
   assets: 
+    - assets/
     - assets/rover.png
     - assets/clippy.webp
     - assets/bad_apple/
