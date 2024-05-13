@@ -29,4 +29,7 @@ class ScienceMetrics extends Metrics<ScienceData> {
 
   @override
   Version get supportedVersion => Version(major: 1);
+
+  @override
+  Message get versionCommand => ScienceCommand(version: supportedVersion);
 }

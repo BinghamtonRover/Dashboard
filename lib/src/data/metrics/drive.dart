@@ -69,4 +69,7 @@ class DriveMetrics extends Metrics<DriveData> {
 
   @override
   Version parseVersion(DriveData message) => Version();
+
+  @override
+  Message get versionCommand => DriveCommand();
 }

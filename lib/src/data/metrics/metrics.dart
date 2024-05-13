@@ -55,7 +55,7 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
       version = parseVersion(value);
       final major = version!.major;
       final minor = version!.minor;
-      if (major == supportedVersion) {
+      if (major == supportedVersion.major) {
         models.home.setMessage(severity: Severity.info, text: "Connected to $name v$major.$minor");
       } else {
         models.home.setMessage(severity: Severity.critical, text: "Received $name v$major.$minor, expected ^$supportedVersion.0");
@@ -73,5 +73,7 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
   /// Parses the version out of a given data packet.
   Version parseVersion(T message);
   /// The currently-supported version for this Dashboard.
-  Version? get supportedVersion;
+  Version get supportedVersion;
+  /// A command to notify the firmware of the Dashboard's [supportedVersion].
+  Message get versionCommand;
 }

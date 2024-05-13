@@ -34,4 +34,7 @@ class GripperMetrics extends Metrics<GripperData> {
 
   @override
   Version parseVersion(GripperData message) => Version();
+
+  @override
+  Message get versionCommand => GripperCommand();
 }
