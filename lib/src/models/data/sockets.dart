@@ -1,5 +1,6 @@
 import "dart:io";
-import "package:burt_network/burt_network.dart";
+
+import "package:burt_network/logging.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
@@ -57,10 +58,10 @@ class Sockets extends Model {
 		for (final socket in sockets) { 
 			await socket.init(); 
 		}
-		final level = BurtLogger.level;
-		BurtLogger.level = LogLevel.warning;
+		final level = Logger.level;
+		Logger.level = LogLevel.warning;
 		await updateSockets();
-		BurtLogger.level = level;
+		Logger.level = level;
 	}
 
 	@override
@@ -74,7 +75,12 @@ class Sockets extends Model {
 	/// Notifies the user when a new device has connected.
 	void onConnect(Device device) {
 		models.home.setMessage(severity: Severity.info, text: "The ${device.humanName} has connected");
-		if (device == Device.SUBSYSTEMS) models.rover.status.value = models.rover.settings.status;
+		if (device == Device.SUBSYSTEMS) {
+      models.rover.status.value = models.rover.settings.status;
+      models.rover.controller1.gamepad.pulse();
+      models.rover.controller2.gamepad.pulse();
+      models.rover.controller3.gamepad.pulse();
+    }
 	}
 
 	/// Notifies the user when a device has disconnected.
@@ -82,7 +88,6 @@ class Sockets extends Model {
 		models.home.setMessage(severity: Severity.critical, text: "The ${device.humanName} has disconnected");
 		if (device == Device.SUBSYSTEMS) models.rover.status.value = RoverStatus.DISCONNECTED;
 		if (device == Device.VIDEO) models.video.reset();
-		if (device == Device.MARS_SERVER) models.rover.metrics.mars.clearStatus();
 	}
 
 	/// Set the right IP addresses for the rover or tank.
@@ -91,7 +96,6 @@ class Sockets extends Model {
 		data.destination = settings.subsystemsSocket.copyWith(address: addressOverride);
 		video.destination = settings.videoSocket.copyWith(address: addressOverride);
 		autonomy.destination = settings.autonomySocket.copyWith(address: addressOverride);
-		await reset();
 	}
 
 	/// Resets all the sockets.
@@ -100,12 +104,11 @@ class Sockets extends Model {
 	/// Resetting the sockets will bypass these errors.
 	Future<void> reset() async {
 		for (final socket in sockets) { 
-      // Sockets lose their destination when disposed, so we save it and restore it.
-      final destination = socket.destination;
 			await socket.dispose();
-      socket.destination = destination;
 			await socket.init();
 		}
+    // Sockets lose their destination when disposed, so we restore it.
+    await updateSockets();
 	}
 
 	/// Change which rover is being used.
@@ -113,7 +116,7 @@ class Sockets extends Model {
 		if (value == null) return;
 		rover = value;
 		models.home.setMessage(severity: Severity.info, text: "Using: ${rover.name}");
-		await updateSockets();
+    await reset();
 		notifyListeners();
 	}
 }

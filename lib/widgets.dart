@@ -17,12 +17,16 @@ library widgets;
 
 import "package:flutter/material.dart";
 
+export "src/widgets/atomic/autonomy_command.dart";
 export "src/widgets/atomic/camera_editor.dart";
 export "src/widgets/atomic/editors.dart";
+export "src/widgets/atomic/science_command.dart";
 export "src/widgets/atomic/video_feed.dart";
 
 export "src/widgets/generic/gamepad.dart";
-export "src/widgets/generic/provider_consumer.dart";
+export "src/widgets/generic/mobile_controls.dart";
+export "src/widgets/generic/reactive_widget.dart";
+export "src/widgets/generic/timer.dart";
 
 export "src/widgets/navigation/footer.dart";
 export "src/widgets/navigation/sidebar.dart";

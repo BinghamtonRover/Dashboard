@@ -13,13 +13,37 @@ class DriveMetrics extends Metrics<DriveData> {
 	@override
 	String get name => "Drive";
 
+  /// The severity based on the throttle speed.
+  Severity? get throttleSeverity {
+    if (data.throttle == 0) {
+      return null;
+    } else if (data.throttle <= 0.3) {
+      return Severity.info;
+    } else if (data.throttle <= 0.75) {
+      return Severity.warning;
+    } else {
+      return Severity.critical;
+    }
+  }
+
+  /// The severity for the electrical metrics.
+  Severity? get electricalSeverity {
+    if (data.batteryVoltage == 0) return null;
+    if (data.batteryVoltage <= 25) {
+      return Severity.critical;
+    } else if (data.batteryVoltage <= 26) {
+      return Severity.warning;
+    } else {
+      return null;
+    }
+  }
+
 	@override
-	List<String> get allMetrics => [  
-		"Throttle: ${data.throttle.toStringAsFixed(2)}",
-		"Left: ${data.left.toStringAsFixed(2)}",
-		"Right: ${data.right.toStringAsFixed(2)}",
-		"Left sensor: ${data.leftSensorValue.toStringAsFixed(2)}",
-		"Right sensor: ${data.rightSensorValue.toStringAsFixed(2)}",
+	List<MetricLine> get allMetrics => [  
+		MetricLine("Throttle: ${data.throttle.toStringAsFixed(2)}", severity: throttleSeverity),
+		MetricLine("Left: ${data.left.toStringAsFixed(2)}"),
+		MetricLine("Right: ${data.right.toStringAsFixed(2)}"),
+    MetricLine("Battery: ${data.batteryVoltage.toStringAsFixed(2)}V,${data.batteryCurrent.toStringAsFixed(2)}A, ${data.batteryTemperature.toStringAsFixed(2)}°F", severity: electricalSeverity),
 	];
 
 	@override
@@ -28,8 +52,24 @@ class DriveMetrics extends Metrics<DriveData> {
 		if (value.setLeft) data.left = value.left;
 		if (value.setRight) data.right = value.right;
 		if (value.setThrottle) data.throttle = value.throttle;
-		if (value.leftSensorValue != 0) data.leftSensorValue = value.leftSensorValue;
-		if (value.rightSensorValue!= 0) data.rightSensorValue = value.rightSensorValue;
+    if (value.hasBatteryCurrent()) data.batteryCurrent = value.batteryCurrent;
+    if (value.hasBatteryVoltage()) data.batteryVoltage = value.batteryVoltage;
+    if (value.hasBatteryTemperature()) data.batteryTemperature = value.batteryTemperature;
 		notifyListeners();
 	}
+
+  /// The battery voltage.
+  double get batteryVoltage => data.batteryVoltage;
+
+  /// The charge of the battery, as a percentage.
+  double get batteryPercentage => (batteryVoltage - 24) / 6;  // 24-30 as a percentage
+  
+  @override
+  Version get supportedVersion => Version(major: 1);
+
+  @override
+  Version parseVersion(DriveData message) => message.version;
+
+  @override
+  Message get versionCommand => DriveCommand(version: supportedVersion);
 }

@@ -9,24 +9,36 @@ class ArmMetrics extends Metrics<ArmData> {
 	String get name => "Arm Base";
 
 	/// Returns a description of a [MotorData].
-	List<String> getMotorData(MotorData motor) => [
-		"  Is moving? ${motor.isMoving}",
-		"  Limit? ${motor.isLimitSwitchPressed}",
-		"  Direction: ${motor.direction.humanName}",
-		"  Steps: ${motor.currentStep} --> ${motor.targetStep}",
-		"  Angle: ${motor.angle}",
+	List<MetricLine> getMotorData(MotorData motor) => [
+		MetricLine("  Is moving? ${motor.isMoving}", severity: motor.isMoving ? Severity.info : null),
+		MetricLine("  Limit? ${motor.isLimitSwitchPressed}", severity: motor.isLimitSwitchPressed ? Severity.warning : null),
+		MetricLine("  Direction: ${motor.direction.humanName}"),
+		MetricLine("  Steps: ${motor.currentStep} --> ${motor.targetStep}"),
+		MetricLine("  Angle: ${motor.angle.toDegrees()} degrees"),
 	];
 
 	@override
-	List<String> get allMetrics => [
-		"IK: ",
-		"  Current: ${data.currentPosition.prettyPrint}",
-		"  Target: ${data.targetPosition.prettyPrint}",
-		"------------------------------",
-		"Swivel: ", ...getMotorData(data.base),
-		"------------------------------",
-		"Shoulder: ", ...getMotorData(data.shoulder),
-		"------------------------------",
-		"Elbow: ", ...getMotorData(data.elbow),
+	List<MetricLine> get allMetrics => [
+		MetricLine("IK: "),
+		MetricLine("  Current: ${data.currentPosition.prettyPrint}"),
+		MetricLine("  Target: ${data.targetPosition.prettyPrint}"),
+		MetricLine("------------------------------"),
+		MetricLine("Swivel: "),
+    ...getMotorData(data.base),
+		MetricLine("------------------------------"),
+		MetricLine("Shoulder: "),
+    ...getMotorData(data.shoulder),
+		MetricLine("------------------------------"),
+		MetricLine("Elbow: "),
+    ...getMotorData(data.elbow),
 	];
+
+  @override
+  Version get supportedVersion => Version(major: 1);
+
+  @override
+  Version parseVersion(ArmData message) => message.version;
+
+  @override
+  Message get versionCommand => ArmCommand(version: supportedVersion);
 }

@@ -1,8 +1,10 @@
 import "package:flutter/material.dart";
+import "package:flutter_resizable_container/flutter_resizable_container.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
+import "package:rover_dashboard/src/pages/arm.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A button for the user to select a new view.
@@ -66,8 +68,12 @@ class DashboardView {
 	final Object? key;
 	/// A function to build this view.
 	final WidgetBuilder builder;
+  /// The Flutter widget key for this view.
+  final Key flutterKey;
+
 	/// A const constructor.
-	const DashboardView({required this.name, required this.builder, this.key});
+	DashboardView({required this.name, required this.builder, this.key}) : 
+    flutterKey = UniqueKey();
 
 	/// A list of views that represent all the camera feeds.
 	static final List<DashboardView> cameraViews = [
@@ -83,6 +89,8 @@ class DashboardView {
 	static final List<DashboardView> uiViews = [
 		DashboardView(name: Routes.science, builder: (context) => SciencePage()),
 		DashboardView(name: Routes.autonomy, builder: (context) => MapPage()),
+    DashboardView(name: Routes.electrical, builder: (context) => ElectricalPage()),
+    DashboardView(name: Routes.arm, builder: (context) => ArmPage()),
 	];
 
 	/// A blank view.
@@ -106,13 +114,46 @@ class DashboardView {
 
 /// A data model for keeping track of the on-screen views.
 class ViewsModel extends Model {
+  /// The controller for the resizable row on top.
+  final horizontalController1 = ResizableController();
+  /// The controller for the resizable row on bottom.
+  final horizontalController2 = ResizableController();
+  /// The controller for the resizable column.
+  final verticalController = ResizableController();
+  
 	/// The current views on the screen.
 	List<DashboardView> views = [
 		DashboardView.cameraViews[0],
 	];
 
 	@override
-	Future<void> init() async { }
+	Future<void> init() async {
+    models.settings.addListener(notifyListeners);
+  }
+
+  @override
+  void dispose() {
+    models.settings.removeListener(notifyListeners);
+    horizontalController1.dispose();
+    horizontalController2.dispose();
+    verticalController.dispose();
+    super.dispose();
+  }
+
+  /// Resets the size of all the views.
+  void resetSizes() {
+    if (views.length == 2 && models.settings.dashboard.splitMode == SplitMode.horizontal) {
+      verticalController.setRatios([0.5, 0.5]);
+    } else if (views.length > 2) {
+      verticalController.setRatios([0.5, 0.5]);
+    }
+    if (views.length == 2 && models.settings.dashboard.splitMode == SplitMode.vertical) {
+      horizontalController1.setRatios([0.5, 0.5]);
+    } else if (views.length > 2) {
+      horizontalController1.setRatios([0.5, 0.5]);
+    }
+    if (views.length == 4) horizontalController2.setRatios([0.5, 0.5]);
+  }
 
 	/// Replaces the [oldView] with the [newView].
 	void replaceView(String oldView, DashboardView newView) {
@@ -138,5 +179,4 @@ class ViewsModel extends Model {
 		}
 		notifyListeners();
 	}
-
 }

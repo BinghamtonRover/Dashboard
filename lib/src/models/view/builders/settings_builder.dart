@@ -1,3 +1,4 @@
+import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
@@ -41,27 +42,21 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 	/// Since the tank runs multiple programs, the port is discarded and only the address is used.
 	final SocketBuilder tankSocket;
 
-  /// The view model representing the [SocketInfo] for the rover.
-	final SocketBuilder marsSocket;
-
 	@override
-	List<SocketBuilder> get otherBuilders => [dataSocket, videoSocket, autonomySocket, tankSocket, marsSocket];
+	List<SocketBuilder> get otherBuilders => [dataSocket, videoSocket, autonomySocket, tankSocket];
 
 	/// Creates the view model based on the current [Settings].
 	NetworkSettingsBuilder(NetworkSettings initial) :
 		dataSocket = SocketBuilder(initial.subsystemsSocket),
 		videoSocket = SocketBuilder(initial.videoSocket),
 		autonomySocket = SocketBuilder(initial.autonomySocket),
-		tankSocket = SocketBuilder(initial.tankSocket),
-    marsSocket = SocketBuilder(initial.marsSocket);
+		tankSocket = SocketBuilder(initial.tankSocket);
 
 	@override
 	bool get isValid => dataSocket.isValid
 		&& videoSocket.isValid
 		&& autonomySocket.isValid
-		&& tankSocket.isValid
-    && marsSocket.isValid;
-
+		&& tankSocket.isValid;
 
 	@override
 	NetworkSettings get value => NetworkSettings(
@@ -69,7 +64,6 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 		videoSocket: videoSocket.value,
 		autonomySocket: autonomySocket.value,
 		tankSocket: tankSocket.value,
-    marsSocket: marsSocket.value,
 		connectionTimeout: 5,
 	);
 }
@@ -148,24 +142,6 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings>{
 	);
 }
 
-/// A [ValueBuilder] that modifies a [VideoSettings].
-class VideoSettingsBuilder extends ValueBuilder<VideoSettings> {
-	/// The builder for the FPS count.
-	final NumberBuilder<int> fps;
-
-	/// Modifies the given [VideoSettings].
-	VideoSettingsBuilder(VideoSettings initial) : 
-		fps = NumberBuilder(initial.fps);
-
-	@override
-	bool get isValid => fps.isValid;
-
-	@override
-	VideoSettings get value => VideoSettings(
-		fps: fps.value,
-	);
-}
-
 /// A [ValueBuilder] that modifies a [ScienceSettings].
 class ScienceSettingsBuilder extends ValueBuilder<ScienceSettings> {
 	/// Whether the graphs can scrolls. See [ScienceSettings.scrollableGraphs].
@@ -195,20 +171,51 @@ class ScienceSettingsBuilder extends ValueBuilder<ScienceSettings> {
 	}
 }
 
-/// A [ValueBuilder] that modifies an [AutonomySettings].
-class AutonomySettingsBuilder extends ValueBuilder<AutonomySettings> {
-	/// The precision of the GPS grid. See [AutonomySettings.blockSize].
+/// A [ValueBuilder] that modifies a [DashboardSettings].
+class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
+  /// The builder for the FPS count.
+	final NumberBuilder<int> fps;
+
+  /// The precision of the GPS grid. See [DashboardSettings.mapBlockSize].
 	final NumberBuilder<double> blockSize;
 
-	/// Fills in the fields with the given [initial] settings.
-	AutonomySettingsBuilder(AutonomySettings initial) : 
-		blockSize = NumberBuilder(initial.blockSize);
+  /// How the Dashboard should split when only two views are present.
+  SplitMode splitMode;
 
-	@override
-	bool get isValid => blockSize.isValid;
+  /// The theme of the Dashboard. See [DashboardSettings.themeMode].
+  ThemeMode themeMode;
 
-	@override
-	AutonomySettings get value => AutonomySettings(blockSize: blockSize.value);
+	/// Modifies the given [DashboardSettings].
+  DashboardSettingsBuilder(DashboardSettings initial) : 
+		fps = NumberBuilder(initial.maxFps),
+		blockSize = NumberBuilder(initial.mapBlockSize),
+    splitMode = initial.splitMode,
+    themeMode = initial.themeMode;
+
+  @override
+  bool get isValid => fps.isValid && blockSize.isValid;
+
+  @override
+  DashboardSettings get value => DashboardSettings(
+    maxFps: fps.value,
+    mapBlockSize: blockSize.value,
+    splitMode: splitMode,
+    themeMode: themeMode,
+  );
+
+  /// Updates the [splitMode] when a new one is selected.
+  void updateSplitMode(SplitMode? mode) {
+    if (mode == null) return;
+    splitMode = mode;
+    notifyListeners();
+  }
+
+  /// Updates the [themeMode]. 
+  void updateThemeMode(ThemeMode? input) {
+    if (input == null) return;
+    themeMode = input;
+    notifyListeners();
+  }
 }
 
 /// A [ValueBuilder] that modifies an [EasterEggsSettings].
@@ -216,21 +223,56 @@ class EasterEggsSettingsBuilder extends ValueBuilder<EasterEggsSettings> {
 	/// Whether to show a SEGA intro. See [EasterEggsSettings.segaIntro].
 	bool segaIntro;
 
+  /// Whether to say "Binghamton" in the SEGA style. See [EasterEggsSettings.segaSound].
+  bool segaSound;
+
+  /// Whether Clippy should appear by log messages. See [EasterEggsSettings.enableClippy].
+  bool enableClippy;
+
+  /// Whether to render Bad Apple in the Map page. See [EasterEggsSettings.badApple].
+  bool badApple;
+
 	/// Fills in the fields with the given [initial] settings.
 	EasterEggsSettingsBuilder(EasterEggsSettings initial) : 
+    badApple = initial.badApple,
+    enableClippy = initial.enableClippy,
+    segaSound = initial.segaSound,
 		segaIntro = initial.segaIntro;
 
 	@override
 	bool get isValid => true;
 
 	@override
-	EasterEggsSettings get value => EasterEggsSettings(segaIntro: segaIntro);
+	EasterEggsSettings get value => EasterEggsSettings(
+    segaIntro: segaIntro,
+    segaSound: segaSound,
+    enableClippy: enableClippy,
+    badApple: badApple,
+  );
 
 	/// Updates the value of [EasterEggsSettings.segaIntro].
 	void updateSegaIntro(bool input) {  // ignore: avoid_positional_boolean_parameters
 		segaIntro = input;
 		notifyListeners();
 	}
+
+  /// Updates the value of [segaSound].
+  void updateSegaSound(bool input) {  // ignore: avoid_positional_boolean_parameters
+    segaSound = input;
+    notifyListeners();
+  }
+
+  /// Updates the value of [EasterEggsSettings.enableClippy].
+  void updateClippy(bool input) {  // ignore: avoid_positional_boolean_parameters
+    enableClippy = input;
+    notifyListeners();
+  }
+
+  /// Updates the value of [badApple].
+  void updateBadApple(bool input) {  // ignore: avoid_positional_boolean_parameters
+    badApple = input;
+    notifyListeners();
+  }
 }
 
 /// A [ValueBuilder] representing an [ArmSettings].
@@ -241,14 +283,11 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	/// The [ArmSettings] view model.
 	final ArmSettingsBuilder arm;
 
-	/// The [VideoSettings] view model.
-	final VideoSettingsBuilder video;
-
 	/// The [ScienceSettings] view model.
 	final ScienceSettingsBuilder science;
 
-	/// The [AutonomySettings] view model.
-	final AutonomySettingsBuilder autonomy;
+  /// The [DashboardSettings] view model.
+  final DashboardSettingsBuilder dashboard;
 
 	/// The [EasterEggsSettings] view model.
 	final EasterEggsSettingsBuilder easterEggs;
@@ -258,36 +297,33 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 
 	/// Modifies the user's settings.
 	SettingsBuilder() : 
-		autonomy = AutonomySettingsBuilder(models.settings.autonomy),
 		network = NetworkSettingsBuilder(models.settings.network),
 		arm = ArmSettingsBuilder(models.settings.arm),
-		video = VideoSettingsBuilder(models.settings.video),
 		science = ScienceSettingsBuilder(models.settings.science),
+    dashboard = DashboardSettingsBuilder(models.settings.dashboard),
 		easterEggs = EasterEggsSettingsBuilder(models.settings.easterEggs)
 	{
-		autonomy.addListener(notifyListeners);
 		network.addListener(notifyListeners);
 		arm.addListener(notifyListeners);
-		video.addListener(notifyListeners);
 		science.addListener(notifyListeners);
+    dashboard.addListener(notifyListeners);
 		easterEggs.addListener(notifyListeners);
 	}
 
 	@override
 	bool get isValid => network.isValid 
 		&& arm.isValid 
-		&& autonomy.isValid 
-		&& video.isValid 
-		&& science.isValid;
+		&& science.isValid
+    && dashboard.isValid
+    && easterEggs.isValid;
 
 	@override
 	Settings get value => Settings(
-		autonomy: autonomy.value,
 		network: network.value,
-		video: video.value,
-		easterEggs: easterEggs.value,
-		science: science.value,
 		arm: arm.value,
+		science: science.value,
+    dashboard: dashboard.value,
+		easterEggs: easterEggs.value,
 	);
 
 	/// Saves the settings to the device.

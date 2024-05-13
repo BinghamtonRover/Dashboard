@@ -10,8 +10,12 @@ import "package:rover_dashboard/services.dart";
 
 import "service.dart";
 
-extension on DateTime{
-  String get timeStamp => "$year-$month-$day-$hour-$minute"; 
+extension on FileSystemEntity {
+  String get filename => uri.pathSegments.last.split(".").first;
+}
+
+extension on Directory {
+  File operator / (String filename) => File("$path/$filename");
 }
 
 /// A service to read and write to the file system. 
@@ -39,7 +43,7 @@ class FilesService extends Service {
   /// 
   /// This file should contain the result of [Settings.toJson], and loading settings
   /// from the file should be done with [Settings.fromJson].
-  File get settingsFile => File("${outputDir.path}/settings.json");
+  File get settingsFile => outputDir / "settings.json";
 
   /// Ensure that files and directories that are expected to be present actually
   /// exist on the system. If not, create them. 
@@ -102,7 +106,7 @@ class FilesService extends Service {
   /// Logs all the data saved in [batchedLogs] and resets it.
   Future<void> logAllData(Timer timer) async {
     for (final name in batchedLogs.keys) {
-      final file = File("${loggingDir.path}/$name.log");
+      final file = loggingDir / "$name.log";
       final data = batchedLogs[name]!;
       final copy = List<WrappedMessage>.from(data);
       data.clear();
@@ -127,11 +131,13 @@ class FilesService extends Service {
 
   /// Outputs error to log file
   Future<void> logError(Object error, StackTrace stack) async{
-    final file = File("${loggingDir.path}/errors.txt");
+    final file = loggingDir / "errors.log";
     await file.writeAsString("${DateTime.now().timeStamp} $error $stack\n", mode: FileMode.writeOnlyAppend);
   }
-}
 
-extension on FileSystemEntity {
-  String get filename => uri.pathSegments.last.split(".")[0];
+  /// Outputs a log to its device's respective log file.
+  Future<void> logMessage(BurtLog log) async {
+    final file = loggingDir / "${log.device.humanName}.log";
+    await file.writeAsString("${log.format()}\n", mode: FileMode.writeOnlyAppend);
+  }
 }

@@ -55,7 +55,7 @@ class SerialDevice {
 	/// Sends a message to the device, if the device accepts it.
 	/// 
 	/// The firmware on the rover cannot handle [WrappedMessage]s and instead assume that all commands
-	/// they receive are the type they ecpect. This function checks [getCommandName] to ensure that
+	/// they receive are the type they expect. This function checks [getCommandName] to ensure that
 	/// the [message] is of the correct type before sending it.
 	void sendMessage(Message message) {
 		final thisDeviceAccepts = getCommandName(device);

@@ -12,12 +12,10 @@ class ScienceMetrics extends Metrics<ScienceData> {
 	String get name => "Science";
 
 	@override
-	List<String> get allMetrics => [  
-		"Methane: ${data.methane.toStringAsFixed(3)}",
-		"CO2: ${data.co2.toStringAsFixed(3)}",
-		"Temperature: ${data.temperature.toStringAsFixed(3)}",
-		"Humidity: ${data.humidity.toStringAsFixed(3)}",
-		"pH: ${data.pH.toStringAsFixed(3)}",
+	List<MetricLine> get allMetrics => [  
+		MetricLine("CO2: ${data.co2.toStringAsFixed(3)}"),
+		MetricLine("Temperature: ${data.temperature.toStringAsFixed(3)}"),
+		MetricLine("Humidity: ${data.humidity.toStringAsFixed(3)}"),
 	];
 
 	@override
@@ -25,4 +23,13 @@ class ScienceMetrics extends Metrics<ScienceData> {
 		if (value.state == ScienceState.STOP_COLLECTING) return;
 		super.update(value);
 	}
+
+  @override 
+  Version parseVersion(ScienceData message) => message.version;
+
+  @override
+  Version get supportedVersion => Version(major: 1);
+
+  @override
+  Message get versionCommand => ScienceCommand(version: supportedVersion);
 }

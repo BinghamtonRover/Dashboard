@@ -1,7 +1,22 @@
+// import "package:math";
+
+import "dart:math";
+
 import "package:flutter/foundation.dart";
 
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
+
+/// Class to construct a Metric
+class MetricLine {
+  /// Severity of the Metric
+	final Severity? severity;
+  /// Message for the Metric
+	final String text;
+  /// Constructor for the MetricLine class
+	MetricLine(this.text, {this.severity});
+}
 
 /// A readout of metrics reported by one of the rover's subsystems. 
 /// 
@@ -24,12 +39,42 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
 	/// 
 	/// Be sure to store the actual values as fields. This property should be a list of one 
 	/// user-friendly explanation per metric. 
-	List<String> get allMetrics;
+	List<MetricLine> get allMetrics;
+
+  /// Fetch the overall Security
+	Severity? get overallSeverity {
+		final indexes = [for (final metric in allMetrics) metric.severity?.index ?? -1];
+		final index = indexes.reduce(max);
+    if (index == -1) return null;
+		return Severity.values[index];
+	}
+
+  /// Checks this message's version and checks for support.
+  bool checkVersion(T data) {
+    final newVersion = parseVersion(data);
+    if (newVersion.hasMajor()) version = newVersion;
+    if (!matchesVersion && newVersion.hasMajor()) {
+      models.home.setMessage(severity: Severity.critical, text: "Received $name v${version.format()}, expected ^${supportedVersion.format()}", permanent: true);
+    }
+    return matchesVersion;
+  }
 
 	/// Updates [data] with new data.
 	void update(T value) {
+    if (!checkVersion(value)) return;    
 		data.mergeFromMessage(value);
 		notifyListeners();
 		services.files.logData(value);
 	}
+
+  /// The version of the data that the firmware sends.
+  Version version = Version();
+  /// Parses the version out of a given data packet.
+  Version parseVersion(T message);
+  /// The currently-supported version for this Dashboard.
+  Version get supportedVersion;
+  /// A command to notify the firmware of the Dashboard's [supportedVersion].
+  Message get versionCommand;
+  /// Whether the Dashboard is certain the firmware matches the right version.
+  bool get matchesVersion => supportedVersion.isCompatible(version);
 }
