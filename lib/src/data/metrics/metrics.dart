@@ -72,6 +72,6 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
   Version? version;
   /// Parses the version out of a given data packet.
   Version parseVersion(T message);
-  /// The currently-supported (major) version for this Dashboard.
-  int get supportedVersion;
+  /// The currently-supported version for this Dashboard.
+  Version? get supportedVersion;
 }

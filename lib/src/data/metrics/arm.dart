@@ -34,7 +34,7 @@ class ArmMetrics extends Metrics<ArmData> {
 	];
 
   @override
-  int get supportedVersion => 0;
+  Version get supportedVersion => Version();
 
   @override
   Version parseVersion(ArmData message) => Version();

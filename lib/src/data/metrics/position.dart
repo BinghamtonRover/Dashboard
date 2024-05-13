@@ -74,5 +74,5 @@ class PositionMetrics extends Metrics<RoverPosition> {
   Version parseVersion(RoverPosition message) => Version();
 
   @override
-  int get supportedVersion => 0;
+  Version get supportedVersion => Version();
 }

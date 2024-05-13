@@ -28,5 +28,5 @@ class ScienceMetrics extends Metrics<ScienceData> {
   Version parseVersion(ScienceData message) => message.version;
 
   @override
-  int get supportedVersion => 1;
+  Version get supportedVersion => Version(major: 1);
 }
