@@ -45,8 +45,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: proto-versions
-      resolved-ref: "2830957867d6a486769b89649ab716fa514074f0"
+      ref: HEAD
+      resolved-ref: c6ad7774c43c72037144d1a32746eda53e33c846
       url: "https://github.com/BinghamtonRover/Networking.git"
     source: git
     version: "1.1.0"
