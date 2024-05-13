@@ -71,11 +71,11 @@ class PositionMetrics extends Metrics<RoverPosition> {
 	double get angle => data.orientation.z;
 
   @override
-  Version parseVersion(RoverPosition message) => Version();
+  Version parseVersion(RoverPosition message) => message.version;
 
   @override
-  Version get supportedVersion => Version();
+  Version get supportedVersion => Version(major: 1);
 
   @override
-  Message get versionCommand => RoverPosition();
+  Message get versionCommand => RoverPosition(version: supportedVersion);
 }

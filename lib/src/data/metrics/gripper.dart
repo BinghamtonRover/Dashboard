@@ -30,11 +30,11 @@ class GripperMetrics extends Metrics<GripperData> {
 	];
 
   @override
-  Version get supportedVersion => Version();
+  Version get supportedVersion => Version(major: 1);
 
   @override
-  Version parseVersion(GripperData message) => Version();
+  Version parseVersion(GripperData message) => message.version;
 
   @override
-  Message get versionCommand => GripperCommand();
+  Message get versionCommand => GripperCommand(version: supportedVersion);
 }

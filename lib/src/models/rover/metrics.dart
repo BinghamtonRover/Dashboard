@@ -76,7 +76,7 @@ class RoverMetrics extends Model {
   void _sendVersions(_) {
     for (final metric in allMetrics) {
       final message = metric.versionCommand;
-      models.messages.sendMessage(message);
+      models.messages.sendMessage(message, checkVersion: false);
     }
   }
 }

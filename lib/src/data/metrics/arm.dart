@@ -34,11 +34,11 @@ class ArmMetrics extends Metrics<ArmData> {
 	];
 
   @override
-  Version get supportedVersion => Version();
+  Version get supportedVersion => Version(major: 1);
 
   @override
-  Version parseVersion(ArmData message) => Version();
+  Version parseVersion(ArmData message) => message.version;
 
   @override
-  Message get versionCommand => ArmCommand();
+  Message get versionCommand => ArmCommand(version: supportedVersion);
 }

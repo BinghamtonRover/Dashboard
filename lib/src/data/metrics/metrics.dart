@@ -53,7 +53,7 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
   bool checkVersion(T data) {
     final newVersion = parseVersion(data);
     if (newVersion.hasMajor()) version = newVersion;
-    if (!matchesVersion) {
+    if (!matchesVersion && newVersion.hasMajor()) {
       models.home.setMessage(severity: Severity.critical, text: "Received $name v${version.format()}, expected ^${supportedVersion.format()}");
     }
     return matchesVersion;
