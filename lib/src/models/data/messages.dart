@@ -26,8 +26,6 @@ class MessagesModel {
       return rawHandler(wrapper.data);
     } on InvalidProtocolBufferException {
       // Data is corrupt, ignore it
-		}	on FormatException { 
-      // Data is in the wrong format or version, ignore it
     }
 	}
 
