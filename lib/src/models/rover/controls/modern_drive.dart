@@ -3,7 +3,7 @@ import "package:rover_dashboard/services.dart";
 
 import "controls.dart";
 
-class DriveControls extends RoverControls {
+class ModernDriveControls extends RoverControls {
   static const throttleIncrement = 0.1;
   static const cameraTiltIncrement = 10;
   static const cameraSwivelIncrement = 10;

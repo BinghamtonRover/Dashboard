@@ -28,6 +28,8 @@ enum OperatingMode {
 	/// Focus on helping the user manipulate the arm.
 	arm("Arm"), 
 
+  modernDrive("Modern Drive"),
+
 	/// MARS mode.
 	/// 
 	/// Allows the user to control the MARS subsystem manually.

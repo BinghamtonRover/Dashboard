@@ -7,6 +7,7 @@ import "drive.dart";
 import "mars.dart";
 import "none.dart";
 import "science.dart";
+import "modern_drive.dart";
 
 export "arm.dart";
 export "camera.dart";
@@ -14,6 +15,7 @@ export "drive.dart";
 export "mars.dart";
 export "none.dart";
 export "science.dart";
+export "modern_drive.dart";
 
 /// How often to check the gamepad for new button presses.
 const gamepadDelay = Duration(milliseconds: 10);
@@ -27,16 +29,15 @@ abstract class RoverControls {
 	const RoverControls();
 
 	/// Creates the appropriate [RoverControls] for this mode.
-	factory RoverControls.forMode(OperatingMode mode) {
-		switch (mode) {
-			case OperatingMode.arm: return ArmControls();
-			case OperatingMode.science: return ScienceControls();
-			case OperatingMode.drive: return DriveControls();
-			case OperatingMode.mars: return MarsControls();
-			case OperatingMode.none: return NoControls();
-			case OperatingMode.cameras: return CameraControls();
-		}
-	}
+	factory RoverControls.forMode(OperatingMode mode) => switch (mode) {
+    OperatingMode.arm => ArmControls(),
+    OperatingMode.science => ScienceControls(),
+    OperatingMode.drive => DriveControls(),
+    OperatingMode.mars => MarsControls(),
+    OperatingMode.none => NoControls(),
+    OperatingMode.cameras => CameraControls(),
+    OperatingMode.modernDrive => ModernDriveControls(),
+	};
 
 	/// The [OperatingMode] for these controls.
 	OperatingMode get mode;
