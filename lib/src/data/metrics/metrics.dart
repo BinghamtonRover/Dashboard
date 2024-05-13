@@ -53,12 +53,10 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
   bool checkVersion(T data) {
     final newVersion = parseVersion(data);
     if (newVersion.hasMajor()) version = newVersion;
-    if (version == null) return true;
-    final result = supportedVersion.isCompatible(version!);
-    if (!result) {
-      models.home.setMessage(severity: Severity.critical, text: "Received $name v${version!.format()}, expected ^${supportedVersion.format()}");
+    if (!matchesVersion) {
+      models.home.setMessage(severity: Severity.critical, text: "Received $name v${version.format()}, expected ^${supportedVersion.format()}");
     }
-    return result;
+    return matchesVersion;
   }
 
 	/// Updates [data] with new data.
@@ -70,11 +68,13 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
 	}
 
   /// The version of the data that the firmware sends.
-  Version? version;
+  Version version = Version();
   /// Parses the version out of a given data packet.
   Version parseVersion(T message);
   /// The currently-supported version for this Dashboard.
   Version get supportedVersion;
   /// A command to notify the firmware of the Dashboard's [supportedVersion].
   Message get versionCommand;
+  /// Whether the Dashboard is certain the firmware matches the right version.
+  bool get matchesVersion => supportedVersion.isCompatible(version);
 }

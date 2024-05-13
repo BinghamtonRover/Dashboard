@@ -238,10 +238,7 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               applicationLegalese: [
                 "Firmware versions:",
                 for (final metrics in models.rover.metrics.allMetrics)
-                  if (metrics.version == null)
-                    "  ${metrics.name}: Supports version ^${metrics.supportedVersion.format()}"
-                  else
-                    "  ${metrics.name}: Running ${metrics.version!.format()}, supports version ^${metrics.supportedVersion.format()}",
+                  "  ${metrics.name}: Running ${metrics.version.format()}, supports version ^${metrics.supportedVersion.format()}",
               ].join("\n"),
               children: [
                 const SizedBox(height: 24),
