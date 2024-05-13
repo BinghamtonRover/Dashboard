@@ -27,8 +27,10 @@ class ModernDriveControls extends RoverControls {
 
     if (direction < -45) {  // trying to turn too far left
       return (-1, 1);
-    } else if (direction > -45 && direction < 45) {  // [-45, 45]
-      return (slope * direction + speed, -1 * slope * direction + speed);
+    } else if (direction >= -45 && direction < 45) {  // [-45, 45]
+      // return (-1 * slope * direction + 0.5, -1 * slope * direction + 0.5 * -1);
+      return (slope * direction + 0.5, slope * direction - 0.5);
+
     } else {
       return (1, -1);
     }
@@ -38,6 +40,7 @@ class ModernDriveControls extends RoverControls {
     final speed = state.normalTrigger;  // sum of both triggers, [-1, 1]
     final direction = state.normalLeftX * 45;  // [-1, 1] --> [-45, 45]
     final (double left, double right) = getWheelSpeeds(speed, direction);
+    print("Speed $speed, direction: $direction, left: $left, right: $right");
     return [
       DriveCommand(left: speed * left, setLeft: true),
       DriveCommand(right: speed * right, setRight: true),
@@ -55,8 +58,8 @@ class ModernDriveControls extends RoverControls {
   List<Message> parseInputs(GamepadState state) => [
     ...getWheelCommands(state),
     ...getCameraCommands(state),
-    if (state.normalShoulder != 0) 
-      DriveCommand(setThrottle: true, throttle: throttle),
+    // if (state.normalShoulder != 0) 
+      // DriveCommand(setThrottle: true, throttle: throttle),
   ];
 
   @override
