@@ -63,4 +63,10 @@ class DriveMetrics extends Metrics<DriveData> {
 
   /// The charge of the battery, as a percentage.
   double get batteryPercentage => (batteryVoltage - 24) / 6;  // 24-30 as a percentage
+  
+  @override
+  int get supportedVersion => 0;
+
+  @override
+  Version parseVersion(DriveData message) => Version();
 }

@@ -5,6 +5,7 @@ import "dart:math";
 import "package:flutter/foundation.dart";
 
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
 /// Class to construct a Metric
@@ -50,8 +51,27 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
 
 	/// Updates [data] with new data.
 	void update(T value) {
+    if (version == null) {
+      version = parseVersion(value);
+      final major = version!.major;
+      final minor = version!.minor;
+      if (major == supportedVersion) {
+        models.home.setMessage(severity: Severity.info, text: "Connected to $name v$major.$minor");
+      } else {
+        models.home.setMessage(severity: Severity.critical, text: "Received $name v$major.$minor, expected ^$supportedVersion.0");
+        return;
+      }
+    }
+    
 		data.mergeFromMessage(value);
 		notifyListeners();
 		services.files.logData(value);
 	}
+
+  /// The version of the data that the firmware sends.
+  Version? version;
+  /// Parses the version out of a given data packet.
+  Version parseVersion(T message);
+  /// The currently-supported (major) version for this Dashboard.
+  int get supportedVersion;
 }

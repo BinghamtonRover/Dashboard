@@ -69,4 +69,10 @@ class PositionMetrics extends Metrics<RoverPosition> {
 
 	/// The angle to orient the rover on the top-down map.
 	double get angle => data.orientation.z;
+
+  @override
+  Version parseVersion(RoverPosition message) => Version();
+
+  @override
+  int get supportedVersion => 0;
 }

@@ -2,6 +2,8 @@
 /output
 # Windows certificate files
 *.pfx
+# Pubspec overrides are device-specific
+pubspec_overrides.yaml
 
 # Miscellaneous
 *.class

@@ -23,4 +23,10 @@ class ScienceMetrics extends Metrics<ScienceData> {
 		if (value.state == ScienceState.STOP_COLLECTING) return;
 		super.update(value);
 	}
+
+  @override 
+  Version parseVersion(ScienceData message) => message.version;
+
+  @override
+  int get supportedVersion => 1;
 }

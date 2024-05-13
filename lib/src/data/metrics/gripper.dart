@@ -28,4 +28,10 @@ class GripperMetrics extends Metrics<GripperData> {
     MetricLine("Pinch:"),
 		...getMotorData(data.pinch),
 	];
+
+  @override
+  int get supportedVersion => 0;
+
+  @override
+  Version parseVersion(GripperData message) => Version();
 }

@@ -22,11 +22,13 @@ class MessagesModel {
 			if (allowedFallthrough.contains(wrapper.name)) return;
 			throw StateError("No handler registered for ${wrapper.name} message");
 		}
-		try { return rawHandler(wrapper.data); }
-		on InvalidProtocolBufferException {
-			try { return rawHandler(wrapper.data); }
-			on InvalidProtocolBufferException { /* Nothing we can do */ }
-		}	
+		try { 
+      return rawHandler(wrapper.data);
+    } on InvalidProtocolBufferException {
+      // Data is corrupt, ignore it
+		}	on FormatException { 
+      // Data is in the wrong format or version, ignore it
+    }
 	}
 
 	/// Sends a command over the network or over Serial.
