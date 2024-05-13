@@ -25,6 +25,20 @@ class RoverMetrics extends Model {
 	/// when new data is received. As a getter, every time it is called it will use new data.
 	List<Metrics> get allMetrics => [position, drive, science, arm, gripper];
 
+  /// Whether the given command is supported by the rover.
+  bool isSupportedVersion(Message command) {
+    final model = metricsByCommandName[command.messageName];
+    return model?.matchesVersion ?? true;
+  }
+
+  /// Maps command names to the metrics responsible for the device.
+  Map<String, Metrics> get metricsByCommandName => {
+    ScienceCommand().messageName: science,
+    DriveCommand().messageName: drive,
+    ArmCommand().messageName: arm,
+    GripperCommand().messageName: gripper,
+  };
+
 	@override
 	Future<void> init() async {
 		models.messages.registerHandler<DriveData>(

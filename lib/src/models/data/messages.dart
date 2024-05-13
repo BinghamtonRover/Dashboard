@@ -33,6 +33,7 @@ class MessagesModel {
 
 	/// Sends a command over the network or over Serial.
 	void sendMessage(Message message) {
+    if (!models.rover.metrics.isSupportedVersion(message)) return;
 		models.serial.sendMessage(message);
 		models.sockets.data.sendMessage(message);
 	}
