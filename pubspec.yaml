@@ -11,9 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   burt_network: 
-    git: 
-      url: https://github.com/BinghamtonRover/Networking.git
-      ref: science-proto
+    git: https://github.com/BinghamtonRover/Networking.git
   file_picker: ^8.0.0+1
   fl_chart: ^0.67.0
   flutter_libserialport: ^0.4.0
