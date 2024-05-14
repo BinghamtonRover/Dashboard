@@ -28,20 +28,16 @@ class CameraControls extends RoverControls {
 
 	@override
 	List<Message> parseInputs(GamepadState state) => [
-    if (state.normalRightTrigger > 0.75) 
-      DriveCommand(frontSwivel: frontSwivel),
-    if (state.normalRightTrigger > 0.75)
-      DriveCommand(frontTilt: frontTilt),
-    // DriveCommand(rearSwivel: rearSwivel),
-    // DriveCommand(rearTilt: rearTilt),
+    DriveCommand(frontSwivel: frontSwivel),
+    DriveCommand(frontTilt: frontTilt),
+    DriveCommand(rearSwivel: rearSwivel),
+    DriveCommand(rearTilt: rearTilt),
 	];
 
   @override
   void updateState(GamepadState state) {
-    if (state.normalRightTrigger > 0.75) {
-      frontSwivel += state.normalRightX * cameraSwivelIncrement;
-      frontTilt += state.normalRightY * cameraTiltIncrement;
-    }
+    frontSwivel += state.normalRightX * cameraSwivelIncrement;
+    frontTilt += state.normalRightY * cameraTiltIncrement;
     rearSwivel += state.normalLeftX * cameraSwivelIncrement;
     rearTilt += state.normalLeftY * cameraTiltIncrement;
     frontSwivel = frontSwivel.clamp(0, 180);

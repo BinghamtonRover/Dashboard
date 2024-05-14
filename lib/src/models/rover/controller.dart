@@ -51,7 +51,12 @@ class Controller extends Model {
 	/// Changes the current mode this [gamepad] is controlling, and chooses a new [RoverControls].
 	void setMode(OperatingMode? mode) {
 		if (mode == null) return;
-    if (models.rover.controllers.any((other) => other.gamepadIndex != gamepadIndex && other.mode == mode)) {
+    if (
+      mode != OperatingMode.none
+      && models.rover.controllers.any(
+        (other) => other.gamepadIndex != gamepadIndex && other.mode == mode,
+      )
+    ) {
       models.home.setMessage(severity: Severity.error, text: "Another controller is set to that mode");
       return;
     }
@@ -104,7 +109,6 @@ class Controller extends Model {
 		controls.updateState(gamepad.state);
 		final messages = controls.parseInputs(gamepad.state);
 		for (final message in messages) {
-      // print(message.toProto3Json());
 			models.messages.sendMessage(message);
 		}
 	}

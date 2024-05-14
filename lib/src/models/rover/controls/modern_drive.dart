@@ -1,7 +1,6 @@
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
-
-import "controls.dart";
 
 /// Modern drive controls, similar to most racing video games.
 /// 
@@ -68,14 +67,15 @@ class ModernDriveControls extends RoverControls {
   List<DriveCommand> getCameraCommands(GamepadState state) => [
     DriveCommand(frontSwivel: frontSwivel),
     DriveCommand(frontTilt: frontTilt),
-    // DriveCommand(rearSwivel: rearSwivel),
-    // DriveCommand(rearTilt: rearTilt),
+    DriveCommand(rearSwivel: rearSwivel),
+    DriveCommand(rearTilt: rearTilt),
   ];
 
   @override
   List<Message> parseInputs(GamepadState state) => [
-    // ...getWheelCommands(state),
-    ...getCameraCommands(state),
+    ...getWheelCommands(state),
+    if (!models.settings.dashboard.splitCameras)
+      ...getCameraCommands(state),
     // if (state.normalShoulder != 0) 
       // DriveCommand(setThrottle: true, throttle: throttle),
   ];
