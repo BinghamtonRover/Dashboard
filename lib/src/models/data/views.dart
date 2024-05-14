@@ -92,7 +92,7 @@ class DashboardView {
 		DashboardView(name: Routes.autonomy, builder: (context) => MapPage()),
     DashboardView(name: Routes.electrical, builder: (context) => ElectricalPage()),
     DashboardView(name: Routes.arm, builder: (context) => ArmPage()),
-    DashboardView(name: Routes.drive, builder: (context) => DrivePage())
+    DashboardView(name: Routes.drive, builder: (context) => DrivePage()),
 	];
 
 	/// A blank view.

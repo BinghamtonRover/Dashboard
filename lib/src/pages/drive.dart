@@ -1,27 +1,111 @@
 import "package:fl_chart/fl_chart.dart";
-import "package:flutter/cupertino.dart";
-import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
-import "package:protobuf/protobuf.dart";
 
-import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
-/// The science analysis page.
+/// Widget to display the speed of the each side of the rover as a bar graph
+class _BarChart extends StatelessWidget {
+  final List<double> values;
+
+  const _BarChart({
+    required this.values, 
+  });
+
+  @override
+  Widget build(BuildContext context) => BarChart(
+    BarChartData(
+      barTouchData: BarTouchData(
+        touchTooltipData: BarTouchTooltipData(
+          fitInsideVertically: true, 
+          fitInsideHorizontally: true,
+        ),
+      ),
+      minY: -1,
+      maxY: 1,
+      titlesData: FlTitlesData(
+        topTitles: const AxisTitles(),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 30,
+            getTitlesWidget: getTitles,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(show: true),
+      gridData: const FlGridData(
+        drawVerticalLine: false,
+      ),
+      barGroups: barGroups,
+      extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)]),
+    ),
+  );
+
+  Widget getTitles(double value, TitleMeta meta) {
+    const style = TextStyle(
+      color: Colors.red,
+      fontWeight: FontWeight.bold,
+      fontSize: 18,
+    );
+    String text;
+    switch (value.toInt()) {
+      case 0:
+        text = "Left";
+      case 1:
+        text = "Right";
+      default:
+        text = "";
+    }
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 4,
+      child: Text(text, style: style),
+    );
+  }
+    
+  List<BarChartGroupData> get barGroups => [
+    BarChartGroupData(
+      x: 0,
+      groupVertically: true,
+      barRods: [
+        BarChartRodData(
+          color: Colors.pink,
+          fromY: 0,
+          toY: values[0],
+          width: 30,
+          rodStackItems: [
+            BarChartRodStackItem(0, values[0], Colors.blue),   
+            BarChartRodStackItem(values[0], values[0] - 0.0001, Colors.pink),
+          ],
+        ),
+      ],
+    ),
+    BarChartGroupData(
+      x: 1,
+      groupVertically: true,
+      barRods: [
+        BarChartRodData(
+          color: Colors.pink,
+          fromY: 0,
+          toY: values[1],
+          width: 30,
+          rodStackItems: [
+            BarChartRodStackItem(0, values[1], Colors.blue),   
+            BarChartRodStackItem(values[1], values[1] - 0.0001, Colors.pink),
+          ],
+        ),
+      ],
+    ),
+  ];
+
+}
+
+/// The UI for the drive analysis.
 class DrivePage extends ReactiveWidget<PositionModel> {
   @override
   PositionModel createModel() => PositionModel();
-  
-
-  /* 
-  - a front-on view of the rover. The rover can tilt, representing roll
-  - a profile view of the rover. The rover can tilt, representing pitch
-  - some data representing how the wheels are doing. Useful for determining traction
-  - two sliders, showing what each side of the rover is doing (slider from [-1, +1]
-  - a button to spin all the wheels slowly and ramp up to ~50% throttle (adjustable). Good to test the hardware
-  */
 
   @override
 	Widget build(BuildContext context, PositionModel model) => Column(
@@ -41,7 +125,7 @@ class DrivePage extends ReactiveWidget<PositionModel> {
               child: Column(children: [
                 const Text("Front View of the Rover"),
                 Transform.rotate(
-                  angle: model.metrics.roll,
+                  angle: model.position.roll,
                   child: const Text("VIEW OF THE ROVER"),
                 ),
               ],),
@@ -50,7 +134,7 @@ class DrivePage extends ReactiveWidget<PositionModel> {
               child: Column(children: [
                 const Text("Side View of the Rover"),
                 Transform.rotate(
-                  angle: model.metrics.pitch,
+                  angle: model.position.pitch,
                   child: const Text("VIEW OF THE ROVER"),
                 ),
               ],),
@@ -58,12 +142,12 @@ class DrivePage extends ReactiveWidget<PositionModel> {
           ],
         ),
       ),
-      const Expanded(
+      Expanded(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Expanded(child: Text("6 rectangles for each wheel showing their rpm -- find the odd one out"),),
-            Expanded(child: Text("Sliders for each side of wheels"),),
+            const Expanded(child: Text("6 rectangles for each wheel showing their rpm -- find the odd one out"),),
+            Expanded(child: _BarChart(values: [model.leftWheels, model.rightWheels])),
           ],
         ),
       ),
@@ -71,22 +155,3 @@ class DrivePage extends ReactiveWidget<PositionModel> {
   );
       
 }
-
-
-
-
-/*
-const Column(
-    children: [
-      Row(children: [
-        Expanded(child: Text("Top Left")),
-        Expanded(child: Text("Top Rght")),
-      ],),
-      Row(children: [
-        Expanded(child: Text("Bottom Left")),
-        Expanded(child: Text("Bottom Rght")),
-      ],)
-    ],
-
-  );
-  */
