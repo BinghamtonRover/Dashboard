@@ -62,9 +62,9 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
 	/// Updates [data] with new data.
 	void update(T value) {
     if (!checkVersion(value)) return;    
+		services.files.logData(value);
 		data.mergeFromMessage(value);
 		notifyListeners();
-		services.files.logData(value);
 	}
 
   /// The version of the data that the firmware sends.

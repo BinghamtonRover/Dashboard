@@ -34,7 +34,7 @@ class ElectricalModel with ChangeNotifier {
   /// The timer that grabs new data for these graphs.
   Timer? timer;
 
-	/// Listens to all the [ScienceTestBuilder]s in the UI.
+	/// Listens to all the [DriveMetrics] and updates the UI.
 	ElectricalModel() {
     metrics.addListener(_setFlag);
     timer = Timer.periodic(const Duration(milliseconds: 10), _updateData);
