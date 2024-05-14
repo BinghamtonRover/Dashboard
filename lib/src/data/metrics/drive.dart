@@ -1,4 +1,5 @@
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/services.dart";
 
 /// Metrics reported by the drive subsystem.
 /// 
@@ -55,6 +56,7 @@ class DriveMetrics extends Metrics<DriveData> {
     if (value.hasBatteryCurrent()) data.batteryCurrent = value.batteryCurrent;
     if (value.hasBatteryVoltage()) data.batteryVoltage = value.batteryVoltage;
     if (value.hasBatteryTemperature()) data.batteryTemperature = value.batteryTemperature;
+		services.files.logData(value);
 		notifyListeners();
 	}
 
