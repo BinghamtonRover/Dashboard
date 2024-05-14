@@ -3,17 +3,17 @@ import "package:rover_dashboard/services.dart";
 
 import "arm.dart";
 import "camera.dart";
-import "drive.dart";
-import "mars.dart";
+import "tank_drive.dart";
 import "none.dart";
 import "science.dart";
+import "modern_drive.dart";
 
 export "arm.dart";
 export "camera.dart";
-export "drive.dart";
-export "mars.dart";
+export "tank_drive.dart";
 export "none.dart";
 export "science.dart";
+export "modern_drive.dart";
 
 /// How often to check the gamepad for new button presses.
 const gamepadDelay = Duration(milliseconds: 10);
@@ -27,16 +27,14 @@ abstract class RoverControls {
 	const RoverControls();
 
 	/// Creates the appropriate [RoverControls] for this mode.
-	factory RoverControls.forMode(OperatingMode mode) {
-		switch (mode) {
-			case OperatingMode.arm: return ArmControls();
-			case OperatingMode.science: return ScienceControls();
-			case OperatingMode.drive: return DriveControls();
-			case OperatingMode.mars: return MarsControls();
-			case OperatingMode.none: return NoControls();
-			case OperatingMode.cameras: return CameraControls();
-		}
-	}
+	factory RoverControls.forMode(OperatingMode mode) => switch (mode) {
+    OperatingMode.arm => ArmControls(),
+    OperatingMode.science => ScienceControls(),
+    OperatingMode.drive => DriveControls(),
+    OperatingMode.none => NoControls(),
+    OperatingMode.cameras => CameraControls(),
+    OperatingMode.modernDrive => ModernDriveControls(),
+	};
 
 	/// The [OperatingMode] for these controls.
 	OperatingMode get mode;
@@ -45,7 +43,7 @@ abstract class RoverControls {
 	void updateState(GamepadState state) { }
 
 	/// Return a list of commands based on the current state of the gamepad.
-	Iterable<Message?> parseInputs(GamepadState state);
+	Iterable<Message> parseInputs(GamepadState state);
 
 	/// A list of commands that disables the subsystem.
 	/// 
