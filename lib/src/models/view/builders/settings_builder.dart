@@ -188,12 +188,16 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   /// Whether to split cameras into their own controls. See [DashboardSettings.splitCameras].
   bool splitCameras;
 
+  /// Whether to default to tank controls. See [DashboardSettings.preferTankControls].
+  bool preferTankControls;
+
 	/// Modifies the given [DashboardSettings].
   DashboardSettingsBuilder(DashboardSettings initial) : 
 		fps = NumberBuilder(initial.maxFps),
 		blockSize = NumberBuilder(initial.mapBlockSize),
     splitMode = initial.splitMode,
     splitCameras = initial.splitCameras,
+    preferTankControls = initial.preferTankControls,
     themeMode = initial.themeMode;
 
   @override
@@ -206,6 +210,7 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     splitMode: splitMode,
     themeMode: themeMode,
     splitCameras: splitCameras,
+    preferTankControls: preferTankControls,
   );
 
   /// Updates the [splitMode] when a new one is selected.
@@ -226,6 +231,13 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   void updateCameras(bool? input) {  // ignore: avoid_positional_boolean_parameters
     if (input == null) return;
     splitCameras = input;
+    notifyListeners();
+  }
+
+  /// Updates [preferTankControls].
+  void updateTank(bool? input) {  // ignore: avoid_positional_boolean_parameters
+    if (input == null) return;
+    preferTankControls = input;
     notifyListeners();
   }
 }

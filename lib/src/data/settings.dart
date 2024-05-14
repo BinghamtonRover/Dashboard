@@ -236,6 +236,11 @@ class DashboardSettings {
   /// When this is enabled, only the dedicated camera control mode can move the cameras.
   final bool splitCameras;
 
+  /// Whether to default to tank drive controls.
+  /// 
+  /// Tank controls offer more custom control, but modern drive controls are more intuitive.
+  final bool preferTankControls;
+
   /// A const constructor.
   const DashboardSettings({
     required this.splitMode,
@@ -243,6 +248,7 @@ class DashboardSettings {
     required this.maxFps,
     required this.themeMode,
     required this.splitCameras,
+    required this.preferTankControls,
   });
 
   /// Parses Dashboard settings from JSON.
@@ -251,6 +257,7 @@ class DashboardSettings {
     mapBlockSize = json?["mapBlockSize"] ?? 1.0,
     maxFps = (json?["maxFps"] ?? 60) as int,
     splitCameras = json?["splitCameras"] ?? false,
+    preferTankControls = json?["preferTankControls"] ?? false,
     themeMode = ThemeMode.values.byName(json?["theme"] ?? ThemeMode.system.name);
 
   /// Serializes these settings to JSON.
@@ -260,6 +267,7 @@ class DashboardSettings {
     "maxFps": maxFps,
     "theme": themeMode.name,
     "splitCameras": splitCameras,
+    "preferTankControls": preferTankControls,
   };
 }
 

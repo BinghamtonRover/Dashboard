@@ -129,6 +129,12 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                 value: model.dashboard.splitCameras,
                 onChanged: model.dashboard.updateCameras,
               ),
+              SwitchListTile(
+                title: const Text("Prefer tank controls"),
+                subtitle: const Text("Default to tank controls instead of modern drive controls"),
+                value: model.dashboard.preferTankControls,
+                onChanged: model.dashboard.updateTank,
+              ),
               Row(children: [
                 const SizedBox(
                   width: 200,
