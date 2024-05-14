@@ -123,6 +123,12 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                 subtitle: "The precision of the GPS grid", 
                 model: model.dashboard.blockSize,
               ),
+              SwitchListTile(
+                title: const Text("Split camera controls"),
+                subtitle: const Text("If enabled, cameras can only be controlled by a separate operator"),
+                value: model.dashboard.splitCameras,
+                onChanged: model.dashboard.updateCameras,
+              ),
               Row(children: [
                 const SizedBox(
                   width: 200,

@@ -68,13 +68,13 @@ class ModernDriveControls extends RoverControls {
   List<DriveCommand> getCameraCommands(GamepadState state) => [
     DriveCommand(frontSwivel: frontSwivel),
     DriveCommand(frontTilt: frontTilt),
-    DriveCommand(rearSwivel: rearSwivel),
-    DriveCommand(rearTilt: rearTilt),
+    // DriveCommand(rearSwivel: rearSwivel),
+    // DriveCommand(rearTilt: rearTilt),
   ];
 
   @override
   List<Message> parseInputs(GamepadState state) => [
-    ...getWheelCommands(state),
+    // ...getWheelCommands(state),
     ...getCameraCommands(state),
     // if (state.normalShoulder != 0) 
       // DriveCommand(setThrottle: true, throttle: throttle),
