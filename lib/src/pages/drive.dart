@@ -128,7 +128,7 @@ class DrivePage extends ReactiveWidget<PositionModel> {
                 const Text("Front View of the Rover"),
                 Transform.rotate(
                   angle: model.position.roll * (pi/180),
-                  child: const Text("VIEW OF THE ROVER"),
+                  child: const Image.asset("assets/rover_front.png"),
                 ),
               ],),
             ),
@@ -137,7 +137,7 @@ class DrivePage extends ReactiveWidget<PositionModel> {
                 const Text("Side View of the Rover"),
                 Transform.rotate(
                   angle: model.position.pitch * (pi/180),
-                  child: const Text("VIEW OF THE ROVER"),
+                  child: const Image.asset("assets/rover_side.png"),              
                 ),
               ],),
             ),
