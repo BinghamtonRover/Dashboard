@@ -78,7 +78,7 @@ class Controller extends Model {
 		controls.updateState(gamepad.state);
 		final messages = controls.parseInputs(gamepad.state);
 		for (final message in messages) {
-			if (message != null) models.messages.sendMessage(message);
+			models.messages.sendMessage(message);
 		}
 	}
 }

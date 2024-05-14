@@ -43,7 +43,7 @@ abstract class RoverControls {
 	void updateState(GamepadState state) { }
 
 	/// Return a list of commands based on the current state of the gamepad.
-	Iterable<Message?> parseInputs(GamepadState state);
+	Iterable<Message> parseInputs(GamepadState state);
 
 	/// A list of commands that disables the subsystem.
 	/// 
