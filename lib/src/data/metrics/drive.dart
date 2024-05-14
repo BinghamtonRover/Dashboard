@@ -48,9 +48,9 @@ class DriveMetrics extends Metrics<DriveData> {
 	];
 
 	@override
-	void update(DriveData value, {bool merge = false}) {
+	void update(DriveData value) {
 		// Since the newValues are often zero, [Metrics.merge] won't work.
-    if (!checkVersion(value)) return;    
+    if (!checkVersion(value)) return;
 		services.files.logData(value);
 		if (value.setLeft) data.left = value.left;
 		if (value.setRight) data.right = value.right;
