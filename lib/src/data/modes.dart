@@ -8,14 +8,19 @@ enum OperatingMode {
 	/// No controls. Allows the user to "disable" a gamepad.
 	none("None"),
 
-	/// Drive mode. 
+	/// Skid-steer drive controls. 
 	/// 
-	/// Focus on helping the user simply drive the rover.
-	drive("Drive"),
+	/// Focus on helping the user drive the rover with as much manual control.
+	drive("Tank drive"),
+
+  /// Modern drive controls.
+  /// 
+  /// Focus on driving intuitively with simple controls 
+  modernDrive("Modern Drive"),
 
 	/// Camera mode.
 	/// 
-	/// The on-board cameras are on spinnable mounts. This mode controls those mounts.
+	/// The on-board cameras are on servo mounts. This mode controls those mounts.
 	cameras("Cameras"),
 
 	/// Science mode. 
@@ -26,12 +31,7 @@ enum OperatingMode {
 	/// Arm mode.
 	/// 
 	/// Focus on helping the user manipulate the arm.
-	arm("Arm"), 
-
-	/// MARS mode.
-	/// 
-	/// Allows the user to control the MARS subsystem manually.
-	mars("MARS");
+	arm("Arm");
 
 	/// The name of this mode.
 	/// 

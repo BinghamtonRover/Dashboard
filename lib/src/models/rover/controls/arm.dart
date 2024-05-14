@@ -43,7 +43,7 @@ class ArmControls extends RoverControls {
 	}
 
 	@override
-	List<Message?> parseInputs(GamepadState state) => [
+	List<Message> parseInputs(GamepadState state) => [
 		// Arm
 		if (settings.useIK) ...[
 			// IK
