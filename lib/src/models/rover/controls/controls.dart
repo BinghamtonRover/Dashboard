@@ -3,14 +3,14 @@ import "package:rover_dashboard/services.dart";
 
 import "arm.dart";
 import "camera.dart";
-import "drive.dart";
+import "tank_drive.dart";
 import "none.dart";
 import "science.dart";
 import "modern_drive.dart";
 
 export "arm.dart";
 export "camera.dart";
-export "drive.dart";
+export "tank_drive.dart";
 export "none.dart";
 export "science.dart";
 export "modern_drive.dart";
