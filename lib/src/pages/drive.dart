@@ -126,19 +126,19 @@ class DrivePage extends ReactiveWidget<PositionModel> {
             Expanded(
               child: Column(children: [
                 const Text("Front View of the Rover"),
-                Transform.rotate(
+                Expanded(child: Transform.rotate(
                   angle: model.position.roll * (pi/180),
-                  child: const Image.asset("assets/rover_front.png"),
-                ),
+                  child: Image.asset("assets/rover_front.png"),
+                ),),
               ],),
             ),
             Expanded(
               child: Column(children: [
                 const Text("Side View of the Rover"),
-                Transform.rotate(
+                Expanded(child: Transform.rotate(
                   angle: model.position.pitch * (pi/180),
-                  child: const Image.asset("assets/rover_side.png"),              
-                ),
+                  child: Image.asset("assets/rover_side.png", scale: 0.5),              
+                ),),
               ],),
             ),
           ],
@@ -148,7 +148,8 @@ class DrivePage extends ReactiveWidget<PositionModel> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const Expanded(child: Text("6 rectangles for each wheel showing their rpm -- find the odd one out"),),
+            // const Expanded(child: Text("6 rectangles for each wheel showing their rpm -- find the odd one out"),),
+            const Expanded(child: Placeholder()),
             Expanded(child: _BarChart(values: [model.leftWheels, model.rightWheels])),
           ],
         ),

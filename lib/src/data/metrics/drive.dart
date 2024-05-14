@@ -48,16 +48,17 @@ class DriveMetrics extends Metrics<DriveData> {
 	];
 
 	@override
-	void update(DriveData value) {
+	void update(DriveData value, {bool merge = false}) {
 		// Since the newValues are often zero, [Metrics.merge] won't work.
+    if (!checkVersion(value)) return;    
+		services.files.logData(value);
 		if (value.setLeft) data.left = value.left;
 		if (value.setRight) data.right = value.right;
 		if (value.setThrottle) data.throttle = value.throttle;
     if (value.hasBatteryCurrent()) data.batteryCurrent = value.batteryCurrent;
     if (value.hasBatteryVoltage()) data.batteryVoltage = value.batteryVoltage;
     if (value.hasBatteryTemperature()) data.batteryTemperature = value.batteryTemperature;
-    services.files.logData(value);
-		notifyListeners();
+    notifyListeners();
 	}
 
   /// The battery voltage.
