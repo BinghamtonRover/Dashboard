@@ -7,15 +7,11 @@ import "package:rover_dashboard/services.dart";
 /// Triggers are for acceleration, left stick for steering.
 /// Also includes camera controls on the D-pad and right stick.
 class ModernDriveControls extends RoverControls {
-  // static const throttleIncrement = 0.1;
-
   /// How far to tilt the cameras each tick.
   static const cameraTiltIncrement = 1;
 
   /// How far to swivel the cameras each tick.
   static const cameraSwivelIncrement = 1;
-
-  // double throttle = 0;
 
   /// The angle of the front tilt servo.
   double frontTilt = 90;
@@ -28,6 +24,14 @@ class ModernDriveControls extends RoverControls {
 
   /// The angle of the rear swivel servo.
   double rearSwivel = 90;
+
+  /// The throttle value.
+  double throttle = 0;
+
+  /// Whether the left shoulder was pressed last tick.
+  bool leftShoulderFlag = false;
+  /// Whether the right shoulder was pressed last tick.
+  bool rightShoulderFlag = true;
 
   @override
   OperatingMode get mode => OperatingMode.modernDrive;
@@ -49,17 +53,19 @@ class ModernDriveControls extends RoverControls {
     final speed = state.normalTrigger;  // sum of both triggers, [-1, 1]
     if (speed == 0) {
       final left = state.normalLeftX;
-      final right = state.normalLeftX * -1;
+      final right = state.normalLeftX;
       return [
         DriveCommand(left: left, setLeft: true),
         DriveCommand(right: right, setRight: true),
+        DriveCommand(throttle: throttle, setThrottle: true),
       ];
     }
-    final direction = state.normalLeftX * 45;  // [-1, 1] --> [-45, 45]
+    final direction = state.normalLeftX * 20;  // [-1, 1] --> [-45, 45]
     final (double left, double right) = getWheelSpeeds(speed, direction);
     return [
       DriveCommand(left: speed * left, setLeft: true),
       DriveCommand(right: speed * right, setRight: true),
+      DriveCommand(throttle: throttle, setThrottle: true),
     ];
   }
 
@@ -83,7 +89,10 @@ class ModernDriveControls extends RoverControls {
   @override
   void updateState(GamepadState state) {
     // Update values
-    // throttle += state.normalShoulder * throttleIncrement;
+    if (!leftShoulderFlag && state.leftShoulder) throttle -= 0.1;
+    leftShoulderFlag = state.leftShoulder;
+    if (!rightShoulderFlag && state.rightShoulder) throttle += 0.1;
+    rightShoulderFlag = state.rightShoulder;
     frontSwivel += state.normalRightX * cameraSwivelIncrement;
     frontTilt += state.normalRightY * cameraTiltIncrement;
     rearSwivel += state.normalDpadX * cameraSwivelIncrement;
@@ -94,6 +103,7 @@ class ModernDriveControls extends RoverControls {
     frontTilt = frontTilt.clamp(0, 180);
     rearSwivel = rearSwivel.clamp(0, 180);
     rearTilt = rearTilt.clamp(0, 180);
+    throttle = throttle.clamp(0, 1);
   }
 
   @override

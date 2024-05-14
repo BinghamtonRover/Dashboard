@@ -354,9 +354,12 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	Future<void> save() async {
 		isLoading = true;
 		notifyListeners();
+    if (value.dashboard.splitCameras != models.settings.dashboard.splitCameras) {
+      // Need an if to avoid resetting throttle when trying to set throttle
+      models.rover.setDefaultControls();
+    }
 		await models.settings.update(value);
 		await models.sockets.reset();
-    models.rover.setDefaultControls();
 		models.video.reset();
 		isLoading = false;
 		notifyListeners();
