@@ -55,6 +55,24 @@ class Controller extends Model {
       models.home.setMessage(severity: Severity.error, text: "Another controller is set to that mode");
       return;
     }
+    if (
+      mode == OperatingMode.drive
+      && models.rover.controllers.any(
+        (other) => other.gamepadIndex != gamepadIndex && other.mode == OperatingMode.modernDrive,
+      )
+    ) {
+      models.home.setMessage(severity: Severity.error, text: "Cannot use both tank and drive controls");
+      return;
+    }
+    if (
+      mode == OperatingMode.modernDrive
+      && models.rover.controllers.any(
+        (other) => other.gamepadIndex != gamepadIndex && other.mode == OperatingMode.drive,
+      )
+    ) {
+      models.home.setMessage(severity: Severity.error, text: "Cannot use both tank and drive controls");
+      return;
+    }
     if (mode == OperatingMode.cameras && !models.settings.dashboard.splitCameras) {
       models.home.setMessage(severity: Severity.error, text: "Enable split camera controls in the settings");
       return;

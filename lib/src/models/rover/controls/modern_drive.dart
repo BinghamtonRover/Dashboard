@@ -31,7 +31,7 @@ class ModernDriveControls extends RoverControls {
   double rearSwivel = 90;
 
   @override
-  OperatingMode get mode => OperatingMode.drive;
+  OperatingMode get mode => OperatingMode.modernDrive;
 
   /// Gets the speeds of the wheels based on the speed and direction.
   (double, double) getWheelSpeeds(double speed, double direction) {

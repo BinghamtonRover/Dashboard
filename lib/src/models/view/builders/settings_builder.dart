@@ -356,6 +356,7 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 		notifyListeners();
 		await models.settings.update(value);
 		await models.sockets.reset();
+    models.rover.setDefaultControls();
 		models.video.reset();
 		isLoading = false;
 		notifyListeners();
