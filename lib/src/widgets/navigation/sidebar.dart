@@ -12,7 +12,7 @@ class Sidebar extends StatelessWidget {
 	@override
 	Widget build(BuildContext context) => Container(
 		width: 250, 
-		color: Theme.of(context).colorScheme.surfaceVariant,
+		color: Theme.of(context).colorScheme.surface,
 		child: ListView(
 			padding: const EdgeInsets.symmetric(horizontal: 4),
 			children: [
