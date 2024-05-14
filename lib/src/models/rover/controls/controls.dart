@@ -4,7 +4,6 @@ import "package:rover_dashboard/services.dart";
 import "arm.dart";
 import "camera.dart";
 import "drive.dart";
-import "mars.dart";
 import "none.dart";
 import "science.dart";
 import "modern_drive.dart";
@@ -12,7 +11,6 @@ import "modern_drive.dart";
 export "arm.dart";
 export "camera.dart";
 export "drive.dart";
-export "mars.dart";
 export "none.dart";
 export "science.dart";
 export "modern_drive.dart";
@@ -33,7 +31,6 @@ abstract class RoverControls {
     OperatingMode.arm => ArmControls(),
     OperatingMode.science => ScienceControls(),
     OperatingMode.drive => DriveControls(),
-    OperatingMode.mars => MarsControls(),
     OperatingMode.none => NoControls(),
     OperatingMode.cameras => CameraControls(),
     OperatingMode.modernDrive => ModernDriveControls(),
