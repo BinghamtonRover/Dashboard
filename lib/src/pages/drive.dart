@@ -1,3 +1,5 @@
+import "dart:math";
+
 import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 
@@ -125,7 +127,7 @@ class DrivePage extends ReactiveWidget<PositionModel> {
               child: Column(children: [
                 const Text("Front View of the Rover"),
                 Transform.rotate(
-                  angle: model.position.roll,
+                  angle: model.position.roll * (pi/180),
                   child: const Text("VIEW OF THE ROVER"),
                 ),
               ],),
@@ -134,7 +136,7 @@ class DrivePage extends ReactiveWidget<PositionModel> {
               child: Column(children: [
                 const Text("Side View of the Rover"),
                 Transform.rotate(
-                  angle: model.position.pitch,
+                  angle: model.position.pitch * (pi/180),
                   child: const Text("VIEW OF THE ROVER"),
                 ),
               ],),
