@@ -27,7 +27,12 @@ class Rover extends Model {
 
   /// Sets all the gamepads to their default controls.
   void setDefaultControls() {
-    controller1.setMode(OperatingMode.drive);
+    final settings = models.settings.dashboard;
+    if (settings.preferTankControls) {
+      controller1.setMode(OperatingMode.drive);
+    } else {
+      controller1.setMode(OperatingMode.modernDrive);
+    }
     controller2.setMode(OperatingMode.arm);
     if (models.settings.dashboard.splitCameras) {
       controller3.setMode(OperatingMode.cameras);
