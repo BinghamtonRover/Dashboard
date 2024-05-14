@@ -51,6 +51,14 @@ class Controller extends Model {
 	/// Changes the current mode this [gamepad] is controlling, and chooses a new [RoverControls].
 	void setMode(OperatingMode? mode) {
 		if (mode == null) return;
+    if (models.rover.controllers.any((other) => other.gamepadIndex != gamepadIndex && other.mode == mode)) {
+      models.home.setMessage(severity: Severity.error, text: "Another controller is set to that mode");
+      return;
+    }
+    if (mode == OperatingMode.cameras && !models.settings.dashboard.splitCameras) {
+      models.home.setMessage(severity: Severity.error, text: "Enable split camera controls in the settings");
+      return;
+    }
 		controls.onDispose.forEach(models.messages.sendMessage);
 		controls = RoverControls.forMode(mode);
 		gamepad.pulse();

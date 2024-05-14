@@ -22,8 +22,22 @@ class Rover extends Model {
 	/// Listens for inputs on the second connected gamepad.
 	final controller2 = Controller(1, ArmControls());
 
-  	/// Listens for inputs on the third connected gamepad.
-	final controller3 = Controller(2, CameraControls());
+  /// Listens for inputs on the third connected gamepad.
+	final controller3 = Controller(2, NoControls());
+
+  /// Sets all the gamepads to their default controls.
+  void setDefaultControls() {
+    controller1.setMode(OperatingMode.drive);
+    controller2.setMode(OperatingMode.arm);
+    if (models.settings.dashboard.splitCameras) {
+      controller3.setMode(OperatingMode.cameras);
+    } else {
+      controller3.setMode(OperatingMode.none);
+    }
+  }
+
+  /// All the controllers on the Dashboard.
+  Iterable<Controller> get controllers => [controller1, controller2, controller3];
 
 	/// Whether the rover is connected.
 	bool get isConnected => models.sockets.data.isConnected;
@@ -33,7 +47,8 @@ class Rover extends Model {
 
 	@override
 	Future<void> init() async { 
-		await metrics.init();
+    setDefaultControls();
+    await metrics.init();
 		await controller1.init();
 		await controller2.init();
     await controller3.init();

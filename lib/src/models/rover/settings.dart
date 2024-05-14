@@ -50,13 +50,11 @@ class RoverSettings extends Model {
 	Future<void> setStatus(RoverStatus value) async {
     if (!models.rover.isConnected) return;
     if (value == RoverStatus.AUTONOMOUS || value == RoverStatus.IDLE) {
-      models.rover.controller1.setMode(OperatingMode.none);
-      models.rover.controller2.setMode(OperatingMode.none);
-      models.rover.controller3.setMode(OperatingMode.none);
+      for (final controller in models.rover.controllers) {
+        controller.setMode(OperatingMode.none);
+      }
     } else if (value == RoverStatus.MANUAL) { 
-      models.rover.controller1.setMode(OperatingMode.drive);
-      models.rover.controller3.setMode(OperatingMode.arm);
-      models.rover.controller2.setMode(OperatingMode.cameras);
+      models.rover.setDefaultControls();
     } else {
       final message = UpdateSetting(status: value);
       models.sockets.video.sendMessage(message);
