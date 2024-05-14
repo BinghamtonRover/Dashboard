@@ -13,9 +13,9 @@ dependencies:
   burt_network: 
     git: https://github.com/BinghamtonRover/Networking.git
   file_picker: ^8.0.0+1
-  fl_chart: ^0.67.0
+  fl_chart: ^0.68.0
   flutter_libserialport: ^0.4.0
-  package_info_plus: ^7.0.0
+  package_info_plus: ^8.0.0
   flutter_resizable_container: ^0.4.1
   path_provider: ^2.0.14
   protobuf: ^3.0.0
