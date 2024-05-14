@@ -1,4 +1,5 @@
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/services.dart";
 
 /// Metrics reported by the drive subsystem.
 /// 
@@ -55,6 +56,7 @@ class DriveMetrics extends Metrics<DriveData> {
     if (value.hasBatteryCurrent()) data.batteryCurrent = value.batteryCurrent;
     if (value.hasBatteryVoltage()) data.batteryVoltage = value.batteryVoltage;
     if (value.hasBatteryTemperature()) data.batteryTemperature = value.batteryTemperature;
+    services.files.logData(value);
 		notifyListeners();
 	}
 
@@ -63,4 +65,13 @@ class DriveMetrics extends Metrics<DriveData> {
 
   /// The charge of the battery, as a percentage.
   double get batteryPercentage => (batteryVoltage - 24) / 6;  // 24-30 as a percentage
+  
+  @override
+  Version get supportedVersion => Version(major: 1);
+
+  @override
+  Version parseVersion(DriveData message) => message.version;
+
+  @override
+  Message get versionCommand => DriveCommand(version: supportedVersion);
 }

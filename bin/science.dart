@@ -18,8 +18,6 @@ bool shouldKeepData(Timestamp timestamp, ScienceData data) {
 
 	// Filter data based on reasonable thresholds, eg:
 	if (data.co2.isOutOfBounds(min: 400, max: 2000)) return false;
-	if (data.methane.isOutOfBounds(min: 100, max: 500)) return false;
-	if (data.pH.isOutOfBounds(min: 0, max: 14)) return false;
 	if (data.humidity.isOutOfBounds(min: 0, max: 50)) return false;
 	if (data.temperature.isOutOfBounds(min: 0, max: 100)) return false;
 

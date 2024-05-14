@@ -32,4 +32,13 @@ class ArmMetrics extends Metrics<ArmData> {
 		MetricLine("Elbow: "),
     ...getMotorData(data.elbow),
 	];
+
+  @override
+  Version get supportedVersion => Version(major: 1);
+
+  @override
+  Version parseVersion(ArmData message) => message.version;
+
+  @override
+  Message get versionCommand => ArmCommand(version: supportedVersion);
 }

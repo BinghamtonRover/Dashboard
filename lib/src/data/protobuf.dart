@@ -300,3 +300,11 @@ extension LogFormat on BurtLog {
     return result.toString();
   }
 }
+
+/// Helpful methods on [Version]s.
+extension VersionUtils on Version {
+  /// Formats the version in a human-readable format.
+  String format() => hasMajor() ? "$major.$minor" : "unknown";
+  /// Whether another version is compatible with this one.
+  bool isCompatible(Version other) => major == other.major;
+}

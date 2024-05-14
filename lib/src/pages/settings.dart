@@ -226,6 +226,29 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
             trailing: const Icon(Icons.launch),
             onTap: () => showDialog<void>(context: context, builder: (_) => TimerEditor()),
           ),
+          ListTile(
+            title: const Text("About"),
+            subtitle: const Text("Show contributor and version information"),
+            trailing: const Icon(Icons.info),
+            onTap: () => showAboutDialog(
+              context: context,
+              applicationName: "Binghamton University Rover Team Dashboard",
+              applicationVersion: models.home.version,
+              applicationIcon: Image.asset("assets/logo.png", scale: 4),
+              applicationLegalese: [
+                "Firmware versions:",
+                for (final metrics in models.rover.metrics.allMetrics)
+                  "  ${metrics.name}: Supports ${metrics.supportedVersion.format()}. Rover: ${metrics.version.format()}",
+              ].join("\n"),
+              children: [
+                const SizedBox(height: 24),
+                Center(child: TextButton(
+                  onPressed: () => launchUrl(Uri.parse("https://github.com/BinghamtonRover/Dashboard/graphs/contributors")),
+                  child: const Text("Click to see contributions"),
+                ),),
+              ],
+            ),
+          ),
         ],
       ),),
       Row(
