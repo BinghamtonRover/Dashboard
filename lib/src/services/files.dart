@@ -37,6 +37,8 @@ class FilesService extends Service {
   /// A map from filename to an [IOSink] for faster writes.
   final Map<String, IOSink> logFiles = {};
 
+  Timer? flushTimer;
+
   /// The directory where screenshots are stored.
   /// 
   /// These are only screenshots of video feeds, not of the dashboard itself.
@@ -56,6 +58,7 @@ class FilesService extends Service {
     outputDir = await Directory("${appDir.path}/Dashboard").create();
     loggingDir = await Directory("${outputDir.path}/logs/${DateTime.now().timeStamp}").create(recursive: true);
     if (!settingsFile.existsSync()) await writeSettings(null);
+    flushTimer = Timer.periodic(const Duration(seconds: 5), _flushAll);
   }
 
   @override
@@ -64,6 +67,7 @@ class FilesService extends Service {
       await file.flush();
       await file.close();
     }
+    flushTimer?.cancel();
   }
 
   /// Saves the [Settings] object to the [settingsFile], as JSON.
@@ -109,6 +113,7 @@ class FilesService extends Service {
     final name = message.messageName;
     final wrapper = message.wrap();
     final content = base64Encode(wrapper.writeToBuffer());
+    // print("Logging ${message.toProto3Json()}");
     await _log(name, content);
   }
 
@@ -129,11 +134,19 @@ class FilesService extends Service {
     final filename = "$name.log";
     var sink = logFiles[filename];
     if (sink == null) {
+      print("Adding a new sink for $name");
       final file = loggingDir / filename;
       await file.create(recursive: true);
       sink = file.openWrite(mode: FileMode.writeOnlyAppend);
       logFiles[filename] = sink;
     }
     sink.writeln(content);
+  }
+
+  Future<void> _flushAll([_]) async {
+    for (final (filename, sink) in logFiles.records) {
+      print("Flushing $filename");
+      await sink.flush();
+    }
   }
 }
