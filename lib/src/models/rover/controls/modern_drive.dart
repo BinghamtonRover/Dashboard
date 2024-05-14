@@ -36,18 +36,11 @@ class ModernDriveControls extends RoverControls {
   /// Gets the speeds of the wheels based on the speed and direction.
   (double, double) getWheelSpeeds(double speed, double direction) {
     const slope = 1 / 90;
-    // if (-90 <= direction && direction <= -45) {  // [-90, -45]
-    //   return (slope * direction + 0.5, slope * direction + 1.5);
-    // } else {  // [45, 90]
-    //   return (-1 * slope * direction + 1.5, -1 * slope * direction + 0.5);
-    // }
-
     if (direction < -45) {  // trying to turn too far left
       return (-1, 1);
     } else if (direction >= -45 && direction < 45) {  // [-45, 45]
-      // return (-1 * slope * direction + 0.5, -1 * slope * direction + 0.5 * -1);
       return (slope * direction + 0.5, slope * direction - 0.5);
-    } else {
+    } else {  // trying to turn too far right
       return (1, -1);
     }
   }
