@@ -11,18 +11,18 @@ class ModernDriveControls extends RoverControls {
   // static const throttleIncrement = 0.1;
 
   /// How far to tilt the cameras each tick.
-  static const cameraTiltIncrement = 10;
+  static const cameraTiltIncrement = 1;
 
   /// How far to swivel the cameras each tick.
-  static const cameraSwivelIncrement = 10;
+  static const cameraSwivelIncrement = 1;
 
   // double throttle = 0;
 
   /// The angle of the front tilt servo.
-  double frontTilt = 0;
+  double frontTilt = 90;
 
   /// The angle of the front swivel servo.
-  double frontSwivel = 0;
+  double frontSwivel = 90;
 
   /// The angle of the rear tilt servo.
   double rearTilt = 90;
