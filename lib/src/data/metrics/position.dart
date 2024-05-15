@@ -49,24 +49,6 @@ class PositionMetrics extends Metrics<RoverPosition> {
     MetricLine("Distance: ${data.gps.distanceTo(baseStation).toStringAsFixed(2)} m",),
 	];
 
-	@override
-	void update(RoverPosition value) {
-		final oldOrientation = data.orientation.deepCopy();
-		super.update(value);
-		if(data.orientation.x > 360 || data.orientation.x < -360){
-			data.orientation.x = oldOrientation.x;
-			notifyListeners();
-		}
-		if(data.orientation.y > 360 || data.orientation.y < -360){
-			data.orientation.y = oldOrientation.y;
-			notifyListeners();
-		}
-		if(data.orientation.z > 360 || data.orientation.z < -360){
-			data.orientation.z = oldOrientation.z;
-			notifyListeners();
-		}		
-	}
-
   /// The angle to orient the rover on a front view map
   double get roll => data.orientation.x;
 
