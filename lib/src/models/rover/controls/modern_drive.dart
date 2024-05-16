@@ -84,6 +84,7 @@ class ModernDriveControls extends RoverControls {
       ...getCameraCommands(state),
   ];
 
+  /// Updates the throttle if either shoulder button is pressed.
   void updateThrottle(GamepadState state) {
     if (!leftShoulderFlag && state.leftShoulder) throttle -= 0.1;
     leftShoulderFlag = state.leftShoulder;
@@ -92,6 +93,7 @@ class ModernDriveControls extends RoverControls {
     throttle = throttle.clamp(0, 1);
   }
 
+  /// Updates variables for both cameras' servos.
   void updateCameras(GamepadState state) {
     // Update only ONE camera. Go left to right.
     final newFrontSwivel = state.normalDpadX;
