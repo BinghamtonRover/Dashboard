@@ -109,6 +109,7 @@ class Controller extends Model {
 		controls.updateState(gamepad.state);
 		final messages = controls.parseInputs(gamepad.state);
 		for (final message in messages) {
+      // print(message.toProto3Json());
 			models.messages.sendMessage(message);
 		}
 	}

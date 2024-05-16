@@ -8,10 +8,10 @@ import "package:rover_dashboard/services.dart";
 /// Also includes camera controls on the D-pad and right stick.
 class ModernDriveControls extends RoverControls {
   /// How far to tilt the cameras each tick.
-  static const cameraTiltIncrement = 1;
+  static const cameraTiltIncrement = -0.75;
 
   /// How far to swivel the cameras each tick.
-  static const cameraSwivelIncrement = 1;
+  static const cameraSwivelIncrement = -1;
 
   /// The angle of the front tilt servo.
   double frontTilt = 90;
@@ -55,8 +55,8 @@ class ModernDriveControls extends RoverControls {
       final left = state.normalLeftX;
       final right = state.normalLeftX;
       return [
-        DriveCommand(left: left, setLeft: true),
-        DriveCommand(right: right, setRight: true),
+        DriveCommand(left: left / 2, setLeft: true),
+        DriveCommand(right: right / 2, setRight: true),
         DriveCommand(throttle: throttle, setThrottle: true),
       ];
     }
@@ -82,28 +82,47 @@ class ModernDriveControls extends RoverControls {
     ...getWheelCommands(state),
     if (!models.settings.dashboard.splitCameras)
       ...getCameraCommands(state),
-    // if (state.normalShoulder != 0) 
-      // DriveCommand(setThrottle: true, throttle: throttle),
   ];
 
-  @override
-  void updateState(GamepadState state) {
-    // Update values
+  void updateThrottle(GamepadState state) {
     if (!leftShoulderFlag && state.leftShoulder) throttle -= 0.1;
     leftShoulderFlag = state.leftShoulder;
     if (!rightShoulderFlag && state.rightShoulder) throttle += 0.1;
     rightShoulderFlag = state.rightShoulder;
-    frontSwivel += state.normalRightX * cameraSwivelIncrement;
-    frontTilt += state.normalRightY * cameraTiltIncrement;
-    rearSwivel += state.normalDpadX * cameraSwivelIncrement;
-    rearTilt += state.normalDpadY * cameraTiltIncrement;
-    // Clamp values to their respective ranges
-    // throttle = throttle.clamp(0, 1);
+    throttle = throttle.clamp(0, 1);
+  }
+
+  void updateCameras(GamepadState state) {
+    // Update only ONE camera. Go left to right.
+    final newFrontSwivel = state.normalDpadX;
+    final newFrontTilt = state.normalDpadY;
+    final newRearSwivel = state.normalRightX;
+    final newRearTilt = state.normalRightY;
+    if (newFrontSwivel.abs() >= 0.05 || newFrontTilt.abs() >= 0.05) {
+      // Update the front camera. Now, choose which axis
+      if (newFrontSwivel.abs() > newFrontTilt.abs()) {
+        frontSwivel += newFrontSwivel * cameraSwivelIncrement; 
+      } else {
+        frontTilt += newFrontTilt * cameraTiltIncrement; 
+      }
+    } else if (newRearSwivel.abs() >= 0.05 || newRearTilt.abs() >= 0.05) {
+      if (newRearSwivel.abs() > newRearTilt.abs()) {
+        rearSwivel += newRearSwivel * cameraSwivelIncrement; 
+      } else {
+        rearTilt += newRearTilt * cameraTiltIncrement * -1; 
+      }
+    }
+    // Clamp cameras
     frontSwivel = frontSwivel.clamp(0, 180);
     frontTilt = frontTilt.clamp(0, 180);
     rearSwivel = rearSwivel.clamp(0, 180);
     rearTilt = rearTilt.clamp(0, 180);
-    throttle = throttle.clamp(0, 1);
+  }
+
+  @override
+  void updateState(GamepadState state) {
+    updateThrottle(state);
+    updateCameras(state);
   }
 
   @override
