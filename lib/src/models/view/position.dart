@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "dart:async";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -21,8 +20,13 @@ class PositionModel with ChangeNotifier {
   /// Value for the three right wheels -- throttle * right
   double rightWheels = 0;
 
-  /// The timer that grabs new data for these graphs.
-  Timer? timer;
+  /// RPM of the left wheels
+  /// Left Front, Left Middle, Left Back, Right Front, Right Middle, Right Back
+  final wheelsRPM = <double>[0, 0, 0, 0, 0, 0];
+
+  /// [Color] the wheels should be displayed
+  /// Used to dispay when one wheel is spinning erratically
+  final wheelColors = <Color>[Colors.black, Colors.black, Colors.black, Colors.black, Colors.black, Colors.black];
 
   /// Listens to all the [ScienceTestBuilder]s in the UI.
 	PositionModel() {
@@ -41,8 +45,33 @@ class PositionModel with ChangeNotifier {
     if(data.hasThrottle()) throttle = data.throttle;
     if(data.hasRight()) rightWheels = throttle * data.right;
     if(data.hasLeft()) leftWheels = throttle * data.left;
+    if(data.hasFrontLeft()) wheelsRPM[0] = data.frontLeft;
+    if(data.hasMiddleLeft()) wheelsRPM[1] = data.middleLeft;
+    if(data.hasBackLeft()) wheelsRPM[2] = data.backLeft;
+    if(data.hasFrontRight()) wheelsRPM[3] = data.frontRight;
+    if(data.hasMiddleRight()) wheelsRPM[4] = data.middleRight;
+    if(data.hasBackRight()) wheelsRPM[5] = data.backRight;
+    _updateWheelColors();
 		notifyListeners();
 	}
+
+  void _updateWheelColors(){
+    for(var i = 0; i < 6; i++){
+      wheelColors[i] = Colors.black;
+    }
+    final leftAvg = (wheelsRPM[0] + wheelsRPM[1] + wheelsRPM[2])/3;
+    for(var i = 0; i < 3; i++){
+      if((wheelsRPM[i] - leftAvg).abs() > 100){ // Threshold is 100 difference from mean
+        wheelColors[i] = Colors.yellow;
+      }
+    }
+    final rightAvg = (wheelsRPM[3] + wheelsRPM[4] + wheelsRPM[5])/3;
+    for(var i = 3; i < 6; i++){
+      if((wheelsRPM[i] - rightAvg).abs() > 100){
+        wheelColors[i] = Colors.yellow;
+      } 
+    }
+  }
 
   @override
 	void dispose() {
