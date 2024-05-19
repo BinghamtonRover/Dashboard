@@ -167,7 +167,6 @@ class _Wheels extends StatelessWidget{
           ),
         ],
       ),),
-      
     ],
   );
 }
@@ -228,7 +227,6 @@ class DrivePage extends ReactiveWidget<PositionModel> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // const Expanded(child: Text("6 rectangles for each wheel showing their rpm -- find the odd one out"),),
             Expanded(child: _Wheels(wheels: model.wheelsRPM, colors: model.wheelColors)),
             Expanded(child: _BarChart(values: [model.leftWheels, model.rightWheels])),
           ],

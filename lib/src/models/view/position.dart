@@ -59,18 +59,29 @@ class PositionModel with ChangeNotifier {
     for(var i = 0; i < 6; i++){
       wheelColors[i] = Colors.black;
     }
-    final leftAvg = (wheelsRPM[0] + wheelsRPM[1] + wheelsRPM[2])/3;
+    final leftAvg = (wheelsRPM[0] + wheelsRPM[1] + wheelsRPM[2]) / 3;
+    var maxDistance = 0.0; 
+    var index = 0;
     for(var i = 0; i < 3; i++){
       if((wheelsRPM[i] - leftAvg).abs() > 100){ // Threshold is 100 difference from mean
-        wheelColors[i] = Colors.yellow;
+        if((wheelsRPM[i] - leftAvg).abs() > maxDistance){
+          index = i;
+          maxDistance = (wheelsRPM[i] - leftAvg).abs();
+        }
       }
     }
-    final rightAvg = (wheelsRPM[3] + wheelsRPM[4] + wheelsRPM[5])/3;
+    wheelColors[index] = Colors.yellow;
+    maxDistance = 0.0;
+    final rightAvg = (wheelsRPM[3] + wheelsRPM[4] + wheelsRPM[5]) / 3;
     for(var i = 3; i < 6; i++){
       if((wheelsRPM[i] - rightAvg).abs() > 100){
-        wheelColors[i] = Colors.yellow;
+        if((wheelsRPM[i] - rightAvg).abs() > maxDistance){
+          index = i;
+          maxDistance = (wheelsRPM[i] - rightAvg).abs();
+        }
       } 
     }
+    wheelColors[index] = Colors.yellow;
   }
 
   @override
