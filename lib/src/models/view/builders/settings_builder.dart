@@ -185,11 +185,19 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   /// The theme of the Dashboard. See [DashboardSettings.themeMode].
   ThemeMode themeMode;
 
+  /// Whether to split cameras into their own controls. See [DashboardSettings.splitCameras].
+  bool splitCameras;
+
+  /// Whether to default to tank controls. See [DashboardSettings.preferTankControls].
+  bool preferTankControls;
+
 	/// Modifies the given [DashboardSettings].
   DashboardSettingsBuilder(DashboardSettings initial) : 
 		fps = NumberBuilder(initial.maxFps),
 		blockSize = NumberBuilder(initial.mapBlockSize),
     splitMode = initial.splitMode,
+    splitCameras = initial.splitCameras,
+    preferTankControls = initial.preferTankControls,
     themeMode = initial.themeMode;
 
   @override
@@ -201,6 +209,8 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     mapBlockSize: blockSize.value,
     splitMode: splitMode,
     themeMode: themeMode,
+    splitCameras: splitCameras,
+    preferTankControls: preferTankControls,
   );
 
   /// Updates the [splitMode] when a new one is selected.
@@ -214,6 +224,20 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   void updateThemeMode(ThemeMode? input) {
     if (input == null) return;
     themeMode = input;
+    notifyListeners();
+  }
+
+  /// Updates [splitCameras].
+  void updateCameras(bool? input) {  // ignore: avoid_positional_boolean_parameters
+    if (input == null) return;
+    splitCameras = input;
+    notifyListeners();
+  }
+
+  /// Updates [preferTankControls].
+  void updateTank(bool? input) {  // ignore: avoid_positional_boolean_parameters
+    if (input == null) return;
+    preferTankControls = input;
     notifyListeners();
   }
 }
@@ -330,6 +354,10 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	Future<void> save() async {
 		isLoading = true;
 		notifyListeners();
+    if (value.dashboard.splitCameras != models.settings.dashboard.splitCameras) {
+      // Need an if to avoid resetting throttle when trying to set throttle
+      models.rover.setDefaultControls();
+    }
 		await models.settings.update(value);
 		await models.sockets.reset();
 		models.video.reset();

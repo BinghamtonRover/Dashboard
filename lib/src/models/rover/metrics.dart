@@ -66,17 +66,17 @@ class RoverMetrics extends Model {
 			decoder: GripperData.fromBuffer,
 			handler: gripper.update,
 		);
-    versionTimer = Timer.periodic(versionInterval, _sendVersions);
+    // versionTimer = Timer.periodic(versionInterval, _sendVersions);
 	}
 
-  /// A timer to broadcast the supported Protobuf version every [versionInterval] seconds.
-  Timer? versionTimer;
-  /// Broadcasts the supported Protobuf version every 5 seconds.
-  static const versionInterval = Duration(seconds: 5);
-  void _sendVersions(_) {
-    for (final metric in allMetrics) {
-      final message = metric.versionCommand;
-      models.messages.sendMessage(message, checkVersion: false);
-    }
-  }
+  // /// A timer to broadcast the supported Protobuf version every [versionInterval] seconds.
+  // Timer? versionTimer;
+  // /// Broadcasts the supported Protobuf version every 5 seconds.
+  // static const versionInterval = Duration(seconds: 5);
+  // void _sendVersions(_) {
+  //   for (final metric in allMetrics) {
+  //     final message = metric.versionCommand;
+  //     models.messages.sendMessage(message, checkVersion: false);
+  //   }
+  // }
 }

@@ -230,12 +230,25 @@ class DashboardSettings {
   /// The theme of the Dashboard. 
   final ThemeMode themeMode;
 
+  /// Whether to split cameras into their own controls. 
+  /// 
+  /// When this is disabled, some other modes, like arm or drive, may move the cameras.
+  /// When this is enabled, only the dedicated camera control mode can move the cameras.
+  final bool splitCameras;
+
+  /// Whether to default to tank drive controls.
+  /// 
+  /// Tank controls offer more custom control, but modern drive controls are more intuitive.
+  final bool preferTankControls;
+
   /// A const constructor.
   const DashboardSettings({
     required this.splitMode,
     required this.mapBlockSize,
     required this.maxFps,
     required this.themeMode,
+    required this.splitCameras,
+    required this.preferTankControls,
   });
 
   /// Parses Dashboard settings from JSON.
@@ -243,6 +256,8 @@ class DashboardSettings {
     splitMode = SplitMode.values[json?["splitMode"] ?? SplitMode.horizontal.index],
     mapBlockSize = json?["mapBlockSize"] ?? 1.0,
     maxFps = (json?["maxFps"] ?? 60) as int,
+    splitCameras = json?["splitCameras"] ?? false,
+    preferTankControls = json?["preferTankControls"] ?? false,
     themeMode = ThemeMode.values.byName(json?["theme"] ?? ThemeMode.system.name);
 
   /// Serializes these settings to JSON.
@@ -251,6 +266,8 @@ class DashboardSettings {
     "mapBlockSize": mapBlockSize,
     "maxFps": maxFps,
     "theme": themeMode.name,
+    "splitCameras": splitCameras,
+    "preferTankControls": preferTankControls,
   };
 }
 

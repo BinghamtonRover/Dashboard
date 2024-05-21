@@ -56,5 +56,6 @@ class AutonomyCommandEditor extends ReactiveWidget<AutonomyCommandBuilder> {
       onPressed: model.abort,
       child: const Text("ABORT"), 
     ),
+    const Spacer(),
   ],);
 }

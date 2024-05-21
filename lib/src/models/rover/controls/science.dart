@@ -9,7 +9,7 @@ import "controls.dart";
 /// A [RoverControls] that controls the science chamber.
 class ScienceControls extends RoverControls {
   /// Whether the shoulder buttons should move tubes or steps.
-  bool tubeMode = false;
+  bool tubeMode = true;
   /// The amount of steps to move the dirt carousel when the button is held.
   double carouselIncrement = 1000;
   /// The amount of steps to move the scooper when the button is held.

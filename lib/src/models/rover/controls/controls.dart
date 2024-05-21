@@ -16,7 +16,7 @@ export "science.dart";
 export "modern_drive.dart";
 
 /// How often to check the gamepad for new button presses.
-const gamepadDelay = Duration(milliseconds: 10);
+const gamepadDelay = Duration(milliseconds: 5);
 
 /// A class that controls one subsystem based on the gamepad state.
 /// 
