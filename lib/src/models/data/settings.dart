@@ -25,6 +25,7 @@ class SettingsModel extends Model {
 	@override
 	Future<void> init() async {
 		all = await services.files.readSettings();
+    notifyListeners();
 	}
 
 	/// Replaces the current settings with the provided ones.

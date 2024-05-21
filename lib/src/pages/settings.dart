@@ -229,19 +229,19 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
           ListTile(
             title: const Text("Change the LED strip color"),
             subtitle: const Text("Opens an RGB picker"),
-            trailing: const Icon(Icons.launch),
+            trailing: const Icon(Icons.lightbulb_outline),
             onTap: () => showDialog<void>(context: context, builder: (_) => ColorEditor(ColorBuilder())),
           ),
           ListTile(
             title: const Text("Set a timer"),
             subtitle: const Text("Shows a timer for the current mission"),
-            trailing: const Icon(Icons.launch),
+            trailing: const Icon(Icons.alarm),
             onTap: () => showDialog<void>(context: context, builder: (_) => TimerEditor()),
           ),
           ListTile(
             title: const Text("About"),
             subtitle: const Text("Show contributor and version information"),
-            trailing: const Icon(Icons.info),
+            trailing: const Icon(Icons.info_outline),
             onTap: () => showAboutDialog(
               context: context,
               applicationName: "Binghamton University Rover Team Dashboard",
