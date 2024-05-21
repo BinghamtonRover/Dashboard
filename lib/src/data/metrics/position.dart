@@ -14,8 +14,6 @@ class PositionMetrics extends Metrics<RoverPosition> {
 	GpsCoordinates? _baseStation;
 
 	/// The position of the base station. Setting this value updates the UI.
-	/// 
-	/// Defaults to [RoverPosition.gps] until the MARS subsystem comes online (see [MarsData.coordinates]).
 	GpsCoordinates get baseStation => _baseStation ?? data.gps;
 	set baseStation(GpsCoordinates value) { 
 		_baseStation = value;

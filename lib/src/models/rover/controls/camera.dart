@@ -53,6 +53,5 @@ class CameraControls extends RoverControls {
 	Map<String, String> get buttonMapping => {
 		"Front camera": "Right trigger + joystick",
 		"Rear camera": "Left trigger + joystick",
-		"MARS swivel": "D-pad (horizontal)",
 	};
 }

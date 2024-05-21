@@ -39,9 +39,6 @@ class Routes {
 	/// The name of the autonomy page.
 	static const String autonomy = "Map"; 
 
-	/// The name of the MARS page.
-	static const String mars = "MARS";
-
   /// The name of the logs page.
   static const String logs = "Logs";
 
