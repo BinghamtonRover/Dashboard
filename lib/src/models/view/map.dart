@@ -182,6 +182,7 @@ class AutonomyModel with ChangeNotifier {
 		notifyListeners();
 	}
 
+  /// Places a marker at the rover's current position.
   void placeMarkerOnRover() {
     markers.add(roverPosition);
     notifyListeners();
