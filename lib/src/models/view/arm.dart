@@ -17,6 +17,9 @@ class ArmModel with ChangeNotifier{
   /// The timer that updates this page.
   Timer? timer;
 
+  /// Whether or not laser is on
+  bool laser = false;
+
   /// Starts a timer to refresh at 100 Hz.
   ArmModel() {
     timer = Timer.periodic(const Duration(milliseconds: 10), _update);
@@ -28,5 +31,14 @@ class ArmModel with ChangeNotifier{
 		super.dispose();
 	}
 
-	void _update([_]) => notifyListeners();
+	void _update([_]) {
+    notifyListeners();
+    final command = GripperCommand(laserState: laser ? BoolState.ON : BoolState.OFF);
+    models.messages.sendMessage(command);
+  }
+
+  /// updates the state of [laser]
+  void switchLaser(){
+    laser = !laser;
+  }
 }

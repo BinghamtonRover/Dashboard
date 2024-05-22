@@ -111,6 +111,27 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
         ),
       ],
     ),
+    8 => Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(child: Row(
+          children: [
+            Expanded(child: ViewWidget(models.views.views[0])),
+            Expanded(child: ViewWidget(models.views.views[1])),
+            Expanded(child: ViewWidget(models.views.views[2])),
+            Expanded(child: ViewWidget(models.views.views[3])),
+          ],
+        ),),
+        Expanded(child: Row(
+          children: [
+            Expanded(child: ViewWidget(models.views.views[4])),
+            Expanded(child: ViewWidget(models.views.views[5])),
+            Expanded(child: ViewWidget(models.views.views[6])),
+            Expanded(child: ViewWidget(models.views.views[7])),
+          ],
+        ),),
+      ],
+    ),
     _ => throw StateError("Too many views: ${model.views.length}"),
   };
 }

@@ -25,6 +25,20 @@ class RoverMetrics extends Model {
 	/// when new data is received. As a getter, every time it is called it will use new data.
 	List<Metrics> get allMetrics => [position, drive, science, arm, gripper];
 
+  /// Whether the given command is supported by the rover.
+  bool isSupportedVersion(Message command) {
+    final model = metricsByCommandName[command.messageName];
+    return model?.matchesVersion ?? true;
+  }
+
+  /// Maps command names to the metrics responsible for the device.
+  Map<String, Metrics> get metricsByCommandName => {
+    ScienceCommand().messageName: science,
+    DriveCommand().messageName: drive,
+    ArmCommand().messageName: arm,
+    GripperCommand().messageName: gripper,
+  };
+
 	@override
 	Future<void> init() async {
 		models.messages.registerHandler<DriveData>(
@@ -52,5 +66,17 @@ class RoverMetrics extends Model {
 			decoder: GripperData.fromBuffer,
 			handler: gripper.update,
 		);
+    // versionTimer = Timer.periodic(versionInterval, _sendVersions);
 	}
+
+  // /// A timer to broadcast the supported Protobuf version every [versionInterval] seconds.
+  // Timer? versionTimer;
+  // /// Broadcasts the supported Protobuf version every 5 seconds.
+  // static const versionInterval = Duration(seconds: 5);
+  // void _sendVersions(_) {
+  //   for (final metric in allMetrics) {
+  //     final message = metric.versionCommand;
+  //     models.messages.sendMessage(message, checkVersion: false);
+  //   }
+  // }
 }

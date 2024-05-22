@@ -14,8 +14,6 @@ class PositionMetrics extends Metrics<RoverPosition> {
 	GpsCoordinates? _baseStation;
 
 	/// The position of the base station. Setting this value updates the UI.
-	/// 
-	/// Defaults to [RoverPosition.gps] until the MARS subsystem comes online (see [MarsData.coordinates]).
 	GpsCoordinates get baseStation => _baseStation ?? data.gps;
 	set baseStation(GpsCoordinates value) { 
 		_baseStation = value;
@@ -49,24 +47,21 @@ class PositionMetrics extends Metrics<RoverPosition> {
     MetricLine("Distance: ${data.gps.distanceTo(baseStation).toStringAsFixed(2)} m",),
 	];
 
-	@override
-	void update(RoverPosition value) {
-		final oldOrientation = data.orientation.deepCopy();
-		super.update(value);
-		if(data.orientation.x > 360 || data.orientation.x < -360){
-			data.orientation.x = oldOrientation.x;
-			notifyListeners();
-		}
-		if(data.orientation.y > 360 || data.orientation.y < -360){
-			data.orientation.y = oldOrientation.y;
-			notifyListeners();
-		}
-		if(data.orientation.z > 360 || data.orientation.z < -360){
-			data.orientation.z = oldOrientation.z;
-			notifyListeners();
-		}		
-	}
+  /// The angle to orient the rover on a front view map
+  double get roll => data.orientation.x;
 
-	/// The angle to orient the rover on the top-down map.
+  /// The angle to orient the rover on a side view map
+  double get pitch => data.orientation.y;
+
+  /// The angle to orient the rover on the top-down map.
 	double get angle => data.orientation.z;
+
+  @override
+  Version parseVersion(RoverPosition message) => message.version;
+
+  @override
+  Version get supportedVersion => Version(major: 1);
+
+  @override
+  Message get versionCommand => RoverPosition(version: supportedVersion);
 }

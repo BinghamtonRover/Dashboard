@@ -22,15 +22,22 @@ class MessagesModel {
 			if (allowedFallthrough.contains(wrapper.name)) return;
 			throw StateError("No handler registered for ${wrapper.name} message");
 		}
-		try { return rawHandler(wrapper.data); }
-		on InvalidProtocolBufferException {
-			try { return rawHandler(wrapper.data); }
-			on InvalidProtocolBufferException { /* Nothing we can do */ }
-		}	
+		try { 
+      return rawHandler(wrapper.data);
+    } on InvalidProtocolBufferException {
+      // Data is corrupt, ignore it
+    }
 	}
 
 	/// Sends a command over the network or over Serial.
-	void sendMessage(Message message) {
+	void sendMessage(Message message, {bool checkVersion = true}) {
+    final shouldCheck = checkVersion && models.settings.dashboard.versionChecking;
+    if (shouldCheck && !models.rover.metrics.isSupportedVersion(message)) {
+      if (models.rover.isConnected) {
+        models.home.setMessage(severity: Severity.error, text: "Rover has the wrong ${message.messageName} version!");
+      }
+      return;
+    }
 		models.serial.sendMessage(message);
 		models.sockets.data.sendMessage(message);
 	}

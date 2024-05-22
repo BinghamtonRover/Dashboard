@@ -72,6 +72,7 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                   }
                 },
               ),
+              NumberEditor(name: "Heart beats per second", model: model.network.connectionTimeout),
             ],
           ),
           const Divider(),
@@ -122,6 +123,24 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                 name: "Block size", 
                 subtitle: "The precision of the GPS grid", 
                 model: model.dashboard.blockSize,
+              ),
+              SwitchListTile(
+                title: const Text("Split camera controls"),
+                subtitle: const Text("If enabled, cameras can only be controlled by a separate operator"),
+                value: model.dashboard.splitCameras,
+                onChanged: model.dashboard.updateCameras,
+              ),
+              SwitchListTile(
+                title: const Text("Prefer tank controls"),
+                subtitle: const Text("Default to tank controls instead of modern drive controls"),
+                value: model.dashboard.preferTankControls,
+                onChanged: model.dashboard.updateTank,
+              ),
+              SwitchListTile(
+                title: const Text("Require version checking"),
+                subtitle: const Text("Default to version checking on"),
+                value: model.dashboard.versionChecking,
+                onChanged: model.dashboard.updateVersionChecking,
               ),
               Row(children: [
                 const SizedBox(
@@ -217,14 +236,37 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
           ListTile(
             title: const Text("Change the LED strip color"),
             subtitle: const Text("Opens an RGB picker"),
-            trailing: const Icon(Icons.launch),
+            trailing: const Icon(Icons.lightbulb_outline),
             onTap: () => showDialog<void>(context: context, builder: (_) => ColorEditor(ColorBuilder())),
           ),
           ListTile(
             title: const Text("Set a timer"),
             subtitle: const Text("Shows a timer for the current mission"),
-            trailing: const Icon(Icons.launch),
+            trailing: const Icon(Icons.alarm),
             onTap: () => showDialog<void>(context: context, builder: (_) => TimerEditor()),
+          ),
+          ListTile(
+            title: const Text("About"),
+            subtitle: const Text("Show contributor and version information"),
+            trailing: const Icon(Icons.info_outline),
+            onTap: () => showAboutDialog(
+              context: context,
+              applicationName: "Binghamton University Rover Team Dashboard",
+              applicationVersion: models.home.version,
+              applicationIcon: Image.asset("assets/logo.png", scale: 4),
+              applicationLegalese: [
+                "Firmware versions:",
+                for (final metrics in models.rover.metrics.allMetrics)
+                  "  ${metrics.name}: Supports ${metrics.supportedVersion.format()}. Rover: ${metrics.version.format()}",
+              ].join("\n"),
+              children: [
+                const SizedBox(height: 24),
+                Center(child: TextButton(
+                  onPressed: () => launchUrl(Uri.parse("https://github.com/BinghamtonRover/Dashboard/graphs/contributors")),
+                  child: const Text("Click to see contributions"),
+                ),),
+              ],
+            ),
           ),
         ],
       ),),

@@ -5,6 +5,7 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/src/pages/arm.dart";
+import "package:rover_dashboard/src/pages/drive.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A button for the user to select a new view.
@@ -91,6 +92,7 @@ class DashboardView {
 		DashboardView(name: Routes.autonomy, builder: (context) => MapPage()),
     DashboardView(name: Routes.electrical, builder: (context) => ElectricalPage()),
     DashboardView(name: Routes.arm, builder: (context) => ArmPage()),
+    DashboardView(name: Routes.drive, builder: (context) => DrivePage()),
 	];
 
 	/// A blank view.
@@ -168,7 +170,7 @@ class ViewsModel extends Model {
 
 	/// Adds or subtracts a number of views to/from the UI
 	void setNumViews(int? value) {
-		if (value == null || value > 4 || value < 1) return;
+		if (value == null || value > 8 || value < 1) return;
 		final currentNum = views.length;
 		if (value < currentNum) {
 			views = views.sublist(0, value);

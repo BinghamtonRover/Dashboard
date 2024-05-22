@@ -51,6 +51,37 @@ class Controller extends Model {
 	/// Changes the current mode this [gamepad] is controlling, and chooses a new [RoverControls].
 	void setMode(OperatingMode? mode) {
 		if (mode == null) return;
+    if (
+      mode != OperatingMode.none
+      && models.rover.controllers.any(
+        (other) => other.gamepadIndex != gamepadIndex && other.mode == mode,
+      )
+    ) {
+      models.home.setMessage(severity: Severity.error, text: "Another controller is set to that mode");
+      return;
+    }
+    if (
+      mode == OperatingMode.drive
+      && models.rover.controllers.any(
+        (other) => other.gamepadIndex != gamepadIndex && other.mode == OperatingMode.modernDrive,
+      )
+    ) {
+      models.home.setMessage(severity: Severity.error, text: "Cannot use both tank and drive controls");
+      return;
+    }
+    if (
+      mode == OperatingMode.modernDrive
+      && models.rover.controllers.any(
+        (other) => other.gamepadIndex != gamepadIndex && other.mode == OperatingMode.drive,
+      )
+    ) {
+      models.home.setMessage(severity: Severity.error, text: "Cannot use both tank and drive controls");
+      return;
+    }
+    if (mode == OperatingMode.cameras && !models.settings.dashboard.splitCameras) {
+      models.home.setMessage(severity: Severity.error, text: "Enable split camera controls in the settings");
+      return;
+    }
 		controls.onDispose.forEach(models.messages.sendMessage);
 		controls = RoverControls.forMode(mode);
 		gamepad.pulse();
@@ -78,7 +109,8 @@ class Controller extends Model {
 		controls.updateState(gamepad.state);
 		final messages = controls.parseInputs(gamepad.state);
 		for (final message in messages) {
-			if (message != null) models.messages.sendMessage(message);
+      // print(message.toProto3Json());
+			models.messages.sendMessage(message);
 		}
 	}
 }

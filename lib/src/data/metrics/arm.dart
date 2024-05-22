@@ -10,8 +10,8 @@ class ArmMetrics extends Metrics<ArmData> {
 
 	/// Returns a description of a [MotorData].
 	List<MetricLine> getMotorData(MotorData motor) => [
-		MetricLine("  Is moving? ${motor.isMoving}", severity: motor.isMoving ? Severity.info : null),
-		MetricLine("  Limit? ${motor.isLimitSwitchPressed}", severity: motor.isLimitSwitchPressed ? Severity.warning : null),
+		MetricLine("  Is moving? ${motor.isMoving.displayName}", severity: motor.isMoving.toBool() ? Severity.info : null),
+		MetricLine("  Limit? ${motor.isLimitSwitchPressed.displayName}", severity: motor.isLimitSwitchPressed.toBool() ? Severity.warning : null),
 		MetricLine("  Direction: ${motor.direction.humanName}"),
 		MetricLine("  Steps: ${motor.currentStep} --> ${motor.targetStep}"),
 		MetricLine("  Angle: ${motor.angle.toDegrees()} degrees"),
@@ -32,4 +32,13 @@ class ArmMetrics extends Metrics<ArmData> {
 		MetricLine("Elbow: "),
     ...getMotorData(data.elbow),
 	];
+
+  @override
+  Version get supportedVersion => Version(major: 1);
+
+  @override
+  Version parseVersion(ArmData message) => message.version;
+
+  @override
+  Message get versionCommand => ArmCommand(version: supportedVersion);
 }

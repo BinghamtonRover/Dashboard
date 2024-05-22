@@ -81,11 +81,7 @@ extension GamepadStateUtils on GamepadState {
   }
 
   /// The signed value of the triggers. The left trigger is negative, the right is positive.
-  double get normalTrigger {
-    if (leftTrigger > 0) return -normalLeftTrigger;
-    if (rightTrigger > 0) return normalRightTrigger;
-    return 0;
-  }
+  double get normalTrigger => normalRightTrigger - normalLeftTrigger;
 
   /// The signed value of the D-pad's horizontal axis. Left is -1, right is +1.
   double get normalDpadX {

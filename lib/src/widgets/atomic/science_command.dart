@@ -19,7 +19,7 @@ class ScienceCommandEditor extends ReactiveWidget<ScienceCommandBuilder> {
         const SizedBox(width: 8),
         Text("Status", style: context.textTheme.titleLarge),
         const SizedBox(width: 12),
-        Text("Sample: ${models.rover.metrics.science.data.sample}", style: context.textTheme.titleMedium),
+        Text("Sample: ${models.rover.metrics.science.data.sample + 1}", style: context.textTheme.titleMedium),
         const SizedBox(width: 12),
         Text("State: ${models.rover.metrics.science.data.state.humanName}", style: context.textTheme.titleMedium),
         const Spacer(),

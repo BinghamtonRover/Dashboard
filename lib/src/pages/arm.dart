@@ -40,7 +40,7 @@ class ArmPainterTop extends CustomPainter {
   void paint(Canvas canvas, Size size){
     screen = min(size.width, size.height);
     final paint = Paint()
-      ..color = Colors.grey.shade800
+      ..color = Colors.orange
       ..strokeWidth = screen / 50
       ..strokeCap = StrokeCap.round;
 
@@ -79,6 +79,15 @@ class ArmPainterSide extends CustomPainter {
 
   /// Converts from [-1, 1] relative coordinates to screen coordinates.
   double toAbsolute(double relative) => relative;
+
+  /// The relative length of the shoulder-elbow segment.
+  static const shoulderLength = 1;
+  
+  /// The relative length of the elbow-wrist segment.
+  static const elbowLength = 0.5;
+  
+  /// The relative length of the gripper.
+  static const gripperLength = 0.25;
   
   @override
   void paint(Canvas canvas, Size size) {
@@ -88,14 +97,14 @@ class ArmPainterSide extends CustomPainter {
     const shoulderX = 0.0;
     const shoulderY = 0.0;
     final a2 = shoulderAngle - pi + elbowAngle;
-    final a3 = a2 + liftAngle - pi;
-    final length = min(size.width / 6, size.height / 3);
-    final elbowX = length * cos(shoulderAngle);
-    final elbowY = length * sin(shoulderAngle);
-    final wristX = length * cos(a2) + elbowX;
-    final wristY = length * sin(a2) + elbowY;
-    final gripperX = length * cos(a3) + wristX;
-    final gripperY = length * sin(a3) + wristY;
+    final a3 = a2 + liftAngle;
+    final length = min(size.width / 4, size.height / 2);
+    final elbowX = length * shoulderLength * cos(shoulderAngle);
+    final elbowY = length * shoulderLength * sin(shoulderAngle);
+    final wristX = length * elbowLength * cos(a2) + elbowX;
+    final wristY = length * elbowLength * sin(a2) + elbowY;
+    final gripperX = length * gripperLength * cos(a3) + wristX;
+    final gripperY = length * gripperLength * sin(a3) + wristY;
 
     final shoulderJoint = Offset(toAbsolute(shoulderX) + size.width / 2, -toAbsolute(shoulderY) + size.height);
     final elbowJoint = Offset(toAbsolute(elbowX) + size.width / 2, -toAbsolute(elbowY) + size.height);
@@ -110,13 +119,13 @@ class ArmPainterSide extends CustomPainter {
     ];
 
     final lineColors = [
-      Colors.grey.shade800,
-      Colors.grey.shade700,
-      Colors.grey.shade600,
+      Colors.red, 
+      Colors.green, 
+      Colors.blue,
     ];
     
     final firstCirclePaint = Paint()
-      ..color = Colors.grey.shade800 
+      ..color = Colors.red 
       ..style = PaintingStyle.fill;
 
     canvas.drawCircle(points[0], screen / 40, firstCirclePaint);
@@ -156,6 +165,13 @@ class ArmPage extends ReactiveWidget<ArmModel> {
         Text("Arm Graphs", style: context.textTheme.headlineMedium), 
         const SizedBox(width: 12),
         const Spacer(),
+        const Text("Laser Light"),
+        Switch(
+          value: model.laser,
+          activeColor: Colors.red,
+          onChanged: (bool value) => model.switchLaser(),
+        ),
+        Text(model.laser ? "On" : "Off"),
         const SizedBox(width: 8),
         const ViewsSelector(currentView: Routes.arm),
       ],),
