@@ -72,6 +72,7 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                   }
                 },
               ),
+              NumberEditor(name: "Connection Timeout", model: model.network.connectionTimeout),
             ],
           ),
           const Divider(),

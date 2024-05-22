@@ -104,7 +104,7 @@ class NetworkSettings {
   /// The amount of time, in seconds, the dashboard should wait before determining it's
   /// lost connection to the rover. For reference, the rover should be sending messages 
   /// at least once per second. 
-  final int connectionTimeout;
+  final double connectionTimeout;
 
   /// The address and port of the subsystems program.
   final SocketInfo subsystemsSocket;
