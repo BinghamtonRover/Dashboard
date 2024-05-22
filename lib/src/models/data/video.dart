@@ -116,10 +116,11 @@ class VideoModel extends Model {
 	}
 
 	/// Updates settings for the given camera.
-	Future<void> updateCamera(String id, CameraDetails details) async { 
+	Future<void> updateCamera(String id, CameraDetails details, {bool verify = true}) async { 
 		_handshake = null;
 		final command = VideoCommand(id: id, details: details);
 		models.sockets.video.sendMessage(command);
+    if (!verify) return;
 		await Future<void>.delayed(const Duration(seconds: 2));
 		if (_handshake == null) throw RequestNotAccepted();
 	}
