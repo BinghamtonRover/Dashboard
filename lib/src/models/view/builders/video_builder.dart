@@ -32,8 +32,11 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
 	/// Whether changes are loading.
 	bool isLoading = false;
 
-	/// The error that occurrec when changing these settings, if any.
+	/// The error that occurred when changing these settings, if any.
 	String? error;
+
+  /// Current status of the camera's autofocus
+  bool autofocus = true;
 
 	@override
 	List<ValueBuilder<dynamic>> get otherBuilders => [resolutionHeight, resolutionWidth, quality, fps];
@@ -45,7 +48,8 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
 		quality = NumberBuilder(data.quality, min: 0, max: 100),
 		fps = NumberBuilder(data.fps, min: 0, max: 60),
 		name = data.name,
-		status = CameraStatus.CAMERA_ENABLED;
+		status = CameraStatus.CAMERA_ENABLED,
+    autofocus = data.autofocus;
 
 	@override
 	bool get isValid => resolutionHeight.isValid
@@ -54,7 +58,8 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
 		&& fps.isValid
 		&& okStatuses.contains(status);
 
-	@override
+
+  @override
 	CameraDetails get value => CameraDetails(
 		resolutionHeight: resolutionHeight.value, 
 		resolutionWidth: resolutionWidth.value, 
@@ -62,6 +67,11 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
 		fps: fps.value, 
 		name: name,
 		status: status,
+    focus: 0,
+    zoom: 100,
+    pan: 0,
+    tilt: 0,
+    autofocus: true,
 	);
 
 	/// Updates the [status] field.
