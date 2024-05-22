@@ -112,18 +112,20 @@ class _WheelRPM extends StatelessWidget{
   });
 
   @override
-  Widget build(BuildContext context) => Container(
-    alignment: Alignment.center,
-    width: 50, 
-    height: 70,
-    color: color,
-    child: Text(
-      rpm.toStringAsFixed(1),
-      style: const TextStyle(
-        color: Colors.red,
-        fontWeight: FontWeight.bold,
-      ),
-    ), 
+  Widget build(BuildContext context) => Expanded(
+    child: Container(
+      alignment: Alignment.center,
+      width: 50, 
+      height: 70,
+      color: color,
+      child: Text(
+        rpm.toStringAsFixed(1),
+        style: const TextStyle(
+          color: Colors.red,
+          fontWeight: FontWeight.bold,
+        ),
+      ), 
+    ),
   );
 }
 class _Wheels extends StatelessWidget{
@@ -153,16 +155,22 @@ class _Wheels extends StatelessWidget{
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _WheelRPM(rpm: wheels[0], color: colors[0]),
+              const SizedBox(height: 8,),
               _WheelRPM(rpm: wheels[1], color: colors[1]),
+              const SizedBox(height: 8,),
               _WheelRPM(rpm: wheels[2], color: colors[2]),
+              const SizedBox(height: 8,),
             ],
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _WheelRPM(rpm: wheels[3], color: colors[3]),
+              const SizedBox(height: 8,),
               _WheelRPM(rpm: wheels[4], color: colors[4]),
+              const SizedBox(height: 8,),
               _WheelRPM(rpm: wheels[5], color: colors[5]),
+              const SizedBox(height: 8,),
             ],
           ),
         ],

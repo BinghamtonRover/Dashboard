@@ -170,7 +170,7 @@ class ViewsModel extends Model {
 
 	/// Adds or subtracts a number of views to/from the UI
 	void setNumViews(int? value) {
-		if (value == null || value > 4 || value < 1) return;
+		if (value == null || value > 8 || value < 1) return;
 		final currentNum = views.length;
 		if (value < currentNum) {
 			views = views.sublist(0, value);

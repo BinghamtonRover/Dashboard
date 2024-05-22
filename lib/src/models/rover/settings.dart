@@ -70,13 +70,8 @@ class RoverSettings extends Model {
 
 	/// Changes the color of the rover's LED strip.
 	Future<bool> setColor(ProtoColor color) async {
-		final message = UpdateSetting(color: color);
-		final result = await tryChangeSettings(message); 
-		if (result) {
-			models.home.setMessage(severity: Severity.info, text: "Successfully changed color");
-			settings.color = color;
-			notifyListeners();
-		}
-		return result;
+		final message = DriveCommand(color: color);
+    models.messages.sendMessage(message);
+    return true;
 	}
 }
