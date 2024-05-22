@@ -164,17 +164,17 @@ class ColorEditor extends ReusableReactiveWidget<ColorBuilder> {
       selected: {model.color},
       segments: [
         ButtonSegment(
-          value: ProtoColor(red: 1),
+          value: ProtoColor.RED,
           icon: Container(height: 48, width: 48, margin: const EdgeInsets.all(8), color: Colors.red),
           label: const Text("Red"),
         ),
         ButtonSegment(
-          value: ProtoColor(green: 1),
+          value: ProtoColor.GREEN,
           icon: Container(height: 48, width: 48, margin: const EdgeInsets.all(8), color: Colors.green),
           label: const Text("Green"),
         ),
         ButtonSegment(
-          value: ProtoColor(blue: 1),
+          value: ProtoColor.BLUE,
           icon: Container(height: 48, width: 48, margin: const EdgeInsets.all(8), color: Colors.blue),
           label: const Text("Blue"),
         ),

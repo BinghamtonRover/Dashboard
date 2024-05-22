@@ -292,3 +292,11 @@ extension VersionUtils on Version {
   /// Whether another version is compatible with this one.
   bool isCompatible(Version other) => major == other.major;
 }
+
+extension BoolUtils on BoolState {
+  bool toBool() => switch (this) {
+    BoolState.NO => false,
+    BoolState.YES => true,
+    _ => throw ArgumentError("Unrecognized bool state: $this"),
+  };
+}

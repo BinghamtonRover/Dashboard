@@ -5,7 +5,7 @@ import "package:rover_dashboard/models.dart";
 
 /// A view model to modify a color and send it to the rover.
 class ColorBuilder with ChangeNotifier {
-  ProtoColor color = ProtoColor(blue: 1);
+  ProtoColor color = ProtoColor.BLUE;
 
 	/// Sets [color] to the rover's current color.
   ColorBuilder();
