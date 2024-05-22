@@ -294,3 +294,13 @@ extension VersionUtils on Version {
   /// Whether another version is compatible with this one.
   bool isCompatible(Version other) => major == other.major;
 }
+
+/// Helpful methods on [BoolState]s.
+extension BoolUtils on BoolState {
+  /// Converts this Protobuf boolean into a normal boolean.
+  bool toBool() => switch (this) {
+    BoolState.NO => false,
+    BoolState.YES => true,
+    _ => throw ArgumentError("Unrecognized bool state: $this"),
+  };
+}

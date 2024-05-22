@@ -97,7 +97,7 @@ class ArmPainterSide extends CustomPainter {
     const shoulderX = 0.0;
     const shoulderY = 0.0;
     final a2 = shoulderAngle - pi + elbowAngle;
-    final a3 = a2 + liftAngle - pi;
+    final a3 = a2 + liftAngle;
     final length = min(size.width / 4, size.height / 2);
     final elbowX = length * shoulderLength * cos(shoulderAngle);
     final elbowY = length * shoulderLength * sin(shoulderAngle);
