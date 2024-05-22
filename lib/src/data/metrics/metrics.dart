@@ -51,6 +51,7 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
 
   /// Checks this message's version and checks for support.
   bool checkVersion(T data) {
+    if (!models.settings.dashboard.versionChecking) return true;
     if (data is RoverPosition) return true;
     final newVersion = parseVersion(data);
     if (newVersion.hasMajor()) version = newVersion;

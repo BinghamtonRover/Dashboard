@@ -10,8 +10,8 @@ class GripperMetrics extends Metrics<GripperData> {
 
 	/// Returns a description of a [MotorData].
 	List<MetricLine> getMotorData(MotorData motor) => [
-		MetricLine("  Is moving? ${motor.isMoving}", severity: motor.isMoving.toBool() ? Severity.info : null),
-		MetricLine("  Limit? ${motor.isLimitSwitchPressed}", severity: motor.isLimitSwitchPressed.toBool() ? Severity.warning : null),
+		MetricLine("  Is moving? ${motor.isMoving.displayName}", severity: motor.isMoving.toBool() ? Severity.info : null),
+		MetricLine("  Limit? ${motor.isLimitSwitchPressed.displayName}", severity: motor.isLimitSwitchPressed.toBool() ? Severity.warning : null),
 		MetricLine("  Direction: ${motor.direction.humanName}"),
 		MetricLine("  Steps: ${motor.currentStep} --> ${motor.targetStep}"),
 		MetricLine("  Angle: ${motor.angle.toDegrees() % 360} degrees"),
@@ -19,6 +19,9 @@ class GripperMetrics extends Metrics<GripperData> {
 
 	@override
 	List<MetricLine> get allMetrics => [
+    MetricLine("Camera Angle: ${data.servoAngle} degrees"),
+    MetricLine("Laser: ${data.laserState.displayName}", severity: data.laserState.toBool() ? Severity.critical : null),
+    MetricLine("------------------------------",),
     MetricLine("Lift:"),
 		...getMotorData(data.lift,),
 		MetricLine("------------------------------",),

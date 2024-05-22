@@ -242,6 +242,9 @@ class DashboardSettings {
   /// Tank controls offer more custom control, but modern drive controls are more intuitive.
   final bool preferTankControls;
 
+  /// Whether to have version checking on protobuf messages.
+  final bool versionChecking;
+
   /// A const constructor.
   const DashboardSettings({
     required this.splitMode,
@@ -250,6 +253,7 @@ class DashboardSettings {
     required this.themeMode,
     required this.splitCameras,
     required this.preferTankControls,
+    required this.versionChecking,
   });
 
   /// Parses Dashboard settings from JSON.
@@ -259,6 +263,7 @@ class DashboardSettings {
     maxFps = (json?["maxFps"] ?? 60) as int,
     splitCameras = json?["splitCameras"] ?? false,
     preferTankControls = json?["preferTankControls"] ?? false,
+    versionChecking = json?["versionChecking"] ?? true,
     themeMode = ThemeMode.values.byName(json?["theme"] ?? ThemeMode.system.name);
 
   /// Serializes these settings to JSON.
@@ -269,6 +274,7 @@ class DashboardSettings {
     "theme": themeMode.name,
     "splitCameras": splitCameras,
     "preferTankControls": preferTankControls,
+    "versionChecking": versionChecking,
   };
 }
 

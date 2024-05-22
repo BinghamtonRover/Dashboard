@@ -301,6 +301,15 @@ extension BoolUtils on BoolState {
   bool toBool() => switch (this) {
     BoolState.NO => false,
     BoolState.YES => true,
+    BoolState.BOOL_UNDEFINED => false,
+    _ => throw ArgumentError("Unrecognized bool state: $this"),
+  };
+
+  /// Converts this Protobuf boolean into a human readable string.
+  String get displayName => switch(this) {
+    BoolState.NO => "No",
+    BoolState.YES => "Yes",
+    BoolState.BOOL_UNDEFINED => "No Data",
     _ => throw ArgumentError("Unrecognized bool state: $this"),
   };
 }

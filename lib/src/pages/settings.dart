@@ -72,7 +72,7 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                   }
                 },
               ),
-              NumberEditor(name: "Connection Timeout", model: model.network.connectionTimeout),
+              NumberEditor(name: "Heart beats per second", model: model.network.connectionTimeout),
             ],
           ),
           const Divider(),
@@ -135,6 +135,12 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                 subtitle: const Text("Default to tank controls instead of modern drive controls"),
                 value: model.dashboard.preferTankControls,
                 onChanged: model.dashboard.updateTank,
+              ),
+              SwitchListTile(
+                title: const Text("Require version checking"),
+                subtitle: const Text("Default to version checking on"),
+                value: model.dashboard.versionChecking,
+                onChanged: model.dashboard.updateVersionChecking,
               ),
               Row(children: [
                 const SizedBox(

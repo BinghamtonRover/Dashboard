@@ -54,7 +54,7 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 		videoSocket = SocketBuilder(initial.videoSocket),
 		autonomySocket = SocketBuilder(initial.autonomySocket),
 		tankSocket = SocketBuilder(initial.tankSocket),
-    connectionTimeout = NumberBuilder<double>(initial.connectionTimeout);
+    connectionTimeout = NumberBuilder<double>(initial.connectionTimeout, min: 0);
 
 	@override
 	bool get isValid => dataSocket.isValid
@@ -195,6 +195,9 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   /// Whether to default to tank controls. See [DashboardSettings.preferTankControls].
   bool preferTankControls;
 
+  /// Whether to use version checking. See [DashboardSettings.versionChecking].
+  bool versionChecking;
+
 	/// Modifies the given [DashboardSettings].
   DashboardSettingsBuilder(DashboardSettings initial) : 
 		fps = NumberBuilder(initial.maxFps),
@@ -202,6 +205,7 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     splitMode = initial.splitMode,
     splitCameras = initial.splitCameras,
     preferTankControls = initial.preferTankControls,
+    versionChecking = initial.versionChecking,
     themeMode = initial.themeMode;
 
   @override
@@ -215,6 +219,7 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     themeMode: themeMode,
     splitCameras: splitCameras,
     preferTankControls: preferTankControls,
+    versionChecking: versionChecking,
   );
 
   /// Updates the [splitMode] when a new one is selected.
@@ -242,6 +247,13 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   void updateTank(bool? input) {  // ignore: avoid_positional_boolean_parameters
     if (input == null) return;
     preferTankControls = input;
+    notifyListeners();
+  }
+
+  /// Updates [versionChecking].
+  void updateVersionChecking(bool? input){ // ignore: avoid_positional_boolean_parameters
+    if (input == null) return;
+    versionChecking = input;
     notifyListeners();
   }
 }
