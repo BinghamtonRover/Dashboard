@@ -245,9 +245,13 @@ class VideoFeedState extends State<VideoFeed> {
   }
 }
 
+/// A widget to edit camera settings.
 class VideoSettingsWidget extends StatefulWidget {
+  /// The details being sent to the camera.
   final CameraDetails details;
+  /// The ID of the camera being edited.
   final String id;
+  /// Creates the video settings widget.
   const VideoSettingsWidget({
     required this.details, 
     required this.id,
@@ -257,11 +261,17 @@ class VideoSettingsWidget extends StatefulWidget {
   VideoSettingsState createState() => VideoSettingsState();
 }
 
+/// A state for [VideoSettingsWidget].
 class VideoSettingsState extends State<VideoSettingsWidget> {
+  /// The zoom level. Camera-specific.
   double zoom = 100;
+  /// The pan level, when zoomed in.
   double pan = 0;
+  /// The tilt level, when zoomed in.
   double tilt = 0;
+  /// The focus level, if autofocus is disabled.
   double focus = 0;
+  /// Whether the camera should autofocus.
   bool autofocus = true;
 
 	@override
