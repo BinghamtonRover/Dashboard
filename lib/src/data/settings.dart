@@ -33,6 +33,7 @@ class ScienceSettings {
   /// Serializes these settings in JSON format.
   Json toJson() => {
     "scrollableGraphs": scrollableGraphs,
+    "numSamples": numSamples,
   };
 }
 

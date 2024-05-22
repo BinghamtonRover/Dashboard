@@ -104,6 +104,8 @@ extension CameraNameUtils on CameraName {
 			case CameraName.SUBSYSTEM1: return "Subsystem 1";
 			case CameraName.SUBSYSTEM2: return "Subsystem 2";
 			case CameraName.SUBSYSTEM3: return "Subsystem 3";
+			case CameraName.BOTTOM_LEFT: return "Bottom Left";
+			case CameraName.BOTTOM_RIGHT: return "Bottom Right";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized camera name: $this");
@@ -293,7 +295,9 @@ extension VersionUtils on Version {
   bool isCompatible(Version other) => major == other.major;
 }
 
+/// Helpful methods on [BoolState]s.
 extension BoolUtils on BoolState {
+  /// Converts this Protobuf boolean into a normal boolean.
   bool toBool() => switch (this) {
     BoolState.NO => false,
     BoolState.YES => true,

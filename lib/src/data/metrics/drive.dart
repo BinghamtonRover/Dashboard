@@ -40,7 +40,9 @@ class DriveMetrics extends Metrics<DriveData> {
 		MetricLine("Left: ${data.left.toStringAsFixed(2)}"),
 		MetricLine("Right: ${data.right.toStringAsFixed(2)}"),
     MetricLine("Battery: ${data.batteryVoltage.toStringAsFixed(2)}V,${data.batteryCurrent.toStringAsFixed(2)}A, ${data.batteryTemperature.toStringAsFixed(2)}°F", severity: electricalSeverity),
-	];
+    MetricLine("Left Side: ${data.frontLeft.toStringAsFixed(1)}, ${data.middleLeft.toStringAsFixed(1)}, ${data.backLeft.toStringAsFixed(1)}"),
+    MetricLine("Right Side: ${data.frontRight.toStringAsFixed(1)}, ${data.middleRight.toStringAsFixed(1)}, ${data.backRight.toStringAsFixed(1)}"),
+  ];
 
 	@override
 	void update(DriveData value) {
@@ -53,6 +55,12 @@ class DriveMetrics extends Metrics<DriveData> {
     if (value.hasBatteryCurrent()) data.batteryCurrent = value.batteryCurrent;
     if (value.hasBatteryVoltage()) data.batteryVoltage = value.batteryVoltage;
     if (value.hasBatteryTemperature()) data.batteryTemperature = value.batteryTemperature;
+    if(value.hasFrontLeft()) data.frontLeft = value.frontLeft;
+    if(value.hasMiddleLeft()) data.middleLeft = value.middleLeft;
+    if(value.hasBackLeft()) data.backLeft = value.backLeft;
+    if(value.hasFrontRight()) data.frontRight = value.frontRight;
+    if(value.hasMiddleRight()) data.middleRight = value.middleRight;
+    if(value.hasBackRight()) data.backRight = value.backRight;
     notifyListeners();
 	}
 

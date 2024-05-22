@@ -165,6 +165,13 @@ class ArmPage extends ReactiveWidget<ArmModel> {
         Text("Arm Graphs", style: context.textTheme.headlineMedium), 
         const SizedBox(width: 12),
         const Spacer(),
+        const Text("Laser Light"),
+        Switch(
+          value: model.laser,
+          activeColor: Colors.red,
+          onChanged: (bool value) => model.switchLaser(),
+        ),
+        Text(model.laser ? "On" : "Off"),
         const SizedBox(width: 8),
         const ViewsSelector(currentView: Routes.arm),
       ],),

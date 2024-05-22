@@ -33,4 +33,3 @@ extension NumUtils on double {
   /// Converts this number (as radians) to degrees.
   int toDegrees() => (this * (180 / pi)).truncate();
 }
-

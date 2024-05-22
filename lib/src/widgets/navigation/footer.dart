@@ -194,6 +194,10 @@ class ViewsCounter extends ReusableReactiveWidget<ViewsModel> {
             value: i,
             child: Center(child: Text(i.toString())),
           ),
+          const DropdownMenuItem(
+            value: 8,
+            child: Center(child: Text("8")),
+          ),
         ],
       ),
     ],
