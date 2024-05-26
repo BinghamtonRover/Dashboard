@@ -164,6 +164,7 @@ class ColorEditor extends ReusableReactiveWidget<ColorBuilder> {
         SegmentedButton(
           style: SegmentedButton.styleFrom(selectedBackgroundColor: Colors.transparent),
           onSelectionChanged: model.updateColor,
+          emptySelectionAllowed: true,
           selected: {model.color},
           segments: [
             ButtonSegment(

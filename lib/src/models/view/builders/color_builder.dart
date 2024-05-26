@@ -6,13 +6,14 @@ import "package:rover_dashboard/models.dart";
 /// A view model to modify a color and send it to the rover.
 class ColorBuilder with ChangeNotifier {
   /// The color being chosen.
-  ProtoColor color = ProtoColor.BLUE;
+  ProtoColor color;
 
   /// Whether the LED strip should blink this color.
   bool blink = false;
 
 	/// Sets [color] to the rover's current color.
-  ColorBuilder();
+  ColorBuilder() : 
+    color = models.rover.metrics.drive.data.color;
 
 	/// Whether [setColor] is still running.
 	bool isLoading = false;
@@ -22,7 +23,7 @@ class ColorBuilder with ChangeNotifier {
   /// Updates the color being chosen.
   void updateColor(Set<ProtoColor>? value) {
     if (value == null) return;
-    color = value.first;
+    color = value.isEmpty ? ProtoColor.UNLIT : value.first;
     notifyListeners();
   }
 

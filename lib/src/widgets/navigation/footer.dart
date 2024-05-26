@@ -178,15 +178,15 @@ class StatusIcons extends StatelessWidget {
 			),
       ListenableBuilder(  // LED color
 				listenable: Listenable.merge([models.rover.metrics.drive, models.rover.status]),
-				builder: (context, child) => Container(
-          height: 24,
-          width: 24,
-          decoration: ShapeDecoration(
-            shape: const CircleBorder(), 
+				builder: (context, child) => IconButton(
+          icon: Icon(
+            Icons.circle, 
             color: models.rover.isConnected
               ? getLedColor(models.rover.metrics.drive.data.color)
               : Colors.black,
-          ),
+            ),
+          onPressed: () => showDialog<void>(context: context, builder: (_) => ColorEditor(ColorBuilder())),
+          tooltip: "Change LED strip",
         ),
       ),
 			const SizedBox(width: 4),

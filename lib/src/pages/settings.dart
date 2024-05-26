@@ -214,12 +214,6 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
             onTap: () => launchUrl(services.files.outputDir.uri),
           ),
           ListTile(
-            title: const Text("Change the LED strip color"),
-            subtitle: const Text("Opens an RGB picker"),
-            trailing: const Icon(Icons.lightbulb_outline),
-            onTap: () => showDialog<void>(context: context, builder: (_) => ColorEditor(ColorBuilder())),
-          ),
-          ListTile(
             title: const Text("Set a timer"),
             subtitle: const Text("Shows a timer for the current mission"),
             trailing: const Icon(Icons.alarm),
