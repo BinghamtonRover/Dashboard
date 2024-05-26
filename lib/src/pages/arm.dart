@@ -124,9 +124,12 @@ class ArmPainterSide extends CustomPainter {
         ..color = Colors.black
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2;
-      final radius = length * (shoulderLength + elbowLength);
-      final rect = Rect.fromCircle(center: coordinates.shoulder, radius: radius);
-      canvas.drawArc(rect, 0, -pi, false, radiusPaint);
+      final radius1 = length * (shoulderLength + elbowLength);
+      final radius2 = length * (shoulderLength - elbowLength);
+      final rect1 = Rect.fromCircle(center: coordinates.shoulder, radius: radius1);
+      final rect2 = Rect.fromCircle(center: coordinates.shoulder, radius: radius2);
+      canvas.drawArc(rect1, 0, -pi, false, radiusPaint);
+      canvas.drawArc(rect2, 0, -pi, false, radiusPaint);
     }
   }
 
@@ -240,6 +243,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
           child: MouseRegion(
             onHover: model.onHover,
             onExit: model.cancelIK,
+            cursor: SystemMouseCursors.precise,
             child: CustomPaint(
               painter: ArmPainterSide(
                 angles: model.angles,
