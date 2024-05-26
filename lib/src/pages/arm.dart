@@ -3,7 +3,6 @@ import "dart:math";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/src/models/view/arm.dart";
 import "package:rover_dashboard/widgets.dart";
 
@@ -203,6 +202,11 @@ class ArmPainterSide extends CustomPainter {
   
 /// The view model for the arm inverse kinematics analysis page.
 class ArmPage extends ReactiveWidget<ArmModel> {
+  /// The index of this view.
+  final int index;
+  /// A const constructor.
+  const ArmPage({required this.index});
+  
   @override
   ArmModel createModel() => ArmModel();
 
@@ -223,7 +227,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
         ),
         Text(model.laser ? "On" : "Off"),
         const SizedBox(width: 8),
-        const ViewsSelector(currentView: Routes.arm),
+        ViewsSelector(index: index),
       ],),
       const Text(
         "Side View (click for IK)", 

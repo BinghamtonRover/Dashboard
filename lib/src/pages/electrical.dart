@@ -3,7 +3,6 @@ import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
 class _LineChart extends StatelessWidget {
@@ -91,6 +90,11 @@ class _LineChart extends StatelessWidget {
 
 /// The UI for the electrical subsystem.
 class ElectricalPage extends ReactiveWidget<ElectricalModel> {
+  /// The index of this view.
+  final int index;
+  /// A const constructor.
+  const ElectricalPage({required this.index});
+  
   @override
   ElectricalModel createModel() => ElectricalModel();
 
@@ -112,7 +116,7 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
         const SizedBox(width: 8),
         ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text("Clear all"), onPressed: model.clear),
         const SizedBox(width: 8),
-        const ViewsSelector(currentView: Routes.electrical),
+        ViewsSelector(index: index),
       ],),
       if (model.axis) Expanded(child:
         Row(children: [

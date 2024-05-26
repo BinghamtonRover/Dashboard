@@ -10,11 +10,11 @@ import "package:rover_dashboard/widgets.dart";
 
 /// A button for the user to select a new view.
 class ViewsSelector extends StatelessWidget {
-	/// The current view to swap with the user's choice of view.
-	final String currentView;
+  /// The index of this view.
+  final int index;
 
 	/// A const constructor.
-	const ViewsSelector({required this.currentView});
+	const ViewsSelector({required this.index});
 
 	/// An icon to indicate the status of the given camera. 
 	Widget getCameraStatus(DashboardView view) {
@@ -39,7 +39,7 @@ class ViewsSelector extends StatelessWidget {
 	Widget build(BuildContext context) => PopupMenuButton<DashboardView>(
 		tooltip: "Select a feed",
 		icon: const Icon(Icons.expand_more),
-		onSelected: (view) => models.views.replaceView(currentView, view),
+		onSelected: (view) => models.views.replaceView(index, view),
 		itemBuilder: (_) => [
 			const PopupMenuItem(enabled: false, child: Text("Cameras")),
 			for (final view in DashboardView.cameraViews) PopupMenuItem(
@@ -59,6 +59,9 @@ class ViewsSelector extends StatelessWidget {
 	);
 }
 
+/// A function that builds a view of the given index.
+typedef ViewBuilder = Widget Function(BuildContext context, int index);
+
 /// A view in the UI.
 /// 
 /// A view can be a camera feed or any other UI element. Views are arranged in a grid.
@@ -68,7 +71,7 @@ class DashboardView {
 	/// A unique key to use while selecting this view.
 	final Object? key;
 	/// A function to build this view.
-	final WidgetBuilder builder;
+	final ViewBuilder builder;
   /// The Flutter widget key for this view.
   final Key flutterKey;
 
@@ -82,32 +85,32 @@ class DashboardView {
 			if (name != CameraName.CAMERA_NAME_UNDEFINED) DashboardView(
 				name: name.humanName,
 				key: name,
-				builder: (context) => VideoFeed(name: name),
+				builder: (context, index) => VideoFeed(name: name, index: index),
 			),
 	];
 
 	/// A list of views that represent all non-camera feeds.
 	static final List<DashboardView> uiViews = [
-		DashboardView(name: Routes.science, builder: (context) => SciencePage()),
-		DashboardView(name: Routes.autonomy, builder: (context) => MapPage()),
-    DashboardView(name: Routes.electrical, builder: (context) => ElectricalPage()),
-    DashboardView(name: Routes.arm, builder: (context) => ArmPage()),
-    DashboardView(name: Routes.drive, builder: (context) => DrivePage()),
+		DashboardView(name: Routes.science, builder: (context, index) => SciencePage(index: index)),
+		DashboardView(name: Routes.autonomy, builder: (context, index) => MapPage(index: index)),
+    DashboardView(name: Routes.electrical, builder: (context, index) => ElectricalPage(index: index)),
+    DashboardView(name: Routes.arm, builder: (context, index) => ArmPage(index: index)),
+    DashboardView(name: Routes.drive, builder: (context, index) => DrivePage(index: index)),
 	];
 
 	/// A blank view.
 	static final blank = DashboardView(
 		name: Routes.blank,
-		builder: (context) => ColoredBox(
+		builder: (context, index) => ColoredBox(
 			color: context.colorScheme.brightness == Brightness.light
 				? Colors.blueGrey
 				: Colors.blueGrey[700]!, 
-			child: const Column(
+			child: Column(
 				children: [
-					Row(children: [Spacer(), ViewsSelector(currentView: Routes.blank)]),
-					Spacer(),
-					Text("Choose a view"),
-					Spacer(),
+					Row(children: [const Spacer(), ViewsSelector(index: index)]),
+					const Spacer(),
+					const Text("Choose a view"),
+					const Spacer(),
 				],
 			),
 		),
@@ -168,17 +171,17 @@ class ViewsModel extends Model {
       horizontalController2.setRatios([0.5, 0.5]);
       horizontalController3.setRatios([0.5, 0.5]);
       horizontalController4.setRatios([0.5, 0.5]);
+      verticalController.setRatios([0.5, 0.5]);
       verticalController2.setRatios([0.5, 0.5]);
     }
   }
 
-	/// Replaces the [oldView] with the [newView].
-	void replaceView(String oldView, DashboardView newView) {
+	/// Replaces the view at the given index with the new view.
+	void replaceView(int index, DashboardView newView) {
 		if (views.contains(newView)) {
 			models.home.setMessage(severity: Severity.error, text: "That view is already on-screen");
 			return;
 		}
-		final index = views.indexWhere((view) => view.name == oldView);
 		views[index] = newView;
 		notifyListeners();
 	}
@@ -194,7 +197,7 @@ class ViewsModel extends Model {
 				views.add(DashboardView.blank);
 			}
 		}
-    resetSizes();
+    // resetSizes();
 		notifyListeners();
 	}
 }

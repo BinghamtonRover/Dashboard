@@ -3,7 +3,6 @@ import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// The UI for the autonomy subsystem.
@@ -38,6 +37,11 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
       ],
     ),
   );
+
+  /// The index of this view.
+  final int index;
+  /// A const constructor.
+  const MapPage({required this.index});
 
   @override
   AutonomyModel createModel() => AutonomyModel();
@@ -142,7 +146,7 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
         else 
           Text("Autonomy status: ${model.data.state.humanName}, ${model.data.task.humanName}", style: context.textTheme.headlineSmall),
         const VerticalDivider(),
-        const ViewsSelector(currentView: Routes.autonomy),
+        ViewsSelector(index: index),
       ],),
     ),
   ],);

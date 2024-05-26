@@ -52,8 +52,11 @@ class VideoFeed extends StatefulWidget {
 	/// The feed to show in this widget.
 	final CameraName name;
 
+  /// The index of this view.
+  final int index;
+
 	/// Displays a video feed for the given camera.
-	const VideoFeed({required this.name});
+	const VideoFeed({required this.name, required this.index});
 
 	@override
 	VideoFeedState createState() => VideoFeedState();
@@ -205,7 +208,7 @@ class VideoFeedState extends State<VideoFeed> {
                 builder: (_) => CameraDetailsEditor(data),
               ),
             ),
-            ViewsSelector(currentView: widget.name.humanName),
+            ViewsSelector(index: widget.index),
           ],
         ),
         Expanded(child: buildChild(context)),

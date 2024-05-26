@@ -4,7 +4,6 @@ import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// Widget to display the speed of the each side of the rover as a bar graph
@@ -181,6 +180,11 @@ class _Wheels extends StatelessWidget{
 
 /// The UI for the drive analysis.
 class DrivePage extends ReactiveWidget<PositionModel> {
+  /// The index of this view.
+  final int index;
+  /// A const constructor.
+  const DrivePage({required this.index});
+  
   @override
   PositionModel createModel() => PositionModel();
 
@@ -192,7 +196,7 @@ class DrivePage extends ReactiveWidget<PositionModel> {
         const SizedBox(width: 8),
         Text("Drive", style: context.textTheme.headlineMedium), 
         const Spacer(),
-        const ViewsSelector(currentView: Routes.drive),
+        ViewsSelector(index: index),
       ],),
       Expanded(
         child: Row(
