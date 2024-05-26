@@ -51,6 +51,9 @@ class ArmModel with ChangeNotifier{
 
   /// The position of the mouse, if it's in the box.
   Offset? mousePosition;
+
+  /// The angles to send the arm to [mousePosition].
+  ArmAngles? ikAngles;
   
   /// Updates the position of the mouse to [mousePosition].
   void onHover(PointerHoverEvent event) {
@@ -62,6 +65,18 @@ class ArmModel with ChangeNotifier{
   void cancelIK(_) {
     mousePosition = null;
     notifyListeners();
+  }
+
+  /// Sends a command to the arm to go to [ikAngles].
+  void sendIK() {
+    if (ikAngles == null) return;
+    final shoulderCommand = MotorCommand(angle: ikAngles!.shoulder);
+    final elbowCommand = MotorCommand(angle: ikAngles!.elbow);
+    final liftCommand = MotorCommand(angle: ikAngles!.lift);
+    final armCommand = ArmCommand(shoulder: shoulderCommand, elbow: elbowCommand);
+    final gripperCommand = GripperCommand(lift: liftCommand);
+    models.messages.sendMessage(armCommand);
+    models.messages.sendMessage(gripperCommand);
   }
 }
 

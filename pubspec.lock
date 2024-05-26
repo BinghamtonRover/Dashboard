@@ -46,7 +46,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "53109c82ec4d70ff977210d47b4666b4c2ea9f6b"
+      resolved-ref: ae18e281f3b327a7d3fbfe0e64e6078189f6dddc
       url: "https://github.com/BinghamtonRover/Networking.git"
     source: git
     version: "1.1.0"

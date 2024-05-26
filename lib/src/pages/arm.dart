@@ -59,17 +59,11 @@ class ArmPainterTop extends CustomPainter {
 /// This viewpoint shits as the arm swivels, so that it is always looking at the shoulder,
 /// elbow, and wrist head-on. To visualize the swivel, see [ArmPainterTop].
 class ArmPainterSide extends CustomPainter {
-  /// The angles of the joints of the arm.
-  final ArmAngles angles;
-
-  /// The position of the mouse, if it's over this widget.
-  final Offset? mousePosition;
+  /// The view model to pull data from.
+  ArmModel model;
   
   /// Constructor for the ArmPainterSide, takes in 3 angles
-  ArmPainterSide({
-    required this.angles,
-    this.mousePosition,
-  });
+  ArmPainterSide(this.model);
 
   /// The smaller screen dimension.
   late double screen;
@@ -85,6 +79,9 @@ class ArmPainterSide extends CustomPainter {
   
   /// The relative length of the gripper.
   static const gripperLength = 0.25;
+
+  /// The total relative length of the arm.
+  static const totalArmLength = shoulderLength + elbowLength;
   
   /// Performs forward kinematics to get the coordinates of each joint from the angles.
   ArmCoordinates getArmCoordinates(ArmAngles angles, Size size) {
@@ -111,15 +108,18 @@ class ArmPainterSide extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     screen = min(size.width, size.height);
-    final coordinates = getArmCoordinates(angles, size);
+    final coordinates = getArmCoordinates(model.angles, size);
     final length = min(size.width / 4, size.height / 2);
     paintArm(canvas, size, coordinates);
+    final mousePosition = model.mousePosition;
     if (mousePosition != null) {
-      final cursorPaint = Paint()..color = Colors.black..style = PaintingStyle.fill;
-      canvas.drawCircle(mousePosition!, screen / 50, cursorPaint);
-      final ikAngles = ik(mousePosition!, size);
-      final ikCoordinates = getArmCoordinates(ikAngles, size);
-      paintArm(canvas, size, ikCoordinates, opacity: 0.5);
+      final relativePosition = getRelativeOffset(size, mousePosition);
+      final ikAngles = ik(size, relativePosition);
+      model.ikAngles = ikAngles;
+      if (ikAngles != null) {
+        final ikCoordinates = getArmCoordinates(ikAngles, size);
+        paintArm(canvas, size, ikCoordinates, opacity: 0.5);
+      }
       final radiusPaint = Paint()
         ..color = Colors.black
         ..style = PaintingStyle.stroke
@@ -133,29 +133,30 @@ class ArmPainterSide extends CustomPainter {
     }
   }
 
-  /// Performs inverse kinematics to get the angles of the arm from the desired position.
-  ArmAngles ik(Offset position, Size size) {
+  /// Converts an absolute offset within this widget to a relative offset about the shoulder joint.
+  Offset getRelativeOffset(Size size, Offset absolute) {
     final length = min(size.width / 4, size.height / 2);
-    const totalArmLength = shoulderLength + elbowLength;
     final radius = length * totalArmLength;
-    final x = (position.dx - size.width / 2 - gripperLength) / radius;
-    final y = (size.height - position.dy) / radius;
+    final x = (absolute.dx - size.width / 2 - gripperLength) / radius;
+    final y = (size.height - absolute.dy) / radius;
+    return Offset(x, y);
+  }
+
+  /// Performs inverse kinematics to get the angles of the arm from the desired position.
+  ArmAngles? ik(Size size, Offset relative) {
     const a = shoulderLength / totalArmLength;
     const b = elbowLength / totalArmLength;
-    final c = sqrt(pow(y, 2) + pow(x, 2));
+    final c = sqrt(pow(relative.dy, 2) + pow(relative.dx, 2));
     final b1Numerator = pow(a, 2) - pow(b, 2) + pow(c, 2);
     final b1Denominator = 2 * a * c;
     final b1 = acos(b1Numerator / b1Denominator);
-    final b2 = atan2(y, x);
+    final b2 = atan2(relative.dy, relative.dx);
     final shoulder = b1 + b2;
     final cNumerator = pow(a, 2) + pow(b, 2) - pow(c, 2);
     const cDenominator = 2 * a * b;
     final elbow = acos(cNumerator / cDenominator);
-    if (shoulder.isNaN || elbow.isNaN) {
-      return (shoulder: 0.0, elbow: pi, lift: 0);
-    } else {
-      return (shoulder: shoulder, elbow: elbow, lift: -1 * (shoulder + elbow) + pi);
-    }
+    if (shoulder.isNaN || elbow.isNaN) return null;
+    return (shoulder: shoulder, elbow: elbow, lift: -1 * (shoulder + elbow) + pi);
   }
 
   /// Paints the arm given its joint positions.
@@ -225,7 +226,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
         const ViewsSelector(currentView: Routes.arm),
       ],),
       const Text(
-        "Side View", 
+        "Side View (click for IK)", 
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Colors.blue,
@@ -244,10 +245,10 @@ class ArmPage extends ReactiveWidget<ArmModel> {
             onHover: model.onHover,
             onExit: model.cancelIK,
             cursor: SystemMouseCursors.precise,
-            child: CustomPaint(
-              painter: ArmPainterSide(
-                angles: model.angles,
-                mousePosition: model.mousePosition,
+            child: GestureDetector(
+              onTap: model.sendIK,
+              child: CustomPaint(
+                painter: ArmPainterSide(model),
               ),
             ),
           ),
