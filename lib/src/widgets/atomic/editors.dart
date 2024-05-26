@@ -158,25 +158,36 @@ class ColorEditor extends ReusableReactiveWidget<ColorBuilder> {
         child: const Text("Save"), 
       ),
     ],
-    content: SegmentedButton(
-      style: SegmentedButton.styleFrom(selectedBackgroundColor: Colors.transparent),
-      onSelectionChanged: model.updateColor,
-      selected: {model.color},
-      segments: [
-        ButtonSegment(
-          value: ProtoColor.RED,
-          icon: Container(height: 48, width: 48, margin: const EdgeInsets.all(8), color: Colors.red),
-          label: const Text("Red"),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SegmentedButton(
+          style: SegmentedButton.styleFrom(selectedBackgroundColor: Colors.transparent),
+          onSelectionChanged: model.updateColor,
+          selected: {model.color},
+          segments: [
+            ButtonSegment(
+              value: ProtoColor.RED,
+              icon: Container(height: 48, width: 48, margin: const EdgeInsets.all(8), color: Colors.red),
+              label: const Text("Red"),
+            ),
+            ButtonSegment(
+              value: ProtoColor.GREEN,
+              icon: Container(height: 48, width: 48, margin: const EdgeInsets.all(8), color: Colors.green),
+              label: const Text("Green"),
+            ),
+            ButtonSegment(
+              value: ProtoColor.BLUE,
+              icon: Container(height: 48, width: 48, margin: const EdgeInsets.all(8), color: Colors.blue),
+              label: const Text("Blue"),
+            ),
+          ],
         ),
-        ButtonSegment(
-          value: ProtoColor.GREEN,
-          icon: Container(height: 48, width: 48, margin: const EdgeInsets.all(8), color: Colors.green),
-          label: const Text("Green"),
-        ),
-        ButtonSegment(
-          value: ProtoColor.BLUE,
-          icon: Container(height: 48, width: 48, margin: const EdgeInsets.all(8), color: Colors.blue),
-          label: const Text("Blue"),
+        const SizedBox(height: 16),
+        CheckboxListTile(
+          value: model.blink, 
+          onChanged: model.updateBlink,
+          title: const Text("Blink"),
         ),
       ],
     ),

@@ -69,8 +69,8 @@ class RoverSettings extends Model {
 	} 
 
 	/// Changes the color of the rover's LED strip.
-	Future<bool> setColor(ProtoColor color) async {
-		final message = DriveCommand(color: color);
+	Future<bool> setColor(ProtoColor color, {required bool blink}) async {
+		final message = DriveCommand(color: color, blink: blink ? BoolState.YES : BoolState.NO);
     models.messages.sendMessage(message);
     return true;
 	}
