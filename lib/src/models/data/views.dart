@@ -120,8 +120,14 @@ class ViewsModel extends Model {
   final horizontalController1 = ResizableController();
   /// The controller for the resizable row on bottom.
   final horizontalController2 = ResizableController();
+  /// The controller for screen 2's first row.
+  final horizontalController3 = ResizableController();
+  /// The controller for screen 2's second row.
+  final horizontalController4 = ResizableController();
   /// The controller for the resizable column.
   final verticalController = ResizableController();
+  /// The vertical controller for screen 2.
+  final verticalController2 = ResizableController();
   
 	/// The current views on the screen.
 	List<DashboardView> views = [
@@ -138,7 +144,10 @@ class ViewsModel extends Model {
     models.settings.removeListener(notifyListeners);
     horizontalController1.dispose();
     horizontalController2.dispose();
+    horizontalController3.dispose();
+    horizontalController4.dispose();
     verticalController.dispose();
+    verticalController2.dispose();
     super.dispose();
   }
 
@@ -155,6 +164,12 @@ class ViewsModel extends Model {
       horizontalController1.setRatios([0.5, 0.5]);
     }
     if (views.length == 4) horizontalController2.setRatios([0.5, 0.5]);
+    if (views.length == 8) {
+      horizontalController2.setRatios([0.5, 0.5]);
+      horizontalController3.setRatios([0.5, 0.5]);
+      horizontalController4.setRatios([0.5, 0.5]);
+      verticalController2.setRatios([0.5, 0.5]);
+    }
   }
 
 	/// Replaces the [oldView] with the [newView].
@@ -179,6 +194,7 @@ class ViewsModel extends Model {
 				views.add(DashboardView.blank);
 			}
 		}
+    resetSizes();
 		notifyListeners();
 	}
 }

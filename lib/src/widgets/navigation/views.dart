@@ -111,27 +111,133 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
         ),
       ],
     ),
-    8 => Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Expanded(child: Row(
-          children: [
-            Expanded(child: ViewWidget(models.views.views[0])),
-            Expanded(child: ViewWidget(models.views.views[1])),
-            Expanded(child: ViewWidget(models.views.views[2])),
-            Expanded(child: ViewWidget(models.views.views[3])),
-          ],
-        ),),
-        Expanded(child: Row(
-          children: [
-            Expanded(child: ViewWidget(models.views.views[4])),
-            Expanded(child: ViewWidget(models.views.views[5])),
-            Expanded(child: ViewWidget(models.views.views[6])),
-            Expanded(child: ViewWidget(models.views.views[7])),
-          ],
-        ),),
-      ],
-    ),
+    8 => Row(children: [
+      Expanded(child: ResizableContainer(
+        controller: model.verticalController,
+        direction: Axis.vertical,
+        dividerWidth: 8, 
+        dividerColor: Colors.black,
+        children: [
+          ResizableChildData(
+            minSize: 100,
+            startingRatio: 0.5,
+            child: ResizableContainer(
+              controller: model.horizontalController1,
+              direction: Axis.horizontal,
+              dividerWidth: 8, 
+              dividerColor: Colors.black,
+              children: [
+                ResizableChildData(
+                  minSize: 100,
+                  startingRatio: 0.5,
+                  child: ViewWidget(models.views.views[0]),
+                ),
+                ResizableChildData(
+                  minSize: 100,
+                  startingRatio: 0.5,
+                  child: ViewWidget(models.views.views[1]),
+                ),
+              ],
+            ),
+          ),
+          ResizableChildData(
+            minSize: 100,
+            startingRatio: 0.5,
+            child: ResizableContainer(
+              controller: model.horizontalController2,
+              direction: Axis.horizontal,
+              dividerWidth: 8, 
+              dividerColor: Colors.black,
+              children: [
+                ResizableChildData(
+                  minSize: 100,
+                  startingRatio: 0.5,
+                  child: ViewWidget(models.views.views[2]),
+                ),
+                ResizableChildData(
+                  minSize: 100,
+                  startingRatio: 0.5,
+                  child: ViewWidget(models.views.views[3]),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),),
+      const VerticalDivider(width: 8, color: Colors.black, thickness: 8),
+      Expanded(child: ResizableContainer(
+        controller: model.verticalController2,
+        direction: Axis.vertical,
+        dividerWidth: 8, 
+        dividerColor: Colors.black,
+        children: [
+          ResizableChildData(
+            minSize: 100,
+            startingRatio: 0.5,
+            child: ResizableContainer(
+              controller: model.horizontalController3,
+              direction: Axis.horizontal,
+              dividerWidth: 8, 
+              dividerColor: Colors.black,
+              children: [
+                ResizableChildData(
+                  minSize: 100,
+                  startingRatio: 0.5,
+                  child: ViewWidget(models.views.views[4]),
+                ),
+                ResizableChildData(
+                  minSize: 100,
+                  startingRatio: 0.5,
+                  child: ViewWidget(models.views.views[5]),
+                ),
+              ],
+            ),
+          ),
+          ResizableChildData(
+            minSize: 100,
+            startingRatio: 0.5,
+            child: ResizableContainer(
+              controller: model.horizontalController4,
+              direction: Axis.horizontal,
+              dividerWidth: 8, 
+              dividerColor: Colors.black,
+              children: [
+                ResizableChildData(
+                  minSize: 100,
+                  startingRatio: 0.5,
+                  child: ViewWidget(models.views.views[6]),
+                ),
+                ResizableChildData(
+                  minSize: 100,
+                  startingRatio: 0.5,
+                  child: ViewWidget(models.views.views[7]),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),),
+    ],),
+                
+            
+        // Expanded(child: Row(
+        //   children: [
+        //     Expanded(child: ViewWidget(models.views.views[0])),
+        //     Expanded(child: ViewWidget(models.views.views[1])),
+        //     Expanded(child: ViewWidget(models.views.views[2])),
+        //     Expanded(child: ViewWidget(models.views.views[3])),
+        //   ],
+        // ),),
+        // Expanded(child: Row(
+        //   children: [
+        //     Expanded(child: ViewWidget(models.views.views[4])),
+        //     Expanded(child: ViewWidget(models.views.views[5])),
+        //     Expanded(child: ViewWidget(models.views.views[6])),
+        //     Expanded(child: ViewWidget(models.views.views[7])),
+        //   ],
+        // ),),
+      // ],
+    // ),
     _ => throw StateError("Too many views: ${model.views.length}"),
   };
 }
