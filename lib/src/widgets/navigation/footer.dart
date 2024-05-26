@@ -99,6 +99,15 @@ class StatusIcons extends StatelessWidget {
 		throw ArgumentError("Unrecognized rover status: $status");
 	}
 
+  /// Gets the Flutter color for the given Protobuf color.
+  Color getLedColor(ProtoColor color) => switch (color) {
+    ProtoColor.BLUE => Colors.blue,
+    ProtoColor.RED => Colors.red,
+    ProtoColor.GREEN => Colors.green,
+    ProtoColor.UNLIT => Colors.grey,
+    _ => Colors.grey,
+  };
+
 	@override
 	Widget build(BuildContext context) => Row(
     mainAxisSize: MainAxisSize.min,
@@ -167,6 +176,19 @@ class StatusIcons extends StatelessWidget {
 					],
 				),
 			),
+      ListenableBuilder(  // LED color
+				listenable: Listenable.merge([models.rover.metrics.drive, models.rover.status]),
+				builder: (context, child) => Container(
+          height: 24,
+          width: 24,
+          decoration: ShapeDecoration(
+            shape: const CircleBorder(), 
+            color: models.rover.isConnected
+              ? getLedColor(models.rover.metrics.drive.data.color)
+              : Colors.black,
+          ),
+        ),
+      ),
 			const SizedBox(width: 4),
 		],
 	);

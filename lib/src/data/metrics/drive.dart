@@ -61,6 +61,7 @@ class DriveMetrics extends Metrics<DriveData> {
     if(value.hasFrontRight()) data.frontRight = value.frontRight;
     if(value.hasMiddleRight()) data.middleRight = value.middleRight;
     if(value.hasBackRight()) data.backRight = value.backRight;
+    if (value.color != ProtoColor.PROTO_COLOR_UNDEFINED) data.color = value.color;
     notifyListeners();
 	}
 
