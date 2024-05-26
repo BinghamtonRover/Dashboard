@@ -1,5 +1,5 @@
 import "dart:async";
-
+import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -41,4 +41,32 @@ class ArmModel with ChangeNotifier{
   void switchLaser(){
     laser = !laser;
   }
+
+  /// The angles of the arm.
+  ArmAngles get angles => (
+    shoulder: arm.shoulder.angle,
+    elbow: arm.elbow.angle,
+    lift: gripper.lift.angle,
+  );
+
+  /// The position of the mouse, if it's in the box.
+  Offset? mousePosition;
+  
+  /// Updates the position of the mouse to [mousePosition].
+  void onHover(PointerHoverEvent event) {
+    mousePosition = event.localPosition;
+    notifyListeners();
+  }
+  
+  /// Clears [mousePosition].
+  void cancelIK(_) {
+    mousePosition = null;
+    notifyListeners();
+  }
 }
+
+/// The three angles of the arm joints: shoulder, elbow, and lift. Swivel is not included.
+typedef ArmAngles = ({double shoulder, double elbow, double lift});
+
+/// The coordinates of each joint of the arm.
+typedef ArmCoordinates = ({Offset shoulder, Offset elbow, Offset wrist, Offset fingers});
