@@ -59,20 +59,7 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               SocketEditor(name: "Video socket", model: model.network.videoSocket),
               SocketEditor(name: "Autonomy socket", model: model.network.autonomySocket),
               SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
-              ListTile(
-                title: const Text("Restart the network sockets"),
-                subtitle: const Text("This only resets your computer's network, not the rover's"),
-                trailing: const Icon(Icons.refresh),
-                onTap: () async {
-                  await models.sockets.reset();
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Network reset"), duration: Duration(milliseconds: 500)),
-                    );
-                  }
-                },
-              ),
-              NumberEditor(name: "Heart beats per second", model: model.network.connectionTimeout),
+              NumberEditor(name: "Heartbeats per second", model: model.network.connectionTimeout),
             ],
           ),
           const Divider(),
@@ -85,13 +72,6 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               NumberEditor(name: "Wrist rotate increment", model: model.arm.rotate),
               NumberEditor(name: "Wrist lift increment", model: model.arm.lift),
               NumberEditor(name: "Pinch increment", model: model.arm.pinch),
-              NumberEditor(name: "IK increment", model: model.arm.ik),
-              SwitchListTile(
-                title: const Text("Use IK?"),
-                subtitle: const Text("Move in millimeters in 3D space instead of radians"),
-                value: model.arm.useIK,
-                onChanged: model.arm.updateIK,
-              ),
             ],
           ),
           const Divider(),

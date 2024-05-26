@@ -33,12 +33,8 @@ class Rover extends Model {
     } else {
       controller1.setMode(OperatingMode.modernDrive);
     }
-    controller2.setMode(OperatingMode.arm);
-    if (models.settings.dashboard.splitCameras) {
-      controller3.setMode(OperatingMode.cameras);
-    } else {
-      controller3.setMode(OperatingMode.none);
-    }
+    controller2.setMode(OperatingMode.none);
+    controller3.setMode(OperatingMode.none);
   }
 
   /// All the controllers on the Dashboard.

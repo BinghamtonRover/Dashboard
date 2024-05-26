@@ -27,13 +27,6 @@ class ArmControls extends RoverControls {
 	@override
 	OperatingMode get mode => OperatingMode.arm;
 
-	/// Updates the IK coordinates by the given offsets.
-	List<Message> updateIK(double x, double y, double z) {
-		if (x == 0 && y == 0 && z == 0) return [];
-		ik += Coordinates(x: x, y: y, z: z);
-		return [ArmCommand(ikX: 1, ikY: ik.y, ikZ: ik.z)];
-	}
-
 	@override
 	void updateState(GamepadState state) {
 		if (!state.buttonA) isAPressed = false;
@@ -44,21 +37,15 @@ class ArmControls extends RoverControls {
 
 	@override
 	List<Message> parseInputs(GamepadState state) => [
-		// Arm
-		if (settings.useIK) ...[
-			// IK
-			...updateIK(state.normalRightX * settings.ikIncrement, state.normalShoulder * settings.ikIncrement, state.normalRightY * settings.ikIncrement),
-		] else ...[
-			// Manual control
-			if (state.normalRightX != 0) ArmCommand(swivel: MotorCommand(moveRadians: state.normalRightX * settings.swivel)),
-			if (state.normalRightY != 0) ArmCommand(shoulder: MotorCommand(moveRadians: state.normalRightY * settings.shoulder)),
-			if (state.normalLeftY != 0) ArmCommand(elbow: MotorCommand(moveRadians: state.normalLeftY * settings.elbow)),
-			// The bumpers should be pseudo-IK: Move the shoulder and elbow in sync. 
-			if (state.normalShoulder != 0) ArmCommand(
-				shoulder: MotorCommand(moveRadians: state.normalShoulder * settings.shoulder * -1),
-				elbow: MotorCommand(moveRadians: state.normalShoulder * settings.elbow),
-			),
-		],
+    // Manual control
+    if (state.normalRightX != 0) ArmCommand(swivel: MotorCommand(moveRadians: state.normalRightX * settings.swivel)),
+    if (state.normalRightY != 0) ArmCommand(shoulder: MotorCommand(moveRadians: state.normalRightY * settings.shoulder)),
+    if (state.normalLeftY != 0) ArmCommand(elbow: MotorCommand(moveRadians: state.normalLeftY * settings.elbow)),
+    // The bumpers should be pseudo-IK: Move the shoulder and elbow in sync. 
+    if (state.normalShoulder != 0) ArmCommand(
+      shoulder: MotorCommand(moveRadians: state.normalShoulder * settings.shoulder * -1),
+      elbow: MotorCommand(moveRadians: state.normalShoulder * settings.elbow),
+    ),
 
 		// Gripper
 		if (state.normalDpadY != 0) GripperCommand(lift: MotorCommand(moveRadians: state.normalDpadY * settings.lift)),
@@ -81,18 +68,11 @@ class ArmControls extends RoverControls {
 
 	@override
 	Map<String, String> get buttonMapping => {
-		// Arm
-		if (settings.useIK) ...{
-			// IK
-			"IK control": "Right joystick",
-			"IK depth": "Bumpers",
-		} else ...{
-			// Manual control
-			"Swivel": "Right joystick (horizontal)",
-			"Shoulder": "Right joystick (vertical)",
-			"Elbow": "Left stick (vertical)",
-			"Pseudo-IK": "Bumpers",
-		},
+    // Manual control
+    "Swivel": "Right joystick (horizontal)",
+    "Shoulder": "Right joystick (vertical)",
+    "Elbow": "Left stick (vertical)",
+    "Pseudo-IK": "Bumpers",
 
 		// Gripper
 		"Lift gripper": "D-pad up/down",
