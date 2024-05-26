@@ -135,7 +135,7 @@ class AutonomyModel with ChangeNotifier {
 		// - rover.longitude => (gridSize - 1) / 2
 		// - rover.latitude => (gridSize - 1) / 2
 		// Then, everything else should be offset by that
-		final x = gpsToBlock(gps.longitude) + offset.x;
+		final x = -1 * gpsToBlock(gps.longitude) + offset.x;
 		final y = gpsToBlock(gps.latitude) + offset.y;
 		if (x < 0 || x >= gridSize) return;
 		if (y < 0 || y >= gridSize) return;
@@ -156,7 +156,7 @@ class AutonomyModel with ChangeNotifier {
     // final position = isPlayingBadApple ? GpsCoordinates() : roverPosition; 
     final position = isPlayingBadApple ? GpsCoordinates(latitude: (gridSize ~/ 2).toDouble(), longitude: (gridSize ~/ 2).toDouble()) : roverPosition; 
 		final midpoint = ((gridSize - 1) / 2).floor();
-		final offsetX = midpoint - gpsToBlock(position.longitude);
+		final offsetX = midpoint - -1 * gpsToBlock(position.longitude);
 		final offsetY = midpoint - gpsToBlock(position.latitude);
 		offset = GridOffset(offsetX, offsetY);
 		notifyListeners();
@@ -181,6 +181,12 @@ class AutonomyModel with ChangeNotifier {
 		markerBuilder.clear();
 		notifyListeners();
 	}
+
+  /// Places a marker at the rover's current position.
+  void placeMarkerOnRover() {
+    markers.add(roverPosition);
+    notifyListeners();
+  }
 
   /// Removes a marker in [gps]
 	void updateMarker(GpsCoordinates gps) {

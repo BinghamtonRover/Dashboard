@@ -27,10 +27,9 @@ class RoverControlDashboard extends ReusableReactiveWidget<SettingsModel> {
     themeMode: models.isReady ? model.dashboard.themeMode : ThemeMode.system,
     theme: ThemeData(
       useMaterial3: false,
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.light(
         primary: binghamtonGreen,
         secondary: binghamtonGreen,
-        surfaceVariant: Colors.blueGrey.shade400,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: binghamtonGreen,
@@ -38,10 +37,9 @@ class RoverControlDashboard extends ReusableReactiveWidget<SettingsModel> {
       ),
     ),
     darkTheme: ThemeData.from(
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: binghamtonGreen,
         secondary: binghamtonGreen,
-        surfaceVariant: Colors.blueGrey.shade700,
       ),
     ),
     routes: {

@@ -3,63 +3,43 @@ import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
-/// The leftmost color on the spectrum.
-HSVColor minColor = HSVColor.fromColor(Colors.redAccent[700]!);
-/// The rightmost color on the spectrum.
-HSVColor maxColor = HSVColor.fromColor(Colors.pink);
-
-/// Utilities for color data.
-extension ColorUtils on ProtoColor {
-	/// Creates a new [ProtoColor] from a Flutter [Color].
-	ProtoColor fromColor(Color other) => ProtoColor(
-		red: other.red / 255,
-		green: other.green / 255,
-		blue: other.blue / 255,
-	);
-
-	/// Converts this message to a Flutter [Color].
-	Color toColor() => Color.fromARGB(
-		255, (red*255).toInt(), (green*255).toInt(), (blue*255).toInt(),
-	);
-}
-
 /// A view model to modify a color and send it to the rover.
-class ColorBuilder extends ValueBuilder<Color> {
-	/// The color to show in the UI.
-	Color color;
+class ColorBuilder with ChangeNotifier {
+  /// The color being chosen.
+  ProtoColor color;
 
-	/// The value of the color slider in the UI.
-	/// 
-	/// This will not match [color] on startup but that's okay.
-	double slider = 0;
+  /// Whether the LED strip should blink this color.
+  bool blink = false;
 
 	/// Sets [color] to the rover's current color.
-	ColorBuilder() : color = models.rover.settings.settings.color.toColor(); 
-
-	@override
-	Color get value => color;
-
-	@override
-	bool get isValid => true;
-
-	/// Updates [color] based on the slider [value].
-	void updateSlider(double value) { 
-		color = HSVColor.lerp(minColor, maxColor, value)!.toColor();
-		slider = value;
-		notifyListeners(); 
-	}
+  ColorBuilder() : 
+    color = models.rover.metrics.drive.data.color;
 
 	/// Whether [setColor] is still running.
 	bool isLoading = false;
 	/// The error when calling [setColor], if any.
 	String? errorText;
 
-	/// Sets the LED strip on the rover to the color in [value].
+  /// Updates the color being chosen.
+  void updateColor(Set<ProtoColor>? value) {
+    if (value == null) return;
+    color = value.isEmpty ? ProtoColor.UNLIT : value.first;
+    notifyListeners();
+  }
+
+  /// Updates [blink].
+  // ignore: avoid_positional_boolean_parameters
+  void updateBlink(bool? value) {
+    if (value == null) return;
+    blink = value;
+    notifyListeners();
+  }
+
+  /// Sends the color to the rover.
 	Future<bool> setColor() async {
 		isLoading = true;
 		notifyListeners();
-		final color = ProtoColor().fromColor(value);
-		final result = await models.rover.settings.setColor(color);
+		final result = await models.rover.settings.setColor(color, blink: blink);
 		errorText = result ? null : "The rover did not accept this command";
 		isLoading = false;
 		notifyListeners();

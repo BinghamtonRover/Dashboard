@@ -116,10 +116,11 @@ class VideoModel extends Model {
 	}
 
 	/// Updates settings for the given camera.
-	Future<void> updateCamera(String id, CameraDetails details) async { 
+	Future<void> updateCamera(String id, CameraDetails details, {bool verify = true}) async { 
 		_handshake = null;
 		final command = VideoCommand(id: id, details: details);
 		models.sockets.video.sendMessage(command);
+    if (!verify) return;
 		await Future<void>.delayed(const Duration(seconds: 2));
 		if (_handshake == null) throw RequestNotAccepted();
 	}
@@ -144,11 +145,11 @@ class VideoModel extends Model {
 				text: "Could not ${enable ? 'enable' : 'disable'} the ${name.humanName} camera",
 			);
 		}
-	}
+	} 
 }
 
 /// An exception thrown when the rover does not respond to a handshake.
-/// 
+///
 /// Certain changes require a handshake to ensure the rover has received and applied the change.
 /// If the rover fails to acknowledge or apply the change, a response will not be sent. Throw
 /// this error to indicate that. 

@@ -2,6 +2,7 @@ import "package:burt_network/burt_network.dart";
 import "package:flutter/foundation.dart";  // <-- Used for ValueNotifier
 
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 
 /// A service to send and receive Protobuf messages over a UDP socket, using [ProtoSocket].
 /// 
@@ -24,6 +25,9 @@ class DashboardSocket extends BurtUdpProtocol {
 	/// The handler to call when a [WrappedMessage] comes in. Used by [onMessage].
 	final WrappedMessageHandler messageHandler;
 
+  /// Number of times to check heart beat per seconds based on [settings.network.connectionTimeout].
+  double get frequency => models.settings.network.connectionTimeout;
+
 	/// Listens for incoming messages on a UDP socket and sends heartbeats to the [device].
 	DashboardSocket({
 		required this.onConnect, 
@@ -36,7 +40,7 @@ class DashboardSocket extends BurtUdpProtocol {
 	);
 
   @override
-  Duration get heartbeatInterval => const Duration(milliseconds: 200);
+  Duration get heartbeatInterval => Duration(milliseconds: 1000 ~/ frequency);
 
 	/// The connection strength, as a percentage to this [device].
 	final connectionStrength = ValueNotifier<double>(0);
@@ -78,10 +82,10 @@ class DashboardSocket extends BurtUdpProtocol {
 		if (wasConnected && !isConnected) onDisconnect(device);
 		_isChecking = false;
 	}
+
+  /// How much each successful/missed handshake is worth, as a percent.
+  double get connectionIncrement => 1 / frequency;
+
+  /// How long to wait for incoming heartbeats after sending them out.
+  Duration get heartbeatWaitDelay => Duration(milliseconds: 1000 ~/ frequency);
 }
-
-/// How much each successful/missed handshake is worth, as a percent.
-const connectionIncrement = 0.2;
-
-/// How long to wait for incoming heartbeats after sending them out.
-const heartbeatWaitDelay = Duration(milliseconds: 200);

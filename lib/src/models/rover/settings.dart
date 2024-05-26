@@ -50,13 +50,11 @@ class RoverSettings extends Model {
 	Future<void> setStatus(RoverStatus value) async {
     if (!models.rover.isConnected) return;
     if (value == RoverStatus.AUTONOMOUS || value == RoverStatus.IDLE) {
-      models.rover.controller1.setMode(OperatingMode.none);
-      models.rover.controller2.setMode(OperatingMode.none);
-      models.rover.controller3.setMode(OperatingMode.none);
+      for (final controller in models.rover.controllers) {
+        controller.setMode(OperatingMode.none);
+      }
     } else if (value == RoverStatus.MANUAL) { 
-      models.rover.controller1.setMode(OperatingMode.drive);
-      models.rover.controller3.setMode(OperatingMode.arm);
-      models.rover.controller2.setMode(OperatingMode.cameras);
+      models.rover.setDefaultControls();
     } else {
       final message = UpdateSetting(status: value);
       models.sockets.video.sendMessage(message);
@@ -71,14 +69,9 @@ class RoverSettings extends Model {
 	} 
 
 	/// Changes the color of the rover's LED strip.
-	Future<bool> setColor(ProtoColor color) async {
-		final message = UpdateSetting(color: color);
-		final result = await tryChangeSettings(message); 
-		if (result) {
-			models.home.setMessage(severity: Severity.info, text: "Successfully changed color");
-			settings.color = color;
-			notifyListeners();
-		}
-		return result;
+	Future<bool> setColor(ProtoColor color, {required bool blink}) async {
+		final message = DriveCommand(color: color, blink: blink ? BoolState.YES : BoolState.NO);
+    models.messages.sendMessage(message);
+    return true;
 	}
 }

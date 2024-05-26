@@ -42,6 +42,9 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 	/// Since the tank runs multiple programs, the port is discarded and only the address is used.
 	final SocketBuilder tankSocket;
 
+  /// The view model for [NetworkSettings.connectionTimeout].
+  final NumberBuilder<double> connectionTimeout;
+
 	@override
 	List<SocketBuilder> get otherBuilders => [dataSocket, videoSocket, autonomySocket, tankSocket];
 
@@ -50,7 +53,8 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 		dataSocket = SocketBuilder(initial.subsystemsSocket),
 		videoSocket = SocketBuilder(initial.videoSocket),
 		autonomySocket = SocketBuilder(initial.autonomySocket),
-		tankSocket = SocketBuilder(initial.tankSocket);
+		tankSocket = SocketBuilder(initial.tankSocket),
+    connectionTimeout = NumberBuilder<double>(initial.connectionTimeout, min: 0);
 
 	@override
 	bool get isValid => dataSocket.isValid
@@ -64,7 +68,7 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 		videoSocket: videoSocket.value,
 		autonomySocket: autonomySocket.value,
 		tankSocket: tankSocket.value,
-		connectionTimeout: 5,
+		connectionTimeout: connectionTimeout.value,
 	);
 }
 
@@ -185,11 +189,23 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   /// The theme of the Dashboard. See [DashboardSettings.themeMode].
   ThemeMode themeMode;
 
+  /// Whether to split cameras into their own controls. See [DashboardSettings.splitCameras].
+  bool splitCameras;
+
+  /// Whether to default to tank controls. See [DashboardSettings.preferTankControls].
+  bool preferTankControls;
+
+  /// Whether to use version checking. See [DashboardSettings.versionChecking].
+  bool versionChecking;
+
 	/// Modifies the given [DashboardSettings].
   DashboardSettingsBuilder(DashboardSettings initial) : 
 		fps = NumberBuilder(initial.maxFps),
 		blockSize = NumberBuilder(initial.mapBlockSize),
     splitMode = initial.splitMode,
+    splitCameras = initial.splitCameras,
+    preferTankControls = initial.preferTankControls,
+    versionChecking = initial.versionChecking,
     themeMode = initial.themeMode;
 
   @override
@@ -201,6 +217,9 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     mapBlockSize: blockSize.value,
     splitMode: splitMode,
     themeMode: themeMode,
+    splitCameras: splitCameras,
+    preferTankControls: preferTankControls,
+    versionChecking: versionChecking,
   );
 
   /// Updates the [splitMode] when a new one is selected.
@@ -214,6 +233,27 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   void updateThemeMode(ThemeMode? input) {
     if (input == null) return;
     themeMode = input;
+    notifyListeners();
+  }
+
+  /// Updates [splitCameras].
+  void updateCameras(bool? input) {  // ignore: avoid_positional_boolean_parameters
+    if (input == null) return;
+    splitCameras = input;
+    notifyListeners();
+  }
+
+  /// Updates [preferTankControls].
+  void updateTank(bool? input) {  // ignore: avoid_positional_boolean_parameters
+    if (input == null) return;
+    preferTankControls = input;
+    notifyListeners();
+  }
+
+  /// Updates [versionChecking].
+  void updateVersionChecking(bool? input){ // ignore: avoid_positional_boolean_parameters
+    if (input == null) return;
+    versionChecking = input;
     notifyListeners();
   }
 }
@@ -330,6 +370,10 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	Future<void> save() async {
 		isLoading = true;
 		notifyListeners();
+    if (value.dashboard.splitCameras != models.settings.dashboard.splitCameras) {
+      // Need an if to avoid resetting throttle when trying to set throttle
+      models.rover.setDefaultControls();
+    }
 		await models.settings.update(value);
 		await models.sockets.reset();
 		models.video.reset();

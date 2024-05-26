@@ -6,6 +6,11 @@ import "package:rover_dashboard/widgets.dart";
 
 /// A widget to edit an [AutonomyCommand].
 class AutonomyCommandEditor extends ReactiveWidget<AutonomyCommandBuilder> {
+  /// The autonomy view model. 
+  final AutonomyModel dataModel;
+  /// A const constructor.
+  const AutonomyCommandEditor(this.dataModel);
+  
   @override
   AutonomyCommandBuilder createModel() => AutonomyCommandBuilder();
 
@@ -52,9 +57,13 @@ class AutonomyCommandEditor extends ReactiveWidget<AutonomyCommandBuilder> {
     ),
     const SizedBox(width: 8),
     ElevatedButton(
-      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
+      style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.red)),
       onPressed: model.abort,
       child: const Text("ABORT"), 
     ),
+    const Spacer(),
+    if (!dataModel.isPlayingBadApple)
+      Text("${dataModel.data.state.humanName}, ${dataModel.data.task.humanName}", style: context.textTheme.titleLarge),
+    const SizedBox(width: 8),
   ],);
 }

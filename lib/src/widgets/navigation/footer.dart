@@ -21,11 +21,9 @@ class Footer extends StatelessWidget {
       children: [
         MessageDisplay(showLogs: showLogs),
         Wrap(  // Groups these elements together even when wrapping
-          // mainAxisSize: MainAxisSize.min, 
           children: [
             ViewsCounter(),
             const SizedBox(width: 8),
-            // GamepadButtons(),
             GamepadButton(models.rover.controller1),
             const SizedBox(width: 8),
             GamepadButton(models.rover.controller2),
@@ -101,6 +99,15 @@ class StatusIcons extends StatelessWidget {
 		throw ArgumentError("Unrecognized rover status: $status");
 	}
 
+  /// Gets the Flutter color for the given Protobuf color.
+  Color getLedColor(ProtoColor color) => switch (color) {
+    ProtoColor.BLUE => Colors.blue,
+    ProtoColor.RED => Colors.red,
+    ProtoColor.GREEN => Colors.green,
+    ProtoColor.UNLIT => Colors.grey,
+    _ => Colors.grey,
+  };
+
 	@override
 	Widget build(BuildContext context) => Row(
     mainAxisSize: MainAxisSize.min,
@@ -169,6 +176,19 @@ class StatusIcons extends StatelessWidget {
 					],
 				),
 			),
+      ListenableBuilder(  // LED color
+				listenable: Listenable.merge([models.rover.metrics.drive, models.rover.status]),
+				builder: (context, child) => IconButton(
+          icon: Icon(
+            Icons.circle, 
+            color: models.rover.isConnected
+              ? getLedColor(models.rover.metrics.drive.data.color)
+              : Colors.black,
+            ),
+          onPressed: () => showDialog<void>(context: context, builder: (_) => ColorEditor(ColorBuilder())),
+          tooltip: "Change LED strip",
+        ),
+      ),
 			const SizedBox(width: 4),
 		],
 	);
@@ -193,6 +213,10 @@ class ViewsCounter extends ReusableReactiveWidget<ViewsModel> {
           for (int i = 1; i <= 4; i++) DropdownMenuItem(
             value: i,
             child: Center(child: Text(i.toString())),
+          ),
+          const DropdownMenuItem(
+            value: 8,
+            child: Center(child: Text("8")),
           ),
         ],
       ),
@@ -272,18 +296,18 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(width: 4),
-            Icon(getIcon(model.message?.severity)),
+            Icon(getIcon(model.message?.severity), color: Colors.white),
             const SizedBox(width: 4),
-            if (model.message == null) const Text("Open logs")
+            if (model.message == null) const Text("Open logs", style: TextStyle(color: Colors.white))
             else Tooltip(
               message: "Click to open logs",
               child: models.settings.easterEggs.enableClippy
                 ? Row(children: [
                   Image.asset("assets/clippy.webp", width: 36, height: 36),
                   const Text(" -- "),
-                  Text(model.message!.text),
+                  Text(model.message!.text, style: const TextStyle(color: Colors.white)),
                 ],)
-                : Text(model.message!.text),
+                : Text(model.message!.text, style: const TextStyle(color: Colors.white)),
             ),
             const SizedBox(width: 8),
           ],

@@ -20,6 +20,7 @@ class ScienceMetrics extends Metrics<ScienceData> {
 
 	@override
 	void update(ScienceData value){
+    if (!checkVersion(value)) return;
 		if (value.state == ScienceState.STOP_COLLECTING) return;
 		super.update(value);
 	}
