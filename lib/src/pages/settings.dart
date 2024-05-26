@@ -224,13 +224,13 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
           ListTile(
             title: const Text("Open session output"),
             subtitle: const Text("Opens all files created by this session"),
-            trailing: const Icon(Icons.launch),
+            trailing: const Icon(Icons.folder_open),
             onTap: () => launchUrl(services.files.loggingDir.uri),
           ),
           ListTile(
             title: const Text("Open the output folder"),
             subtitle: const Text("Contains logs, screenshots, and settings"),
-            trailing: const Icon(Icons.launch),
+            trailing: const Icon(Icons.folder_open),
             onTap: () => launchUrl(services.files.outputDir.uri),
           ),
           ListTile(
