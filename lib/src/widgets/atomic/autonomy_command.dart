@@ -6,7 +6,9 @@ import "package:rover_dashboard/widgets.dart";
 
 /// A widget to edit an [AutonomyCommand].
 class AutonomyCommandEditor extends ReactiveWidget<AutonomyCommandBuilder> {
+  /// The autonomy view model. 
   final AutonomyModel dataModel;
+  /// A const constructor.
   const AutonomyCommandEditor(this.dataModel);
   
   @override

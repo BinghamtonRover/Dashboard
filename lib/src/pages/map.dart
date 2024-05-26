@@ -1,7 +1,6 @@
 import "dart:math";
 import "package:flutter/material.dart";
 
-import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
