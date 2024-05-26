@@ -38,8 +38,10 @@ class ArmControls extends RoverControls {
 	@override
 	List<Message> parseInputs(GamepadState state) => [
     // Manual control
-    if (state.normalRightX != 0) ArmCommand(swivel: MotorCommand(moveRadians: state.normalRightX * settings.swivel)),
-    if (state.normalRightY != 0) ArmCommand(shoulder: MotorCommand(moveRadians: state.normalRightY * settings.shoulder)),
+    if (state.normalRightX.abs() > state.normalRightY.abs() && state.normalRightX != 0) 
+      ArmCommand(swivel: MotorCommand(moveRadians: state.normalRightX * settings.swivel)),
+    if (state.normalRightY.abs() > state.normalRightX.abs() && state.normalRightY != 0) 
+      ArmCommand(shoulder: MotorCommand(moveRadians: state.normalRightY * settings.shoulder)),
     if (state.normalLeftY != 0) ArmCommand(elbow: MotorCommand(moveRadians: state.normalLeftY * settings.elbow)),
     // The bumpers should be pseudo-IK: Move the shoulder and elbow in sync. 
     if (state.normalShoulder != 0) ArmCommand(
