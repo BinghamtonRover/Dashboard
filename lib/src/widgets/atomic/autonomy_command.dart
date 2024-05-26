@@ -52,7 +52,7 @@ class AutonomyCommandEditor extends ReactiveWidget<AutonomyCommandBuilder> {
     ),
     const SizedBox(width: 8),
     ElevatedButton(
-      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
+      style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.red)),
       onPressed: model.abort,
       child: const Text("ABORT"), 
     ),

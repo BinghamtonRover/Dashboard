@@ -54,14 +54,15 @@ class ArmPainterTop extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
-
 /// A widget to show the profile view of the arm. 
 /// 
 /// This viewpoint shits as the arm swivels, so that it is always looking at the shoulder,
 /// elbow, and wrist head-on. To visualize the swivel, see [ArmPainterTop].
 class ArmPainterSide extends CustomPainter {
+  /// The angles of the joints of the arm.
   final ArmAngles angles;
 
+  /// The position of the mouse, if it's over this widget.
   final Offset? mousePosition;
   
   /// Constructor for the ArmPainterSide, takes in 3 angles
@@ -85,6 +86,7 @@ class ArmPainterSide extends CustomPainter {
   /// The relative length of the gripper.
   static const gripperLength = 0.25;
   
+  /// Performs forward kinematics to get the coordinates of each joint from the angles.
   ArmCoordinates getArmCoordinates(ArmAngles angles, Size size) {
     // See: https://www.desmos.com/calculator/i8grld5pdu
     const shoulderX = 0.0;
@@ -123,6 +125,7 @@ class ArmPainterSide extends CustomPainter {
     }
   }
 
+  /// Performs inverse kinematics to get the angles of the arm from the desired position.
   ArmAngles ik(Offset position, Size size) {
     final length = min(size.width / 4, size.height / 2);
     const totalArmLength = shoulderLength + elbowLength;
@@ -147,6 +150,7 @@ class ArmPainterSide extends CustomPainter {
     }
   }
 
+  /// Paints the arm given its joint positions.
   void paintArm(Canvas canvas, Size size, ArmCoordinates coordinates, {double opacity = 1}) {
     final points = [
       coordinates.shoulder,
@@ -162,7 +166,7 @@ class ArmPainterSide extends CustomPainter {
     ];
     
     final firstCirclePaint = Paint()
-      ..color = Colors.red.withOpacity(opacity)
+      ..color = lineColors[0].withOpacity(opacity)
       ..style = PaintingStyle.fill;
 
     canvas.drawCircle(points[0], screen / 40, firstCirclePaint);
@@ -227,7 +231,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
         child: Card(
           margin: const EdgeInsets.all(16),
           elevation: 12,
-          color: context.colorScheme.surfaceVariant,
+          color: context.colorScheme.surfaceContainerHighest,
           child: MouseRegion(
             onHover: model.onHover,
             onExit: model.cancelIK,
@@ -255,7 +259,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
         child: Card(
           margin: const EdgeInsets.all(16),
           elevation: 12,
-          color: context.colorScheme.surfaceVariant,
+          color: context.colorScheme.surfaceContainerHighest,
           child: CustomPaint(
             painter: ArmPainterTop(swivelAngle: model.arm.base.angle),
           ),
