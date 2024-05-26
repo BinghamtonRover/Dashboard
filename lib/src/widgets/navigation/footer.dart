@@ -21,11 +21,9 @@ class Footer extends StatelessWidget {
       children: [
         MessageDisplay(showLogs: showLogs),
         Wrap(  // Groups these elements together even when wrapping
-          // mainAxisSize: MainAxisSize.min, 
           children: [
             ViewsCounter(),
             const SizedBox(width: 8),
-            // GamepadButtons(),
             GamepadButton(models.rover.controller1),
             const SizedBox(width: 8),
             GamepadButton(models.rover.controller2),
@@ -276,18 +274,18 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(width: 4),
-            Icon(getIcon(model.message?.severity)),
+            Icon(getIcon(model.message?.severity), color: Colors.white),
             const SizedBox(width: 4),
-            if (model.message == null) const Text("Open logs")
+            if (model.message == null) const Text("Open logs", style: TextStyle(color: Colors.white))
             else Tooltip(
               message: "Click to open logs",
               child: models.settings.easterEggs.enableClippy
                 ? Row(children: [
                   Image.asset("assets/clippy.webp", width: 36, height: 36),
                   const Text(" -- "),
-                  Text(model.message!.text),
+                  Text(model.message!.text, style: const TextStyle(color: Colors.white)),
                 ],)
-                : Text(model.message!.text),
+                : Text(model.message!.text, style: const TextStyle(color: Colors.white)),
             ),
             const SizedBox(width: 8),
           ],
