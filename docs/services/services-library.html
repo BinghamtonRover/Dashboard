@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="services library API docs, for the Dart programming language.">
+  <title>services library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">rover_dashboard</a></li>
+    <li class="self-crumb">services.dart</li>
+  </ol>
+  <div class="self-name">services</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar=""
+    data-below-sidebar="services&#47;services-library-sidebar.html">
+  
+    <div>
+      
+  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/BinghamtonRover/rover-control-dashboard/blob/main/lib/services.dart#L14"><span class="material-symbols-outlined">description</span></a></div>
+
+      <h1>
+        <span class="kind-library">services</span>
+        library 
+ 
+
+      </h1>
+    </div>
+
+    
+<section class="desc markdown">
+  <p>Defines handler classes for out-of-app resources.</p>
+<p>These resources include plugins that are designed to be general, not specific to the rover project.
+By providing rover-centric APIs for these services, the app's logic becomes simpler and easier
+to follow without having to study the specific service. Each service declared is to extend
+the abstract <code>Service</code> class.</p>
+<p>The <a href="../services/Services-class.html">Services</a> class acts as a bundle service for all services defined in this library. Its
+responsibilities include initializing and disposing of the services, and it also acts as a
+sort of dependency injection service by ensuring simple access. Use the <a href="../services/services.html">services</a> singleton.</p>
+<p>This library sits right above the data library, and may import it, but not any other library
+in this project, only 3rd party plugins. That way, all other code can import any service.</p>
+</section>
+
+
+    <section class="summary offset-anchor" id="classes">
+      <h2>Classes</h2>
+
+      <dl>
+          <dt id="DashboardSocket">
+  <span class="name "><a href="../services/DashboardSocket-class.html">DashboardSocket</a></span> 
+
+</dt>
+<dd>
+  A service to send and receive Protobuf messages over a UDP socket, using <code>ProtoSocket</code>.
+</dd>
+
+          <dt id="FilesService">
+  <span class="name "><a href="../services/FilesService-class.html">FilesService</a></span> 
+
+</dt>
+<dd>
+  A service to read and write to the file system.
+</dd>
+
+          <dt id="Gamepad">
+  <span class="name "><a href="https://pub.dev/documentation/win32_gamepad/1.0.8/win32_gamepad/Gamepad-class.html">Gamepad</a></span> 
+
+</dt>
+<dd>
+  Represents a gamepad controller.
+</dd>
+
+          <dt id="GamepadBatteryInfo">
+  <span class="name "><a href="https://pub.dev/documentation/win32_gamepad/1.0.8/win32_gamepad/GamepadBatteryInfo-class.html">GamepadBatteryInfo</a></span> 
+
+</dt>
+<dd>
+  Information about the battery state for a gamepad or headset.
+</dd>
+
+          <dt id="GamepadCapabilities">
+  <span class="name "><a href="https://pub.dev/documentation/win32_gamepad/1.0.8/win32_gamepad/GamepadCapabilities-class.html">GamepadCapabilities</a></span> 
+
+</dt>
+<dd>
+  Information about what a gamepad supports: vibration, voice, navigation,
+etc.
+</dd>
+
+          <dt id="GamepadService">
+  <span class="name "><a href="../services/GamepadService-class.html">GamepadService</a></span> 
+
+</dt>
+<dd>
+  A service to receive input from a gamepad connected to the user's device.
+</dd>
+
+          <dt id="GamepadState">
+  <span class="name "><a href="https://pub.dev/documentation/win32_gamepad/1.0.8/win32_gamepad/GamepadState-class.html">GamepadState</a></span> 
+
+</dt>
+<dd>
+  The current status of a gamepad.
+</dd>
+
+          <dt id="MockGamepad">
+  <span class="name "><a href="../services/MockGamepad-class.html">MockGamepad</a></span> 
+
+</dt>
+<dd>
+  An "implementation" of <code>package:win32_gamepad</code> for non-supported platforms.
+</dd>
+
+          <dt id="SerialDevice">
+  <span class="name "><a href="../services/SerialDevice-class.html">SerialDevice</a></span> 
+
+</dt>
+<dd>
+  A service to connect to a single serial device.
+</dd>
+
+          <dt id="Services">
+  <span class="name "><a href="../services/Services-class.html">Services</a></span> 
+
+</dt>
+<dd>
+  A dependency injection service that manages the lifecycle of other services.
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="enums">
+      <h2>Enums</h2>
+
+      <dl>
+          <dt id="Direction">
+  <span class="name "><a href="https://pub.dev/documentation/win32_gamepad/1.0.8/win32_gamepad/Direction.html">Direction</a></span> 
+
+</dt>
+<dd>
+  The compass point represented by the directional pad.
+</dd>
+
+          <dt id="GamepadBatteryLevel">
+  <span class="name "><a href="https://pub.dev/documentation/win32_gamepad/1.0.8/win32_gamepad/GamepadBatteryLevel.html">GamepadBatteryLevel</a></span> 
+
+</dt>
+<dd>
+  The charge state of the battery.
+</dd>
+
+          <dt id="GamepadBatteryType">
+  <span class="name "><a href="https://pub.dev/documentation/win32_gamepad/1.0.8/win32_gamepad/GamepadBatteryType.html">GamepadBatteryType</a></span> 
+
+</dt>
+<dd>
+  The type of battery.
+</dd>
+
+          <dt id="GamepadDeviceType">
+  <span class="name "><a href="https://pub.dev/documentation/win32_gamepad/1.0.8/win32_gamepad/GamepadDeviceType.html">GamepadDeviceType</a></span> 
+
+</dt>
+<dd>
+  Whether the specified device is the controller or an attached headset.
+</dd>
+
+      </dl>
+    </section>
+
+
+
+    <section class="summary offset-anchor" id="extensions">
+      <h2>Extensions</h2>
+
+      <dl>
+          <dt id="GamepadNumbers">
+  <span class="name "><a href="../services/GamepadNumbers.html">GamepadNumbers</a></span>
+  on num
+  
+
+</dt>
+<dd>
+  An extension to do gamepad math.
+</dd>
+
+
+          <dt id="GamepadStateUtils">
+  <span class="name "><a href="../services/GamepadStateUtils.html">GamepadStateUtils</a></span>
+  on <a href="https://pub.dev/documentation/win32_gamepad/1.0.8/win32_gamepad/GamepadState-class.html">GamepadState</a>
+  
+
+</dt>
+<dd>
+  More user-friendly values from <a href="https://pub.dev/documentation/win32_gamepad/1.0.8/win32_gamepad/GamepadState-class.html">GamepadState</a>.
+</dd>
+
+
+          <dt id="GamepadUtils">
+  <span class="name "><a href="../services/GamepadUtils.html">GamepadUtils</a></span>
+  on <a href="https://pub.dev/documentation/win32_gamepad/1.0.8/win32_gamepad/Gamepad-class.html">Gamepad</a>
+  
+
+</dt>
+<dd>
+  Convenience methods on <a href="https://pub.dev/documentation/win32_gamepad/1.0.8/win32_gamepad/Gamepad-class.html">Gamepad</a>.
+</dd>
+
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="constants">
+      <h2>Constants</h2>
+
+      <dl class="properties">
+          <dt id="epsilon" class="constant">
+    <span class="name "><a href="../services/epsilon-constant.html">epsilon</a></span>
+  <span class="signature">&#8594; const double</span>
+  
+
+</dt>
+<dd>
+  The "deadzone" of the gamepad.
+  
+
+</dd>
+
+          <dt id="maxGamepads" class="constant">
+    <span class="name "><a href="../services/maxGamepads-constant.html">maxGamepads</a></span>
+  <span class="signature">&#8594; const int</span>
+  
+
+</dt>
+<dd>
+  The maximum amount of gamepads a user can have.
+  
+
+</dd>
+
+          <dt id="vibrateIntensity" class="constant">
+    <span class="name "><a href="../services/vibrateIntensity-constant.html">vibrateIntensity</a></span>
+  <span class="signature">&#8594; const int</span>
+  
+
+</dt>
+<dd>
+  The default vibration intensity.
+  
+
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="properties">
+      <h2>Properties</h2>
+
+      <dl class="properties">
+          <dt id="services" class="property">
+  <span class="name"><a href="../services/services.html">services</a></span>
+  <span class="signature">&#8594; <a href="../services/Services-class.html">Services</a></span>
+  
+
+</dt>
+<dd>
+  The singleton instance of the <a href="../services/Services-class.html">Services</a> class.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+      </dl>
+    </section>
+
+
+
+    <section class="summary offset-anchor" id="exceptions">
+      <h2>Exceptions / Errors</h2>
+
+      <dl>
+          <dt id="DeviceNotConnected">
+  <span class="name "><a href="../services/DeviceNotConnected-class.html">DeviceNotConnected</a></span> 
+
+</dt>
+<dd>
+  Indicates that no device has been connected.
+</dd>
+
+          <dt id="DeviceNotConnectedError">
+  <span class="name "><a href="https://pub.dev/documentation/win32_gamepad/1.0.8/win32_gamepad/DeviceNotConnectedError-class.html">DeviceNotConnectedError</a></span> 
+
+</dt>
+<dd>
+  Error occurring when an operation is attempted on a device that is not
+connected.
+</dd>
+
+          <dt id="MalformedSerialPacket">
+  <span class="name "><a href="../services/MalformedSerialPacket-class.html">MalformedSerialPacket</a></span> 
+
+</dt>
+<dd>
+  Indicates that a data packet has come malformed.
+</dd>
+
+          <dt id="MultipleDevicesFound">
+  <span class="name "><a href="../services/MultipleDevicesFound-class.html">MultipleDevicesFound</a></span> 
+
+</dt>
+<dd>
+  Indicates that multiple devices are available to connect to.
+</dd>
+
+          <dt id="NoDeviceFound">
+  <span class="name "><a href="../services/NoDeviceFound-class.html">NoDeviceFound</a></span> 
+
+</dt>
+<dd>
+  Indicates that no devices are available to connect to.
+</dd>
+
+          <dt id="SerialCannotOpen">
+  <span class="name "><a href="../services/SerialCannotOpen-class.html">SerialCannotOpen</a></span> 
+
+</dt>
+<dd>
+  Indicates that the port could not be opened.
+</dd>
+
+          <dt id="SerialException">
+  <span class="name "><a href="../services/SerialException-class.html">SerialException</a></span> 
+
+</dt>
+<dd>
+  The base class for all exceptions relating to using Serial devices.
+</dd>
+
+          <dt id="SerialHandshakeFailed">
+  <span class="name "><a href="../services/SerialHandshakeFailed-class.html">SerialHandshakeFailed</a></span> 
+
+</dt>
+<dd>
+  Indicates that the Serial device did not reciprocate the handshake.
+</dd>
+
+          <dt id="SerialIOError">
+  <span class="name "><a href="../services/SerialIOError-class.html">SerialIOError</a></span> 
+
+</dt>
+<dd>
+  Indicates that the device is unreachable.
+</dd>
+
+      </dl>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">rover_dashboard</a></li>
+    <li class="self-crumb">services.dart</li>
+</ol>
+
+
+    <h5><span class="package-name">rover_dashboard</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="../app/app-library.html">app</a></li>
+      <li><a href="../data/data-library.html">data</a></li>
+      <li><a href="../errors/errors-library.html">errors</a></li>
+      <li><a href="../main/main-library.html">main</a></li>
+      <li><a href="../models/models-library.html">models</a></li>
+      <li><a href="../pages/pages-library.html">pages</a></li>
+      <li><a href="../services/services-library.html">services</a></li>
+      <li><a href="../widgets/widgets-library.html">widgets</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+    <h5>services library</h5>
+  </div><!--/sidebar-offcanvas-right-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    rover_dashboard
+      2024.5.26+10
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+
+
+</body>
+
+</html>
+
