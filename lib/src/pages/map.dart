@@ -48,7 +48,9 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
 
 	@override
 	Widget build(BuildContext context, AutonomyModel model) => Stack(children: [
-    Column(children: [
+    Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
       const SizedBox(height: 48),
       for (final row in model.grid.reversed) Expanded(
         child: Row(children: [
@@ -122,8 +124,9 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
         ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text("Clear all"), onPressed: model.clearMarkers),
         const Spacer(),
       ],),
-        const SizedBox(height: 8),
-      AutonomyCommandEditor(),
+      const SizedBox(height: 8),
+      AutonomyCommandEditor(model),
+      const VerticalDivider(),
       const SizedBox(height: 4),
     ],),
     Container(
@@ -141,11 +144,6 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
           onPressed: model.isPlayingBadApple ? model.stopBadApple : model.startBadApple,
         ),
         const Spacer(),
-        if (model.isPlayingBadApple) 
-          Text("Autonomy status: Bad Apple", style: context.textTheme.headlineSmall)
-        else 
-          Text("Autonomy status: ${model.data.state.humanName}, ${model.data.task.humanName}", style: context.textTheme.headlineSmall),
-        const VerticalDivider(),
         ViewsSelector(index: index),
       ],),
     ),

@@ -6,6 +6,9 @@ import "package:rover_dashboard/widgets.dart";
 
 /// A widget to edit an [AutonomyCommand].
 class AutonomyCommandEditor extends ReactiveWidget<AutonomyCommandBuilder> {
+  final AutonomyModel dataModel;
+  const AutonomyCommandEditor(this.dataModel);
+  
   @override
   AutonomyCommandBuilder createModel() => AutonomyCommandBuilder();
 
@@ -57,5 +60,8 @@ class AutonomyCommandEditor extends ReactiveWidget<AutonomyCommandBuilder> {
       child: const Text("ABORT"), 
     ),
     const Spacer(),
+    if (!dataModel.isPlayingBadApple)
+      Text("${dataModel.data.state.humanName}, ${dataModel.data.task.humanName}", style: context.textTheme.titleLarge),
+    const SizedBox(width: 8),
   ],);
 }
