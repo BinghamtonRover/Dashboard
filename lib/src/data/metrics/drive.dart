@@ -1,4 +1,7 @@
+import "package:collection/collection.dart";
+
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
 /// Metrics reported by the drive subsystem.
@@ -49,6 +52,7 @@ class DriveMetrics extends Metrics<DriveData> {
 		// Since the newValues are often zero, [Metrics.merge] won't work.
     if (!checkVersion(value)) return;
 		services.files.logData(value);
+    final oldThrottle = data.throttle;
 		if (value.setLeft) data.left = value.left;
 		if (value.setRight) data.right = value.right;
 		if (value.setThrottle) data.throttle = value.throttle;
@@ -62,6 +66,15 @@ class DriveMetrics extends Metrics<DriveData> {
     if(value.hasMiddleRight()) data.middleRight = value.middleRight;
     if(value.hasBackRight()) data.backRight = value.backRight;
     if (value.color != ProtoColor.PROTO_COLOR_UNDEFINED) data.color = value.color;
+
+    if (
+      (data.throttle > 0.05 && oldThrottle < 0.05) || 
+      (data.throttle < 0.05 && oldThrottle > 0.05)
+    ) {
+      models.rover.controllers.firstWhereOrNull(
+        (controller) => controller.mode == OperatingMode.drive || controller.mode == OperatingMode.modernDrive,
+      )?.gamepad.pulse();
+    }
     notifyListeners();
 	}
 
