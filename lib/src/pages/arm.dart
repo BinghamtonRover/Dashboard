@@ -116,12 +116,17 @@ class ArmPainterSide extends CustomPainter {
     paintArm(canvas, size, coordinates);
     if (mousePosition != null) {
       final cursorPaint = Paint()..color = Colors.black..style = PaintingStyle.fill;
-      final radiusPaint = Paint()..color = Colors.black..style = PaintingStyle.stroke;
       canvas.drawCircle(mousePosition!, screen / 50, cursorPaint);
-      canvas.drawCircle(coordinates.shoulder, length * (shoulderLength + elbowLength), radiusPaint);
       final ikAngles = ik(mousePosition!, size);
       final ikCoordinates = getArmCoordinates(ikAngles, size);
       paintArm(canvas, size, ikCoordinates, opacity: 0.5);
+      final radiusPaint = Paint()
+        ..color = Colors.black
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2;
+      final radius = length * (shoulderLength + elbowLength);
+      final rect = Rect.fromCircle(center: coordinates.shoulder, radius: radius);
+      canvas.drawArc(rect, 0, -pi, false, radiusPaint);
     }
   }
 
@@ -226,11 +231,11 @@ class ArmPage extends ReactiveWidget<ArmModel> {
           letterSpacing: 1,
         ),
       ),
-      const SizedBox(height: 10,),
+      const SizedBox(height: 10),
       Expanded(
         child: Card(
           margin: const EdgeInsets.all(16),
-          elevation: 12,
+          elevation: 16,
           color: context.colorScheme.surfaceContainerHighest,
           child: MouseRegion(
             onHover: model.onHover,
@@ -244,7 +249,9 @@ class ArmPage extends ReactiveWidget<ArmModel> {
           ),
         ),
       ),
-      const SizedBox(height: 16,),
+      const SizedBox(height: 8),
+      // const Divider(),
+      const SizedBox(height: 8),
       const Text(
         "Top View", 
         textAlign: TextAlign.center,
@@ -258,7 +265,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
       Expanded(
         child: Card(
           margin: const EdgeInsets.all(16),
-          elevation: 12,
+          elevation: 16,
           color: context.colorScheme.surfaceContainerHighest,
           child: CustomPaint(
             painter: ArmPainterTop(swivelAngle: model.arm.base.angle),
