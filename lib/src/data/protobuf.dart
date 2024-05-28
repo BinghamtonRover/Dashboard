@@ -104,6 +104,8 @@ extension CameraNameUtils on CameraName {
 			case CameraName.SUBSYSTEM1: return "Subsystem 1";
 			case CameraName.SUBSYSTEM2: return "Subsystem 2";
 			case CameraName.SUBSYSTEM3: return "Subsystem 3";
+			case CameraName.BOTTOM_LEFT: return "Bottom Left";
+			case CameraName.BOTTOM_RIGHT: return "Bottom Right";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized camera name: $this");
@@ -224,22 +226,6 @@ extension ScienceStateUtils on ScienceState {
 	}
 }
 
-/// Utilities for [MarsStatus]es.
-extension MarsStatusUtils on MarsStatus {
-	/// The human-readable name of the status
-	String get humanName {
-		switch (this) {
-			case MarsStatus.MARS_STATUS_UNDEFINED: return "Not available";
-			case MarsStatus.PORT_NOT_FOUND: return "Could not open port";
-			case MarsStatus.TEENSY_UNRESPONSIVE: return "Teensy unresponsive";
-			case MarsStatus.FAILED_HANDSHAKE: return "Failed handshake";
-			case MarsStatus.TEENSY_CONNECTED: return "Connected";
-		}
-		// Do not use default or else you'll lose exhaustiveness checking.
-		throw ArgumentError("Unrecognized MarsStatus: $this");
-	}
-}
-
 /// Utilities for [MotorDirection]s.
 extension MotorDirectionUtils on MotorDirection {
 	/// The human-readable name of the direction
@@ -307,4 +293,23 @@ extension VersionUtils on Version {
   String format() => hasMajor() ? "$major.$minor" : "unknown";
   /// Whether another version is compatible with this one.
   bool isCompatible(Version other) => major == other.major;
+}
+
+/// Helpful methods on [BoolState]s.
+extension BoolUtils on BoolState {
+  /// Converts this Protobuf boolean into a normal boolean.
+  bool toBool() => switch (this) {
+    BoolState.NO => false,
+    BoolState.YES => true,
+    BoolState.BOOL_UNDEFINED => false,
+    _ => throw ArgumentError("Unrecognized bool state: $this"),
+  };
+
+  /// Converts this Protobuf boolean into a human readable string.
+  String get displayName => switch(this) {
+    BoolState.NO => "No",
+    BoolState.YES => "Yes",
+    BoolState.BOOL_UNDEFINED => "No Data",
+    _ => throw ArgumentError("Unrecognized bool state: $this"),
+  };
 }

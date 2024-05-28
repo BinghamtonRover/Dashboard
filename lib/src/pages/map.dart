@@ -1,9 +1,7 @@
 import "dart:math";
 import "package:flutter/material.dart";
 
-import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// The UI for the autonomy subsystem.
@@ -39,12 +37,19 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
     ),
   );
 
+  /// The index of this view.
+  final int index;
+  /// A const constructor.
+  const MapPage({required this.index});
+
   @override
   AutonomyModel createModel() => AutonomyModel();
 
 	@override
 	Widget build(BuildContext context, AutonomyModel model) => Stack(children: [
-    Column(children: [
+    Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
       const SizedBox(height: 48),
       for (final row in model.grid.reversed) Expanded(
         child: Row(children: [
@@ -109,11 +114,18 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
           onPressed: () => placeMarker(context, model),
         ),
         const SizedBox(width: 8),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.location_on), 
+          label: const Text("Drop marker here"), 
+          onPressed: model.placeMarkerOnRover,
+        ),
+        const SizedBox(width: 8),
         ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text("Clear all"), onPressed: model.clearMarkers),
         const Spacer(),
-        AutonomyCommandEditor(),
-        const SizedBox(width: 8),
       ],),
+      const SizedBox(height: 8),
+      AutonomyCommandEditor(model),
+      const VerticalDivider(),
       const SizedBox(height: 4),
     ],),
     Container(
@@ -131,12 +143,7 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
           onPressed: model.isPlayingBadApple ? model.stopBadApple : model.startBadApple,
         ),
         const Spacer(),
-        if (model.isPlayingBadApple) 
-          Text("Autonomy status: Bad Apple", style: context.textTheme.headlineSmall)
-        else 
-          Text("Autonomy status: ${model.data.state.humanName}, ${model.data.task.humanName}", style: context.textTheme.headlineSmall),
-        const VerticalDivider(),
-        const ViewsSelector(currentView: Routes.autonomy),
+        ViewsSelector(index: index),
       ],),
     ),
   ],);

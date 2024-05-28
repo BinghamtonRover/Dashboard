@@ -4,7 +4,6 @@ import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// Allows desktop users to scroll with their mouse or other device.
@@ -156,6 +155,11 @@ class SciencePage extends ReactiveWidget<ScienceModel> {
 		barTouchData: BarTouchData(touchTooltipData: BarTouchTooltipData(fitInsideVertically: true, fitInsideHorizontally: true)),
 	);
 
+  /// The index of this view.
+  final int index;
+  /// A const constructor.
+  const SciencePage({required this.index});
+
   @override
   ScienceModel createModel() => ScienceModel();
 
@@ -186,7 +190,7 @@ class SciencePage extends ReactiveWidget<ScienceModel> {
         onPressed: model.clear,
         tooltip: "Clear",
       ),
-      const ViewsSelector(currentView: Routes.science),
+      ViewsSelector(index: index),
     ],),
     Expanded(child: ListView(  // The main content of the page
       padding: const EdgeInsets.symmetric(horizontal: 4),

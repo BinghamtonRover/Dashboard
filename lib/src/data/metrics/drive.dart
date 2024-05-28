@@ -1,12 +1,10 @@
+import "package:collection/collection.dart";
+
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
 /// Metrics reported by the drive subsystem.
-/// 
-/// In the future, the drive Teensy will have a GPS and IMU to read [RoverPosition] data. For now,
-/// this information is sent separately and is represented by its own [RoverPosition] object because
-/// they are collected on the Pi. In the future, when they are moved to the Drive subsystem, this
-/// data should still be kept separate so as to make it easier to show in the UI and send to MARS.
 class DriveMetrics extends Metrics<DriveData> {
 	/// A collection of metrics relevant for monitoring the rover's electrical status.
 	DriveMetrics() : super(DriveData());
@@ -45,19 +43,38 @@ class DriveMetrics extends Metrics<DriveData> {
 		MetricLine("Left: ${data.left.toStringAsFixed(2)}"),
 		MetricLine("Right: ${data.right.toStringAsFixed(2)}"),
     MetricLine("Battery: ${data.batteryVoltage.toStringAsFixed(2)}V,${data.batteryCurrent.toStringAsFixed(2)}A, ${data.batteryTemperature.toStringAsFixed(2)}°F", severity: electricalSeverity),
-	];
+    MetricLine("Left Side: ${data.frontLeft.toStringAsFixed(1)}, ${data.middleLeft.toStringAsFixed(1)}, ${data.backLeft.toStringAsFixed(1)}"),
+    MetricLine("Right Side: ${data.frontRight.toStringAsFixed(1)}, ${data.middleRight.toStringAsFixed(1)}, ${data.backRight.toStringAsFixed(1)}"),
+  ];
 
 	@override
 	void update(DriveData value) {
 		// Since the newValues are often zero, [Metrics.merge] won't work.
     if (!checkVersion(value)) return;
 		services.files.logData(value);
+    final oldThrottle = data.throttle;
 		if (value.setLeft) data.left = value.left;
 		if (value.setRight) data.right = value.right;
 		if (value.setThrottle) data.throttle = value.throttle;
     if (value.hasBatteryCurrent()) data.batteryCurrent = value.batteryCurrent;
     if (value.hasBatteryVoltage()) data.batteryVoltage = value.batteryVoltage;
     if (value.hasBatteryTemperature()) data.batteryTemperature = value.batteryTemperature;
+    if(value.hasFrontLeft()) data.frontLeft = value.frontLeft;
+    if(value.hasMiddleLeft()) data.middleLeft = value.middleLeft;
+    if(value.hasBackLeft()) data.backLeft = value.backLeft;
+    if(value.hasFrontRight()) data.frontRight = value.frontRight;
+    if(value.hasMiddleRight()) data.middleRight = value.middleRight;
+    if(value.hasBackRight()) data.backRight = value.backRight;
+    if (value.color != ProtoColor.PROTO_COLOR_UNDEFINED) data.color = value.color;
+
+    if (
+      (data.throttle > 0.05 && oldThrottle < 0.05) || 
+      (data.throttle < 0.05 && oldThrottle > 0.05)
+    ) {
+      models.rover.controllers.firstWhereOrNull(
+        (controller) => controller.mode == OperatingMode.drive || controller.mode == OperatingMode.modernDrive,
+      )?.gamepad.pulse();
+    }
     notifyListeners();
 	}
 

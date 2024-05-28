@@ -59,19 +59,7 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               SocketEditor(name: "Video socket", model: model.network.videoSocket),
               SocketEditor(name: "Autonomy socket", model: model.network.autonomySocket),
               SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
-              ListTile(
-                title: const Text("Restart the network sockets"),
-                subtitle: const Text("This only resets your computer's network, not the rover's"),
-                trailing: const Icon(Icons.refresh),
-                onTap: () async {
-                  await models.sockets.reset();
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Network reset"), duration: Duration(milliseconds: 500)),
-                    );
-                  }
-                },
-              ),
+              NumberEditor(name: "Heartbeats per second", model: model.network.connectionTimeout),
             ],
           ),
           const Divider(),
@@ -84,13 +72,6 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               NumberEditor(name: "Wrist rotate increment", model: model.arm.rotate),
               NumberEditor(name: "Wrist lift increment", model: model.arm.lift),
               NumberEditor(name: "Pinch increment", model: model.arm.pinch),
-              NumberEditor(name: "IK increment", model: model.arm.ik),
-              SwitchListTile(
-                title: const Text("Use IK?"),
-                subtitle: const Text("Move in millimeters in 3D space instead of radians"),
-                value: model.arm.useIK,
-                onChanged: model.arm.updateIK,
-              ),
             ],
           ),
           const Divider(),
@@ -122,6 +103,24 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                 name: "Block size", 
                 subtitle: "The precision of the GPS grid", 
                 model: model.dashboard.blockSize,
+              ),
+              SwitchListTile(
+                title: const Text("Split camera controls"),
+                subtitle: const Text("If enabled, cameras can only be controlled by a separate operator"),
+                value: model.dashboard.splitCameras,
+                onChanged: model.dashboard.updateCameras,
+              ),
+              SwitchListTile(
+                title: const Text("Prefer tank controls"),
+                subtitle: const Text("Default to tank controls instead of modern drive controls"),
+                value: model.dashboard.preferTankControls,
+                onChanged: model.dashboard.updateTank,
+              ),
+              SwitchListTile(
+                title: const Text("Require version checking"),
+                subtitle: const Text("Default to version checking on"),
+                value: model.dashboard.versionChecking,
+                onChanged: model.dashboard.updateVersionChecking,
               ),
               Row(children: [
                 const SizedBox(
@@ -205,31 +204,25 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
           ListTile(
             title: const Text("Open session output"),
             subtitle: const Text("Opens all files created by this session"),
-            trailing: const Icon(Icons.launch),
+            trailing: const Icon(Icons.folder_open),
             onTap: () => launchUrl(services.files.loggingDir.uri),
           ),
           ListTile(
             title: const Text("Open the output folder"),
             subtitle: const Text("Contains logs, screenshots, and settings"),
-            trailing: const Icon(Icons.launch),
+            trailing: const Icon(Icons.folder_open),
             onTap: () => launchUrl(services.files.outputDir.uri),
-          ),
-          ListTile(
-            title: const Text("Change the LED strip color"),
-            subtitle: const Text("Opens an RGB picker"),
-            trailing: const Icon(Icons.launch),
-            onTap: () => showDialog<void>(context: context, builder: (_) => ColorEditor(ColorBuilder())),
           ),
           ListTile(
             title: const Text("Set a timer"),
             subtitle: const Text("Shows a timer for the current mission"),
-            trailing: const Icon(Icons.launch),
+            trailing: const Icon(Icons.alarm),
             onTap: () => showDialog<void>(context: context, builder: (_) => TimerEditor()),
           ),
           ListTile(
             title: const Text("About"),
             subtitle: const Text("Show contributor and version information"),
-            trailing: const Icon(Icons.info),
+            trailing: const Icon(Icons.info_outline),
             onTap: () => showAboutDialog(
               context: context,
               applicationName: "Binghamton University Rover Team Dashboard",

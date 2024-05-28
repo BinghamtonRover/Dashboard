@@ -161,14 +161,35 @@ class ColorEditor extends ReusableReactiveWidget<ColorBuilder> {
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Slider(
-          value: model.slider, 
-          onChanged: model.updateSlider,
-          label: "color",
+        SegmentedButton(
+          style: SegmentedButton.styleFrom(selectedBackgroundColor: Colors.transparent),
+          onSelectionChanged: model.updateColor,
+          emptySelectionAllowed: true,
+          selected: {model.color},
+          segments: [
+            ButtonSegment(
+              value: ProtoColor.RED,
+              icon: Container(height: 48, width: 48, margin: const EdgeInsets.all(8), color: Colors.red),
+              label: const Text("Red"),
+            ),
+            ButtonSegment(
+              value: ProtoColor.GREEN,
+              icon: Container(height: 48, width: 48, margin: const EdgeInsets.all(8), color: Colors.green),
+              label: const Text("Green"),
+            ),
+            ButtonSegment(
+              value: ProtoColor.BLUE,
+              icon: Container(height: 48, width: 48, margin: const EdgeInsets.all(8), color: Colors.blue),
+              label: const Text("Blue"),
+            ),
+          ],
         ),
-        Container(height: 50, width: double.infinity, color: model.value),
-        if (model.isLoading) const Text("Loading..."),
-        if (model.errorText != null) Text(model.errorText!, style: const TextStyle(color: Colors.red)),
+        const SizedBox(height: 16),
+        CheckboxListTile(
+          value: model.blink, 
+          onChanged: model.updateBlink,
+          title: const Text("Blink"),
+        ),
       ],
     ),
 	);
