@@ -79,7 +79,7 @@ class DashboardSocket extends BurtUdpProtocol {
 		// 3. Assess the current state
 		connectionStrength.value = connectionStrength.value.clamp(0, 1);
 		if (isConnected && !wasConnected) onConnect(device);
-		if (wasConnected && !isConnected) onDisconnect(device);
+		// if (wasConnected && !isConnected) onDisconnect(device);
 		_isChecking = false;
 	}
 

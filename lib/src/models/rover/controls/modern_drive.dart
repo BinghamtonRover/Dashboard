@@ -62,6 +62,7 @@ class ModernDriveControls extends RoverControls {
     }
     final direction = state.normalLeftX * 20;  // [-1, 1] --> [-45, 45]
     final (double left, double right) = getWheelSpeeds(speed, direction);
+    print("Left; ${speed * left}, Right: ${speed * right}");
     return [
       DriveCommand(left: speed * left, setLeft: true),
       DriveCommand(right: speed * right, setRight: true),
@@ -80,8 +81,8 @@ class ModernDriveControls extends RoverControls {
   @override
   List<Message> parseInputs(GamepadState state) => [
     ...getWheelCommands(state),
-    if (!models.settings.dashboard.splitCameras)
-      ...getCameraCommands(state),
+    // if (!models.settings.dashboard.splitCameras)
+      // ...getCameraCommands(state),
   ];
 
   /// Updates the throttle if either shoulder button is pressed.

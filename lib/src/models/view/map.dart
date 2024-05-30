@@ -185,6 +185,7 @@ class AutonomyModel with ChangeNotifier {
   /// Places a marker at the rover's current position.
   void placeMarkerOnRover() {
     markers.add(roverPosition);
+    print("Placed marker at ${roverPosition.toProto3Json()}");
     notifyListeners();
   }
 

@@ -77,6 +77,8 @@ class ArmModel with ChangeNotifier{
     final gripperCommand = GripperCommand(lift: liftCommand);
     models.messages.sendMessage(armCommand);
     models.messages.sendMessage(gripperCommand);
+    print(armCommand.toProto3Json());
+    print(gripperCommand.toProto3Json());
   }
 }
 
