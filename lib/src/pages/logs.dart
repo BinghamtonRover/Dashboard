@@ -28,6 +28,7 @@ class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
             leading: const Icon(Icons.restart_alt),
             title: Text("Reset the ${device.humanName}"),
             subtitle: const Text("The device will reboot"),
+            enabled: device != Device.VIDEO,
           ),),
         ),
       DropdownMenu<Device?>(

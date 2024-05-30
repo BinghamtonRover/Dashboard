@@ -4,6 +4,38 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
+class AutonomyTaskEditor extends ReusableReactiveWidget<AutonomyCommandBuilder> {
+  AutonomyTaskEditor(super.model);
+
+  @override
+  Widget build(BuildContext context, AutonomyCommandBuilder model) => AlertDialog(
+    title: const Text("Create a new Task"),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        DropdownEditor<AutonomyTask>(
+          name: "Task type",
+          value: model.task,
+          items: [
+            for (final task in AutonomyTask.values)
+              if (task != AutonomyTask.AUTONOMY_TASK_UNDEFINED) task,
+          ],
+          onChanged: model.updateTask,
+          humanName: (task) => task.humanName,
+        ),
+        GpsEditor(model.gps),
+      ],
+    ),
+    actions: [
+      TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
+      ElevatedButton(
+        onPressed: model.isLoading ? null : () { model.submit(); Navigator.of(context).pop(); },
+        child: const Text("Submit"),
+      ),
+    ],
+  );
+}
+
 /// A widget to edit an [AutonomyCommand].
 class AutonomyCommandEditor extends ReactiveWidget<AutonomyCommandBuilder> {
   /// The autonomy view model.
