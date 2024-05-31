@@ -90,6 +90,9 @@ class ModernDriveControls extends RoverControls {
     leftShoulderFlag = state.leftShoulder;
     if (!rightShoulderFlag && state.rightShoulder) throttle += 0.1;
     rightShoulderFlag = state.rightShoulder;
+    if(throttle == 0.3){
+      models.home.setMessage(severity: Severity.critical, text: "Throttle hit 30%");
+    }
     throttle = throttle.clamp(0, 1);
   }
 
