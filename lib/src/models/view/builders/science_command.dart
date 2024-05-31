@@ -1,7 +1,7 @@
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
-/// A [ValueBuilder] to modify and send an [AutonomyCommand].
+/// A [ValueBuilder] to modify and send an [ScienceCommand].
 class ScienceCommandBuilder extends ValueBuilder<ScienceCommand> {
 	/// The sample number being tested.
 	final sample = NumberBuilder<int>(1, min: 1, max: 3);
