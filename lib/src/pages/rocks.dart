@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
-
+///Search Bar and Rock Database class
 class RockModel with ChangeNotifier {
   
   final rocks = <Rock>[
@@ -90,7 +90,7 @@ class RockModel with ChangeNotifier {
 
 }
 
-
+///Rock Class and Constructor
 class Rock{
   final String name;
   final String image;
@@ -100,7 +100,7 @@ class Rock{
    
 }
 
-
+///Reactive Widget class
 class RocksPage extends ReactiveWidget<RockModel> {
   RockModel createModel() => RockModel();
   final int index;
@@ -109,12 +109,13 @@ class RocksPage extends ReactiveWidget<RockModel> {
   @override
   Widget build(BuildContext context, RockModel model) => ListView(
         shrinkWrap: true,
+        ///Contains Search bar widgets and format for each row
         children: [
           Row(
             children: [
               Text("Rocks & Minerals",
                   style: context
-                      .textTheme.headlineMedium,), // The header at the top
+                      .textTheme.headlineMedium,), /// The header at the top
               const Spacer(),
               ViewsSelector(index: index),
             ],
@@ -123,7 +124,7 @@ class RocksPage extends ReactiveWidget<RockModel> {
             controller: model.controller,
             onChanged: model.search,
           ),
-          ...model.filteredRocks.map((rock) =>
+          ...model.filteredRocks.map((rock) => /// Method to create new rows for each Rock
           Row(
             children: <Widget>[
               Container(
