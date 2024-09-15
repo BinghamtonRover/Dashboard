@@ -3,7 +3,7 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 ///Search Bar and Rock Database class
 class RockModel with ChangeNotifier {
-  
+  ///Where all the rocks and minerals are located.
   final rocks = <Rock>[
     const Rock(
       "Shale",
@@ -76,13 +76,15 @@ class RockModel with ChangeNotifier {
       "Found on meteors \n   \u2022 Greenish white streak",
     ),       
   ];
+  ///Sets up filtered list of rocks and minerals from above
   List<Rock> get filteredRocks => rocks.where(filter).toList();
+  ///Creates empty string for users Query
   String query = "";
-
+  ///The filter for search bar
   bool filter(Rock rock) => rock.name.toLowerCase().contains(query) ||  rock.description.toLowerCase().contains(query);
-
+  ///Controller for search bar
   SearchController controller = SearchController();
-
+  ///search method that isolates a row if it matches the query
   void search(String input){
     query = input.toLowerCase();
     notifyListeners();
@@ -92,18 +94,24 @@ class RockModel with ChangeNotifier {
 
 ///Rock Class and Constructor
 class Rock{
+  ///Rock Name
   final String name;
+  ///Rock Image
   final String image;
+  ///Rock description
   final String description;
-
+  ///Rock constructor
   const Rock(this.name, this.image, this.description);
    
 }
 
 ///Reactive Widget class
 class RocksPage extends ReactiveWidget<RockModel> {
+  @override
   RockModel createModel() => RockModel();
+  ///Index of the rock page for view widget
   final int index;
+  ///Sets up the view widget
   const RocksPage({required this.index});
 
   @override
@@ -138,7 +146,7 @@ class RocksPage extends ReactiveWidget<RockModel> {
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: const Color.fromARGB(255, 212, 218, 228)),
+                      color: const Color.fromARGB(255, 212, 218, 228),),
                   image:  DecorationImage(
                     image: AssetImage(rock.image),
                     fit: BoxFit.cover,
@@ -149,16 +157,14 @@ class RocksPage extends ReactiveWidget<RockModel> {
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: const Color.fromARGB(255, 212, 218, 228)),
+                      color: const Color.fromARGB(255, 212, 218, 228),),
                 ),
                 padding: const EdgeInsets.all(40),
                 child: Text(rock.description),
               ),
             ],
-          ),          )
+          ),          ),
           
         ],
       );
 }
-
-
