@@ -4,8 +4,6 @@ import "package:flutter_resizable_container/flutter_resizable_container.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
-import "package:rover_dashboard/src/pages/arm.dart";
-import "package:rover_dashboard/src/pages/drive.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A button for the user to select a new view.
@@ -21,27 +19,25 @@ class ViewsSelector extends StatelessWidget {
     final name = view.key! as CameraName;
     final status = models.video.feeds[name]!.details.status;
     const size = 12.0;
-    switch (status) {
-      case CameraStatus.CAMERA_STATUS_UNDEFINED:
-        return const Icon(Icons.question_mark, size: size);
-      case CameraStatus.CAMERA_DISCONNECTED:
-        return const Icon(Icons.circle, size: size, color: Colors.black);
-      case CameraStatus.CAMERA_ENABLED:
-        return const Icon(Icons.circle, size: size, color: Colors.green);
-      case CameraStatus.CAMERA_LOADING:
-        return const Icon(Icons.circle, size: size, color: Colors.blueGrey);
-      case CameraStatus.CAMERA_DISABLED:
-        return const Icon(Icons.circle, size: size, color: Colors.orange);
-      case CameraStatus.CAMERA_NOT_RESPONDING:
-        return const Icon(Icons.circle, size: size, color: Colors.red);
-      case CameraStatus.FRAME_TOO_LARGE:
-        return const Icon(Icons.circle, size: size, color: Colors.orange);
-      case CameraStatus.CAMERA_HAS_NO_NAME:
-        return const Icon(Icons.circle,
-            size: size, color: Colors.black); // won't happen
-    }
-    // Do not use `default` or you will lose exhaustiveness checking
-    throw ArgumentError("Unrecognized status: $status");
+    return switch (status) {
+      CameraStatus.CAMERA_STATUS_UNDEFINED =>
+        const Icon(Icons.question_mark, size: size),
+      CameraStatus.CAMERA_DISCONNECTED =>
+        const Icon(Icons.circle, size: size, color: Colors.black),
+      CameraStatus.CAMERA_ENABLED =>
+        const Icon(Icons.circle, size: size, color: Colors.green),
+      CameraStatus.CAMERA_LOADING =>
+        const Icon(Icons.circle, size: size, color: Colors.blueGrey),
+      CameraStatus.CAMERA_DISABLED =>
+        const Icon(Icons.circle, size: size, color: Colors.orange),
+      CameraStatus.CAMERA_NOT_RESPONDING =>
+        const Icon(Icons.circle, size: size, color: Colors.red),
+      CameraStatus.FRAME_TOO_LARGE =>
+        const Icon(Icons.circle, size: size, color: Colors.orange),
+      CameraStatus.CAMERA_HAS_NO_NAME =>
+        const Icon(Icons.circle, size: size, color: Colors.black),
+      _ => throw ArgumentError("Unrecognized status: $status"),
+    };
   }
 
   @override
@@ -58,7 +54,7 @@ class ViewsSelector extends StatelessWidget {
                 children: [
                   if (models.sockets.video.isConnected) ...[
                     getCameraStatus(view),
-                    const SizedBox(width: 8)
+                    const SizedBox(width: 8),
                   ],
                   Text(view.name),
                 ],
@@ -113,21 +109,21 @@ class DashboardView {
   static final List<DashboardView> uiViews = [
     DashboardView(
         name: Routes.science,
-        builder: (context, index) => SciencePage(index: index)),
+        builder: (context, index) => SciencePage(index: index),),
     DashboardView(
         name: Routes.autonomy,
-        builder: (context, index) => MapPage(index: index)),
+        builder: (context, index) => MapPage(index: index),),
     DashboardView(
         name: Routes.electrical,
-        builder: (context, index) => ElectricalPage(index: index)),
+        builder: (context, index) => ElectricalPage(index: index),),
     DashboardView(
-        name: Routes.arm, builder: (context, index) => ArmPage(index: index)),
+        name: Routes.arm, builder: (context, index) => ArmPage(index: index),),
     DashboardView(
         name: Routes.drive,
-        builder: (context, index) => DrivePage(index: index)),
+        builder: (context, index) => DrivePage(index: index),),
     DashboardView(
         name: Routes.rocks,
-        builder: (context, index) => RocksPage(index: index)),
+        builder: (context, index) => RocksPage(index: index),),
   ];
 
   /// A blank view.
@@ -219,7 +215,7 @@ class ViewsModel extends Model {
   void replaceView(int index, DashboardView newView) {
     if (views.contains(newView)) {
       models.home.setMessage(
-          severity: Severity.error, text: "That view is already on-screen");
+          severity: Severity.error, text: "That view is already on-screen",);
       return;
     }
     views[index] = newView;

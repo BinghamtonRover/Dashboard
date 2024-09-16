@@ -1,9 +1,10 @@
 import "package:flutter/material.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
-///Search Bar and Rock Database class
+
+/// A view model to control which rocks are shown on screen.
 class RockModel with ChangeNotifier {
-  ///Where all the rocks and minerals are located.
+  /// All rocks that can be shown.
   final rocks = <Rock>[
     const Rock(
       "Shale",
@@ -54,17 +55,17 @@ class RockModel with ChangeNotifier {
       "Hematite",
       "assets/Rocks_Minerals_Images/Hematite.jpg",
       "Precipitate from water \n   \u2022 Deep red or brownish red streak",
-    ),   
+    ),
     const Rock(
       "Olivine",
       "assets/Rocks_Minerals_Images/Olivine.jpg",
       "Weathers in the presence of water \n   \u2022 Green or pale green, lack of cleavage, in rocks it's usually rounded",
-    ), 
+    ),
      const Rock(
       "Pyroxene",
       "assets/Rocks_Minerals_Images/Pyroxene.jpg",
       "Weathers in the presence of water \n   \u2022 Has cleavage, dark green to black",
-    ), 
+    ),
        const Rock(
       "Pigeonite",
       "assets/Rocks_Minerals_Images/Pigeonite.jpg",
@@ -74,104 +75,125 @@ class RockModel with ChangeNotifier {
       "Augite",
       "assets/Rocks_Minerals_Images/Pyroxene.jpg",
       "Found on meteors \n   \u2022 Greenish white streak",
-    ),       
+    ),
   ];
-  ///Sets up filtered list of rocks and minerals from above
+
+  /// A filtered view of [rocks] that matches the [query].
   List<Rock> get filteredRocks => rocks.where(filter).toList();
-  ///Creates empty string for users Query
-  String query = "";
-  ///The filter for search bar
-  bool filter(Rock rock) => rock.name.toLowerCase().contains(query) ||  rock.description.toLowerCase().contains(query);
-  ///Controller for search bar
+
+  /// The current search query from the search bar.
+  String get query => controller.text;
+
+  /// Whether the given rock matches the current [query].
+  bool filter(Rock rock) => rock.name.toLowerCase().contains(query)
+    || rock.description.toLowerCase().contains(query);
+
+  /// The Flutter controller for the search bar.
   SearchController controller = SearchController();
-  ///search method that isolates a row if it matches the query
-  void search(String input){
-    query = input.toLowerCase();
-    notifyListeners();
-  }
 
+  /// Filters the [rocks] by the [query] and saves it to [filteredRocks].
+  void search(String input) => notifyListeners();
 }
 
-///Rock Class and Constructor
+/// Contains data and knowledge about a specific rock type.
 class Rock{
-  ///Rock Name
+  /// The name of the rock.
   final String name;
-  ///Rock Image
+
+  /// The path to the image of the rock.
   final String image;
-  ///Rock description
+
+  /// A description of the rock.
   final String description;
-  ///Rock constructor
+
+  /// A const constructor.
   const Rock(this.name, this.image, this.description);
-   
 }
 
-///Reactive Widget class
+/// A page to show a searchable list of rocks and information about them.
 class RocksPage extends ReactiveWidget<RockModel> {
   @override
   RockModel createModel() => RockModel();
-  ///Index of the rock page for view widget
+
+  /// Index of the rock page for view widget
   final int index;
-  ///Sets up the view widget
+
+  /// A const constructor.
   const RocksPage({required this.index});
 
   @override
   Widget build(BuildContext context, RockModel model) => ListView(
-        shrinkWrap: true,
-        ///Contains Search bar widgets and format for each row
+    shrinkWrap: true,
+    children: [
+      Row(
         children: [
-          Row(
-            children: [
-              Text("Rocks & Minerals",
-                  style: context
-                      .textTheme.headlineMedium,), /// The header at the top
-              const Spacer(),
-              ViewsSelector(index: index),
-            ],
+          Text(
+            "Rocks & Minerals",
+            style: context.textTheme.headlineMedium,
           ),
-          SearchBar(
-            controller: model.controller,
-            onChanged: model.search,
-          ),
-          ...model.filteredRocks.map((rock) => /// Method to create new rows for each Rock
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: const Color.fromARGB(255, 212, 218, 228),),
-                  ),
-                  padding: const EdgeInsets.all(40),
-                  child: Text(rock.name),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: const Color.fromARGB(255, 212, 218, 228),),
-                    image:  DecorationImage(
-                      image: AssetImage(rock.image),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(50),
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: const Color.fromARGB(255, 212, 218, 228),),
-                  ),
-                  padding: const EdgeInsets.all(40),
-                  child: Text(rock.description),
-                ),
-              ),
-            ],
-          ),          ),
-          
+          const Spacer(),
+          ViewsSelector(index: index),
         ],
-      );
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: SearchBar(
+          hintText: "Search for a rock or characteristic",
+          hintStyle: WidgetStatePropertyAll(context.textTheme.bodyMedium),
+          controller: model.controller,
+          onChanged: model.search,
+        ),
+      ),
+      for (final rock in model.filteredRocks)
+        RockWidget(rock),
+    ],
+  );
+}
+
+/// A widget to show a row with details about a specific kind of rock.
+class RockWidget extends StatelessWidget {
+  /// The rock to show.
+  final Rock rock;
+  /// A const constructor.
+  const RockWidget(this.rock);
+
+  @override
+  Widget build(BuildContext context) => Row(
+    children: <Widget>[
+      Expanded(
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: const Color.fromARGB(255, 212, 218, 228),),
+          ),
+          padding: const EdgeInsets.all(40),
+          child: Text(rock.name),
+        ),
+      ),
+      Expanded(
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: const Color.fromARGB(255, 212, 218, 228),),
+            image:  DecorationImage(
+              image: AssetImage(rock.image),
+              fit: BoxFit.contain,
+            ),
+          ),
+          padding: const EdgeInsets.all(50),
+        ),
+      ),
+      Expanded(
+        flex: 3,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+                color: const Color.fromARGB(255, 212, 218, 228),),
+          ),
+          padding: const EdgeInsets.all(40),
+          child: Text(rock.description),
+        ),
+      ),
+    ],
+  );
 }
