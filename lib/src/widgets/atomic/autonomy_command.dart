@@ -53,7 +53,7 @@ class AutonomyCommandEditor extends ReactiveWidget<AutonomyCommandBuilder> {
     ElevatedButton.icon(
       icon: const Icon(Icons.add), 
       label: const Text("New Task"), 
-      onPressed: () => createTask(context, model),
+      onPressed: RoverStatus.AUTONOMOUS != models.rover.status.value ? () =>  models.home.setMessage(severity: Severity.error, text: "You must be in autonomy mode to do that") : () => createTask(context, model),
     ),
     const SizedBox(width: 8),
     ElevatedButton(
