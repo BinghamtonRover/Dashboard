@@ -11,212 +11,144 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
   ViewsWidget() : super(models.views);
 
   @override
-  Widget build(BuildContext context, ViewsModel model) =>
-      switch (model.views.length) {
-        1 => Column(
-            children: [
-              Expanded(child: _ViewArea(model: model, index: 0)),
-            ],
-          ),
-        2 => ResizableContainer(
-            direction: switch (models.settings.dashboard.splitMode) {
-              SplitMode.horizontal => Axis.vertical,
-              SplitMode.vertical => Axis.horizontal,
-            },
-            dividerWidth: 8,
-            controller: switch (models.settings.dashboard.splitMode) {
-              SplitMode.horizontal => model.verticalController,
-              SplitMode.vertical => model.horizontalController1,
-            },
-            dividerColor: Colors.black,
-            children: [
-              ResizableChildData(
-                minSize: 100,
-                startingRatio: 0.5,
-                child: _ViewArea(model: model, index: 0),
+  Widget build(BuildContext context, ViewsModel model) {
+    final childData = List<ResizableChildData>.generate(
+      (model.views.length > 1) ? model.views.length : 0,
+      (index) => ResizableChildData(
+        minSize: 100,
+        startingRatio: 0.5,
+        child: _ViewArea(model: model, index: index),
+      ),
+    );
+
+    return switch (model.views.length) {
+      1 => Column(
+          children: [
+            Expanded(child: _ViewArea(model: model, index: 0)),
+          ],
+        ),
+      2 => ResizableContainer(
+          direction: switch (models.settings.dashboard.splitMode) {
+            SplitMode.horizontal => Axis.vertical,
+            SplitMode.vertical => Axis.horizontal,
+          },
+          dividerWidth: 8,
+          controller: switch (models.settings.dashboard.splitMode) {
+            SplitMode.horizontal => model.verticalController,
+            SplitMode.vertical => model.horizontalController1,
+          },
+          dividerColor: Colors.black,
+          children: childData.sublist(0, 2),
+        ),
+      3 || 4 => ResizableContainer(
+          controller: model.verticalController,
+          direction: Axis.vertical,
+          dividerWidth: 8,
+          dividerColor: Colors.black,
+          children: [
+            ResizableChildData(
+              minSize: 100,
+              startingRatio: 0.5,
+              child: ResizableContainer(
+                controller: model.horizontalController1,
+                direction: Axis.horizontal,
+                dividerWidth: 8,
+                dividerColor: Colors.black,
+                children: childData.sublist(0, 2),
               ),
-              ResizableChildData(
-                minSize: 100,
-                startingRatio: 0.5,
-                child: _ViewArea(model: model, index: 1),
-              ),
-            ],
-          ),
-        3 || 4 => ResizableContainer(
-            controller: model.verticalController,
-            direction: Axis.vertical,
-            dividerWidth: 8,
-            dividerColor: Colors.black,
-            children: [
+            ),
+            if (model.views.length == 3)
+              childData[2]
+            else
               ResizableChildData(
                 minSize: 100,
                 startingRatio: 0.5,
                 child: ResizableContainer(
-                  controller: model.horizontalController1,
+                  controller: model.horizontalController2,
                   direction: Axis.horizontal,
                   dividerWidth: 8,
                   dividerColor: Colors.black,
-                  children: [
-                    ResizableChildData(
-                      minSize: 100,
-                      startingRatio: 0.5,
-                      child: _ViewArea(model: model, index: 0),
-                    ),
-                    ResizableChildData(
-                      minSize: 100,
-                      startingRatio: 0.5,
-                      child: _ViewArea(model: model, index: 1),
-                    ),
-                  ],
+                  children: childData.sublist(2, 4),
                 ),
               ),
-              if (model.views.length == 3)
-                ResizableChildData(
-                  minSize: 100,
-                  startingRatio: 0.5,
-                  child: _ViewArea(model: model, index: 2),
-                )
-              else
-                ResizableChildData(
-                  minSize: 100,
-                  startingRatio: 0.5,
-                  child: ResizableContainer(
-                    controller: model.horizontalController2,
-                    direction: Axis.horizontal,
-                    dividerWidth: 8,
-                    dividerColor: Colors.black,
-                    children: [
-                      ResizableChildData(
-                        minSize: 100,
-                        startingRatio: 0.5,
-                        child: _ViewArea(model: model, index: 2),
-                      ),
-                      ResizableChildData(
-                        minSize: 100,
-                        startingRatio: 0.5,
-                        child: _ViewArea(model: model, index: 3),
-                      ),
-                    ],
+          ],
+        ),
+      8 => Row(
+          children: [
+            Expanded(
+              child: ResizableContainer(
+                controller: model.verticalController,
+                direction: Axis.vertical,
+                dividerWidth: 8,
+                dividerColor: Colors.black,
+                children: [
+                  ResizableChildData(
+                    minSize: 100,
+                    startingRatio: 0.5,
+                    child: ResizableContainer(
+                      controller: model.horizontalController1,
+                      direction: Axis.horizontal,
+                      dividerWidth: 8,
+                      dividerColor: Colors.black,
+                      children: childData.sublist(0, 2),
+                    ),
                   ),
-                ),
-            ],
-          ),
-        8 => Row(
-            children: [
-              Expanded(
-                child: ResizableContainer(
-                  controller: model.verticalController,
-                  direction: Axis.vertical,
-                  dividerWidth: 8,
-                  dividerColor: Colors.black,
-                  children: [
-                    ResizableChildData(
-                      minSize: 100,
-                      startingRatio: 0.5,
-                      child: ResizableContainer(
-                        controller: model.horizontalController1,
-                        direction: Axis.horizontal,
-                        dividerWidth: 8,
-                        dividerColor: Colors.black,
-                        children: [
-                          ResizableChildData(
-                            minSize: 100,
-                            startingRatio: 0.5,
-                            child: _ViewArea(model: model, index: 0),
-                          ),
-                          ResizableChildData(
-                            minSize: 100,
-                            startingRatio: 0.5,
-                            child: _ViewArea(model: model, index: 1),
-                          ),
-                        ],
-                      ),
+                  ResizableChildData(
+                    minSize: 100,
+                    startingRatio: 0.5,
+                    child: ResizableContainer(
+                      controller: model.horizontalController2,
+                      direction: Axis.horizontal,
+                      dividerWidth: 8,
+                      dividerColor: Colors.black,
+                      children: childData.sublist(2, 4),
                     ),
-                    ResizableChildData(
-                      minSize: 100,
-                      startingRatio: 0.5,
-                      child: ResizableContainer(
-                        controller: model.horizontalController2,
-                        direction: Axis.horizontal,
-                        dividerWidth: 8,
-                        dividerColor: Colors.black,
-                        children: [
-                          ResizableChildData(
-                            minSize: 100,
-                            startingRatio: 0.5,
-                            child: _ViewArea(model: model, index: 2),
-                          ),
-                          ResizableChildData(
-                            minSize: 100,
-                            startingRatio: 0.5,
-                            child: _ViewArea(model: model, index: 3),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              const VerticalDivider(
-                  width: 8, color: Colors.black, thickness: 8,),
-              Expanded(
-                child: ResizableContainer(
-                  controller: model.verticalController2,
-                  direction: Axis.vertical,
-                  dividerWidth: 8,
-                  dividerColor: Colors.black,
-                  children: [
-                    ResizableChildData(
-                      minSize: 100,
-                      startingRatio: 0.5,
-                      child: ResizableContainer(
-                        controller: model.horizontalController3,
-                        direction: Axis.horizontal,
-                        dividerWidth: 8,
-                        dividerColor: Colors.black,
-                        children: [
-                          ResizableChildData(
-                            minSize: 100,
-                            startingRatio: 0.5,
-                            child: _ViewArea(model: model, index: 4),
-                          ),
-                          ResizableChildData(
-                            minSize: 100,
-                            startingRatio: 0.5,
-                            child: _ViewArea(model: model, index: 5),
-                          ),
-                        ],
-                      ),
+            ),
+            const VerticalDivider(
+              width: 8,
+              color: Colors.black,
+              thickness: 8,
+            ),
+            Expanded(
+              child: ResizableContainer(
+                controller: model.verticalController2,
+                direction: Axis.vertical,
+                dividerWidth: 8,
+                dividerColor: Colors.black,
+                children: [
+                  ResizableChildData(
+                    minSize: 100,
+                    startingRatio: 0.5,
+                    child: ResizableContainer(
+                      controller: model.horizontalController3,
+                      direction: Axis.horizontal,
+                      dividerWidth: 8,
+                      dividerColor: Colors.black,
+                      children: childData.sublist(4, 6),
                     ),
-                    ResizableChildData(
-                      minSize: 100,
-                      startingRatio: 0.5,
-                      child: ResizableContainer(
-                        controller: model.horizontalController4,
-                        direction: Axis.horizontal,
-                        dividerWidth: 8,
-                        dividerColor: Colors.black,
-                        children: [
-                          ResizableChildData(
-                            minSize: 100,
-                            startingRatio: 0.5,
-                            child: _ViewArea(model: model, index: 6),
-                          ),
-                          ResizableChildData(
-                            minSize: 100,
-                            startingRatio: 0.5,
-                            child: _ViewArea(model: model, index: 7),
-                          ),
-                        ],
-                      ),
+                  ),
+                  ResizableChildData(
+                    minSize: 100,
+                    startingRatio: 0.5,
+                    child: ResizableContainer(
+                      controller: model.horizontalController4,
+                      direction: Axis.horizontal,
+                      dividerWidth: 8,
+                      dividerColor: Colors.black,
+                      children: childData.sublist(6, 8),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        _ => throw StateError("Too many views: ${model.views.length}"),
-      };
+            ),
+          ],
+        ),
+      _ => throw StateError("Too many views: ${model.views.length}"),
+    };
+  }
 }
 
 class _ViewArea extends StatelessWidget {
