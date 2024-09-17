@@ -37,6 +37,8 @@ class ScienceSettings {
   };
 }
 
+
+
 /// Settings relating to the arm.
 class ArmSettings {
   /// How many radians to move the shoulder joint each frame.
@@ -277,6 +279,17 @@ class DashboardSettings {
     "versionChecking": versionChecking,
   };
 }
+
+class ViewPreset{
+  final int numViews;
+  
+  const ViewPreset({
+    required this.numViews,
+
+  });
+
+}
+
 
 /// Contains the settings for running the dashboard and the rover. 
 class Settings {
