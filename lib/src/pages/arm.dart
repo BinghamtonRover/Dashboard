@@ -2,7 +2,6 @@ import "dart:math";
 
 import "package:flutter/material.dart";
 
-import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/src/models/view/arm.dart";
 import "package:rover_dashboard/widgets.dart";
 
@@ -226,8 +225,6 @@ class ArmPage extends ReactiveWidget<ArmModel> {
           onChanged: (bool value) => model.switchLaser(),
         ),
         Text(model.laser ? "On" : "Off"),
-        const SizedBox(width: 8),
-        ViewsSelector(index: index),
       ],),
       const Text(
         "Side View (click for IK)", 
