@@ -25,6 +25,14 @@ class SocketSwitcher extends ReusableReactiveWidget<Sockets> {
   );
 }
 
+class PresetViews extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+
+}
 /// The main dashboard page.
 /// 
 /// Each page the user could navigate to is embedded here, as a [View]. 

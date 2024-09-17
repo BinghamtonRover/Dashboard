@@ -73,7 +73,7 @@ class RockModel with ChangeNotifier {
     ),
     const Rock(
       "Augite",
-      "assets/Rocks_Minerals_Images/Pyroxene.jpg",
+      "assets/Rocks_Minerals_Images/Augite.jpg",
       "Found on meteors \n   \u2022 Greenish white streak",
     ),
   ];
