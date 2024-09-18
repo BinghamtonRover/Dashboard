@@ -63,10 +63,31 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
               NumberEditor(name: "Heartbeats per second", model: model.network.connectionTimeout),
               if (Platform.isWindows) ListTile(
-                title: const Text("Open Network Config"),
-                subtitle: const Text("Opens ethernet configuration page in settings"),
+                title: const Text("Open Windows network settings"),
+                subtitle: const Text("You may need to change these if the rover will not connect"),
                 trailing: const Icon(Icons.lan_outlined),
-                onTap: () => launchUrl(Uri.parse("ms-settings:network-ethernet")),
+                onTap: () {
+                  launchUrl(Uri.parse("ms-settings:network-ethernet"));
+                  showDialog<void>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content: const Text(
+                        "Click on IP Assignment, select Manual, then IPv4, then set:\n"
+                        "\n- IP address: 192.168.1.10"
+                        "\n- Subnet 255.255.255.0 (or Subnet length: 24)"
+                        "\n- Gateway: 192.168.1.1"
+                        "\n- Preferred DNS: 192.168.1.1"
+                      ),
+                      title: const Text("Set your IP settings"),
+                      actions: [
+                        TextButton(
+                          child: const Text("Ok"),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ],
           ),
