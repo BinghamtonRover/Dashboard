@@ -171,6 +171,12 @@ class SciencePage extends ReactiveWidget<ScienceModel> {
       const SizedBox(width: 12),
       if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
       const Spacer(),
+      ElevatedButton(
+        onPressed: model.fillPumps,
+        style: ButtonStyle(backgroundColor: WidgetStatePropertyAll<Color>(Colors.green),),
+        child: const Text("Fill Pumps"),
+      ),
+      const SizedBox(width: 12),
       DropdownButton(
         value: model.sample,
         onChanged: model.updateSample,

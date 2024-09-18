@@ -140,6 +140,9 @@ class ScienceModel with ChangeNotifier {
 	/// Whether the page is currently loading.
 	bool isLoading = false;
 
+  /// Whether the pump command has just been sent.
+  bool pumping = false;
+
 	/// The error, if any, that occurred while loading the data.
 	String? errorText;
 
@@ -169,6 +172,18 @@ class ScienceModel with ChangeNotifier {
 		isListening = true;
 		models.home.setMessage(severity: Severity.info, text: "Science UI will update on new data");
 	}
+  
+  /// Sends a [ScienceCommand] to fill  the pumps
+  Future<void> fillPumps() async{
+    pumping = true;
+    notifyListeners();
+    models.messages.sendMessage(ScienceCommand(pumps: PumpState.PUMP_ON));
+    models.home.setMessage(severity: Severity.info, text: "Science command submitted. Check the video feed to confirm");
+    await Future<void>.delayed(const Duration(seconds: 3));
+    pumping = false;
+    notifyListeners();
+    return;
+  }
 
 	/// Calls [addMessage] for each message in the picked file.
 	Future<void> loadFile() async {
