@@ -28,14 +28,16 @@ class ArmPainterTop extends CustomPainter {
   Offset getShoulder(Size size) {
     const shoulderX = 0.0;
     const shoulderY = 0.0;
-    return Offset(toAbsolute(shoulderX) + size.width / 2, -toAbsolute(shoulderY) + size.height / 2);
+    return Offset(toAbsolute(shoulderX) + size.width / 2,
+        -toAbsolute(shoulderY) + size.height / 2);
   }
 
   /// Gets the location of the elbow joint.
   Offset getElbow(Size size) {
     final elbowX = cos(swivelAngle + pi / 2);
     final elbowY = sin(swivelAngle + pi / 2);
-    return Offset(toAbsolute(elbowX) + size.width / 2, -toAbsolute(elbowY) + size.height / 2);
+    return Offset(toAbsolute(elbowX) + size.width / 2,
+        -toAbsolute(elbowY) + size.height / 2);
   }
 
   @override
@@ -66,7 +68,7 @@ class ArmPainterSide extends CustomPainter {
 
   /// Color to paint the radius in
   Color radiusColor;
-  
+
   /// Constructor for the ArmPainterSide, takes in 3 angles
   ArmPainterSide(this.model, this.radiusColor);
 
@@ -103,10 +105,14 @@ class ArmPainterSide extends CustomPainter {
     final gripperX = length * gripperLength * cos(a3) + wristX;
     final gripperY = length * gripperLength * sin(a3) + wristY;
 
-    final shoulderJoint = Offset(toAbsolute(shoulderX) + size.width / 2, -toAbsolute(shoulderY) + size.height);
-    final elbowJoint = Offset(toAbsolute(elbowX) + size.width / 2, -toAbsolute(elbowY) + size.height);
-    final wristJoint = Offset(toAbsolute(wristX) + size.width / 2, -toAbsolute(wristY) + size.height);
-    final gripLocation = Offset(toAbsolute(gripperX) + size.width / 2, -toAbsolute(gripperY) + size.height);
+    final shoulderJoint = Offset(toAbsolute(shoulderX) + size.width / 2,
+        -toAbsolute(shoulderY) + size.height);
+    final elbowJoint = Offset(
+        toAbsolute(elbowX) + size.width / 2, -toAbsolute(elbowY) + size.height);
+    final wristJoint = Offset(
+        toAbsolute(wristX) + size.width / 2, -toAbsolute(wristY) + size.height);
+    final gripLocation = Offset(toAbsolute(gripperX) + size.width / 2,
+        -toAbsolute(gripperY) + size.height);
     return (
       shoulder: shoulderJoint,
       elbow: elbowJoint,
@@ -136,8 +142,10 @@ class ArmPainterSide extends CustomPainter {
         ..strokeWidth = 2;
       final radius1 = length * (shoulderLength + elbowLength);
       final radius2 = length * (shoulderLength - elbowLength);
-      final rect1 = Rect.fromCircle(center: coordinates.shoulder, radius: radius1);
-      final rect2 = Rect.fromCircle(center: coordinates.shoulder, radius: radius2);
+      final rect1 =
+          Rect.fromCircle(center: coordinates.shoulder, radius: radius1);
+      final rect2 =
+          Rect.fromCircle(center: coordinates.shoulder, radius: radius2);
       canvas.drawArc(rect1, 0, -pi, false, radiusPaint);
       canvas.drawArc(rect2, 0, -pi, false, radiusPaint);
     }
@@ -174,7 +182,8 @@ class ArmPainterSide extends CustomPainter {
   }
 
   /// Paints the arm given its joint positions.
-  void paintArm(Canvas canvas, Size size, ArmCoordinates coordinates, {double opacity = 1}) {
+  void paintArm(Canvas canvas, Size size, ArmCoordinates coordinates,
+      {double opacity = 1}) {
     final points = [
       coordinates.shoulder,
       coordinates.elbow,
@@ -238,20 +247,22 @@ class ArmPage extends ReactiveWidget<ArmModel> {
               const SizedBox(width: 12),
               const Spacer(),
               const Text("Laser Light"),
-              const SizedBox(width: 10),
-              ToggleButtons(
-                isSelected: [
-                  !model.gripper.laserState.toBool(),
-                  model.gripper.laserState.toBool(),
-                ],
-                onPressed: (index) {
-                  model.setLaser(laser: index == 1);
-                },
-                children: const [
-                  Text("Off"),
-                  Text("On"),
-                ],
+              const SizedBox(width: 5),
+              Switch(
+                value: model.desiredLaserState,
+                onChanged: (value) => model.setLaser(laser: value),
               ),
+              const SizedBox(width: 5),
+              if (model.desiredLaserState == model.gripper.laserState.toBool())
+                const Tooltip(
+                  message: "Laser state matches toggled state",
+                  child: Icon(Icons.check, color: Colors.green),
+                )
+              else
+                const Tooltip(
+                  message: "Laser state does not match toggled state",
+                  child: Icon(Icons.warning, color: Colors.red),
+                ),
               const SizedBox(width: 8),
               ViewsSelector(index: index),
             ],
@@ -279,7 +290,8 @@ class ArmPage extends ReactiveWidget<ArmModel> {
                 child: GestureDetector(
                   onTap: model.sendIK,
                   child: CustomPaint(
-                    painter: ArmPainterSide(model, context.colorScheme.onSurface),
+                    painter:
+                        ArmPainterSide(model, context.colorScheme.onSurface),
                   ),
                 ),
               ),

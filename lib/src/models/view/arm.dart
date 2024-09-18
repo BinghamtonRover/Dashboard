@@ -18,6 +18,9 @@ class ArmModel with ChangeNotifier {
   /// The timer that updates this page.
   Timer? timer;
 
+  /// The state that the user wants to set the laser to
+  bool desiredLaserState = false;
+
   /// Starts a timer to refresh at 100 Hz.
   ArmModel() {
     timer = Timer.periodic(const Duration(milliseconds: 10), _update);
@@ -30,12 +33,17 @@ class ArmModel with ChangeNotifier {
   }
 
   void _update([_]) {
+    if (desiredLaserState != gripper.laserState.toBool()) {
+      final command = GripperCommand(laserState: desiredLaserState ? BoolState.ON : BoolState.OFF);
+      models.messages.sendMessage(command);
+    }
     notifyListeners();
   }
 
   /// Sets the laser on or off
   void setLaser({required bool laser}) {
-    final command = GripperCommand(laserState: laser ? BoolState.ON : BoolState.OFF);
+    desiredLaserState = laser;
+    final command = GripperCommand(laserState: desiredLaserState ? BoolState.ON : BoolState.OFF);
     models.messages.sendMessage(command);
   }
 
