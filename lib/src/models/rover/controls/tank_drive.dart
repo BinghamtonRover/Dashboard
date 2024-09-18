@@ -14,6 +14,7 @@ class DriveControls extends RoverControls {
   @override
   OperatingMode get mode => OperatingMode.drive;
 
+  /// The throttle the rover should be at.
   double throttle = 0;
 
   @override
