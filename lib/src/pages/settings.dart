@@ -1,4 +1,6 @@
 // ignore_for_file: directives_ordering
+import "dart:io";
+
 import "package:flutter/material.dart";
 import "package:url_launcher/url_launcher.dart";
 
@@ -8,7 +10,7 @@ import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A widget to display all the settings in a [ValueBuilder].
-/// 
+///
 /// Technically this class does not need to be used with [ValueBuilder], but it provides a heading
 /// and a list of children widgets to modify individual settings.
 class ValueEditor<T> extends StatelessWidget {
@@ -38,7 +40,7 @@ class ValueEditor<T> extends StatelessWidget {
 			...children,
 		],
 	);
-} 
+}
 
 /// The settings page.
 class SettingsPage extends ReactiveWidget<SettingsBuilder> {
@@ -60,6 +62,33 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               SocketEditor(name: "Autonomy socket", model: model.network.autonomySocket),
               SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
               NumberEditor(name: "Heartbeats per second", model: model.network.connectionTimeout),
+              if (Platform.isWindows) ListTile(
+                title: const Text("Open Windows network settings"),
+                subtitle: const Text("You may need to change these if the rover will not connect"),
+                trailing: const Icon(Icons.lan_outlined),
+                onTap: () {
+                  launchUrl(Uri.parse("ms-settings:network-ethernet"));
+                  showDialog<void>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content: const Text(
+                        "Click on IP Assignment, select Manual, then IPv4, then set:\n"
+                        "\n- IP address: 192.168.1.10"
+                        "\n- Subnet 255.255.255.0 (or Subnet length: 24)"
+                        "\n- Gateway: 192.168.1.1"
+                        "\n- Preferred DNS: 192.168.1.1"
+                      ),
+                      title: const Text("Set your IP settings"),
+                      actions: [
+                        TextButton(
+                          child: const Text("Ok"),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ],
           ),
           const Divider(),
@@ -79,7 +108,7 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
             name: "Science settings",
             children: [
               NumberEditor(
-                name: "Number of samples", 
+                name: "Number of samples",
                 model: model.science.numSamples,
               ),
               SwitchListTile(
@@ -95,13 +124,13 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
             name: "Dashboard Settings",
             children: [
               NumberEditor(
-                name: "Frames per second", 
+                name: "Frames per second",
                 subtitle: "This does not affect the rover's cameras. Useful for limiting the CPU of the dashboard",
                 model: model.dashboard.fps,
               ),
               NumberEditor(
-                name: "Block size", 
-                subtitle: "The precision of the GPS grid", 
+                name: "Block size",
+                subtitle: "The precision of the GPS grid",
                 model: model.dashboard.blockSize,
               ),
               SwitchListTile(
@@ -193,15 +222,6 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
           const Divider(),
           Text("Misc", style: Theme.of(context).textTheme.titleLarge),
           ListTile(
-            title: const Text("Adjust throttle"),
-            subtitle: const Text("Sets the max speed on the rover"),
-            trailing: const Icon(Icons.speed),
-            onTap: () => showDialog<void>(
-              context: context,
-              builder: (_) => ThrottleEditor(),
-            ),
-          ),
-          ListTile(
             title: const Text("Open session output"),
             subtitle: const Text("Opens all files created by this session"),
             trailing: const Icon(Icons.folder_open),
@@ -245,11 +265,11 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
         ],
       ),),
       Row(
-        mainAxisAlignment: MainAxisAlignment.end, 
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text("Cancel"), 
+            child: const Text("Cancel"),
           ),
           const SizedBox(width: 4),
           ElevatedButton.icon(
@@ -257,9 +277,9 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               await model.save();
               if (context.mounted) Navigator.of(context).pop();
             },
-            label: const Text("Save"), 
-            icon: model.isLoading 
-              ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator()) 
+            label: const Text("Save"),
+            icon: model.isLoading
+              ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator())
               : const Icon(Icons.save),
           ),
           const SizedBox(width: 4),
