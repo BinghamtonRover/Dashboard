@@ -1,4 +1,6 @@
 // ignore_for_file: directives_ordering
+import "dart:io";
+
 import "package:flutter/material.dart";
 import "package:url_launcher/url_launcher.dart";
 
@@ -192,15 +194,18 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
           ),
           const Divider(),
           Text("Misc", style: Theme.of(context).textTheme.titleLarge),
-          ListTile(
-            title: const Text("Adjust throttle"),
-            subtitle: const Text("Sets the max speed on the rover"),
-            trailing: const Icon(Icons.speed),
-            onTap: () => showDialog<void>(
-              context: context,
-              builder: (_) => ThrottleEditor(),
+          if (Platform.isWindows)
+            ListTile(
+              title: const Text("Open Network Config"),
+              subtitle: const Text("Opens ethernet configuration page in settings"),
+              trailing: const Icon(Icons.lan_outlined),
+              onTap: () async {
+                if (!Platform.isWindows) {
+                  return;
+                }
+                await launchUrl(Uri.parse("ms-settings:network-ethernet"));
+              },
             ),
-          ),
           ListTile(
             title: const Text("Open session output"),
             subtitle: const Text("Opens all files created by this session"),
