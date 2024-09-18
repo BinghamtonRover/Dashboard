@@ -59,7 +59,24 @@ class Sidebar extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const ViewsList(),
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ViewsCounter(),
+                              IconButton(
+                                icon: const Icon(Icons.aspect_ratio),
+                                tooltip: "Reset View Sizes",
+                                onPressed: models.views.resetSizes,
+                              ),
+                            ],
+                          ),
+                          const Expanded(
+                            child: ViewsList(),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -142,4 +159,33 @@ class ControlsDisplay extends ReusableReactiveWidget<Controller> {
           ],
         ],
       );
+}
+
+/// A dropdown to select more or less views.
+class ViewsCounter extends ReusableReactiveWidget<ViewsModel> {
+	/// Provides a const constructor for this widget.
+	ViewsCounter() : super(models.views);
+
+	@override
+	Widget build(BuildContext context, ViewsModel model) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      const Text("Views:"),
+      const SizedBox(width: 4),
+      DropdownButton<int>(
+        value: model.views.length,
+        onChanged: model.setNumViews,
+        items: [
+          for (int i = 1; i <= 4; i++) DropdownMenuItem(
+            value: i,
+            child: Center(child: Text(i.toString())),
+          ),
+          const DropdownMenuItem(
+            value: 8,
+            child: Center(child: Text("8")),
+          ),
+        ],
+      ),
+    ],
+	);
 }
