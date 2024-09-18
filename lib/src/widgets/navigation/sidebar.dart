@@ -13,7 +13,7 @@ class Sidebar extends StatelessWidget {
   Widget build(BuildContext context) => Material(
         elevation: 20,
         child: Container(
-          width: 300,
+          width: 310,
           color: Theme.of(context).colorScheme.surface,
           child: DefaultTabController(
             length: 2,
