@@ -45,6 +45,9 @@ class FilesService extends Service {
   /// from the file should be done with [Settings.fromJson].
   File get settingsFile => outputDir / "settings.json";
 
+  /// The encoder to convert a Map<> to a json string with a nice indent
+  final JsonEncoder jsonEncoder = const JsonEncoder.withIndent("  ");
+
   /// Ensure that files and directories that are expected to be present actually
   /// exist on the system. If not, create them. 
   @override
@@ -63,7 +66,7 @@ class FilesService extends Service {
 
   /// Saves the [Settings] object to the [settingsFile], as JSON.
   Future<void> writeSettings(Settings? value) async {
-    final json = jsonEncode(value?.toJson() ?? {});
+    final json = jsonEncoder.convert(value?.toJson() ?? {});
     await settingsFile.writeAsString(json);
   }
 
