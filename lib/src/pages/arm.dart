@@ -28,16 +28,14 @@ class ArmPainterTop extends CustomPainter {
   Offset getShoulder(Size size) {
     const shoulderX = 0.0;
     const shoulderY = 0.0;
-    return Offset(toAbsolute(shoulderX) + size.width / 2,
-        -toAbsolute(shoulderY) + size.height / 2);
+    return Offset(toAbsolute(shoulderX) + size.width / 2, -toAbsolute(shoulderY) + size.height / 2);
   }
 
   /// Gets the location of the elbow joint.
   Offset getElbow(Size size) {
     final elbowX = cos(swivelAngle + pi / 2);
     final elbowY = sin(swivelAngle + pi / 2);
-    return Offset(toAbsolute(elbowX) + size.width / 2,
-        -toAbsolute(elbowY) + size.height / 2);
+    return Offset(toAbsolute(elbowX) + size.width / 2, -toAbsolute(elbowY) + size.height / 2);
   }
 
   @override
