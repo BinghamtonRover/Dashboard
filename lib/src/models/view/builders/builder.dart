@@ -15,7 +15,7 @@ abstract class ValueBuilder<T> with ChangeNotifier {
 	bool get isValid;
 
 	/// Other builders to listen to.
-	List<ValueBuilder<dynamic>> get otherBuilders => [];
+	List<ChangeNotifier> get otherBuilders => [];
 
 	/// Listens to all [otherBuilders] as part of this builder.
 	ValueBuilder() {

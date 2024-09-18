@@ -1,3 +1,4 @@
+import "package:flutter/foundation.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
@@ -17,6 +18,9 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 
   /// A constructor to call [init] when created.
 	AutonomyCommandBuilder() { init(); }
+
+  @override
+  List<ChangeNotifier> get otherBuilders => [models.rover.status];
 
 	/// Listens for incoming confirmations from the rover that it received the command.
   Future<void> init() async {
