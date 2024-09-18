@@ -71,7 +71,7 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                   showDialog<void>(
                     context: context,
                     builder: (context) => AlertDialog(
-                      content: const Text(
+                      content: const SelectableText(
                         "Click on IP Assignment, select Manual, then IPv4, then set:\n"
                         "\n- IP address: 192.168.1.10"
                         "\n- Subnet 255.255.255.0 (or Subnet length: 24)"
