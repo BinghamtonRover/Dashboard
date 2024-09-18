@@ -208,7 +208,6 @@ class VideoFeedState extends State<VideoFeed> {
                 builder: (_) => CameraDetailsEditor(data),
               ),
             ),
-            ViewsSelector(index: widget.index),
           ],
         ),
         Expanded(child: buildChild(context)),

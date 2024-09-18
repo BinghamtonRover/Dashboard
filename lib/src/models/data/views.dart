@@ -6,15 +6,15 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
-/// A button for the user to select a new view.
-class ViewsSelector extends StatelessWidget {
-  /// The index of this view.
-  final int index;
+/// A list of views for the user to drag into their desired view area
+class ViewsList extends StatelessWidget {
+  /// The size of the icon to appear under the mouse pointer when dragging
+  static const double draggingIconSize = 100;
 
-  /// A const constructor.
-  const ViewsSelector({required this.index});
+  /// A const constructor
+  const ViewsList({super.key});
 
-  /// An icon to indicate the status of the given camera.
+  /// Get a widget for the camera status of the view
   Widget getCameraStatus(DashboardView view) {
     final name = view.key! as CameraName;
     final status = models.video.feeds[name]!.details.status;
@@ -41,32 +41,77 @@ class ViewsSelector extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => PopupMenuButton<DashboardView>(
-        tooltip: "Select a feed",
-        icon: const Icon(Icons.expand_more),
-        onSelected: (view) => models.views.replaceView(index, view),
-        itemBuilder: (_) => [
-          const PopupMenuItem(enabled: false, child: Text("Cameras")),
-          for (final view in DashboardView.cameraViews)
-            PopupMenuItem(
-              value: view,
-              child: Row(
-                children: [
-                  if (models.sockets.video.isConnected) ...[
-                    getCameraStatus(view),
-                    const SizedBox(width: 8),
-                  ],
-                  Text(view.name),
-                ],
+  Widget build(BuildContext context) => ListView(
+        children: [
+          ExpansionTile(
+            title: const Text("Cameras"),
+            children: [
+              for (final view in DashboardView.cameraViews)
+                Draggable<DashboardView>(
+                  data: view,
+                  dragAnchorStrategy: (draggable, context, position) =>
+                      const Offset(draggingIconSize, draggingIconSize) / 2,
+                  feedback: const SizedBox(
+                    width: draggingIconSize,
+                    height: draggingIconSize,
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Icon(Icons.camera_alt),
+                    ),
+                  ),
+                  child: ListTile(
+                    mouseCursor: SystemMouseCursors.move,
+                    title: Text(view.name),
+                    leading: (models.sockets.video.isConnected)
+                        ? getCameraStatus(view)
+                        : null,
+                    trailing: const Icon(Icons.camera_alt),
+                  ),
+                ),
+            ],
+          ),
+          ExpansionTile(
+            title: const Text("Controls"),
+            children: [
+              for (final view in DashboardView.uiViews)
+                Draggable<DashboardView>(
+                  data: view,
+                  dragAnchorStrategy: (draggable, context, position) =>
+                      const Offset(draggingIconSize, draggingIconSize) / 2,
+                  feedback: SizedBox(
+                    width: draggingIconSize,
+                    height: draggingIconSize,
+                    child: FittedBox(
+                      fit: BoxFit.fill,
+                      child: Icon(view.icon),
+                    ),
+                  ),
+                  child: ListTile(
+                    mouseCursor: SystemMouseCursors.move,
+                    title: Text(view.name),
+                    trailing: Icon(view.icon),
+                  ),
+                ),
+            ],
+          ),
+          Draggable<DashboardView>(
+            data: DashboardView.blank,
+            dragAnchorStrategy: (draggable, context, position) =>
+                const Offset(draggingIconSize, draggingIconSize) / 2,
+            feedback: const SizedBox(
+              width: 100,
+              height: 100,
+              child: FittedBox(
+                fit: BoxFit.fill,
+                child: Icon(Icons.delete),
               ),
             ),
-          const PopupMenuDivider(),
-          const PopupMenuItem(enabled: false, child: Text("Controls")),
-          for (final view in DashboardView.uiViews)
-            PopupMenuItem(
-              value: view,
-              child: Text(view.name),
+            child: const ListTile(
+              mouseCursor: SystemMouseCursors.move,
+              title: Text("Remove View"),
+              trailing: Icon(Icons.delete),
             ),
+          ),
         ],
       );
 }
@@ -81,6 +126,9 @@ class DashboardView {
   /// The name of the view.
   final String name;
 
+  /// The icon used to represent the view
+  final IconData? icon;
+
   /// A unique key to use while selecting this view.
   final Object? key;
 
@@ -91,7 +139,8 @@ class DashboardView {
   final Key flutterKey;
 
   /// A const constructor.
-  DashboardView({required this.name, required this.builder, this.key})
+  DashboardView(
+      {required this.name, required this.builder, this.icon, this.key,})
       : flutterKey = UniqueKey();
 
   /// A list of views that represent all the camera feeds.
@@ -108,22 +157,35 @@ class DashboardView {
   /// A list of views that represent all non-camera feeds.
   static final List<DashboardView> uiViews = [
     DashboardView(
-        name: Routes.science,
-        builder: (context, index) => SciencePage(index: index),),
+      name: Routes.science,
+      icon: Icons.science,
+      builder: (context, index) => SciencePage(index: index),
+    ),
     DashboardView(
-        name: Routes.autonomy,
-        builder: (context, index) => MapPage(index: index),),
+      name: Routes.autonomy,
+      icon: Icons.map,
+      builder: (context, index) => MapPage(index: index),
+    ),
     DashboardView(
-        name: Routes.electrical,
-        builder: (context, index) => ElectricalPage(index: index),),
+      name: Routes.electrical,
+      icon: Icons.bolt,
+      builder: (context, index) => ElectricalPage(index: index),
+    ),
     DashboardView(
-        name: Routes.arm, builder: (context, index) => ArmPage(index: index),),
+      name: Routes.arm,
+      icon: Icons.precision_manufacturing_outlined,
+      builder: (context, index) => ArmPage(index: index),
+    ),
     DashboardView(
-        name: Routes.drive,
-        builder: (context, index) => DrivePage(index: index),),
+      name: Routes.drive,
+      icon: Icons.drive_eta,
+      builder: (context, index) => DrivePage(index: index),
+    ),
     DashboardView(
-        name: Routes.rocks,
-        builder: (context, index) => RocksPage(index: index),),
+      name: Routes.rocks,
+      icon: Icons.landslide,
+      builder: (context, index) => RocksPage(index: index),
+    ),
   ];
 
   /// A blank view.
@@ -133,12 +195,13 @@ class DashboardView {
       color: context.colorScheme.brightness == Brightness.light
           ? Colors.blueGrey
           : Colors.blueGrey[700]!,
-      child: Column(
+      child: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(children: [const Spacer(), ViewsSelector(index: index)]),
-          const Spacer(),
-          const Text("Choose a view"),
-          const Spacer(),
+          // Convoluted way to get all horizontal space filled
+          Row(children: [Spacer()]),
+          Text("Drag in a view"),
+          Row(children: [Spacer()]),
         ],
       ),
     ),
@@ -213,9 +276,11 @@ class ViewsModel extends Model {
 
   /// Replaces the view at the given index with the new view.
   void replaceView(int index, DashboardView newView) {
-    if (views.contains(newView)) {
+    if (views.contains(newView) && newView.name != Routes.blank) {
       models.home.setMessage(
-          severity: Severity.error, text: "That view is already on-screen",);
+        severity: Severity.error,
+        text: "That view is already on-screen",
+      );
       return;
     }
     views[index] = newView;
