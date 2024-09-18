@@ -28,16 +28,14 @@ class ArmPainterTop extends CustomPainter {
   Offset getShoulder(Size size) {
     const shoulderX = 0.0;
     const shoulderY = 0.0;
-    return Offset(toAbsolute(shoulderX) + size.width / 2,
-        -toAbsolute(shoulderY) + size.height / 2);
+    return Offset(toAbsolute(shoulderX) + size.width / 2, -toAbsolute(shoulderY) + size.height / 2);
   }
 
   /// Gets the location of the elbow joint.
   Offset getElbow(Size size) {
     final elbowX = cos(swivelAngle + pi / 2);
     final elbowY = sin(swivelAngle + pi / 2);
-    return Offset(toAbsolute(elbowX) + size.width / 2,
-        -toAbsolute(elbowY) + size.height / 2);
+    return Offset(toAbsolute(elbowX) + size.width / 2, -toAbsolute(elbowY) + size.height / 2);
   }
 
   @override
@@ -105,14 +103,10 @@ class ArmPainterSide extends CustomPainter {
     final gripperX = length * gripperLength * cos(a3) + wristX;
     final gripperY = length * gripperLength * sin(a3) + wristY;
 
-    final shoulderJoint = Offset(toAbsolute(shoulderX) + size.width / 2,
-        -toAbsolute(shoulderY) + size.height);
-    final elbowJoint = Offset(
-        toAbsolute(elbowX) + size.width / 2, -toAbsolute(elbowY) + size.height);
-    final wristJoint = Offset(
-        toAbsolute(wristX) + size.width / 2, -toAbsolute(wristY) + size.height);
-    final gripLocation = Offset(toAbsolute(gripperX) + size.width / 2,
-        -toAbsolute(gripperY) + size.height);
+    final shoulderJoint = Offset(toAbsolute(shoulderX) + size.width / 2, -toAbsolute(shoulderY) + size.height);
+    final elbowJoint = Offset(toAbsolute(elbowX) + size.width / 2, -toAbsolute(elbowY) + size.height);
+    final wristJoint = Offset(toAbsolute(wristX) + size.width / 2, -toAbsolute(wristY) + size.height);
+    final gripLocation = Offset(toAbsolute(gripperX) + size.width / 2, -toAbsolute(gripperY) + size.height);
     return (
       shoulder: shoulderJoint,
       elbow: elbowJoint,
@@ -182,8 +176,7 @@ class ArmPainterSide extends CustomPainter {
   }
 
   /// Paints the arm given its joint positions.
-  void paintArm(Canvas canvas, Size size, ArmCoordinates coordinates,
-      {double opacity = 1}) {
+  void paintArm(Canvas canvas, Size size, ArmCoordinates coordinates, {double opacity = 1}) {
     final points = [
       coordinates.shoulder,
       coordinates.elbow,
