@@ -66,8 +66,11 @@ class ArmPainterSide extends CustomPainter {
   /// The view model to pull data from.
   ArmModel model;
 
+  /// Color to paint the radius in
+  Color radiusColor;
+  
   /// Constructor for the ArmPainterSide, takes in 3 angles
-  ArmPainterSide(this.model);
+  ArmPainterSide(this.model, this.radiusColor);
 
   /// The smaller screen dimension.
   late double screen;
@@ -130,7 +133,7 @@ class ArmPainterSide extends CustomPainter {
         paintArm(canvas, size, ikCoordinates, opacity: 0.5);
       }
       final radiusPaint = Paint()
-        ..color = Colors.black
+        ..color = radiusColor
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2;
       final radius1 = length * (shoulderLength + elbowLength);
@@ -278,7 +281,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
                 child: GestureDetector(
                   onTap: model.sendIK,
                   child: CustomPaint(
-                    painter: ArmPainterSide(model),
+                    painter: ArmPainterSide(model, context.colorScheme.onSurface),
                   ),
                 ),
               ),
