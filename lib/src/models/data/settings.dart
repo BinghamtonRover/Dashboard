@@ -22,8 +22,6 @@ class SettingsModel extends Model {
   /// The user's dashboard settings.
   DashboardSettings get dashboard => all.dashboard;
 
-  
-
 	@override
 	Future<void> init() async {
 		all = await services.files.readSettings();
