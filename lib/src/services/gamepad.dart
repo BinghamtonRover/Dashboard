@@ -139,7 +139,7 @@ class GamepadService extends Service {
   static const int numGamepads = 3;
 
   /// A list of all the [Gamepad]s the user has connected.
-  /// 
+  ///
   /// Non-connected gamepads are represented with [MockGamepad]s, which has the nice benefit of
   /// automatically handling the case where the user is on a non-supported platform.
   final List<Gamepad> gamepads = [
