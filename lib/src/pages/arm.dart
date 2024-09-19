@@ -136,10 +136,8 @@ class ArmPainterSide extends CustomPainter {
         ..strokeWidth = 2;
       final radius1 = length * (shoulderLength + elbowLength);
       final radius2 = length * (shoulderLength - elbowLength);
-      final rect1 =
-          Rect.fromCircle(center: coordinates.shoulder, radius: radius1);
-      final rect2 =
-          Rect.fromCircle(center: coordinates.shoulder, radius: radius2);
+      final rect1 = Rect.fromCircle(center: coordinates.shoulder, radius: radius1);
+      final rect2 = Rect.fromCircle(center: coordinates.shoulder, radius: radius2);
       canvas.drawArc(rect1, 0, -pi, false, radiusPaint);
       canvas.drawArc(rect2, 0, -pi, false, radiusPaint);
     }
@@ -284,8 +282,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
                 child: GestureDetector(
                   onTap: model.sendIK,
                   child: CustomPaint(
-                    painter:
-                        ArmPainterSide(model, context.colorScheme.onSurface),
+                    painter: ArmPainterSide(model, context.colorScheme.onSurface),
                   ),
                 ),
               ),
