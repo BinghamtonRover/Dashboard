@@ -14,32 +14,6 @@ class ViewsList extends StatelessWidget {
   /// A const constructor
   const ViewsList({super.key});
 
-  /// Get a widget for the camera status of the view
-  Widget getCameraStatus(DashboardView view) {
-    final name = view.key! as CameraName;
-    final status = models.video.feeds[name]!.details.status;
-    const size = 12.0;
-    return switch (status) {
-      CameraStatus.CAMERA_STATUS_UNDEFINED =>
-        const Icon(Icons.question_mark, size: size),
-      CameraStatus.CAMERA_DISCONNECTED =>
-        const Icon(Icons.circle, size: size, color: Colors.black),
-      CameraStatus.CAMERA_ENABLED =>
-        const Icon(Icons.circle, size: size, color: Colors.green),
-      CameraStatus.CAMERA_LOADING =>
-        const Icon(Icons.circle, size: size, color: Colors.blueGrey),
-      CameraStatus.CAMERA_DISABLED =>
-        const Icon(Icons.circle, size: size, color: Colors.orange),
-      CameraStatus.CAMERA_NOT_RESPONDING =>
-        const Icon(Icons.circle, size: size, color: Colors.red),
-      CameraStatus.FRAME_TOO_LARGE =>
-        const Icon(Icons.circle, size: size, color: Colors.orange),
-      CameraStatus.CAMERA_HAS_NO_NAME =>
-        const Icon(Icons.circle, size: size, color: Colors.black),
-      _ => throw ArgumentError("Unrecognized status: $status"),
-    };
-  }
-
   @override
   Widget build(BuildContext context) => ListView(
         children: [
@@ -62,10 +36,9 @@ class ViewsList extends StatelessWidget {
                   child: ListTile(
                     mouseCursor: SystemMouseCursors.move,
                     title: Text(view.name),
-                    leading: (models.sockets.video.isConnected)
-                        ? getCameraStatus(view)
-                        : null,
-                    trailing: const Icon(Icons.camera_alt),
+                    trailing: (models.sockets.video.isConnected)
+                        ? ViewsSelector.getCameraStatus(view)
+                        : const Icon(Icons.signal_wifi_off),
                   ),
                 ),
             ],
@@ -112,6 +85,77 @@ class ViewsList extends StatelessWidget {
               trailing: Icon(Icons.delete),
             ),
           ),
+        ],
+      );
+}
+
+/// A button for the user to select a new view.
+class ViewsSelector extends StatelessWidget {
+  /// The index of this view.
+  final int index;
+
+  /// A const constructor.
+  const ViewsSelector({required this.index});
+
+  /// An icon to indicate the status of the given camera.
+  static Widget getCameraStatus(DashboardView view) {
+    final name = view.key! as CameraName;
+    final status = models.video.feeds[name]!.details.status;
+    const size = 12.0;
+    return switch (status) {
+      CameraStatus.CAMERA_STATUS_UNDEFINED =>
+        const Icon(Icons.question_mark, size: size),
+      CameraStatus.CAMERA_DISCONNECTED =>
+        const Icon(Icons.circle, size: size, color: Colors.black),
+      CameraStatus.CAMERA_ENABLED =>
+        const Icon(Icons.circle, size: size, color: Colors.green),
+      CameraStatus.CAMERA_LOADING =>
+        const Icon(Icons.circle, size: size, color: Colors.blueGrey),
+      CameraStatus.CAMERA_DISABLED =>
+        const Icon(Icons.circle, size: size, color: Colors.orange),
+      CameraStatus.CAMERA_NOT_RESPONDING =>
+        const Icon(Icons.circle, size: size, color: Colors.red),
+      CameraStatus.FRAME_TOO_LARGE =>
+        const Icon(Icons.circle, size: size, color: Colors.orange),
+      CameraStatus.CAMERA_HAS_NO_NAME =>
+        const Icon(Icons.circle, size: size, color: Colors.black),
+      _ => throw ArgumentError("Unrecognized status: $status"),
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) => PopupMenuButton<DashboardView>(
+        tooltip: "Select a feed",
+        icon: const Icon(Icons.expand_more),
+        onSelected: (view) => models.views.replaceView(index, view),
+        itemBuilder: (_) => [
+          const PopupMenuItem(enabled: false, child: Text("Cameras")),
+          for (final view in DashboardView.cameraViews)
+            PopupMenuItem(
+              value: view,
+              child: Row(
+                children: [
+                  if (models.sockets.video.isConnected) ...[
+                    getCameraStatus(view),
+                    const SizedBox(width: 8),
+                  ],
+                  Text(view.name),
+                ],
+              ),
+            ),
+          const PopupMenuDivider(),
+          const PopupMenuItem(enabled: false, child: Text("Controls")),
+          for (final view in DashboardView.uiViews)
+            PopupMenuItem(
+              value: view,
+              child: Row(
+                children: [
+                  Text(view.name),
+                  const Spacer(),
+                  Icon(view.icon),
+                ],
+              ),
+            ),
         ],
       );
 }
@@ -195,13 +239,14 @@ class DashboardView {
       color: context.colorScheme.brightness == Brightness.light
           ? Colors.blueGrey
           : Colors.blueGrey[700]!,
-      child: const Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Convoluted way to get all horizontal space filled
-          Row(children: [Spacer()]),
-          Text("Drag in a view"),
-          Row(children: [Spacer()]),
+          Row(children: [const Spacer(), ViewsSelector(index: index)]),
+          const Spacer(),
+          const Text("Drag in or choose a view"),
+          const Spacer(),
         ],
       ),
     ),

@@ -190,6 +190,7 @@ class SciencePage extends ReactiveWidget<ScienceModel> {
         onPressed: model.clear,
         tooltip: "Clear",
       ),
+      ViewsSelector(index: index),
     ],),
     Expanded(child: ListView(  // The main content of the page
       padding: const EdgeInsets.symmetric(horizontal: 4),
