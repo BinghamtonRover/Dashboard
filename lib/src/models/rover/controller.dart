@@ -48,37 +48,23 @@ class Controller extends Model {
 	/// Whether this controller is ready to use.
 	bool get isConnected => gamepad.isConnected;
 
+  /// Returns Whether another controller is set to the given mode.
+  bool otherControllerIs(OperatingMode mode) => models.rover.controllers
+    .any((other) => other.index != index && other.mode == mode);
+
 	/// Changes the current mode this [gamepad] is controlling, and chooses a new [RoverControls].
 	void setMode(OperatingMode? mode) {
 		if (mode == null) return;
-    if (
-      mode != OperatingMode.none
-      && models.rover.controllers.any(
-        (other) => other.index != index && other.mode == mode,
-      )
-    ) {
+    if (mode != OperatingMode.none && otherControllerIs(mode)) {
       models.home.setMessage(severity: Severity.error, text: "Another controller is set to that mode");
       return;
-    }
-    if (
-      mode == OperatingMode.drive
-      && models.rover.controllers.any(
-        (other) => other.index != index && other.mode == OperatingMode.modernDrive,
-      )
-    ) {
+    } else if (mode == OperatingMode.drive && otherControllerIs(OperatingMode.modernDrive)) {
       models.home.setMessage(severity: Severity.error, text: "Cannot use both tank and drive controls");
       return;
-    }
-    if (
-      mode == OperatingMode.modernDrive
-      && models.rover.controllers.any(
-        (other) => other.index != index && other.mode == OperatingMode.drive,
-      )
-    ) {
+    } else if (mode == OperatingMode.modernDrive && otherControllerIs(OperatingMode.drive)) {
       models.home.setMessage(severity: Severity.error, text: "Cannot use both tank and drive controls");
       return;
-    }
-    if (mode == OperatingMode.cameras && !models.settings.dashboard.splitCameras) {
+    } else if (mode == OperatingMode.cameras && !models.settings.dashboard.splitCameras) {
       models.home.setMessage(severity: Severity.error, text: "Enable split camera controls in the settings");
       return;
     }
