@@ -2,9 +2,11 @@ import "gamepad.dart";
 import "state.dart";
 import "package:win32_gamepad/win32_gamepad.dart" as win32;
 
+/// A Windows implementation of gamepads, using [`package:win32_gamepad`](https://pub.dev/packages/win32_gamepad).
 class Win32Gamepad extends Gamepad {
   final win32.Gamepad _winGamepad;
 
+  /// Links to a gamepad at the given index using Win32 APIs.
   Win32Gamepad(super.controllerIndex) :
     _winGamepad = win32.Gamepad(controllerIndex);
 
