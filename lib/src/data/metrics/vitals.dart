@@ -1,14 +1,18 @@
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
+/// Metrics about the vitals of the rover.
 class VitalsMetrics extends Metrics {
+  /// A const constructor.
   VitalsMetrics() : super(DriveData());
-  
+
   @override
   Version parseVersion(Message message) => Version(major: 0, minor: 0);
 
+  /// Provides access to the drive data.
   DriveData get drive => models.rover.metrics.drive.data;
 
+  /// The severity of the [DriveData.batteryVoltage] readings.
   Severity? get voltageSeverity {
     if (drive.batteryVoltage == 0) return null;
     if (drive.batteryVoltage <= 25) {
@@ -20,6 +24,7 @@ class VitalsMetrics extends Metrics {
     }
   }
 
+  /// The severity of the [DriveData.batteryTemperature] readings.
   Severity? get temperatureSeverity {
     if (drive.batteryTemperature == 0) {
       return null;

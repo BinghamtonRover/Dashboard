@@ -23,6 +23,7 @@ class CameraControls extends RoverControls {
   /// The angle of the rear swivel servo.
   double rearSwivel = 90;
 
+  /// The angle of the arm camera tilt.
   double armTilt = 90;
 
 	@override
