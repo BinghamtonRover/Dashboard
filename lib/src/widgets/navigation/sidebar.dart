@@ -11,118 +11,117 @@ class Sidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Material(
-        elevation: 20,
-        child: Container(
-          width: 310,
-          color: Theme.of(context).colorScheme.surface,
-          child: DefaultTabController(
-            length: 2,
-            child: Column(
-              children: [
-                TabBar(
-                  tabs: [
-                    Tab(child: Text("Metrics & Controls", style: TextStyle(color: context.colorScheme.onSurface)),),
-                    Tab(child: Text("Views", style: TextStyle(color: context.colorScheme.onSurface))),
-                  ],
-                ),
-                Expanded(
-                  child: TabBarView(
+    elevation: 20,
+    child: Container(
+      width: 310,
+      color: Theme.of(context).colorScheme.surface,
+      child: DefaultTabController(
+        length: 2,
+        child: Column(
+          children: [
+            TabBar(
+              tabs: [
+                Tab(child: Text("Metrics & Controls", style: TextStyle(color: context.colorScheme.onSurface)),),
+                Tab(child: Text("Views", style: TextStyle(color: context.colorScheme.onSurface))),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  ListView(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
                     children: [
-                      ListView(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        children: [
-                          Text(
-                            "Metrics",
-                            style: context.textTheme.displaySmall,
-                            textAlign: TextAlign.center,
-                          ),
-                          for (final metrics in models.rover.metrics.allMetrics)
-                            MetricsList(metrics),
-                          const Divider(),
-                          Text(
-                            "Controls",
-                            style: context.textTheme.displaySmall,
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 4),
-                          ControlsDisplay(
-                            controller: models.rover.controller1,
-                            gamepadNum: 1,
-                          ),
-                          ControlsDisplay(
-                            controller: models.rover.controller2,
-                            gamepadNum: 2,
-                          ),
-                          ControlsDisplay(
-                            controller: models.rover.controller3,
-                            gamepadNum: 3,
-                          ),
-                        ],
+                      Text(
+                        "Metrics",
+                        style: context.textTheme.displaySmall,
+                        textAlign: TextAlign.center,
                       ),
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ViewsCounter(),
-                              IconButton(
-                                icon: const Icon(Icons.aspect_ratio),
-                                tooltip: "Reset View Sizes",
-                                onPressed: models.views.resetSizes,
-                              ),
-                            ],
-                          ),
-                          Expanded(child: ViewsList()),
-                        ],
+                      for (final metrics in models.rover.metrics.allMetrics)
+                        MetricsList(metrics),
+                      const Divider(),
+                      Text(
+                        "Controls",
+                        style: context.textTheme.displaySmall,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 4),
+                      ControlsDisplay(
+                        controller: models.rover.controller1,
+                        gamepadNum: 1,
+                      ),
+                      ControlsDisplay(
+                        controller: models.rover.controller2,
+                        gamepadNum: 2,
+                      ),
+                      ControlsDisplay(
+                        controller: models.rover.controller3,
+                        gamepadNum: 3,
                       ),
                     ],
                   ),
-                ),
-              ],
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ViewsCounter(),
+                          IconButton(
+                            icon: const Icon(Icons.aspect_ratio),
+                            tooltip: "Reset View Sizes",
+                            onPressed: models.views.resetSizes,
+                          ),
+                        ],
+                      ),
+                      Expanded(child: ViewsList()),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 }
 
 /// Displays metrics of all sorts in a collapsible list.
 class MetricsList extends ReusableReactiveWidget<Metrics> {
-  /// A const constructor for this widget.
-  const MetricsList(super.model);
+/// A const constructor for this widget.
+const MetricsList(super.model);
 
   @override
   Widget build(BuildContext context, Metrics model) => ExpansionTile(
-        expandedCrossAxisAlignment: CrossAxisAlignment.start,
-        expandedAlignment: Alignment.centerLeft,
-        childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
-        title: Text(
-          model.name,
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: model.overallSeverity?.color,
-              ),
+    expandedCrossAxisAlignment: CrossAxisAlignment.start,
+    expandedAlignment: Alignment.centerLeft,
+    childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
+    title: Text(
+      model.name,
+      style: Theme.of(context).textTheme.headlineSmall
+        ?.copyWith(color: model.overallSeverity?.color),
+    ),
+    children: [
+      for (final MetricLine metric in model.allMetrics)
+        Text(
+          metric.text,
+          style: TextStyle(
+            color: metric.severity?.color,
+          ),
         ),
-        children: [
-          for (final MetricLine metric in model.allMetrics)
-            Text(
-              metric.text,
-              style: TextStyle(
-                color: metric.severity?.color,
-              ),
-            ),
-          const SizedBox(height: 4),
-        ],
-      );
+      const SizedBox(height: 4),
+    ],
+  );
 }
 
 /// Extension for COlors on Severity
 extension SeverityUtil on Severity {
   /// Fetch the color based on the severity
   Color? get color => switch (this) {
-        Severity.info => Colors.blueGrey,
-        Severity.warning => Colors.orange,
-        Severity.error => Colors.red,
-        Severity.critical => Colors.red.shade900,
-      };
+    Severity.info => Colors.blueGrey,
+    Severity.warning => Colors.orange,
+    Severity.error => Colors.red,
+    Severity.critical => Colors.red.shade900,
+  };
 }
 
 /// Displays controls for the given [Controller].
@@ -138,25 +137,25 @@ class ControlsDisplay extends ReusableReactiveWidget<Controller> {
 
   @override
   Widget build(BuildContext context, Controller model) => ExpansionTile(
-        expandedCrossAxisAlignment: CrossAxisAlignment.start,
-        expandedAlignment: Alignment.centerLeft,
-        childrenPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        title: Text(
-          model.controls.mode.name,
-          style: Theme.of(context).textTheme.titleLarge,
-          textAlign: TextAlign.start,
+    expandedCrossAxisAlignment: CrossAxisAlignment.start,
+    expandedAlignment: Alignment.centerLeft,
+    childrenPadding:
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    title: Text(
+      model.controls.mode.name,
+      style: Theme.of(context).textTheme.titleLarge,
+      textAlign: TextAlign.start,
+    ),
+    children: [
+      for (final entry in model.controls.buttonMapping.entries) ...[
+        Text(entry.key, style: Theme.of(context).textTheme.labelLarge),
+        Text(
+          "  ${entry.value}",
+          style: Theme.of(context).textTheme.titleMedium,
         ),
-        children: [
-          for (final entry in model.controls.buttonMapping.entries) ...[
-            Text(entry.key, style: Theme.of(context).textTheme.labelLarge),
-            Text(
-              "  ${entry.value}",
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ],
-        ],
-      );
+      ],
+    ],
+  );
 }
 
 /// A dropdown to select more or less views.

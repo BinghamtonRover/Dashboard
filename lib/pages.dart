@@ -50,5 +50,5 @@ class Routes {
   static const String rocks = "Rocks";
 
 	/// The name of the blank page.
-	static const String blank = "blank";
+	static const String blank = "Remove View";
 }
