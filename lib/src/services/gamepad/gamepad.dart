@@ -5,12 +5,12 @@ import "state.dart";
 import "windows.dart";
 
 abstract class Gamepad {
+  final int controllerIndex;
+  Gamepad(this.controllerIndex);
+
   factory Gamepad.forPlatform(int index) => Platform.isWindows
     ? Win32Gamepad(index)
     : MockGamepad(index);
-
-  final int controllerIndex;
-  Gamepad(this.controllerIndex);
 
   void vibrate({double intensity = 1});
   GamepadState? getState();

@@ -16,7 +16,7 @@ class Controller extends Model {
 	/// Reads the gamepad and controls the rover when triggered.
 	late final Timer gamepadTimer;
 
-	/// The index of the gamepad to read from. Does not match [Gamepad.controller].
+	/// The index of the gamepad to read from. Does not match [Gamepad.controllerIndex].
 	final int index;
 
 	/// Defines what the current controls are for the current mode.
