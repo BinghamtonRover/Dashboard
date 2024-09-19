@@ -1,8 +1,13 @@
+import "dart:io";
+
+import "mock.dart";
 import "state.dart";
 import "windows.dart";
 
 abstract class Gamepad {
-  factory Gamepad.forPlatform(int index) => Win32Gamepad(index);
+  factory Gamepad.forPlatform(int index) => Platform.isWindows
+    ? Win32Gamepad(index)
+    : MockGamepad(index);
 
   final int controllerIndex;
   Gamepad(this.controllerIndex);
