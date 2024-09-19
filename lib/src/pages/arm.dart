@@ -3,21 +3,24 @@ import "dart:math";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/src/data/protobuf.dart";
 import "package:rover_dashboard/src/models/view/arm.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A widget to paint the top-down view of the arm.
-/// 
+///
 /// This is simple, just shows a line pointing in the same direction as the arm's base. For a
 /// more complex side view, see [ArmPainterSide].
 class ArmPainterTop extends CustomPainter {
   /// The swivel angle of the arm.
   final double swivelAngle;
+
   /// Paints a top-down view of the arm.
   ArmPainterTop({required this.swivelAngle});
 
   /// The size of the smaller dimension of the screen.
   late double screen;
+
   /// Converts relative coordinates from [-1, 1] to screen coordinates.
   double toAbsolute(double relative) => relative / 2 * screen;
 
@@ -30,13 +33,13 @@ class ArmPainterTop extends CustomPainter {
 
   /// Gets the location of the elbow joint.
   Offset getElbow(Size size) {
-    final elbowX = cos(swivelAngle+pi/2);
-    final elbowY = sin(swivelAngle+pi/2);
+    final elbowX = cos(swivelAngle + pi / 2);
+    final elbowY = sin(swivelAngle + pi / 2);
     return Offset(toAbsolute(elbowX) + size.width / 2, -toAbsolute(elbowY) + size.height / 2);
   }
 
   @override
-  void paint(Canvas canvas, Size size){
+  void paint(Canvas canvas, Size size) {
     screen = min(size.width, size.height);
     final paint = Paint()
       ..color = Colors.orange
@@ -53,8 +56,8 @@ class ArmPainterTop extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
-/// A widget to show the profile view of the arm. 
-/// 
+/// A widget to show the profile view of the arm.
+///
 /// This viewpoint shits as the arm swivels, so that it is always looking at the shoulder,
 /// elbow, and wrist head-on. To visualize the swivel, see [ArmPainterTop].
 class ArmPainterSide extends CustomPainter {
@@ -63,7 +66,7 @@ class ArmPainterSide extends CustomPainter {
 
   /// Color to paint the radius in
   Color radiusColor;
-  
+
   /// Constructor for the ArmPainterSide, takes in 3 angles
   ArmPainterSide(this.model, this.radiusColor);
 
@@ -84,7 +87,7 @@ class ArmPainterSide extends CustomPainter {
 
   /// The total relative length of the arm.
   static const totalArmLength = shoulderLength + elbowLength;
-  
+
   /// Performs forward kinematics to get the coordinates of each joint from the angles.
   ArmCoordinates getArmCoordinates(ArmAngles angles, Size size) {
     // See: https://www.desmos.com/calculator/i8grld5pdu
@@ -104,9 +107,14 @@ class ArmPainterSide extends CustomPainter {
     final elbowJoint = Offset(toAbsolute(elbowX) + size.width / 2, -toAbsolute(elbowY) + size.height);
     final wristJoint = Offset(toAbsolute(wristX) + size.width / 2, -toAbsolute(wristY) + size.height);
     final gripLocation = Offset(toAbsolute(gripperX) + size.width / 2, -toAbsolute(gripperY) + size.height);
-    return (shoulder: shoulderJoint, elbow: elbowJoint, wrist: wristJoint, fingers: gripLocation);
+    return (
+      shoulder: shoulderJoint,
+      elbow: elbowJoint,
+      wrist: wristJoint,
+      fingers: gripLocation,
+    );
   }
-    
+
   @override
   void paint(Canvas canvas, Size size) {
     screen = min(size.width, size.height);
@@ -158,7 +166,11 @@ class ArmPainterSide extends CustomPainter {
     const cDenominator = 2 * a * b;
     final elbow = acos(cNumerator / cDenominator);
     if (shoulder.isNaN || elbow.isNaN) return null;
-    return (shoulder: shoulder, elbow: elbow, lift: -1 * (shoulder + elbow) + pi);
+    return (
+      shoulder: shoulder,
+      elbow: elbow,
+      lift: -1 * (shoulder + elbow) + pi,
+    );
   }
 
   /// Paints the arm given its joint positions.
@@ -171,11 +183,11 @@ class ArmPainterSide extends CustomPainter {
     ];
 
     final lineColors = [
-      Colors.red, 
-      Colors.green, 
+      Colors.red,
+      Colors.green,
       Colors.blue,
     ];
-    
+
     final firstCirclePaint = Paint()
       ..color = lineColors[0].withOpacity(opacity)
       ..style = PaintingStyle.fill;
@@ -195,21 +207,22 @@ class ArmPainterSide extends CustomPainter {
       final circlePaint = Paint()
         ..color = lineColors[i].withOpacity(opacity)
         ..style = PaintingStyle.fill;
-      canvas.drawCircle(points[i+1], screen / 50, circlePaint); 
+      canvas.drawCircle(points[i + 1], screen / 50, circlePaint);
     }
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
-  
+
 /// The view model for the arm inverse kinematics analysis page.
 class ArmPage extends ReactiveWidget<ArmModel> {
   /// The index of this view.
   final int index;
+
   /// A const constructor.
   const ArmPage({required this.index});
-  
+
   @override
   ArmModel createModel() => ArmModel();
 
@@ -217,23 +230,36 @@ class ArmPage extends ReactiveWidget<ArmModel> {
   Widget build(BuildContext context, ArmModel model) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      Row(children: [  // The header at the top
-        const SizedBox(width: 8),
-        Text("Arm Graphs", style: context.textTheme.headlineMedium), 
-        const SizedBox(width: 12),
-        const Spacer(),
-        const Text("Laser Light"),
-        Switch(
-          value: model.laser,
-          activeColor: Colors.red,
-          onChanged: (bool value) => model.switchLaser(),
-        ),
-        Text(model.laser ? "On" : "Off"),
-        const SizedBox(width: 8),
-        ViewsSelector(index: index),
-      ],),
+      Row(  // The header at the top
+        children: [
+          const SizedBox(width: 8),
+          Text("Arm Graphs", style: context.textTheme.headlineMedium),
+          const SizedBox(width: 12),
+          const Spacer(),
+          const Text("Laser Light"),
+          const SizedBox(width: 5),
+          Switch(
+            activeColor: Colors.red,
+            value: model.desiredLaserState,
+            onChanged: (value) => model.setLaser(laser: value),
+          ),
+          const SizedBox(width: 5),
+          if (model.desiredLaserState == model.gripper.laserState.toBool())
+            const Tooltip(
+              message: "The laser has been updated",
+              child: Icon(Icons.check, color: Colors.green),
+            )
+          else
+            const Tooltip(
+              message: "Waiting for the laser to respond",
+              child: Icon(Icons.sync),
+            ),
+          const SizedBox(width: 8),
+          ViewsSelector(index: index),
+        ],
+      ),
       const Text(
-        "Side View (click for IK)", 
+        "Side View (click for IK)",
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Colors.blue,
@@ -262,10 +288,9 @@ class ArmPage extends ReactiveWidget<ArmModel> {
         ),
       ),
       const SizedBox(height: 8),
-      // const Divider(),
       const SizedBox(height: 8),
       const Text(
-        "Top View", 
+        "Top View",
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Colors.blue,
