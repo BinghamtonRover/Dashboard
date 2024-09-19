@@ -87,8 +87,8 @@ class Sidebar extends StatelessWidget {
 
 /// Displays metrics of all sorts in a collapsible list.
 class MetricsList extends ReusableReactiveWidget<Metrics> {
-/// A const constructor for this widget.
-const MetricsList(super.model);
+  /// A const constructor for this widget.
+  const MetricsList(super.model);
 
   @override
   Widget build(BuildContext context, Metrics model) => ExpansionTile(
@@ -101,13 +101,10 @@ const MetricsList(super.model);
         ?.copyWith(color: model.overallSeverity?.color),
     ),
     children: [
-      for (final MetricLine metric in model.allMetrics)
-        Text(
-          metric.text,
-          style: TextStyle(
-            color: metric.severity?.color,
-          ),
-        ),
+      for (final MetricLine metric in model.allMetrics) Text(
+        metric.text,
+        style: TextStyle(color: metric.severity?.color),
+      ),
       const SizedBox(height: 4),
     ],
   );
@@ -139,8 +136,10 @@ class ControlsDisplay extends ReusableReactiveWidget<Controller> {
   Widget build(BuildContext context, Controller model) => ExpansionTile(
     expandedCrossAxisAlignment: CrossAxisAlignment.start,
     expandedAlignment: Alignment.centerLeft,
-    childrenPadding:
-        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    childrenPadding: const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 8,
+    ),
     title: Text(
       model.controls.mode.name,
       style: Theme.of(context).textTheme.titleLarge,
@@ -173,13 +172,9 @@ class ViewsCounter extends ReusableReactiveWidget<ViewsModel> {
         value: model.views.length,
         onChanged: model.setNumViews,
         items: [
-          for (int i = 1; i <= 4; i++) DropdownMenuItem(
-            value: i,
-            child: Center(child: Text(i.toString())),
-          ),
-          const DropdownMenuItem(
-            value: 8,
-            child: Center(child: Text("8")),
+          for (final option in [1, 2, 3, 4, 8]) DropdownMenuItem(
+            value: option,
+            child: Center(child: Text(option.toString())),
           ),
         ],
       ),
