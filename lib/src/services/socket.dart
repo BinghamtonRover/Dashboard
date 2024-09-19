@@ -5,13 +5,13 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
 /// A service to send and receive Protobuf messages over a UDP socket, using [ProtoSocket].
-/// 
+///
 /// This class monitors its connection to the given [device] by sending heartbeats periodically and
-/// logging the response (or lack thereof). To be notified of connection events, pass in 
-/// [onConnect] and [onDisconnect] callbacks. To be notified of incoming messages, pass in an 
+/// logging the response (or lack thereof). To be notified of connection events, pass in
+/// [onConnect] and [onDisconnect] callbacks. To be notified of incoming messages, pass in an
 /// [onMessage] callback that accepts a [WrappedMessage].
-///  
-/// To use this class: 
+///
+/// To use this class:
 /// - Call [init] to open the socket.
 /// - Check [connectionStrength] or [isConnected] for the connection to the given [device].
 /// - To send a message, call [sendMessage].
@@ -30,10 +30,10 @@ class DashboardSocket extends BurtUdpProtocol {
 
 	/// Listens for incoming messages on a UDP socket and sends heartbeats to the [device].
 	DashboardSocket({
-		required this.onConnect, 
-		required this.onDisconnect, 
+		required this.onConnect,
+		required this.onDisconnect,
 		required this.messageHandler,
-		required super.device, 
+		required super.device,
 	}) : super(
 		port: null,
     quiet: true,
@@ -71,7 +71,7 @@ class DashboardSocket extends BurtUdpProtocol {
 		sendMessage(Connect(sender: Device.DASHBOARD, receiver: device));
 		// 2. Wait a bit and count the number of responses
 		await Future<void>.delayed(heartbeatWaitDelay);
-		if (_heartbeats > 0) {			
+		if (_heartbeats > 0) {
 			connectionStrength.value += connectionIncrement * _heartbeats;
 		} else {
 			connectionStrength.value -= connectionIncrement;
@@ -79,7 +79,7 @@ class DashboardSocket extends BurtUdpProtocol {
 		// 3. Assess the current state
 		connectionStrength.value = connectionStrength.value.clamp(0, 1);
 		if (isConnected && !wasConnected) onConnect(device);
-		// if (wasConnected && !isConnected) onDisconnect(device);
+		if (wasConnected && !isConnected) onDisconnect(device);
 		_isChecking = false;
 	}
 

@@ -3,7 +3,7 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
 /// Modern drive controls, similar to most racing video games.
-/// 
+///
 /// Triggers are for acceleration, left stick for steering.
 /// Also includes camera controls on the D-pad and right stick.
 class ModernDriveControls extends RoverControls {
@@ -62,7 +62,6 @@ class ModernDriveControls extends RoverControls {
     }
     final direction = state.normalLeftX * 20;  // [-1, 1] --> [-45, 45]
     final (double left, double right) = getWheelSpeeds(speed, direction);
-    print("Left; ${speed * left}, Right: ${speed * right}");
     return [
       DriveCommand(left: speed * left, setLeft: true),
       DriveCommand(right: speed * right, setRight: true),
@@ -81,8 +80,8 @@ class ModernDriveControls extends RoverControls {
   @override
   List<Message> parseInputs(GamepadState state) => [
     ...getWheelCommands(state),
-    // if (!models.settings.dashboard.splitCameras)
-      // ...getCameraCommands(state),
+    if (!models.settings.dashboard.splitCameras)
+      ...getCameraCommands(state),
   ];
 
   /// Updates the throttle if either shoulder button is pressed.
@@ -104,15 +103,15 @@ class ModernDriveControls extends RoverControls {
     if (newFrontSwivel.abs() >= 0.05 || newFrontTilt.abs() >= 0.05) {
       // Update the front camera. Now, choose which axis
       if (newFrontSwivel.abs() > newFrontTilt.abs()) {
-        frontSwivel += newFrontSwivel * cameraSwivelIncrement; 
+        frontSwivel += newFrontSwivel * cameraSwivelIncrement;
       } else {
-        frontTilt += newFrontTilt * cameraTiltIncrement; 
+        frontTilt += newFrontTilt * cameraTiltIncrement;
       }
     } else if (newRearSwivel.abs() >= 0.05 || newRearTilt.abs() >= 0.05) {
       if (newRearSwivel.abs() > newRearTilt.abs()) {
-        rearSwivel += newRearSwivel * cameraSwivelIncrement; 
+        rearSwivel += newRearSwivel * cameraSwivelIncrement;
       } else {
-        rearTilt += newRearTilt * cameraTiltIncrement * -1; 
+        rearTilt += newRearTilt * cameraTiltIncrement * -1;
       }
     }
     // Clamp cameras

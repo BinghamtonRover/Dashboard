@@ -6,7 +6,7 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
 /// View model for the arm inverse kinematics page
-/// 
+///
 /// This view model gets its data from [RoverMetrics.arm] and [RoverMetrics.position].
 class ArmModel with ChangeNotifier{
   /// The [Metrics] model for arm data.
@@ -54,13 +54,13 @@ class ArmModel with ChangeNotifier{
 
   /// The angles to send the arm to [mousePosition].
   ArmAngles? ikAngles;
-  
+
   /// Updates the position of the mouse to [mousePosition].
   void onHover(PointerHoverEvent event) {
     mousePosition = event.localPosition;
     notifyListeners();
   }
-  
+
   /// Clears [mousePosition].
   void cancelIK(_) {
     mousePosition = null;
@@ -77,8 +77,6 @@ class ArmModel with ChangeNotifier{
     final gripperCommand = GripperCommand(lift: liftCommand);
     models.messages.sendMessage(armCommand);
     models.messages.sendMessage(gripperCommand);
-    print(armCommand.toProto3Json());
-    print(gripperCommand.toProto3Json());
   }
 }
 

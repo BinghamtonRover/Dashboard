@@ -6,10 +6,10 @@ import "controls.dart";
 /// A [RoverControls] for the rover's front and rear cameras.
 class CameraControls extends RoverControls {
   /// How far to tilt the cameras each tick.
-  static const cameraTiltIncrement = -1 * 1;
+  static const cameraTiltIncrement = 1;
 
   /// How far to swivel the cameras each tick.
-  static const cameraSwivelIncrement = -1 * 1;
+  static const cameraSwivelIncrement = 1;
 
   /// The angle of the front tilt servo.
   double frontTilt = 90;
@@ -24,13 +24,13 @@ class CameraControls extends RoverControls {
   double rearSwivel = 90;
 
   double armTilt = 90;
-  
+
 	@override
 	OperatingMode get mode => OperatingMode.cameras;
 
 	@override
 	List<Message> parseInputs(GamepadState state) => [
-    // DriveCommand(frontTilt: frontSwivel),
+    DriveCommand(frontSwivel: frontSwivel),
     DriveCommand(frontTilt: frontTilt),
     DriveCommand(rearSwivel: rearSwivel),
     DriveCommand(rearTilt: rearTilt),
@@ -47,15 +47,15 @@ class CameraControls extends RoverControls {
     if (newFrontSwivel.abs() >= 0.05 || newFrontTilt.abs() >= 0.05) {
       // Update the front camera. Now, choose which axis
       if (newFrontSwivel.abs() > newFrontTilt.abs()) {
-        frontSwivel += newFrontSwivel * cameraSwivelIncrement; 
+        frontSwivel += newFrontSwivel * cameraSwivelIncrement;
       } else {
-        frontTilt += newFrontTilt * cameraTiltIncrement; 
+        frontTilt += newFrontTilt * cameraTiltIncrement;
       }
     } else if (newRearSwivel.abs() >= 0.05 || newRearTilt.abs() >= 0.05) {
       if (newRearSwivel.abs() > newRearTilt.abs()) {
-        rearSwivel += newRearSwivel * cameraSwivelIncrement; 
+        rearSwivel += newRearSwivel * cameraSwivelIncrement;
       } else {
-        rearTilt += newRearTilt * cameraTiltIncrement * -1; 
+        rearTilt += newRearTilt * cameraTiltIncrement * -1;
       }
     }
 
