@@ -228,89 +228,87 @@ class ArmPage extends ReactiveWidget<ArmModel> {
 
   @override
   Widget build(BuildContext context, ArmModel model) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Row(  // The header at the top
         children: [
-          Row(
-            children: [
-              // The header at the top
-              const SizedBox(width: 8),
-              Text("Arm Graphs", style: context.textTheme.headlineMedium),
-              const SizedBox(width: 12),
-              const Spacer(),
-              const Text("Laser Light"),
-              const SizedBox(width: 5),
-              Switch(
-                activeColor: Colors.red,
-                value: model.desiredLaserState,
-                onChanged: (value) => model.setLaser(laser: value),
-              ),
-              const SizedBox(width: 5),
-              if (model.desiredLaserState == model.gripper.laserState.toBool())
-                const Tooltip(
-                  message: "Laser state matches toggled state",
-                  child: Icon(Icons.check, color: Colors.green),
-                )
-              else
-                const Tooltip(
-                  message: "Laser state does not match toggled state",
-                  child: Icon(Icons.warning, color: Colors.red),
-                ),
-              const SizedBox(width: 8),
-              ViewsSelector(index: index),
-            ],
+          const SizedBox(width: 8),
+          Text("Arm Graphs", style: context.textTheme.headlineMedium),
+          const SizedBox(width: 12),
+          const Spacer(),
+          const Text("Laser Light"),
+          const SizedBox(width: 5),
+          Switch(
+            activeColor: Colors.red,
+            value: model.desiredLaserState,
+            onChanged: (value) => model.setLaser(laser: value),
           ),
-          const Text(
-            "Side View (click for IK)",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1,
+          const SizedBox(width: 5),
+          if (model.desiredLaserState == model.gripper.laserState.toBool())
+            const Tooltip(
+              message: "The laser has been updated",
+              child: Icon(Icons.check, color: Colors.green),
+            )
+          else
+            const Tooltip(
+              message: "Waiting for the laser to respond",
+              child: Icon(Icons.sync),
             ),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: Card(
-              margin: const EdgeInsets.all(16),
-              elevation: 16,
-              color: context.colorScheme.surfaceContainerHighest,
-              child: MouseRegion(
-                onHover: model.onHover,
-                onExit: model.cancelIK,
-                cursor: SystemMouseCursors.precise,
-                child: GestureDetector(
-                  onTap: model.sendIK,
-                  child: CustomPaint(
-                    painter: ArmPainterSide(model, context.colorScheme.onSurface),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          // const Divider(),
-          const SizedBox(height: 8),
-          const Text(
-            "Top View",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1,
-            ),
-          ),
-          Expanded(
-            child: Card(
-              margin: const EdgeInsets.all(16),
-              elevation: 16,
-              color: context.colorScheme.surfaceContainerHighest,
-              child: CustomPaint(
-                painter: ArmPainterTop(swivelAngle: model.arm.base.angle),
-              ),
-            ),
-          ),
+          const SizedBox(width: 8),
+          ViewsSelector(index: index),
         ],
-      );
+      ),
+      const Text(
+        "Side View (click for IK)",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1,
+        ),
+      ),
+      const SizedBox(height: 10),
+      Expanded(
+        child: Card(
+          margin: const EdgeInsets.all(16),
+          elevation: 16,
+          color: context.colorScheme.surfaceContainerHighest,
+          child: MouseRegion(
+            onHover: model.onHover,
+            onExit: model.cancelIK,
+            cursor: SystemMouseCursors.precise,
+            child: GestureDetector(
+              onTap: model.sendIK,
+              child: CustomPaint(
+                painter: ArmPainterSide(model, context.colorScheme.onSurface),
+              ),
+            ),
+          ),
+        ),
+      ),
+      const SizedBox(height: 8),
+      const SizedBox(height: 8),
+      const Text(
+        "Top View",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.blue,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1,
+        ),
+      ),
+      Expanded(
+        child: Card(
+          margin: const EdgeInsets.all(16),
+          elevation: 16,
+          color: context.colorScheme.surfaceContainerHighest,
+          child: CustomPaint(
+            painter: ArmPainterTop(swivelAngle: model.arm.base.angle),
+          ),
+        ),
+      ),
+    ],
+  );
 }
