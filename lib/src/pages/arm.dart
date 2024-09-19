@@ -77,13 +77,13 @@ class ArmPainterSide extends CustomPainter {
   double toAbsolute(double relative) => relative;
 
   /// The relative length of the shoulder-elbow segment.
-  static const shoulderLength = 1;
-
+  static const shoulderLength = 530/530;
+  
   /// The relative length of the elbow-wrist segment.
-  static const elbowLength = 0.5;
-
+  static const elbowLength = 440/530;
+  
   /// The relative length of the gripper.
-  static const gripperLength = 0.25;
+  static const gripperLength = 310/530;
 
   /// The total relative length of the arm.
   static const totalArmLength = shoulderLength + elbowLength;
