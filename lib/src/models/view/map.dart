@@ -153,8 +153,9 @@ class AutonomyModel with ChangeNotifier {
 	/// `(3, 2)` to get it there. That means we should also add `(3, 2)` to the obstacle's position
 	/// so it remains `(-1, -1)` away from the rover's new position, yielding `(4, 4)`.
 	void recenterRover() {
-    // final position = isPlayingBadApple ? GpsCoordinates() : roverPosition;
-    final position = isPlayingBadApple ? GpsCoordinates(latitude: (gridSize ~/ 2).toDouble(), longitude: (gridSize ~/ 2).toDouble()) : roverPosition;
+    final position = isPlayingBadApple
+      ? GpsCoordinates(latitude: (gridSize ~/ 2).toDouble(), longitude: (gridSize ~/ 2).toDouble())
+      : roverPosition;
 		final midpoint = ((gridSize - 1) / 2).floor();
 		final offsetX = midpoint - -1 * gpsToBlock(position.longitude);
 		final offsetY = midpoint - gpsToBlock(position.latitude);
@@ -234,7 +235,6 @@ class AutonomyModel with ChangeNotifier {
   }
 
   Future<void> _loadBadAppleFrame(_) async {
-    // final filename = "assets/bad_apple/image_480.jpg";
     final filename = "assets/bad_apple/image_$badAppleFrame.jpg";
     final buffer = await rootBundle.loadBuffer(filename);
     final codec = await instantiateImageCodecWithSize(buffer);

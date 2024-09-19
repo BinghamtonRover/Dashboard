@@ -6,10 +6,10 @@ import "controls.dart";
 /// A [RoverControls] for the rover's front and rear cameras.
 class CameraControls extends RoverControls {
   /// How far to tilt the cameras each tick.
-  static const cameraTiltIncrement = -1 * 1;
+  static const cameraTiltIncrement = 1;
 
   /// How far to swivel the cameras each tick.
-  static const cameraSwivelIncrement = -1 * 1;
+  static const cameraSwivelIncrement = 1;
 
   /// The angle of the front tilt servo.
   double frontTilt = 90;
@@ -31,7 +31,7 @@ class CameraControls extends RoverControls {
 
 	@override
 	List<Message> parseInputs(GamepadState state) => [
-    // DriveCommand(frontTilt: frontSwivel),
+    DriveCommand(frontSwivel: frontSwivel),
     DriveCommand(frontTilt: frontTilt),
     DriveCommand(rearSwivel: rearSwivel),
     DriveCommand(rearTilt: rearTilt),
