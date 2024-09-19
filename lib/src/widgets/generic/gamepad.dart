@@ -6,7 +6,7 @@ import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A widget to show the gamepad state and allow the user to switch its mode.
-/// 
+///
 /// - Clicking on the icon connects to the gamepad
 /// - The icon shows the battery level/connection of the gamepad
 /// - The dropdown menu allows the user to switch [OperatingMode]s
@@ -37,16 +37,16 @@ class GamepadButton extends ReusableReactiveWidget<Controller> {
         IconButton(
           icon: Stack(
             children: [
-              const Icon(Icons.sports_esports), 
+              const Icon(Icons.sports_esports),
               Positioned(
                 bottom: -2,
                 right: -2,
-                child: Text("${model.gamepadIndex + 1}", style: const TextStyle(fontSize: 12, color: Colors.white)),
+                child: Text("${model.index + 1}", style: const TextStyle(fontSize: 12, color: Colors.white)),
               ),
             ],
           ),
-          color: isDisabled(status) ? Colors.grey : model.isConnected 
-            ? getColor(model.gamepad.battery)
+          color: isDisabled(status) ? Colors.grey : model.isConnected
+            ? getColor(model.gamepad.batteryLevel)
             : Colors.black,
           constraints: const BoxConstraints(maxWidth: 36),
           onPressed: model.connect,

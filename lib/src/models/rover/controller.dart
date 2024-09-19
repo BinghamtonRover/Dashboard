@@ -17,16 +17,16 @@ class Controller extends Model {
 	late final Timer gamepadTimer;
 
 	/// The index of the gamepad to read from. Does not match [Gamepad.controller].
-	final int gamepadIndex;
+	final int index;
 
 	/// Defines what the current controls are for the current mode.
 	RoverControls controls;
 
 	/// Maps button presses on [gamepad] to [controls].
-	Controller(this.gamepadIndex, this.controls);
+	Controller(this.index, this.controls);
 
 	/// The gamepad to read from.
-	Gamepad get gamepad => services.gamepad.gamepads[gamepadIndex];
+	Gamepad get gamepad => services.gamepad.gamepads[index];
 
 	@override
 	Future<void> init() async {
@@ -54,7 +54,7 @@ class Controller extends Model {
     if (
       mode != OperatingMode.none
       && models.rover.controllers.any(
-        (other) => other.gamepadIndex != gamepadIndex && other.mode == mode,
+        (other) => other.index != index && other.mode == mode,
       )
     ) {
       models.home.setMessage(severity: Severity.error, text: "Another controller is set to that mode");
@@ -63,7 +63,7 @@ class Controller extends Model {
     if (
       mode == OperatingMode.drive
       && models.rover.controllers.any(
-        (other) => other.gamepadIndex != gamepadIndex && other.mode == OperatingMode.modernDrive,
+        (other) => other.index != index && other.mode == OperatingMode.modernDrive,
       )
     ) {
       models.home.setMessage(severity: Severity.error, text: "Cannot use both tank and drive controls");
@@ -72,7 +72,7 @@ class Controller extends Model {
     if (
       mode == OperatingMode.modernDrive
       && models.rover.controllers.any(
-        (other) => other.gamepadIndex != gamepadIndex && other.mode == OperatingMode.drive,
+        (other) => other.index != index && other.mode == OperatingMode.drive,
       )
     ) {
       models.home.setMessage(severity: Severity.error, text: "Cannot use both tank and drive controls");
@@ -89,8 +89,8 @@ class Controller extends Model {
 	}
 
 	/// Connects the [gamepad] to the user's device.
-	Future<void> connect() async { 
-		await services.gamepad.connect(gamepadIndex);
+	Future<void> connect() async {
+		services.gamepad.connect(index);
 		if (gamepad.isConnected) {
 			models.home.setMessage(severity: Severity.info, text: "Connected to gamepad");
 		} else {
@@ -104,10 +104,10 @@ class Controller extends Model {
 
 	/// Reads the gamepad, chooses commands, and sends them to the rover.
 	Future<void> _update([_]) async {
-		services.gamepad.update();
-		if (!gamepad.isConnected) return;
-		controls.updateState(gamepad.state);
-		final messages = controls.parseInputs(gamepad.state);
+    final state = gamepad.getState();
+    if (state == null) return;
+    controls.updateState(state);
+		final messages = controls.parseInputs(state);
 		for (final message in messages) {
       // print(message.toProto3Json());
 			models.messages.sendMessage(message);
