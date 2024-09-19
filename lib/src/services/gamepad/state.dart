@@ -2,10 +2,13 @@
 enum GamepadBatteryLevel {
   /// The battery is running low.
   low,
+
   /// The battery is at medium charge.
   medium,
+
   /// The battery is fully charged.
   full,
+
   /// The battery's charge is unknown.
   ///
   /// Either the device does not support battery readings, or the device
@@ -26,10 +29,13 @@ enum GamepadBatteryLevel {
 class GamepadState {
   /// Whether the A button was pressed.
   final bool buttonA;
+
   /// Whether the B button was pressed.
   final bool buttonB;
+
   /// Whether the X button was pressed.
   final bool buttonX;
+
   /// Whether the Y button was pressed.
   final bool buttonY;
 
@@ -69,19 +75,14 @@ class GamepadState {
     required this.buttonB,
     required this.buttonX,
     required this.buttonY,
-
     required this.buttonBack,
     required this.buttonStart,
-
     required this.normalTrigger,
     required this.normalShoulder,
-
     required this.normalLeftX,
     required this.normalLeftY,
-
     required this.normalRightX,
     required this.normalRightY,
-
     required this.normalDpadX,
     required this.normalDpadY,
   });
