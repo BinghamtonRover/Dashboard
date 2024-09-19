@@ -19,11 +19,14 @@ class RoverMetrics extends Model {
   /// Data from the HREI subsystem about the gripper.
   final gripper = GripperMetrics();
 
+  /// Vitals data from the rover.
+  final vitals = VitalsMetrics();
+
 	/// A list of all the metrics to iterate over.
 	///
 	/// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
 	/// when new data is received. As a getter, every time it is called it will use new data.
-	List<Metrics> get allMetrics => [position, drive, science, arm, gripper];
+	List<Metrics> get allMetrics => [vitals, position, drive, science, arm, gripper];
 
   /// Whether the given command is supported by the rover.
   bool isSupportedVersion(Message command) {

@@ -5,15 +5,15 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A widget to show the options for the logs page.
-/// 
+///
 /// This is separate from the logs display so that the menu doesn't flicker when new logs arrive.
 class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
   /// The view model for the whole page.
   final LogsViewModel viewModel;
-  
+
   /// Listens to the view model without disposing it.
   LogsOptions(this.viewModel) : super(viewModel.options);
-  
+
   @override
   Widget build(BuildContext context, LogsOptionsViewModel model) => Wrap(
     runAlignment: WrapAlignment.center,
@@ -24,7 +24,7 @@ class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
       for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY])  // Reset devices
         SizedBox(width: 250, child: Card(
           child: ListTile(
-            onTap: () => model.resetDevice(device), 
+            onTap: () => model.resetDevice(device),
             leading: const Icon(Icons.restart_alt),
             title: Text("Reset the ${device.humanName}"),
             subtitle: const Text("The device will reboot"),
@@ -38,7 +38,7 @@ class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
           viewModel.update();
         },
         dropdownMenuEntries: [
-          for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY, null]) 
+          for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY, null])
             DropdownMenuEntry(label: device?.humanName ?? "All", value: device),
         ],
       ),
@@ -71,7 +71,7 @@ class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
 }
 
 /// The logs page, containing the [LogsOptions] and [LogsBody] widgets.
-/// 
+///
 /// This page lets the user view logs, set filters, and reboot the rover.
 class LogsPage extends StatefulWidget {
   @override
@@ -114,7 +114,7 @@ class LogsState extends State<LogsPage> {
               ],),
               actions: [
                 ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(), 
+                  onPressed: () => Navigator.of(context).pop(),
                   child: const Text("Close"),
                 ),
               ],
@@ -138,15 +138,15 @@ class LogsState extends State<LogsPage> {
 }
 
 /// The widget that actually contains the logs for the page.
-/// 
+///
 /// This is a separate widget to prevent updating the rest of the page when new logs come in.
 class LogsBody extends ReusableReactiveWidget<LogsViewModel> {
   /// Listens to the given view model.
   const LogsBody(super.model);
-  
+
   @override
-  Widget build(BuildContext context, LogsViewModel model) => model.logs.isEmpty 
-    ? const Center(child: Text("No logs yet")) 
+  Widget build(BuildContext context, LogsViewModel model) => model.logs.isEmpty
+    ? const Center(child: Text("No logs yet"))
     : ListView.builder(
       itemCount: model.logs.length,
       controller: model.scrollController,
