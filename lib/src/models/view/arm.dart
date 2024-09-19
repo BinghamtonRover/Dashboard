@@ -21,8 +21,9 @@ class ArmModel with ChangeNotifier {
   /// The state that the user wants to set the laser to
   bool desiredLaserState = false;
 
-  /// Starts a timer to refresh at 100 Hz.
+  /// Sets the initial laser state to the current laser state and starts a timer to refresh at 100 Hz.
   ArmModel() {
+    desiredLaserState = gripper.laserState.toBool();
     timer = Timer.periodic(const Duration(milliseconds: 10), _update);
   }
 
