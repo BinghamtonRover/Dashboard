@@ -25,7 +25,7 @@ class Win32Gamepad extends Gamepad {
 
   @override
   GamepadBatteryLevel get batteryLevel => switch (_winGamepad.gamepadBatteryInfo.batteryLevel) {
-    win32.GamepadBatteryLevel.empty => GamepadBatteryLevel.empty,
+    win32.GamepadBatteryLevel.empty => GamepadBatteryLevel.low,
     win32.GamepadBatteryLevel.full => GamepadBatteryLevel.full,
     win32.GamepadBatteryLevel.low => GamepadBatteryLevel.low,
     win32.GamepadBatteryLevel.medium => GamepadBatteryLevel.medium,

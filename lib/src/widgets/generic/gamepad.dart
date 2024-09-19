@@ -17,7 +17,6 @@ class GamepadButton extends ReusableReactiveWidget<Controller> {
 	/// Returns a color representing the gamepad's battery level.
 	Color getColor(GamepadBatteryLevel battery) {
 		switch (battery) {
-			case GamepadBatteryLevel.empty: return Colors.red;
 			case GamepadBatteryLevel.low: return Colors.red;
 			case GamepadBatteryLevel.medium: return Colors.orange;
 			case GamepadBatteryLevel.full: return Colors.green;
