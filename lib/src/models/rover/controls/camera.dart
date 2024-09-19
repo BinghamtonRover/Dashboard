@@ -23,8 +23,9 @@ class CameraControls extends RoverControls {
   /// The angle of the rear swivel servo.
   double rearSwivel = 90;
 
+  /// The angle of the camera attached to the arm.
   double armTilt = 90;
-  
+
 	@override
 	OperatingMode get mode => OperatingMode.cameras;
 
@@ -47,15 +48,15 @@ class CameraControls extends RoverControls {
     if (newFrontSwivel.abs() >= 0.05 || newFrontTilt.abs() >= 0.05) {
       // Update the front camera. Now, choose which axis
       if (newFrontSwivel.abs() > newFrontTilt.abs()) {
-        frontSwivel += newFrontSwivel * cameraSwivelIncrement; 
+        frontSwivel += newFrontSwivel * cameraSwivelIncrement;
       } else {
-        frontTilt += newFrontTilt * cameraTiltIncrement; 
+        frontTilt += newFrontTilt * cameraTiltIncrement;
       }
     } else if (newRearSwivel.abs() >= 0.05 || newRearTilt.abs() >= 0.05) {
       if (newRearSwivel.abs() > newRearTilt.abs()) {
-        rearSwivel += newRearSwivel * cameraSwivelIncrement; 
+        rearSwivel += newRearSwivel * cameraSwivelIncrement;
       } else {
-        rearTilt += newRearTilt * cameraTiltIncrement * -1; 
+        rearTilt += newRearTilt * cameraTiltIncrement * -1;
       }
     }
 
@@ -74,5 +75,6 @@ class CameraControls extends RoverControls {
 	Map<String, String> get buttonMapping => {
 		"Front camera": "Right trigger + joystick",
 		"Rear camera": "Left trigger + joystick",
+    "Arm camera": "D-pad up/down",
 	};
 }

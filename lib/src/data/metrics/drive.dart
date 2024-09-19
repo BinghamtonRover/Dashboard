@@ -38,7 +38,7 @@ class DriveMetrics extends Metrics<DriveData> {
   }
 
 	@override
-	List<MetricLine> get allMetrics => [  
+	List<MetricLine> get allMetrics => [
 		MetricLine("Throttle: ${data.throttle.toStringAsFixed(2)}", severity: throttleSeverity),
 		MetricLine("Left: ${data.left.toStringAsFixed(2)}"),
 		MetricLine("Right: ${data.right.toStringAsFixed(2)}"),
@@ -65,10 +65,9 @@ class DriveMetrics extends Metrics<DriveData> {
     if(value.hasMiddleRight()) data.middleRight = value.middleRight;
     if(value.hasBackRight()) data.backRight = value.backRight;
     if (value.color != ProtoColor.PROTO_COLOR_UNDEFINED) data.color = value.color;
-    if (value.batteryTemperature != 0) data.batteryTemperature = value.batteryTemperature;
 
     if (
-      (data.throttle > 0.05 && oldThrottle < 0.05) || 
+      (data.throttle > 0.05 && oldThrottle < 0.05) ||
       (data.throttle < 0.05 && oldThrottle > 0.05)
     ) {
       models.rover.controllers.firstWhereOrNull(
@@ -83,7 +82,7 @@ class DriveMetrics extends Metrics<DriveData> {
 
   /// The charge of the battery, as a percentage.
   double get batteryPercentage => (batteryVoltage - 24) / 6;  // 24-30 as a percentage
-  
+
   @override
   Version get supportedVersion => Version(major: 1);
 

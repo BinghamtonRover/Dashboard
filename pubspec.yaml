@@ -1,7 +1,7 @@
 name: rover_dashboard
 description: Graphical application for remotely operating the rover.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 2024.5.28+12  # Always increment the build number, never go down, even on new versions
+version: 2024.9.18+13  # Always increment the build number, never go down, even on new versions
 
 environment:
   sdk: ^3.2.2
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  burt_network: 
+  burt_network:
     git: https://github.com/BinghamtonRover/Networking.git
   file_picker: ^8.0.0+1
   fl_chart: ^0.68.0
@@ -38,22 +38,22 @@ dev_dependencies:
 #   Run: flutter pub run icons_launcher:create
 icons_launcher:
   image_path: "assets/logo.png"
-  platforms: 
+  platforms:
     android:
       enable: true
-    windows: 
+    windows:
       enable: true
 
 flutter_launcher_icons:
   image_path: "assets/logo.png"
   android: true
-  windows: 
+  windows:
     generate: true
 
 # Builds a Windows .msix App Installer file for the Dashboard.
 #   Command: dart run msix:create
 msix_config:
-  msix_version: 2024.5.28.12
+  msix_version: 2024.9.18.13
   display_name: Dashboard
   publisher_display_name: Binghamton University Rover Team
   identity_name: edu.binghamton.rover
@@ -68,7 +68,7 @@ msix_config:
 # The following section is specific to Flutter packages.
 flutter:
   uses-material-design: true
-  assets: 
+  assets:
     - assets/
     - assets/rover.png
     - assets/clippy.webp
@@ -76,3 +76,4 @@ flutter:
     - assets/bad_apple_thumbnail.webp
     - assets/bad_apple2.mp3
     - assets/binghamton2.wav
+    - assets/Rocks_Minerals_Images/

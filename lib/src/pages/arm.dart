@@ -7,7 +7,7 @@ import "package:rover_dashboard/src/models/view/arm.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A widget to paint the top-down view of the arm.
-/// 
+///
 /// This is simple, just shows a line pointing in the same direction as the arm's base. For a
 /// more complex side view, see [ArmPainterSide].
 class ArmPainterTop extends CustomPainter {
@@ -53,16 +53,19 @@ class ArmPainterTop extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
-/// A widget to show the profile view of the arm. 
-/// 
+/// A widget to show the profile view of the arm.
+///
 /// This viewpoint shits as the arm swivels, so that it is always looking at the shoulder,
 /// elbow, and wrist head-on. To visualize the swivel, see [ArmPainterTop].
 class ArmPainterSide extends CustomPainter {
   /// The view model to pull data from.
   ArmModel model;
-  
-  /// Constructor for the ArmPainterSide, takes in 3 angles
-  ArmPainterSide(this.model);
+
+  /// Color to paint the radius in
+  Color radiusColor;
+
+  /// Constructor for the ArmPainterSide
+  ArmPainterSide(this.model, this.radiusColor);
 
   /// The smaller screen dimension.
   late double screen;
@@ -72,18 +75,19 @@ class ArmPainterSide extends CustomPainter {
 
   /// The relative length of the shoulder-elbow segment.
   static const shoulderLength = 530/530;
-  
+
   /// The relative length of the elbow-wrist segment.
   static const elbowLength = 440/530;
-  
+
   /// The relative length of the gripper.
   static const gripperLength = 310/530;
 
   /// The total relative length of the arm.
   static const totalArmLength = shoulderLength + elbowLength;
-  
+
   /// Performs forward kinematics to get the coordinates of each joint from the angles.
   ArmCoordinates getArmCoordinates(ArmAngles angles, Size size) {
+
     // See: https://www.desmos.com/calculator/i8grld5pdu
     const shoulderX = 0.0;
     const shoulderY = 0.0;
@@ -103,7 +107,7 @@ class ArmPainterSide extends CustomPainter {
     final gripLocation = Offset(toAbsolute(gripperX) + size.width / 2, -toAbsolute(gripperY) + size.height);
     return (shoulder: shoulderJoint, elbow: elbowJoint, wrist: wristJoint, fingers: gripLocation);
   }
-    
+
   @override
   void paint(Canvas canvas, Size size) {
     screen = min(size.width, size.height);
@@ -120,7 +124,7 @@ class ArmPainterSide extends CustomPainter {
         paintArm(canvas, size, ikCoordinates, opacity: 0.5);
       }
       final radiusPaint = Paint()
-        ..color = Colors.black
+        ..color = radiusColor
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2;
       final radius1 = length * (shoulderLength + elbowLength);
@@ -168,11 +172,11 @@ class ArmPainterSide extends CustomPainter {
     ];
 
     final lineColors = [
-      Colors.red, 
-      Colors.green, 
+      Colors.red,
+      Colors.green,
       Colors.blue,
     ];
-    
+
     final firstCirclePaint = Paint()
       ..color = lineColors[0].withOpacity(opacity)
       ..style = PaintingStyle.fill;
@@ -192,21 +196,22 @@ class ArmPainterSide extends CustomPainter {
       final circlePaint = Paint()
         ..color = lineColors[i].withOpacity(opacity)
         ..style = PaintingStyle.fill;
-      canvas.drawCircle(points[i+1], screen / 50, circlePaint); 
+      canvas.drawCircle(points[i+1], screen / 50, circlePaint);
     }
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
-  
+
 /// The view model for the arm inverse kinematics analysis page.
 class ArmPage extends ReactiveWidget<ArmModel> {
   /// The index of this view.
   final int index;
+
   /// A const constructor.
   const ArmPage({required this.index});
-  
+
   @override
   ArmModel createModel() => ArmModel();
 
@@ -216,7 +221,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
     children: [
       Row(children: [  // The header at the top
         const SizedBox(width: 8),
-        Text("Arm Graphs", style: context.textTheme.headlineMedium), 
+        Text("Arm Graphs", style: context.textTheme.headlineMedium),
         const SizedBox(width: 12),
         const Spacer(),
         const Text("Laser Light"),
@@ -230,7 +235,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
         ViewsSelector(index: index),
       ],),
       const Text(
-        "Side View (click for IK)", 
+        "Side View (click for IK)",
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Colors.blue,
@@ -252,17 +257,15 @@ class ArmPage extends ReactiveWidget<ArmModel> {
             child: GestureDetector(
               onTap: model.sendIK,
               child: CustomPaint(
-                painter: ArmPainterSide(model),
+                painter: ArmPainterSide(model, context.colorScheme.onSurface),
               ),
             ),
           ),
         ),
       ),
-      const SizedBox(height: 8),
-      // const Divider(),
-      const SizedBox(height: 8),
+      const SizedBox(height: 16),
       const Text(
-        "Top View", 
+        "Top View",
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Colors.blue,
