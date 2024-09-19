@@ -23,6 +23,7 @@ class ViewsList extends StatelessWidget {
               for (final view in DashboardView.cameraViews)
                 Draggable<DashboardView>(
                   data: view,
+                  affinity: Axis.horizontal,
                   dragAnchorStrategy: (draggable, context, position) =>
                       const Offset(draggingIconSize, draggingIconSize) / 2,
                   feedback: const SizedBox(
@@ -49,6 +50,7 @@ class ViewsList extends StatelessWidget {
               for (final view in DashboardView.uiViews)
                 Draggable<DashboardView>(
                   data: view,
+                  affinity: Axis.horizontal,
                   dragAnchorStrategy: (draggable, context, position) =>
                       const Offset(draggingIconSize, draggingIconSize) / 2,
                   feedback: SizedBox(
@@ -69,6 +71,7 @@ class ViewsList extends StatelessWidget {
           ),
           Draggable<DashboardView>(
             data: DashboardView.blank,
+            affinity: Axis.horizontal,
             dragAnchorStrategy: (draggable, context, position) =>
                 const Offset(draggingIconSize, draggingIconSize) / 2,
             feedback: const SizedBox(
