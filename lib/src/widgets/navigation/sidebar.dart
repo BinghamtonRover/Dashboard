@@ -72,9 +72,7 @@ class Sidebar extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const Expanded(
-                            child: ViewsList(),
-                          ),
+                          Expanded(child: ViewsList()),
                         ],
                       ),
                     ],

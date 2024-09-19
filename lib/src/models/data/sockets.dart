@@ -10,7 +10,7 @@ class Sockets extends Model {
 	/// A UDP socket for sending and receiving Protobuf data.
 	late final data = DashboardSocket(
 		device: Device.SUBSYSTEMS,
-		onConnect: onConnect, 
+		onConnect: onConnect,
 		onDisconnect: onDisconnect,
 		messageHandler: models.messages.onMessage,
 	);
@@ -18,7 +18,7 @@ class Sockets extends Model {
 	/// A UDP socket for receiving video.
 	late final video = DashboardSocket(
 		device: Device.VIDEO,
-		onConnect: onConnect, 
+		onConnect: onConnect,
 		onDisconnect: onDisconnect,
 		messageHandler: models.messages.onMessage,
 	);
@@ -26,7 +26,7 @@ class Sockets extends Model {
 	/// A UDP socket for controlling autonomy.
 	late final autonomy = DashboardSocket(
 		device: Device.AUTONOMY,
-		onConnect: onConnect, 
+		onConnect: onConnect,
 		onDisconnect: onDisconnect,
 		messageHandler: models.messages.onMessage,
 	);
@@ -55,8 +55,8 @@ class Sockets extends Model {
 
 	@override
 	Future<void> init() async {
-		for (final socket in sockets) { 
-			await socket.init(); 
+		for (final socket in sockets) {
+			await socket.init();
 		}
 		final level = Logger.level;
 		Logger.level = LogLevel.warning;
@@ -66,7 +66,7 @@ class Sockets extends Model {
 
 	@override
 	Future<void> dispose() async {
-		for (final socket in sockets) { 
+		for (final socket in sockets) {
 			await socket.dispose();
 		}
 		super.dispose();
@@ -81,6 +81,7 @@ class Sockets extends Model {
       models.rover.controller2.gamepad.pulse();
       models.rover.controller3.gamepad.pulse();
     }
+    notifyListeners();
 	}
 
 	/// Notifies the user when a device has disconnected.
@@ -88,6 +89,7 @@ class Sockets extends Model {
 		models.home.setMessage(severity: Severity.critical, text: "The ${device.humanName} has disconnected");
 		if (device == Device.SUBSYSTEMS) models.rover.status.value = RoverStatus.DISCONNECTED;
 		if (device == Device.VIDEO) models.video.reset();
+    notifyListeners();
 	}
 
 	/// Set the right IP addresses for the rover or tank.
@@ -99,11 +101,11 @@ class Sockets extends Model {
 	}
 
 	/// Resets all the sockets.
-	/// 
+	///
 	/// When working with localhost, even UDP sockets can throw errors when the remote is unreachable.
 	/// Resetting the sockets will bypass these errors.
 	Future<void> reset() async {
-		for (final socket in sockets) { 
+		for (final socket in sockets) {
 			await socket.dispose();
 			await socket.init();
 		}
