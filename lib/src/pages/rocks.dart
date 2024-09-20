@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A view model to control which rocks are shown on screen.

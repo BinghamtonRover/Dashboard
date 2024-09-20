@@ -22,8 +22,6 @@ class Footer extends StatelessWidget {
         MessageDisplay(showLogs: showLogs),
         Wrap(  // Groups these elements together even when wrapping
           children: [
-            ViewsCounter(),
-            const SizedBox(width: 8),
             GamepadButton(models.rover.controller1),
             const SizedBox(width: 8),
             GamepadButton(models.rover.controller2),
@@ -191,36 +189,6 @@ class StatusIcons extends StatelessWidget {
       ),
 			const SizedBox(width: 4),
 		],
-	);
-}
-
-/// A dropdown to select more or less views.
-class ViewsCounter extends ReusableReactiveWidget<ViewsModel> {
-	/// Provides a const constructor for this widget.
-	ViewsCounter() : super(models.views);
-
-	@override
-	Widget build(BuildContext context, ViewsModel model) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      const Text("Views:"),
-      const SizedBox(width: 4),
-      DropdownButton<int>(
-        iconEnabledColor: Colors.black,
-        value: model.views.length,
-        onChanged: model.setNumViews,
-        items: [
-          for (int i = 1; i <= 4; i++) DropdownMenuItem(
-            value: i,
-            child: Center(child: Text(i.toString())),
-          ),
-          const DropdownMenuItem(
-            value: 8,
-            child: Center(child: Text("8")),
-          ),
-        ],
-      ),
-    ],
 	);
 }
 
