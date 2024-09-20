@@ -16,6 +16,7 @@ export "src/pages/rocks.dart";
 export "src/pages/settings.dart";
 export "src/pages/splash.dart";
 export "src/pages/electrical.dart";
+export "src/pages/view.dart";
 
 /// The names of all the pages available in the app.
 ///
@@ -49,5 +50,5 @@ class Routes {
   static const String rocks = "Rocks";
 
 	/// The name of the blank page.
-	static const String blank = "blank";
+	static const String blank = "Remove View";
 }

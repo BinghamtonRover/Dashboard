@@ -2,7 +2,6 @@ import "dart:math";
 
 import "package:flutter/material.dart";
 
-import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/src/data/protobuf.dart";
 import "package:rover_dashboard/src/models/view/arm.dart";
 import "package:rover_dashboard/widgets.dart";
@@ -78,10 +77,10 @@ class ArmPainterSide extends CustomPainter {
 
   /// The relative length of the shoulder-elbow segment.
   static const shoulderLength = 530/530;
-  
+
   /// The relative length of the elbow-wrist segment.
   static const elbowLength = 440/530;
-  
+
   /// The relative length of the gripper.
   static const gripperLength = 310/530;
 
