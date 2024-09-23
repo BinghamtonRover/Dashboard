@@ -1,3 +1,5 @@
+import "package:rover_dashboard/src/services/gamepad/sdl.dart";
+
 import "../service.dart";
 import "gamepad.dart";
 import "mock.dart";
@@ -43,9 +45,10 @@ class GamepadService extends Service {
 
   @override
   Future<void> init() async {
+    print(initSdl());
     gamepads = List.generate(maxGamepads, (i) => MockGamepad(i));
     for (var i = 0; i < maxGamepads; i++) {
-      connect(i);
+      await connect(i);
     }
   }
 
@@ -58,19 +61,28 @@ class GamepadService extends Service {
   /// For example, assume the OS provides gamepads at indexes 0 and 2. There is already an operator
   /// connected to gamepad 0. If the next operator (at index 1) wants to connect, this function will
   /// assign them the gamepad at index 2.
-  void connect(int operatorIndex) {
+  Future<void> connect(int operatorIndex) async {
+    if (gamepads[operatorIndex] is! MockGamepad) return;
     gamepads[operatorIndex] = MockGamepad(0);
     for (var osIndex = 0; osIndex < maxGamepads; osIndex++) {
-      print("Trying to connect $operatorIndex to $osIndex");
       if (osIndexes.contains(osIndex)) continue;
+      print("Trying to connect $operatorIndex to $osIndex");
       final gamepad = Gamepad.forPlatform(osIndex);
-      if (!gamepad.isConnected) continue;
+      await gamepad.init();
+      if (!gamepad.isConnected) { await gamepad.dispose(); continue; }
+      print("OS $osIndex is connected to gamepad $operatorIndex");
       gamepads[operatorIndex] = gamepad;
       gamepad.pulse();
+      print("New IDs: $osIndexes");
       return;
     }
+    print(gamepads[operatorIndex].isConnected);
   }
 
   @override
-  Future<void> dispose() async { }
+  Future<void> dispose() async {
+    for (final gamepad in gamepads) {
+      await gamepad.dispose();
+    }
+  }
 }

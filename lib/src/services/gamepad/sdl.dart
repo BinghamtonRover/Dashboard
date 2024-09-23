@@ -1,3 +1,4 @@
+import "dart:async";
 import "dart:ffi";
 import "package:ffi/ffi.dart";
 
@@ -6,10 +7,22 @@ import "package:sdl3/sdl3.dart" as sdl;
 import "gamepad.dart";
 import "state.dart";
 
+int initSdl() {
+  final result = sdl.sdlInit(sdl.SDL_INIT_GAMECONTROLLER | sdl.SDL_INIT_GAMEPAD);
+  sdl.sdlSetGamepadEventsEnabled(true);
+  Timer.periodic(Duration(milliseconds: 10), update);
+  return result;
+}
+
+  void update(_) {
+    sdl.sdlUpdateGamepads();
+  sdl.sdlUpdateJoysticks();
+  }
+
 class SdlGamepad extends Gamepad {
   static const sdlMaxRumble = 0xFFFF;
 
-  final Pointer<sdl.SdlGamepad> _sdlGamepad;
+  Pointer<sdl.SdlGamepad> _sdlGamepad;
   final _arena = Arena();
   late Pointer<Int32> _batteryPointer;
 
@@ -18,24 +31,35 @@ class SdlGamepad extends Gamepad {
 
   @override
   Future<void> init() async {
-    sdl.sdlSetGamepadEventsEnabled(true);
+    print("Have device: $_sdlGamepad");
+    // _sdlGamepad = sdl.sdlOpenGamepad(controllerIndex);
+    // print("Have device2: $_sdlGamepad");
     _batteryPointer = _arena<Int32>();
   }
+
+
 
   int _getRumbleIntensity(double intensity) =>
     (sdlMaxRumble * intensity).floor();
 
   @override
-  void vibrate({double intensity = 1}) => _sdlGamepad.rumble(
+  void vibrate({double intensity = 1}) {
+    _sdlGamepad.rumble(
     _getRumbleIntensity(intensity),
     _getRumbleIntensity(intensity),
     1000,
   );
+    sdl.sdlUpdateGamepads();
+
+  }
 
   @override
   GamepadBatteryLevel get batteryLevel {
     _sdlGamepad.getPowerInfo(_batteryPointer);
-    return GamepadBatteryLevel.fromPercent(_batteryPointer.value);
+    final percentage = _batteryPointer.value;
+    if (percentage == -1) return GamepadBatteryLevel.full;
+    // print("  Battery is ${_batteryPointer.value}");
+    return GamepadBatteryLevel.fromPercent(percentage);
   }
 
   @override
@@ -48,7 +72,10 @@ class SdlGamepad extends Gamepad {
   bool get isConnected => _sdlGamepad.connected();
 
   @override
-  GamepadState getState() => GamepadState(
+  GamepadState getState() {
+    // print(_sdlGamepad.getButton(sdl.SDL_GAMEPAD_BUTTON_LEFT_STICK));
+    print(_sdlGamepad.getButton(sdl.SDL_GAMEPAD_BUTTON_NORTH));
+    return GamepadState(
     buttonA: _getButton(sdl.SDL_GAMEPAD_BUTTON_LABEL_A),
     buttonB: _getButton(sdl.SDL_GAMEPAD_BUTTON_LABEL_B),
     buttonX: _getButton(sdl.SDL_GAMEPAD_BUTTON_LABEL_X),
@@ -75,7 +102,7 @@ class SdlGamepad extends Gamepad {
       sdl.SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER,
       sdl.SDL_GAMEPAD_BUTTON_LEFT_SHOULDER,
     ),
-  );
+  );}
 
   bool _getButton(int button) => _sdlGamepad.getButton(button) == 1;
 
