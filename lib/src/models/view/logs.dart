@@ -5,16 +5,18 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
 /// A view model to track options for the logs page.
-/// 
+///
 /// This view model is needed to separate the menus from the main logs page as whenever a new log
-/// message is added to the page, the currently-selected menu item would flicker. 
+/// message is added to the page, the currently-selected menu item would flicker.
 class LogsOptionsViewModel with ChangeNotifier {
   /// Only show logs from this device. If null, show all devices.
   Device? deviceFilter;
+
   /// The level at which to show logs. All logs at this level or above are shown.
   BurtLogLevel levelFilter = BurtLogLevel.info;
+
   /// Whether this page should autoscroll.
-  /// 
+  ///
   /// When scrolling manually, this will be set to false for convenience.
   bool autoscroll = true;
 
@@ -28,7 +30,7 @@ class LogsOptionsViewModel with ChangeNotifier {
   void setAutoscroll({bool? input}) {
     if (input == null || autoscroll == input) return;
     autoscroll = input;
-   Timer.run(notifyListeners);
+    Timer.run(notifyListeners);
   }
 
   /// Sets [levelFilter] and updates the UI.
@@ -38,10 +40,10 @@ class LogsOptionsViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Resets the given device by sending [RoverStatus.RESTART]. 
+  /// Resets the given device by sending [RoverStatus.RESTART].
   void resetDevice(Device device) {
     models.home.clear(clearErrors: true);
-    final socket = switch(device) {
+    final socket = switch (device) {
       Device.SUBSYSTEMS => models.sockets.data,
       Device.AUTONOMY => models.sockets.autonomy,
       Device.VIDEO => models.sockets.video,
@@ -60,11 +62,9 @@ class LogsViewModel with ChangeNotifier {
   /// The scroll controller used to implement autoscroll.
   late final ScrollController scrollController;
 
-  void _listenForScroll(ScrollPosition position) => 
-    position.isScrollingNotifier.addListener(onScroll);
+  void _listenForScroll(ScrollPosition position) => position.isScrollingNotifier.addListener(onScroll);
 
-  void _stopListeningForScroll(ScrollPosition position) => 
-    position.isScrollingNotifier.removeListener(onScroll);
+  void _stopListeningForScroll(ScrollPosition position) => position.isScrollingNotifier.removeListener(onScroll);
 
   /// Listens for incoming logs.
   LogsViewModel() {
@@ -99,9 +99,28 @@ class LogsViewModel with ChangeNotifier {
     if (!scrollController.hasClients) return;
     scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.easeOutBack);
   }
-  
+
   /// Updates the UI.
   void update() => notifyListeners();
+
+  /// An iterable of logs whose device matches [device], if [device] is null, returns all logs
+  Iterable<BurtLog> filterByDevice(Device? device) =>
+      models.logs.allLogs.where((log) => log.device == device || device == null);
+
+  /// Returns the lowest log level for all logs in [device]
+  ///
+  /// If [device] is null, returns the lowest log level of all logs
+  BurtLogLevel lowestLevel(Device? device) {
+    var lowestLevel = BurtLogLevel.trace;
+
+    for (final log in filterByDevice(device)) {
+      if (log.level.value < lowestLevel.value) {
+        lowestLevel = log.level;
+      }
+    }
+
+    return lowestLevel;
+  }
 
   /// The logs that should be shown, according to [LogsOptionsViewModel].
   List<BurtLog> get logs {

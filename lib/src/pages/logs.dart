@@ -1,3 +1,5 @@
+import "dart:io";
+
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -7,15 +9,98 @@ import "package:rover_dashboard/widgets.dart";
 /// A widget to show the options for the logs page.
 ///
 /// This is separate from the logs display so that the menu doesn't flicker when new logs arrive.
-class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
-  /// The view model for the whole page.
-  final LogsViewModel viewModel;
-
+class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
   /// Listens to the view model without disposing it.
-  LogsOptions(this.viewModel) : super(viewModel.options);
+  const LogsOptions(super.model) : super();
+
+  /// An appropriate WiFi for the connection strength of [device]
+  IconData connectionStrength(Device device) {
+    final socket = models.sockets.fromDevice(device);
+    final percentage = (socket?.connectionStrength.value ?? 0) * 100;
+
+    // Can't use a switch statement since socket?.isConnected isn't constant :(
+    if (percentage >= 0.8) {
+      return Icons.signal_wifi_statusbar_4_bar;
+    } else if (percentage >= 0.6) {
+      return Icons.network_wifi_3_bar;
+    } else if (percentage >= 0.4) {
+      return Icons.network_wifi_2_bar;
+    } else if (percentage >= 0.2) {
+      return Icons.network_wifi_1_bar;
+    } else if (socket?.isConnected ?? false) {
+      return Icons.signal_wifi_0_bar;
+    } else {
+      return Icons.signal_wifi_off_outlined;
+    }
+  }
+
+  /// Returns the appropriate status icon for the log messages received from [device]
+  Widget statusIcon(Device? device) {
+    final socket = models.sockets.fromDevice(device);
+    final lowestLevel = model.lowestLevel(device);
+
+    Color? iconColor = switch (lowestLevel) {
+      BurtLogLevel.critical => Colors.red,
+      BurtLogLevel.info || BurtLogLevel.debug || BurtLogLevel.trace => Colors.green,
+      BurtLogLevel.warning => Colors.green, // Separate line in case if we need to change it at any point
+      BurtLogLevel.error => Colors.yellow,
+      _ => null,
+    };
+
+    if (device == null || socket == null || !socket.isConnected) {
+      iconColor = Colors.black;
+    }
+
+    return Icon(Icons.circle, color: iconColor);
+  }
+
+  /// Returns a button to open an SSH connection to [device]
+  Widget sshButton(Device? device) {
+    final socket = models.sockets.fromDevice(device);
+
+    return TextButton.icon(
+      onPressed: () {
+        if (!Platform.isWindows || device == null) {
+          return;
+        }
+
+        if (socket == null || socket.destination?.address == null) {
+          // For some reason this always happens on localhost even if you reset the network
+          if (models.sockets.rover != RoverType.localhost) {
+            models.home.setMessage(
+              severity: Severity.error,
+              text: "Unable to find IP Address for ${device.humanName}, try resetting the network.",
+            );
+          } else {
+            models.home.setMessage(
+              severity: Severity.error,
+              text: "You can't SSH into your own computer silly!",
+            );
+          }
+          return;
+        }
+
+        if (!socket.isConnected) {
+          models.home.setMessage(severity: Severity.error, text: "${device.humanName} is not connected");
+          return;
+        }
+
+        Process.run("cmd", [
+          "/k",
+          "start",
+          "powershell",
+          "-NoExit",
+          "-command",
+          "ssh pi@${socket.destination!.address.address} -o StrictHostkeyChecking=no",
+        ]);
+      },
+      label: const Text("Open SSH"),
+      icon: const Icon(Icons.lan),
+    );
+  }
 
   @override
-  Widget build(BuildContext context, LogsOptionsViewModel model) => Column(
+  Widget build(BuildContext context, LogsViewModel model) => Column(
       children: [
         // Menu
         Row(
@@ -25,11 +110,26 @@ class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
               SizedBox(
                 width: 250,
                 child: Card(
-                  child: ListTile(
-                    onTap: () => model.resetDevice(device),
-                    leading: const Icon(Icons.restart_alt),
-                    title: Text("Reset the ${device.humanName}"),
-                    subtitle: const Text("The device will reboot"),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        onTap: () => model.options.resetDevice(device),
+                        leading: const Icon(Icons.restart_alt),
+                        title: Text("Reset ${device.humanName}"),
+                        subtitle: const Text("The device will reboot"),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            statusIcon(device),
+                            Icon(connectionStrength(device)),
+                            sshButton(device),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -40,10 +140,10 @@ class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
           children: [
             DropdownMenu<Device?>(
               label: const Text("Select device"),
-              initialSelection: model.deviceFilter,
+              initialSelection: model.options.deviceFilter,
               onSelected: (input) {
-                model.setDeviceFilter(input);
-                viewModel.update();
+                model.options.setDeviceFilter(input);
+                model.update();
               },
               dropdownMenuEntries: [
                 for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY, null])
@@ -53,10 +153,10 @@ class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
             const SizedBox(width: 8),
             DropdownMenu<BurtLogLevel>(
               label: const Text("Select severity"),
-              initialSelection: model.levelFilter,
+              initialSelection: model.options.levelFilter,
               onSelected: (input) {
-                model.setLevelFilter(input);
-                viewModel.update();
+                model.options.setLevelFilter(input);
+                model.update();
               },
               dropdownMenuEntries: [
                 for (final level in BurtLogLevel.values.filtered)
@@ -69,11 +169,11 @@ class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
               child: CheckboxListTile(
                 title: const Text("Autoscroll"),
                 subtitle: const Text("Scroll to override"),
-                value: model.autoscroll,
+                value: model.options.autoscroll,
                 onChanged: (input) {
-                  model.setAutoscroll(input: input);
-                  if (input ?? false) viewModel.jumpToBottom();
-                  viewModel.update();
+                  model.options.setAutoscroll(input: input);
+                  if (input ?? false) model.jumpToBottom();
+                  model.update();
                 },
               ),
             ),
