@@ -15,59 +15,72 @@ class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
   LogsOptions(this.viewModel) : super(viewModel.options);
 
   @override
-  Widget build(BuildContext context, LogsOptionsViewModel model) => Wrap(
-    runAlignment: WrapAlignment.center,
-    alignment: WrapAlignment.center,
-    crossAxisAlignment: WrapCrossAlignment.center,
-    runSpacing: 8,
-    children: [  // Menu
-      for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY])  // Reset devices
-        SizedBox(width: 250, child: Card(
-          child: ListTile(
-            onTap: () => model.resetDevice(device),
-            leading: const Icon(Icons.restart_alt),
-            title: Text("Reset the ${device.humanName}"),
-            subtitle: const Text("The device will reboot"),
-          ),),
+  Widget build(BuildContext context, LogsOptionsViewModel model) => Column(
+      children: [
+        // Menu
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY]) // Reset devices
+              SizedBox(
+                width: 250,
+                child: Card(
+                  child: ListTile(
+                    onTap: () => model.resetDevice(device),
+                    leading: const Icon(Icons.restart_alt),
+                    title: Text("Reset the ${device.humanName}"),
+                    subtitle: const Text("The device will reboot"),
+                  ),
+                ),
+              ),
+          ],
         ),
-      DropdownMenu<Device?>(
-        label: const Text("Select device"),
-        initialSelection: model.deviceFilter,
-        onSelected: (input) {
-          model.setDeviceFilter(input);
-          viewModel.update();
-        },
-        dropdownMenuEntries: [
-          for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY, null])
-            DropdownMenuEntry(label: device?.humanName ?? "All", value: device),
-        ],
-      ),
-      const SizedBox(width: 8),
-      DropdownMenu<BurtLogLevel>(
-        label: const Text("Select severity"),
-        initialSelection: model.levelFilter,
-        onSelected: (input) {
-          model.setLevelFilter(input);
-          viewModel.update();
-        },
-        dropdownMenuEntries: [
-          for (final level in BurtLogLevel.values.filtered)
-            DropdownMenuEntry(label: level.humanName, value: level),
-        ],
-      ),
-      const SizedBox(width: 8),
-      SizedBox(width: 250, child: CheckboxListTile(
-        title: const Text("Autoscroll"),
-        subtitle: const Text("Scroll to override"),
-        value: model.autoscroll,
-        onChanged: (input) {
-          model.setAutoscroll(input: input);
-          if (input ?? false) viewModel.jumpToBottom();
-          viewModel.update();
-        },
-      ),),
-    ],
-  );
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            DropdownMenu<Device?>(
+              label: const Text("Select device"),
+              initialSelection: model.deviceFilter,
+              onSelected: (input) {
+                model.setDeviceFilter(input);
+                viewModel.update();
+              },
+              dropdownMenuEntries: [
+                for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY, null])
+                  DropdownMenuEntry(label: device?.humanName ?? "All", value: device),
+              ],
+            ),
+            const SizedBox(width: 8),
+            DropdownMenu<BurtLogLevel>(
+              label: const Text("Select severity"),
+              initialSelection: model.levelFilter,
+              onSelected: (input) {
+                model.setLevelFilter(input);
+                viewModel.update();
+              },
+              dropdownMenuEntries: [
+                for (final level in BurtLogLevel.values.filtered)
+                  DropdownMenuEntry(label: level.humanName, value: level),
+              ],
+            ),
+            const SizedBox(width: 8),
+            SizedBox(
+              width: 250,
+              child: CheckboxListTile(
+                title: const Text("Autoscroll"),
+                subtitle: const Text("Scroll to override"),
+                value: model.autoscroll,
+                onChanged: (input) {
+                  model.setAutoscroll(input: input);
+                  if (input ?? false) viewModel.jumpToBottom();
+                  viewModel.update();
+                },
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
 }
 
 /// The logs page, containing the [LogsOptions] and [LogsBody] widgets.
