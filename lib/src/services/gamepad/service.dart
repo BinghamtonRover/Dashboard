@@ -62,21 +62,22 @@ class GamepadService extends Service {
   /// connected to gamepad 0. If the next operator (at index 1) wants to connect, this function will
   /// assign them the gamepad at index 2.
   Future<void> connect(int operatorIndex) async {
-    if (gamepads[operatorIndex] is! MockGamepad) return;
+    if (gamepads[operatorIndex].isConnected) {
+      gamepads[operatorIndex].pulse();
+      return;
+    }
     gamepads[operatorIndex] = MockGamepad(0);
     for (var osIndex = 0; osIndex < maxGamepads; osIndex++) {
       if (osIndexes.contains(osIndex)) continue;
-      print("Trying to connect $operatorIndex to $osIndex");
+      print("Trying to connect operator $operatorIndex to OS $osIndex");
       final gamepad = Gamepad.forPlatform(osIndex);
       await gamepad.init();
+      print("  Device is connected: ${gamepad.isConnected}");
       if (!gamepad.isConnected) { await gamepad.dispose(); continue; }
-      print("OS $osIndex is connected to gamepad $operatorIndex");
       gamepads[operatorIndex] = gamepad;
       gamepad.pulse();
-      print("New IDs: $osIndexes");
       return;
     }
-    print(gamepads[operatorIndex].isConnected);
   }
 
   @override
