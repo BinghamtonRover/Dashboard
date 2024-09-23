@@ -64,19 +64,19 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
           return;
         }
 
+        if (models.sockets.rover == RoverType.localhost) {
+          models.home.setMessage(
+            severity: Severity.error,
+            text: "You can't SSH into your own computer silly!",
+          );
+          return;
+        }
+
         if (socket == null || socket.destination?.address == null) {
-          // For some reason this always happens on localhost even if you reset the network
-          if (models.sockets.rover != RoverType.localhost) {
-            models.home.setMessage(
-              severity: Severity.error,
-              text: "Unable to find IP Address for ${device.humanName}, try resetting the network.",
-            );
-          } else {
-            models.home.setMessage(
-              severity: Severity.error,
-              text: "You can't SSH into your own computer silly!",
-            );
-          }
+          models.home.setMessage(
+            severity: Severity.error,
+            text: "Unable to find IP Address for ${device.humanName}, try resetting the network.",
+          );
           return;
         }
 
