@@ -10,6 +10,12 @@ class MockGamepad extends Gamepad {
   GamepadState? getState() => null;
 
   @override
+  Future<void> init() async { }
+
+  @override
+  Future<void> dispose() async { }
+
+  @override
   void vibrate({double intensity = 1}) { }
 
   @override

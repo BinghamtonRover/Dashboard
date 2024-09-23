@@ -13,7 +13,15 @@ enum GamepadBatteryLevel {
   ///
   /// Either the device does not support battery readings, or the device
   /// may be disconnected.
-  unknown,
+  unknown;
+
+  /// Returns a battery level from a percentage.
+  static GamepadBatteryLevel fromPercent(int percentage) => switch (percentage) {
+    < 33 => low,
+    < 66 => medium,
+    < 100 => full,
+    _ => unknown,
+  };
 }
 
 /// The complete state of a gamepad.

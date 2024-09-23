@@ -11,6 +11,12 @@ class Win32Gamepad extends Gamepad {
     _winGamepad = win32.Gamepad(controllerIndex);
 
   @override
+  Future<void> init() async { }
+
+  @override
+  Future<void> dispose() async { }
+
+  @override
   void vibrate({double intensity = 1}) {
     final win32Intensity = (intensity * 65000).floor();
     _winGamepad.vibrate(leftMotorSpeed: win32Intensity, rightMotorSpeed: win32Intensity);

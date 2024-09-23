@@ -4,6 +4,8 @@ import "mock.dart";
 import "state.dart";
 import "windows.dart";
 
+import "../service.dart";
+
 /// A physical gamepad that can be connected and used to control the rover.
 ///
 /// To interact with a gamepad, create an instance of this class. This class is completely safe to
@@ -11,7 +13,7 @@ import "windows.dart";
 /// [isConnected] if you need to know the current state of the gamepad.
 ///
 /// Use [Gamepad.forPlatform] to get the right implementation for the current platform.
-abstract class Gamepad {
+abstract class Gamepad extends Service {
   /// The unique number assigned to this controller by the operating system.
   final int controllerIndex;
 
