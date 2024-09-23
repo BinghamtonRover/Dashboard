@@ -43,6 +43,7 @@ class GamepadService extends Service {
 
   @override
   Future<void> init() async {
+    gamepads = List.generate(maxGamepads, (i) => MockGamepad(i));
     for (var i = 0; i < maxGamepads; i++) {
       connect(i);
     }
@@ -60,6 +61,7 @@ class GamepadService extends Service {
   void connect(int operatorIndex) {
     gamepads[operatorIndex] = MockGamepad(0);
     for (var osIndex = 0; osIndex < maxGamepads; osIndex++) {
+      print("Trying to connect $operatorIndex to $osIndex");
       if (osIndexes.contains(osIndex)) continue;
       final gamepad = Gamepad.forPlatform(osIndex);
       if (!gamepad.isConnected) continue;
