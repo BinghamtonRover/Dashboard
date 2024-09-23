@@ -20,7 +20,9 @@ class GamepadButton extends ReusableReactiveWidget<Controller> {
 			case GamepadBatteryLevel.low: return Colors.red;
 			case GamepadBatteryLevel.medium: return Colors.orange;
 			case GamepadBatteryLevel.full: return Colors.green;
-			case GamepadBatteryLevel.unknown: return Colors.black;
+      // Should probably find a better icon for this, but it's more important
+      // that the user sees a gamepad is connected.
+			case GamepadBatteryLevel.unknown: return Colors.green;
 		}
 	}
 

@@ -7,22 +7,29 @@ import "package:sdl3/sdl3.dart" as sdl;
 import "gamepad.dart";
 import "state.dart";
 
-int initSdl() {
-  final result = sdl.sdlInit(sdl.SDL_INIT_GAMECONTROLLER | sdl.SDL_INIT_GAMEPAD);
-  sdl.sdlSetGamepadEventsEnabled(true);
-  Timer.periodic(const Duration(milliseconds: 10), update);
-  return result;
-}
+/// A small class to manage the SDL library.
+class SdlManager {
+  /// Whether the SDL library has been initialized.
+  static bool isInitialized = false;
 
-void update(_) {
-  sdl.sdlUpdateGamepads();
-  sdl.sdlUpdateJoysticks();
+  /// Initializes the SDL library and starts the event loop.
+  static void init() {
+    sdl.sdlInit(sdl.SDL_INIT_GAMECONTROLLER | sdl.SDL_INIT_GAMEPAD);
+    sdl.sdlSetGamepadEventsEnabled(true);
+    Timer.periodic(const Duration(milliseconds: 10), update);
+  }
+
+  /// Updates all gamepad-related APIs.
+  static void update(_) {
+    sdl.sdlUpdateGamepads();
+    sdl.sdlUpdateJoysticks();
+  }
 }
 
 class SdlGamepad extends Gamepad {
   static const sdlMaxRumble = 0xFFFF;
 
-  Pointer<sdl.SdlGamepad> _sdlGamepad;
+  final Pointer<sdl.SdlGamepad> _sdlGamepad;
   final _arena = Arena();
   late Pointer<Int32> _batteryPointer;
 
@@ -31,6 +38,7 @@ class SdlGamepad extends Gamepad {
 
   @override
   Future<void> init() async {
+    if (!SdlManager.isInitialized) SdlManager.init();
     _batteryPointer = _arena<Int32>();
   }
 

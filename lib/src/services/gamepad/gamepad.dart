@@ -1,8 +1,4 @@
-import "dart:io";
-
-import "mock.dart";
 import "state.dart";
-import "windows.dart";
 import "sdl.dart";
 
 import "../service.dart";

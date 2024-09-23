@@ -19,7 +19,7 @@ enum GamepadBatteryLevel {
   static GamepadBatteryLevel fromPercent(int percentage) => switch (percentage) {
     < 33 => low,
     < 66 => medium,
-    < 100 => full,
+    <= 100 => full,
     _ => unknown,
   };
 }
