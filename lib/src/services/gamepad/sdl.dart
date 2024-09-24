@@ -23,10 +23,7 @@ class DesktopGamepad extends Gamepad {
   }
 
   @override
-  Future<void> init() async {
-    sdl.SdlLibrary.init();
-    if (!isConnected) return;
-  }
+  Future<void> init() async { }
 
   @override
   Future<void> dispose() async => _sdl.close();

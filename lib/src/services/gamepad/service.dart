@@ -45,6 +45,7 @@ class GamepadService extends Service {
 
   @override
   Future<void> init() async {
+    SdlLibrary.init();
     gamepads = List.generate(maxGamepads, MockGamepad.new);
     for (var i = 0; i < maxGamepads; i++) {
       await connect(i);
@@ -67,7 +68,9 @@ class GamepadService extends Service {
     }
     gamepads[operatorIndex] = MockGamepad(0);
     for (final osIndex in SdlGamepad.getConnectedGamepadIds()) {
+      print("$osIndex");
       if (osIndexes.contains(osIndex)) continue;
+      print("Trying to connect operator $operatorIndex to OS $osIndex");
       final gamepad = Gamepad.forPlatform(osIndex);
       await gamepad.init();
       if (!gamepad.isConnected) {
