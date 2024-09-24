@@ -39,6 +39,8 @@ class _MiniHomePageState extends State<MiniHomePage> {
   Future<void> init() async {
     await services.init();
     await models.init();
+    await models.sockets.setRover(RoverType.localhost);
+    await models.sockets.disable();
 
     if (mounted) {
       setState(() {});
@@ -61,7 +63,7 @@ class _MiniHomePageState extends State<MiniHomePage> {
               const TabBar(
                 tabs: [
                   Tab(text: "Home"),
-                  Tab(text: "Metrics"),
+                  Tab(text: "Metrics & Controls"),
                   Tab(text: "Logs"),
                 ],
               ),

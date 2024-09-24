@@ -15,7 +15,12 @@ class MiniMetrics extends ReusableReactiveWidget<RoverMetrics> {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               children: [
-                for (int i = 0; i < 3; i++) MetricsList(model.allMetrics[i]),
+                Text(
+                  "Metrics",
+                  style: context.textTheme.displaySmall,
+                  textAlign: TextAlign.center,
+                ),
+                for (final metrics in model.allMetrics) MetricsList(metrics),
               ],
             ),
           ),
@@ -24,7 +29,23 @@ class MiniMetrics extends ReusableReactiveWidget<RoverMetrics> {
             flex: 3,
             child: ListView(
               children: [
-                for (int i = 3; i < model.allMetrics.length; i++) MetricsList(model.allMetrics[i]),
+                Text(
+                  "Controls",
+                  style: context.textTheme.displaySmall,
+                  textAlign: TextAlign.center,
+                ),
+                ControlsDisplay(
+                  controller: models.rover.controller1,
+                  gamepadNum: 1,
+                ),
+                ControlsDisplay(
+                  controller: models.rover.controller2,
+                  gamepadNum: 2,
+                ),
+                ControlsDisplay(
+                  controller: models.rover.controller3,
+                  gamepadNum: 3,
+                ),
               ],
             ),
           ),

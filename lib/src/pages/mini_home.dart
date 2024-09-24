@@ -13,13 +13,21 @@ class MiniHome extends StatelessWidget {
           Expanded(
             flex: 3,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
                   child: MiniHomeVoltage(models.rover.metrics),
                 ),
                 const Divider(),
-                const Flexible(
-                  child: Placeholder(),
+                Flexible(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GamepadButton(models.rover.controller1),
+                      GamepadButton(models.rover.controller2),
+                      GamepadButton(models.rover.controller3),
+                    ],
+                  ),
                 ),
                 const Divider(),
                 SizedBox(
