@@ -68,9 +68,7 @@ class GamepadService extends Service {
     }
     gamepads[operatorIndex] = MockGamepad(0);
     for (final osIndex in SdlGamepad.getConnectedGamepadIds()) {
-      print("$osIndex");
       if (osIndexes.contains(osIndex)) continue;
-      print("Trying to connect operator $operatorIndex to OS $osIndex");
       final gamepad = Gamepad.forPlatform(osIndex);
       await gamepad.init();
       if (!gamepad.isConnected) {
