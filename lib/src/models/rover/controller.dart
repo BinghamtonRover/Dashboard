@@ -92,10 +92,10 @@ class Controller extends Model {
   Future<void> _update([_]) async {
     final state = gamepad.getState();
     if (state == null) return;
+    // print(state.normalLeftX);
     controls.updateState(state);
     final messages = controls.parseInputs(state);
     for (final message in messages) {
-      // print(message.toProto3Json());
       models.messages.sendMessage(message);
     }
   }

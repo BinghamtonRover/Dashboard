@@ -63,7 +63,7 @@ class SdlGamepad extends Gamepad {
 
   @override
   GamepadState getState() => GamepadState(
-    buttonA: _getButton(sdl.SDL_GAMEPAD_BUTTON_SOUTH),
+    buttonA: _getButton(sdl.SDL_GAMEPAD_BUTTON_LABEL_A),
     buttonB: _getButton(sdl.SDL_GAMEPAD_BUTTON_EAST),
     buttonX: _getButton(sdl.SDL_GAMEPAD_BUTTON_WEST),
     buttonY: _getButton(sdl.SDL_GAMEPAD_BUTTON_NORTH),

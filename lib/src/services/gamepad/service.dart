@@ -3,6 +3,7 @@ import "package:rover_dashboard/src/services/gamepad/sdl.dart";
 import "../service.dart";
 import "gamepad.dart";
 import "mock.dart";
+import "sdl2.dart";
 
 /// A service to match operators to gamepads.
 ///
