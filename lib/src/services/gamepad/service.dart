@@ -1,3 +1,5 @@
+import "package:sdl_gamepad/sdl_gamepad.dart";
+
 import "../service.dart";
 import "gamepad.dart";
 import "mock.dart";
@@ -64,11 +66,14 @@ class GamepadService extends Service {
       return;
     }
     gamepads[operatorIndex] = MockGamepad(0);
-    for (var osIndex = 0; osIndex < maxGamepads; osIndex++) {
+    for (final osIndex in SdlGamepad.getConnectedGamepadIds()) {
       if (osIndexes.contains(osIndex)) continue;
       final gamepad = Gamepad.forPlatform(osIndex);
       await gamepad.init();
-      if (!gamepad.isConnected) { await gamepad.dispose(); continue; }
+      if (!gamepad.isConnected) {
+        await gamepad.dispose();
+        continue;
+      }
       gamepads[operatorIndex] = gamepad;
       gamepad.pulse();
       return;

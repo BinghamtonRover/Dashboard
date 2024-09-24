@@ -47,9 +47,11 @@ class DesktopGamepad extends Gamepad {
       normalDpadX: state.normalDpadX.toDouble(),
       normalDpadY: state.normalDpadY.toDouble(),
       normalLeftX: state.normalLeftJoystickX,
-      normalLeftY: state.normalLeftJoystickY,
+      // These Y values are flipped because sdl_gamepad follows the standard convention,
+      // where positive means the joystick is moving towards the user (down).
+      normalLeftY: -state.normalLeftJoystickY,
       normalRightX: state.normalRightJoystickX,
-      normalRightY: state.normalRightJoystickY,
+      normalRightY: -state.normalRightJoystickY,
       normalShoulder: state.normalShoulders.toDouble(),
       normalTrigger: state.normalTriggers,
     );

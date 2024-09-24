@@ -1,6 +1,3 @@
-import "dart:io";
-
-import "mock.dart";
 import "state.dart";
 import "sdl.dart";
 
@@ -21,9 +18,7 @@ abstract class Gamepad extends Service {
   Gamepad(this.controllerIndex);
 
   /// Returns a functional instance of this class, or a mock on unsupported platforms.
-  factory Gamepad.forPlatform(int index) => Platform.isWindows
-    ? DesktopGamepad(index)
-    : MockGamepad(index);
+  factory Gamepad.forPlatform(int index) => DesktopGamepad(index);
 
   /// Gets the current state of the gamepad, or null if it's not connected.
   GamepadState? getState();

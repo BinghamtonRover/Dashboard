@@ -91,10 +91,11 @@ class Controller extends Model {
   /// Reads the gamepad, chooses commands, and sends them to the rover.
   Future<void> _update([_]) async {
     final state = gamepad.getState();
-    if (state == null) return;
+    if (!gamepad.isConnected || state == null) return;
     controls.updateState(state);
     final messages = controls.parseInputs(state);
     for (final message in messages) {
+      // print(message.toProto3Json());
       models.messages.sendMessage(message);
     }
   }
