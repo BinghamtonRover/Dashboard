@@ -83,15 +83,17 @@ class LogsViewModel with ChangeNotifier {
 
   /// Disables [LogsOptionsViewModel.autoscroll] when the user scrolls manually.
   void onScroll() {
-    final enableAutoscroll = scrollController.position.pixels == 0;
-    options.setAutoscroll(input: enableAutoscroll);
+    final disableAutoscroll = scrollController.position.pixels > 0;
+    if (disableAutoscroll != options.autoscroll && options.autoscroll) {
+      options.setAutoscroll(input: disableAutoscroll);
+    }
   }
 
   /// Scrolls to the bottom when a new log appears (if [LogsOptionsViewModel.autoscroll] is true).
   void onNewLog() {
     notifyListeners();
     if (!scrollController.hasClients) return;
-    scrollController.jumpTo(options.autoscroll ? 0 : scrollController.offset + 64);
+    scrollController.jumpTo(options.autoscroll ? 0 : scrollController.offset + 67);
   }
 
   /// Jumps to the bottom of the logs.
