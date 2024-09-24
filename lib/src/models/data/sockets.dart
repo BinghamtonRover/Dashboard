@@ -37,6 +37,9 @@ class Sockets extends Model {
   /// The rover-like system currently in use.
   RoverType rover = RoverType.rover;
 
+  /// Whether or not the sockets are currently enabled
+  bool isEnabled = true;
+
   /// The [InternetAddress] to use instead of the address on the rover.
   InternetAddress? get addressOverride => switch (rover) {
   	RoverType.rover => null,
@@ -55,6 +58,7 @@ class Sockets extends Model {
 
 	@override
 	Future<void> init() async {
+    isEnabled = true;
 		for (final socket in sockets) {
 			await socket.init();
 		}
@@ -62,7 +66,17 @@ class Sockets extends Model {
 		Logger.level = LogLevel.warning;
 		await updateSockets();
 		Logger.level = level;
+    notifyListeners();
 	}
+
+  /// Disconnects from all sockets without restarting them
+  Future<void> disable() async {
+    isEnabled = false;
+		for (final socket in sockets) {
+			await socket.dispose();
+		}
+    notifyListeners();
+  }
 
 	@override
 	Future<void> dispose() async {

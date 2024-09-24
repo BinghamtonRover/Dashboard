@@ -24,6 +24,7 @@ dependencies:
   just_audio: ^0.9.36
   just_audio_windows: ^0.2.0
   collection: ^1.18.0
+  device_preview: ^1.2.0
 
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
