@@ -42,8 +42,8 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
     Color? iconColor = switch (lowestLevel) {
       BurtLogLevel.critical => Colors.red,
       BurtLogLevel.info || BurtLogLevel.debug || BurtLogLevel.trace => Colors.green,
-      BurtLogLevel.warning => Colors.green, // Separate line in case if we need to change it at any point
-      BurtLogLevel.error => Colors.yellow,
+      BurtLogLevel.warning => Colors.yellow, // Separate line in case if we need to change it at any point
+      BurtLogLevel.error => Colors.red,
       _ => null,
     };
 
