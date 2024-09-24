@@ -23,7 +23,9 @@ abstract class Gamepad extends Service {
   Gamepad(this.controllerIndex);
 
   /// Returns a functional instance of this class, or a mock on unsupported platforms.
-  factory Gamepad.forPlatform(int index) => DashboardSdlGamepad(index);
+  factory Gamepad.forPlatform(int index) => Platform.isWindows
+    ? Win32Gamepad(index)
+    : DashboardSdlGamepad(index);
 
   /// Gets the current state of the gamepad, or null if it's not connected.
   GamepadState? getState();
