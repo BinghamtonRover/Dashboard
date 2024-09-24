@@ -1,9 +1,6 @@
-import "package:rover_dashboard/src/services/gamepad/sdl.dart";
-
 import "../service.dart";
 import "gamepad.dart";
 import "mock.dart";
-import "sdl2.dart";
 
 /// A service to match operators to gamepads.
 ///
@@ -46,8 +43,7 @@ class GamepadService extends Service {
 
   @override
   Future<void> init() async {
-    print(initSdl());
-    gamepads = List.generate(maxGamepads, (i) => MockGamepad(i));
+    gamepads = List.generate(maxGamepads, MockGamepad.new);
     for (var i = 0; i < maxGamepads; i++) {
       await connect(i);
     }
@@ -70,10 +66,8 @@ class GamepadService extends Service {
     gamepads[operatorIndex] = MockGamepad(0);
     for (var osIndex = 0; osIndex < maxGamepads; osIndex++) {
       if (osIndexes.contains(osIndex)) continue;
-      print("Trying to connect operator $operatorIndex to OS $osIndex");
       final gamepad = Gamepad.forPlatform(osIndex);
       await gamepad.init();
-      print("  Device is connected: ${gamepad.isConnected}");
       if (!gamepad.isConnected) { await gamepad.dispose(); continue; }
       gamepads[operatorIndex] = gamepad;
       gamepad.pulse();
