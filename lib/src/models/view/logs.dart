@@ -105,17 +105,13 @@ class LogsViewModel with ChangeNotifier {
   /// Updates the UI.
   void update() => notifyListeners();
 
-  /// An iterable of logs whose device matches [device], if [device] is null, returns all logs
-  Iterable<BurtLog> filterByDevice(Device? device) =>
-      models.logs.allLogs.where((log) => log.device == device || device == null);
-
   /// Returns the lowest log level for all logs in [device]
   ///
   /// If [device] is null, returns the lowest log level of all logs
   BurtLogLevel lowestLevel(Device? device) {
     var lowestLevel = BurtLogLevel.trace;
 
-    for (final log in filterByDevice(device)) {
+    for (final log in models.logs.fromDevice(device)) {
       if (log.level.value < lowestLevel.value) {
         lowestLevel = log.level;
       }
@@ -126,12 +122,8 @@ class LogsViewModel with ChangeNotifier {
 
   /// The logs that should be shown, according to [LogsOptionsViewModel].
   List<BurtLog> get logs {
-    final result = <BurtLog>[];
-    for (final log in models.logs.allLogs) {
-      if (options.deviceFilter != null && log.device != options.deviceFilter) continue;
-      if (log.level.value > options.levelFilter.value) continue;
-      result.add(log);
-    }
-    return result.reversed.toList();
+    final logList = models.logs.fromDevice(options.deviceFilter).toList();
+
+    return logList.reversed.where((log) => log.level.value <= options.levelFilter.value).toList();
   }
 }
