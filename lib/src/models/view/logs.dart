@@ -1,20 +1,27 @@
 import "dart:async";
+import "dart:io";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 
 /// A view model to track options for the logs page.
-/// 
+///
 /// This view model is needed to separate the menus from the main logs page as whenever a new log
-/// message is added to the page, the currently-selected menu item would flicker. 
+/// message is added to the page, the currently-selected menu item would flicker.
 class LogsOptionsViewModel with ChangeNotifier {
+  /// Contains the highest severity that each device emitted.
+  final Map<Device, BurtLogLevel> deviceSeverity = {};
+
   /// Only show logs from this device. If null, show all devices.
   Device? deviceFilter;
+
   /// The level at which to show logs. All logs at this level or above are shown.
   BurtLogLevel levelFilter = BurtLogLevel.info;
+
   /// Whether this page should autoscroll.
-  /// 
+  ///
   /// When scrolling manually, this will be set to false for convenience.
   bool autoscroll = true;
 
@@ -28,7 +35,7 @@ class LogsOptionsViewModel with ChangeNotifier {
   void setAutoscroll({bool? input}) {
     if (input == null || autoscroll == input) return;
     autoscroll = input;
-   Timer.run(notifyListeners);
+    Timer.run(notifyListeners);
   }
 
   /// Sets [levelFilter] and updates the UI.
@@ -38,17 +45,32 @@ class LogsOptionsViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Resets the given device by sending [RoverStatus.RESTART]. 
+  /// Resets the given device by sending [RoverStatus.RESTART].
   void resetDevice(Device device) {
     models.home.clear(clearErrors: true);
-    final socket = switch(device) {
+    final socket = switch (device) {
       Device.SUBSYSTEMS => models.sockets.data,
       Device.AUTONOMY => models.sockets.autonomy,
       Device.VIDEO => models.sockets.video,
       _ => null,
     };
+    deviceSeverity[device] = BurtLogLevel.info;
     final message = UpdateSetting(status: RoverStatus.RESTART);
     socket?.sendMessage(message);
+    notifyListeners();
+  }
+
+  /// Gets the highest severity the given device emitted.
+  BurtLogLevel getSeverity(Device device) =>
+    deviceSeverity[device] ?? BurtLogLevel.info;
+
+  /// Updates [deviceSeverity] when a new message comes in.
+  void onNewLog(BurtLog log) {
+    final oldSeverity = deviceSeverity[log.device];
+    if (oldSeverity == null || log.level.value < oldSeverity.value) {
+      deviceSeverity[log.device] = log.level;
+    }
+    notifyListeners();
   }
 }
 
@@ -60,11 +82,9 @@ class LogsViewModel with ChangeNotifier {
   /// The scroll controller used to implement autoscroll.
   late final ScrollController scrollController;
 
-  void _listenForScroll(ScrollPosition position) => 
-    position.isScrollingNotifier.addListener(onScroll);
+  void _listenForScroll(ScrollPosition position) => position.isScrollingNotifier.addListener(onScroll);
 
-  void _stopListeningForScroll(ScrollPosition position) => 
-    position.isScrollingNotifier.removeListener(onScroll);
+  void _stopListeningForScroll(ScrollPosition position) => position.isScrollingNotifier.removeListener(onScroll);
 
   /// Listens for incoming logs.
   LogsViewModel() {
@@ -73,6 +93,8 @@ class LogsViewModel with ChangeNotifier {
       onDetach: _stopListeningForScroll,
     );
     models.logs.addListener(onNewLog);
+    models.sockets.addListener(notifyListeners);
+    models.logs.stream.listen(options.onNewLog);
   }
 
   @override
@@ -83,15 +105,17 @@ class LogsViewModel with ChangeNotifier {
 
   /// Disables [LogsOptionsViewModel.autoscroll] when the user scrolls manually.
   void onScroll() {
-    final enableAutoscroll = scrollController.position.pixels == 0;
-    options.setAutoscroll(input: enableAutoscroll);
+    final disableAutoscroll = scrollController.position.pixels > 0;
+    if (disableAutoscroll != options.autoscroll && options.autoscroll) {
+      options.setAutoscroll(input: disableAutoscroll);
+    }
   }
 
   /// Scrolls to the bottom when a new log appears (if [LogsOptionsViewModel.autoscroll] is true).
   void onNewLog() {
     notifyListeners();
     if (!scrollController.hasClients) return;
-    scrollController.jumpTo(options.autoscroll ? 0 : scrollController.offset + 64);
+    scrollController.jumpTo(options.autoscroll ? 0 : scrollController.offset + 67);
   }
 
   /// Jumps to the bottom of the logs.
@@ -99,18 +123,53 @@ class LogsViewModel with ChangeNotifier {
     if (!scrollController.hasClients) return;
     scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.easeOutBack);
   }
-  
+
   /// Updates the UI.
   void update() => notifyListeners();
 
+  /// Returns the most severe log level for all logs in [device]
+  ///
+  /// If [device] is null, returns [BurtLogLevel.info].
+  BurtLogLevel getMostSevereLevel(Device? device) => device == null
+    ? BurtLogLevel.info : options.getSeverity(device);
+
   /// The logs that should be shown, according to [LogsOptionsViewModel].
   List<BurtLog> get logs {
-    final result = <BurtLog>[];
-    for (final log in models.logs.allLogs) {
-      if (options.deviceFilter != null && log.device != options.deviceFilter) continue;
-      if (log.level.value > options.levelFilter.value) continue;
-      result.add(log);
+    final device = options.deviceFilter;
+    final logList = models.logs.logsForDevice(device);
+    if (logList == null) return [];
+    return logList.toList().reversed
+      .where((log) => log.level.value <= options.levelFilter.value).toList();
+  }
+
+  /// Opens an SSH session (on Windows) for the given device.
+  void openSsh(Device device, DashboardSocket socket) {
+    if (models.sockets.rover == RoverType.localhost) {
+      models.home.setMessage(severity: Severity.error, text: "You can't SSH into your own computer silly!");
+    } else if (socket.destination?.address == null) {
+      models.home.setMessage(severity: Severity.error, text: "Unable to find IP Address for ${device.humanName}, try resetting the network.");
+    } else {
+      Process.run("cmd", [
+        // Keep a Powershell window open
+        "/k", "start", "powershell", "-NoExit", "-command",
+        // SSH to the IP address, and do not care if the device fingerprint has changed
+        "ssh pi@${socket.destination!.address.address} -o StrictHostkeyChecking=no",
+      ]);
     }
-    return result.reversed.toList();
+  }
+
+  /// Opens a Command prompt on Windows to ping the device.
+  void ping(Device device) {
+    final socket = models.sockets.socketForDevice(device);
+    if (socket == null || socket.destination == null) {
+      models.home.setMessage(severity: Severity.error, text: "Could not determine IP address for ${device.humanName}");
+    } else {
+      Process.run("cmd", [
+        // Keep a CMD window open
+        "/k", "start", "cmd", "/k",
+        // Ping the IP address. -t means indefinitely
+        "ping", "-t", socket.destination!.address.address,
+      ]);
+    }
   }
 }

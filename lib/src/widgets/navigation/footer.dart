@@ -6,13 +6,13 @@ import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/widgets.dart";
 
-/// The footer, responsible for showing vitals and logs. 
+/// The footer, responsible for showing vitals and logs.
 class Footer extends StatelessWidget {
   /// Whether to show logs. Disable this when on the logs page.
   final bool showLogs;
   /// Creates the footer.
   const Footer({this.showLogs = true});
-  
+
 	@override
 	Widget build(BuildContext context) => ColoredBox(
 		color: Theme.of(context).colorScheme.secondary,
@@ -37,19 +37,59 @@ class Footer extends StatelessWidget {
 	);
 }
 
+/// A network status icon for the given device.
+class NetworkStatusIcon extends StatelessWidget {
+  /// The device to monitor.
+  final Device device;
+
+  /// What to do when the button is pressed.
+  final VoidCallback? onPressed;
+
+  /// What to show as the tooltip.
+  final String tooltip;
+
+  /// A const constructor.
+  const NetworkStatusIcon({
+    required this.device,
+    required this.onPressed,
+    required this.tooltip,
+  });
+
+  IconData _getNetworkIcon(double percentage) => switch(percentage) {
+    >= 0.8 => Icons.signal_wifi_statusbar_4_bar,
+    >= 0.6 => Icons.network_wifi_3_bar,
+    >= 0.4 => Icons.network_wifi_2_bar,
+    >= 0.2 => Icons.network_wifi_1_bar,
+    >  0.0 => Icons.signal_wifi_0_bar,
+    _ => Icons.signal_wifi_off_outlined,
+  };
+
+  @override
+  Widget build(BuildContext context) => ValueListenableBuilder<double>(  // network strength
+    valueListenable: models.sockets.socketForDevice(device)!.connectionStrength,
+    builder: (context, value, child) => IconButton(
+      tooltip: tooltip,
+      icon: Icon(
+        _getNetworkIcon(value),
+        color: StatusIcons.getColor(value),
+      ),
+      onPressed: onPressed,
+    ),
+  );
+}
+
 /// A few icons displaying the rover's current status.
 class StatusIcons extends StatelessWidget {
+  /// A color representing a meter's fill.
+	static Color getColor(double percentage) {
+		if (percentage > 0.45) { return Colors.green; }
+		else if (percentage > 0.2) { return Colors.orange; }
+		else if (percentage > 0.0) { return Colors.red; }
+		else { return Colors.black; }
+	}
+
 	/// Provides a const constructor.
 	const StatusIcons();
-
-	/// An appropriate WiFi icon in increments of 1/5 connection strength.
-	IconData getNetworkIcon(double percentage) {
-		if (percentage      >= 0.8) { return Icons.signal_wifi_statusbar_4_bar; }
-		else if (percentage >= 0.6) { return Icons.network_wifi_3_bar; }
-		else if (percentage >= 0.4) { return Icons.network_wifi_2_bar; }
-		else if (percentage >= 0.2) { return Icons.network_wifi_1_bar; }
-		else { return Icons.signal_wifi_0_bar; }
-	}
 
 	/// An appropriate battery icon in increments of 1/8 battery level.
 	IconData getBatteryIcon(double percentage) {
@@ -74,14 +114,6 @@ class StatusIcons extends StatelessWidget {
 			case RoverStatus.RESTART: return Icons.restart_alt;
 		}
 		throw ArgumentError("Unrecognized rover status: $status");
-	}
-
-	/// A color representing a meter's fill.
-	Color getColor(double percentage) {
-		if (percentage > 0.45) { return Colors.green; }
-		else if (percentage > 0.2) { return Colors.orange; }
-		else if (percentage > 0.0) { return Colors.red; }
-		else { return Colors.black; }
 	}
 
 	/// The color of the rover's status icon.
@@ -119,26 +151,20 @@ class StatusIcons extends StatelessWidget {
 						models.rover.isConnected
 							? getBatteryIcon(models.rover.metrics.drive.batteryPercentage)
 							: Icons.battery_unknown,
-						color: models.rover.isConnected 
+						color: models.rover.isConnected
               ? getColor(models.rover.metrics.drive.batteryPercentage)
               : Colors.black,
 					),
 				),
 			),
-			ValueListenableBuilder<double>(  // network strength
-				valueListenable: models.sockets.data.connectionStrength,
-				builder: (context, value, child) => IconButton(
-					tooltip: "${models.sockets.connectionSummary}\nClick to reset",
-					icon: Icon(
-						value > 0 ? getNetworkIcon(value) : Icons.signal_wifi_off_outlined,
-						color: getColor(value),
-					),
-					onPressed: () async {
-						await models.sockets.reset();
-						models.home.setMessage(severity: Severity.info, text: "Network reset");
-					},
-				),
-			),
+			NetworkStatusIcon(
+        device: Device.SUBSYSTEMS,
+        tooltip: "${models.sockets.connectionSummary}\nClick to reset",
+        onPressed: () async {
+          await models.sockets.reset();
+          models.home.setMessage(severity: Severity.info, text: "Network reset");
+        },
+      ),
 			ValueListenableBuilder<RoverStatus>(  // status
 				valueListenable: models.rover.status,
 				builder: (context, value, child) => PopupMenuButton(
@@ -146,7 +172,7 @@ class StatusIcons extends StatelessWidget {
 					onSelected: (value) async {
             if (value == RoverStatus.POWER_OFF) {
               await showDialog<void>(
-                context: context, 
+                context: context,
                 builder: (ctx) => AlertDialog(
                   title: const Text("Are you sure?"),
                   content: const Text("This will turn off the rover and you must physically turn it back on again"),
@@ -154,7 +180,7 @@ class StatusIcons extends StatelessWidget {
                     TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
                     ElevatedButton(
                       onPressed: () { models.rover.settings.setStatus(value); Navigator.of(context).pop(); },
-                      child: const Text("Continue"), 
+                      child: const Text("Continue"),
                     ),
                   ],
                 ),
@@ -178,7 +204,7 @@ class StatusIcons extends StatelessWidget {
 				listenable: Listenable.merge([models.rover.metrics.drive, models.rover.status]),
 				builder: (context, child) => IconButton(
           icon: Icon(
-            Icons.circle, 
+            Icons.circle,
             color: models.rover.isConnected
               ? getLedColor(models.rover.metrics.drive.data.color)
               : Colors.black,
@@ -193,7 +219,7 @@ class StatusIcons extends StatelessWidget {
 }
 
 /// Allows the user to connect to the firmware directly, over Serial.
-/// 
+///
 /// See [SerialModel] for an implementation.
 class SerialButton extends ReusableReactiveWidget<SerialModel> {
 	/// Provides a const constructor.
@@ -202,7 +228,7 @@ class SerialButton extends ReusableReactiveWidget<SerialModel> {
 	@override
 	Widget build(BuildContext context, SerialModel model) => PopupMenuButton(
     icon: Icon(
-      Icons.usb, 
+      Icons.usb,
       color: model.hasDevice ? Colors.green : context.colorScheme.onSecondary,
     ),
     tooltip: "Select device",
@@ -217,16 +243,16 @@ class SerialButton extends ReusableReactiveWidget<SerialModel> {
       ),
     ],
 	);
-} 
+}
 
 /// Displays the latest [TaskbarMessage] from [HomeModel.message].
-class MessageDisplay extends ReusableReactiveWidget<HomeModel> {  
+class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
   /// Whether to show an option to open the logs page.
   final bool showLogs;
-  
+
   /// Provides a const constructor for this widget.
 	MessageDisplay({required this.showLogs}) : super(models.home);
-  
+
 	/// Gets the appropriate icon for the given severity.
 	IconData getIcon(Severity? severity) {
 		switch (severity) {
@@ -236,7 +262,7 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
 			case Severity.critical: return Icons.dangerous;
       case null: return Icons.receipt_long;
 		}
-	}	
+	}
 
 	/// Gets the appropriate color for the given severity.
 	Color getColor(Severity? severity) {
@@ -256,7 +282,7 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
       onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (context) => LogsPage())),
       child: Card(
         shadowColor: Colors.transparent,
-        color: getColor(model.message?.severity), 
+        color: getColor(model.message?.severity),
         shape: ContinuousRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),

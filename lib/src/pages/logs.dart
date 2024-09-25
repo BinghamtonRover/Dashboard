@@ -1,3 +1,5 @@
+import "dart:io";
+
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -7,65 +9,119 @@ import "package:rover_dashboard/widgets.dart";
 /// A widget to show the options for the logs page.
 ///
 /// This is separate from the logs display so that the menu doesn't flicker when new logs arrive.
-class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
-  /// The view model for the whole page.
-  final LogsViewModel viewModel;
-
+class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
   /// Listens to the view model without disposing it.
-  LogsOptions(this.viewModel) : super(viewModel.options);
+  const LogsOptions(super.model) : super();
+
+  /// Returns the appropriate status icon for the log messages received from [device]
+  Color? getStatusColor(Device device) {
+    final socket = models.sockets.socketForDevice(device);
+    final lowestLevel = model.getMostSevereLevel(device);
+    if (socket == null || !socket.isConnected) return Colors.black;
+    return switch (lowestLevel) {
+      BurtLogLevel.critical => Colors.red,
+      BurtLogLevel.info || BurtLogLevel.debug || BurtLogLevel.trace => Colors.green,
+      BurtLogLevel.warning => Colors.yellow,
+      BurtLogLevel.error => Colors.red,
+      _ => null,
+    };
+  }
+
+  /// Returns a button to open an SSH connection to [device]
+  Widget? sshButton(Device device) {
+    final socket = models.sockets.socketForDevice(device);
+    if (socket == null || !Platform.isWindows) return null;
+    return TextButton.icon(
+      onPressed: () => model.openSsh(device, socket),
+      label: const Text("Open SSH"),
+      icon: const Icon(Icons.lan),
+    );
+  }
+
+  static const _devices = [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY];
 
   @override
-  Widget build(BuildContext context, LogsOptionsViewModel model) => Wrap(
-    runAlignment: WrapAlignment.center,
-    alignment: WrapAlignment.center,
-    crossAxisAlignment: WrapCrossAlignment.center,
-    runSpacing: 8,
-    children: [  // Menu
-      for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY])  // Reset devices
-        SizedBox(width: 250, child: Card(
-          child: ListTile(
-            onTap: () => model.resetDevice(device),
-            leading: const Icon(Icons.restart_alt),
-            title: Text("Reset the ${device.humanName}"),
-            subtitle: const Text("The device will reboot"),
-          ),),
-        ),
-      DropdownMenu<Device?>(
-        label: const Text("Select device"),
-        initialSelection: model.deviceFilter,
-        onSelected: (input) {
-          model.setDeviceFilter(input);
-          viewModel.update();
-        },
-        dropdownMenuEntries: [
-          for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY, null])
-            DropdownMenuEntry(label: device?.humanName ?? "All", value: device),
+  Widget build(BuildContext context, LogsViewModel model) => Column(
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          for (final device in _devices) SizedBox(
+            width: 250,
+            child: Card(
+              child: Column(
+                children: [
+                  ListTile(
+                    onTap: () => model.options.resetDevice(device),
+                    leading: const Icon(Icons.restart_alt),
+                    title: Text("Reset ${device.humanName}"),
+                    subtitle: const Text("The device will reboot"),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(Icons.circle, color: getStatusColor(device)),
+                        NetworkStatusIcon(
+                          device: device,
+                          tooltip: "Ping Device",
+                          onPressed: Platform.isWindows ? () => model.ping(device) : null,
+                        ),
+                        sshButton(device) ?? Container(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
-      const SizedBox(width: 8),
-      DropdownMenu<BurtLogLevel>(
-        label: const Text("Select severity"),
-        initialSelection: model.levelFilter,
-        onSelected: (input) {
-          model.setLevelFilter(input);
-          viewModel.update();
-        },
-        dropdownMenuEntries: [
-          for (final level in BurtLogLevel.values.filtered)
-            DropdownMenuEntry(label: level.humanName, value: level),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          DropdownMenu<Device?>(
+            label: const Text("Select Device"),
+            initialSelection: model.options.deviceFilter,
+            onSelected: (input) {
+              model.options.setDeviceFilter(input);
+              model.update();
+            },
+            dropdownMenuEntries: [
+              for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY, null])
+                DropdownMenuEntry(label: device?.humanName ?? "All", value: device),
+            ],
+          ),
+          const SizedBox(width: 8),
+          DropdownMenu<BurtLogLevel>(
+            label: const Text("Select Severity"),
+            initialSelection: model.options.levelFilter,
+            onSelected: (input) {
+              model.options.setLevelFilter(input);
+              model.update();
+            },
+            dropdownMenuEntries: [
+              for (final level in BurtLogLevel.values.filtered)
+                DropdownMenuEntry(label: level.humanName, value: level),
+            ],
+          ),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 250,
+            child: CheckboxListTile(
+              title: const Text("Autoscroll"),
+              subtitle: const Text("Scroll to override"),
+              value: model.options.autoscroll,
+              onChanged: (input) {
+                model.options.setAutoscroll(input: input);
+                if (input ?? false) model.jumpToBottom();
+                model.update();
+              },
+            ),
+          ),
         ],
       ),
-      const SizedBox(width: 8),
-      SizedBox(width: 250, child: CheckboxListTile(
-        title: const Text("Autoscroll"),
-        subtitle: const Text("Scroll to override"),
-        value: model.autoscroll,
-        onChanged: (input) {
-          model.setAutoscroll(input: input);
-          if (input ?? false) viewModel.jumpToBottom();
-          viewModel.update();
-        },
-      ),),
     ],
   );
 }
@@ -100,7 +156,7 @@ class LogsState extends State<LogsPage> {
           onPressed: () => showDialog<void>(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text("Logs help"),
+              title: const Text("Logs Help"),
               content: Column(mainAxisSize: MainAxisSize.min, children: [
                 const Text("This page contains all logs received by the dashboard.\nSelecting a level means that only messages of that level or higher will be shown.", textAlign: TextAlign.center,),
                 const SizedBox(height: 4),
@@ -124,12 +180,12 @@ class LogsState extends State<LogsPage> {
         IconButton(
           icon: const Icon(Icons.vertical_align_bottom),
           onPressed: model.jumpToBottom,
-          tooltip: "Jump to bottom",
+          tooltip: "Jump to Bottom",
         ),
         IconButton(
           icon: const Icon(Icons.delete_forever),
           onPressed: models.logs.clear,
-          tooltip: "Clear logs",
+          tooltip: "Clear Logs",
         ),
       ],
     ),
