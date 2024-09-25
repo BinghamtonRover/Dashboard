@@ -11,6 +11,9 @@ import "package:rover_dashboard/services.dart";
 /// This view model is needed to separate the menus from the main logs page as whenever a new log
 /// message is added to the page, the currently-selected menu item would flicker.
 class LogsOptionsViewModel with ChangeNotifier {
+  /// Contains the highest severity that each device emitted.
+  final Map<Device, BurtLogLevel> deviceSeverity = {};
+
   /// Only show logs from this device. If null, show all devices.
   Device? deviceFilter;
 
@@ -51,8 +54,23 @@ class LogsOptionsViewModel with ChangeNotifier {
       Device.VIDEO => models.sockets.video,
       _ => null,
     };
+    deviceSeverity[device] = BurtLogLevel.info;
     final message = UpdateSetting(status: RoverStatus.RESTART);
     socket?.sendMessage(message);
+    notifyListeners();
+  }
+
+  /// Gets the highest severity the given device emitted.
+  BurtLogLevel getSeverity(Device device) =>
+    deviceSeverity[device] ?? BurtLogLevel.info;
+
+  /// Updates [deviceSeverity] when a new message comes in.
+  void onNewLog(BurtLog log) {
+    final oldSeverity = deviceSeverity[log.device];
+    if (oldSeverity == null || log.level.value < oldSeverity.value) {
+      deviceSeverity[log.device] = log.level;
+    }
+    notifyListeners();
   }
 }
 
@@ -76,6 +94,7 @@ class LogsViewModel with ChangeNotifier {
     );
     models.logs.addListener(onNewLog);
     models.sockets.addListener(notifyListeners);
+    models.logs.stream.listen(options.onNewLog);
   }
 
   @override
@@ -110,18 +129,9 @@ class LogsViewModel with ChangeNotifier {
 
   /// Returns the most severe log level for all logs in [device]
   ///
-  /// If [device] is null, returns the most severe log level of all logs
-  BurtLogLevel getMostSevereLevel(Device? device) {
-    var result = BurtLogLevel.trace;
-    final logsList = models.logs.logsForDevice(device);
-    if (logsList == null) return result;
-    for (final log in logsList) {
-      if (log.level.value < result.value) {
-        result = log.level;
-      }
-    }
-    return result;
-  }
+  /// If [device] is null, returns [BurtLogLevel.info].
+  BurtLogLevel getMostSevereLevel(Device? device) => device == null
+    ? BurtLogLevel.info : options.getSeverity(device);
 
   /// The logs that should be shown, according to [LogsOptionsViewModel].
   List<BurtLog> get logs {

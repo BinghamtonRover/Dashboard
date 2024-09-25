@@ -66,6 +66,7 @@ class LogsModel extends Model {
     // Save to disk and memory
     saveToFileBuffer.add(log);
     logsForDevice(log.device)?.addWithLimit(log);
+    _controller.add(log);
     allLogs.addWithLimit(log);
     notifyListeners();
 
@@ -80,6 +81,11 @@ class LogsModel extends Model {
       case BurtLogLevel.BURT_LOG_LEVEL_UNDEFINED:
     }
   }
+
+  final _controller = StreamController<BurtLog>.broadcast();
+
+  /// A stream of incoming logs.
+  Stream<BurtLog> get stream => _controller.stream;
 
   /// Saves all the logs in [saveToFileBuffer] to disk.
   Future<void> saveToFile(_) async {
