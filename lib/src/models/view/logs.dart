@@ -153,8 +153,9 @@ class LogsViewModel with ChangeNotifier {
       models.home.setMessage(severity: Severity.error, text: "You can't SSH into your own computer silly!");
     } else if (socket.destination?.address == null) {
       models.home.setMessage(
-          severity: Severity.error,
-          text: "Unable to find IP Address for ${device.humanName}, try resetting the network.");
+        severity: Severity.error,
+        text: "Unable to find IP Address for ${device.humanName}, try resetting the network.",
+      );
     } else {
       Process.run("cmd", [
         // Keep a Powershell window open
