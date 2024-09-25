@@ -20,7 +20,7 @@ class RoverMetrics extends Model {
   final gripper = GripperMetrics();
 
   /// Vitals data from the rover.
-  final vitals = VitalsMetrics();
+  late final vitals = VitalsMetrics();
 
 	/// A list of all the metrics to iterate over.
 	///
