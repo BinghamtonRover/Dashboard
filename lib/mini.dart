@@ -80,7 +80,7 @@ class MiniHomePage extends StatelessWidget {
           ],
         ),
         body: DefaultTabController(
-          length: 3,
+          length: 4,
           child: Column(
             children: [
               const TabBar(
@@ -88,6 +88,7 @@ class MiniHomePage extends StatelessWidget {
                   Tab(text: "Home"),
                   Tab(text: "Metrics & Controls"),
                   Tab(text: "Logs"),
+                  Tab(text: "View"),
                 ],
               ),
               Expanded(
@@ -96,6 +97,7 @@ class MiniHomePage extends StatelessWidget {
                     const MiniHome(),
                     MiniMetrics(models.rover.metrics),
                     LogsPage(),
+                    ViewsWidget(),
                   ],
                 ),
               ),
