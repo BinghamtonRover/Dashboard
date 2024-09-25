@@ -28,7 +28,7 @@ class LogsOptionsViewModel with ChangeNotifier {
   /// Whether or not to temporarily pause log updating
   ///
   /// Makes scrolling and viewing past logs significantly easier
-  bool pause = false;
+  bool paused = false;
 
   /// Sets [deviceFilter] and updates the UI.
   void setDeviceFilter(Device? input) {
@@ -117,7 +117,7 @@ class LogsViewModel with ChangeNotifier {
 
   /// Scrolls to the bottom when a new log appears (if [LogsOptionsViewModel.autoscroll] is true).
   void onNewLog() {
-    if (options.pause) {
+    if (options.paused) {
       return;
     }
     notifyListeners();
