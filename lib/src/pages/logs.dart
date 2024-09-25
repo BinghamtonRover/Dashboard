@@ -37,12 +37,12 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
   /// Returns the appropriate status icon for the log messages received from [device]
   Widget statusIcon(Device? device) {
     final socket = models.sockets.fromDevice(device);
-    final lowestLevel = model.lowestLevel(device);
+    final lowestLevel = model.getMostSevereLevel(device);
 
     Color? iconColor = switch (lowestLevel) {
       BurtLogLevel.critical => Colors.red,
       BurtLogLevel.info || BurtLogLevel.debug || BurtLogLevel.trace => Colors.green,
-      BurtLogLevel.warning => Colors.yellow, // Separate line in case if we need to change it at any point
+      BurtLogLevel.warning => Colors.yellow,
       BurtLogLevel.error => Colors.red,
       _ => null,
     };

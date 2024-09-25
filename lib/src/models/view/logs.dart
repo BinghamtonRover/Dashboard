@@ -105,25 +105,27 @@ class LogsViewModel with ChangeNotifier {
   /// Updates the UI.
   void update() => notifyListeners();
 
-  /// Returns the lowest log level for all logs in [device]
+  /// Returns the most severe log level for all logs in [device]
   ///
-  /// If [device] is null, returns the lowest log level of all logs
-  BurtLogLevel lowestLevel(Device? device) {
-    var lowestLevel = BurtLogLevel.trace;
-
-    for (final log in models.logs.fromDevice(device)) {
-      if (log.level.value < lowestLevel.value) {
-        lowestLevel = log.level;
+  /// If [device] is null, returns the most severe log level of all logs
+  BurtLogLevel getMostSevereLevel(Device? device) {
+    var result = BurtLogLevel.trace;
+    final logsList = models.logs.logsForDevice(device);
+    if (logsList == null) return result;
+    for (final log in logsList) {
+      if (log.level.value < result.value) {
+        result = log.level;
       }
     }
-
-    return lowestLevel;
+    return result;
   }
 
   /// The logs that should be shown, according to [LogsOptionsViewModel].
   List<BurtLog> get logs {
-    final logList = models.logs.fromDevice(options.deviceFilter).toList();
-
-    return logList.reversed.where((log) => log.level.value <= options.levelFilter.value).toList();
+    final device = options.deviceFilter;
+    final logList = models.logs.logsForDevice(device);
+    if (logList == null) return [];
+    return logList.toList().reversed
+      .where((log) => log.level.value <= options.levelFilter.value).toList();
   }
 }
