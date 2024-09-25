@@ -22,38 +22,61 @@ import "package:device_preview/device_preview.dart";
 import "package:rover_dashboard/src/pages/mini_metrics.dart";
 import "package:rover_dashboard/widgets.dart";
 
-class MiniHomePage extends StatefulWidget {
-  const MiniHomePage({super.key});
-
-  @override
-  State<MiniHomePage> createState() => _MiniHomePageState();
-}
-
-class _MiniHomePageState extends State<MiniHomePage> {
-  @override
-  void initState() {
+class MiniViewModel with ChangeNotifier {
+  /// Constructor for [MiniViewModel], calls [init] to setup mini dashboard
+  MiniViewModel() {
     init();
-    super.initState();
   }
 
+  bool _darkMode = false;
+
+  set darkMode(bool darkMode) {
+    _darkMode = darkMode;
+    notifyListeners();
+  }
+
+  /// Whether or not dark mode is enabled
+  bool get darkMode => _darkMode;
+
+  /// Initializes necessary systems and models for the Mini Dashboard
+  ///
+  /// Sets the rover type to localhost and disables the sockets until
+  /// it is manually turned on by the user
   Future<void> init() async {
     await services.init();
     await models.init();
     await models.sockets.setRover(RoverType.localhost);
     await models.sockets.disable();
 
-    if (mounted) {
-      setState(() {});
-    }
+    notifyListeners();
   }
+}
+
+class MiniHomePage extends StatelessWidget {
+  final MiniViewModel model;
+
+  /// A const constructor
+  const MiniHomePage({required this.model});
 
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text("Dashboard v${models.home.version ?? ''}"),
-          actions: const [
-            PowerButton(),
+          actions: [
+            Row(
+              children: [
+                const Text(
+                  "Dark Mode",
+                  style: TextStyle(color: Colors.white),
+                ),
+                const SizedBox(width: 5),
+                Switch(value: model.darkMode, onChanged: (value) => model.darkMode = value),
+              ],
+            ),
+            const SizedBox(width: 10),
+            const PowerButton(),
+            const SizedBox(width: 5),
           ],
         ),
         body: DefaultTabController(
@@ -79,7 +102,7 @@ class _MiniHomePageState extends State<MiniHomePage> {
             ],
           ),
         ),
-        bottomNavigationBar: MiniFooter(),
+        bottomNavigationBar: const MiniFooter(),
       );
 }
 
@@ -132,14 +155,17 @@ class MiniFooter extends StatelessWidget {
       );
 }
 
-class MiniDashboard extends StatelessWidget {
-  const MiniDashboard({super.key});
+class MiniDashboard extends ReactiveWidget<MiniViewModel> {
+  const MiniDashboard();
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
+  MiniViewModel createModel() => MiniViewModel();
+
+  @override
+  Widget build(BuildContext context, MiniViewModel model) => MaterialApp(
         title: "Binghamton University Rover Team",
         debugShowCheckedModeBanner: false,
-        themeMode: ThemeMode.light,
+        themeMode: model.darkMode ? ThemeMode.dark : ThemeMode.light,
         theme: ThemeData(
           colorScheme: const ColorScheme.light(
             primary: binghamtonGreen,
@@ -156,7 +182,7 @@ class MiniDashboard extends StatelessWidget {
             secondary: binghamtonGreen,
           ),
         ),
-        home: const MiniHomePage(),
+        home: MiniHomePage(model: model),
       );
 }
 

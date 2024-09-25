@@ -13,13 +13,15 @@ class MiniHome extends StatelessWidget {
           Expanded(
             flex: 3,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
+                  flex: 5,
                   child: MiniHomeVoltage(models.rover.metrics),
                 ),
                 const Divider(),
-                Flexible(
+                Expanded(
+                  flex: 2,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -188,16 +190,28 @@ class MiniHomeSystemStatus extends ReusableReactiveWidget<LogsViewModel> {
 
   @override
   Widget build(BuildContext context, LogsViewModel model) => Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          const Spacer(),
+          Expanded(
+            flex: 8,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: Image.asset(
+                context.colorScheme.brightness == Brightness.light ? "assets/logo-light.png" : "assets/logo-dark.png",
+              ),
+            ),
+          ),
+          const Spacer(),
           for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY])
             SizedBox(
               width: 300,
               child: Card(
+                color: Colors.white,
+                elevation: 3,
                 child: Column(
                   children: [
                     ListTile(
-                      title: Text(device.humanName),
+                      title: Text(device.humanName, style: const TextStyle(color: Colors.black)),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -212,10 +226,12 @@ class MiniHomeSystemStatus extends ReusableReactiveWidget<LogsViewModel> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 5),
                   ],
                 ),
               ),
             ),
+          const SizedBox(height: 5),
         ],
       );
 }
