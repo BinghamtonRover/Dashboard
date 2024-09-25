@@ -25,6 +25,11 @@ class LogsOptionsViewModel with ChangeNotifier {
   /// When scrolling manually, this will be set to false for convenience.
   bool autoscroll = true;
 
+  /// Whether or not to temporarily pause log updating
+  ///
+  /// Makes scrolling and viewing past logs significantly easier
+  bool pause = false;
+
   /// Sets [deviceFilter] and updates the UI.
   void setDeviceFilter(Device? input) {
     deviceFilter = input;
@@ -61,8 +66,7 @@ class LogsOptionsViewModel with ChangeNotifier {
   }
 
   /// Gets the highest severity the given device emitted.
-  BurtLogLevel getSeverity(Device device) =>
-    deviceSeverity[device] ?? BurtLogLevel.info;
+  BurtLogLevel getSeverity(Device device) => deviceSeverity[device] ?? BurtLogLevel.info;
 
   /// Updates [deviceSeverity] when a new message comes in.
   void onNewLog(BurtLog log) {
@@ -113,6 +117,9 @@ class LogsViewModel with ChangeNotifier {
 
   /// Scrolls to the bottom when a new log appears (if [LogsOptionsViewModel.autoscroll] is true).
   void onNewLog() {
+    if (options.pause) {
+      return;
+    }
     notifyListeners();
     if (!scrollController.hasClients) return;
     scrollController.jumpTo(options.autoscroll ? 0 : scrollController.offset + 67);
@@ -130,16 +137,14 @@ class LogsViewModel with ChangeNotifier {
   /// Returns the most severe log level for all logs in [device]
   ///
   /// If [device] is null, returns [BurtLogLevel.info].
-  BurtLogLevel getMostSevereLevel(Device? device) => device == null
-    ? BurtLogLevel.info : options.getSeverity(device);
+  BurtLogLevel getMostSevereLevel(Device? device) => device == null ? BurtLogLevel.info : options.getSeverity(device);
 
   /// The logs that should be shown, according to [LogsOptionsViewModel].
   List<BurtLog> get logs {
     final device = options.deviceFilter;
     final logList = models.logs.logsForDevice(device);
     if (logList == null) return [];
-    return logList.toList().reversed
-      .where((log) => log.level.value <= options.levelFilter.value).toList();
+    return logList.toList().reversed.where((log) => log.level.value <= options.levelFilter.value).toList();
   }
 
   /// Opens an SSH session (on Windows) for the given device.
@@ -147,7 +152,9 @@ class LogsViewModel with ChangeNotifier {
     if (models.sockets.rover == RoverType.localhost) {
       models.home.setMessage(severity: Severity.error, text: "You can't SSH into your own computer silly!");
     } else if (socket.destination?.address == null) {
-      models.home.setMessage(severity: Severity.error, text: "Unable to find IP Address for ${device.humanName}, try resetting the network.");
+      models.home.setMessage(
+          severity: Severity.error,
+          text: "Unable to find IP Address for ${device.humanName}, try resetting the network.");
     } else {
       Process.run("cmd", [
         // Keep a Powershell window open

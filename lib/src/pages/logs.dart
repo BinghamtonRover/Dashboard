@@ -120,6 +120,14 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
               },
             ),
           ),
+          const SizedBox(width: 8),
+          IconButton(
+            onPressed: () {
+              model.options.pause = !model.options.pause;
+              model.update();
+            },
+            icon: Icon((model.options.pause) ? Icons.play_arrow : Icons.pause),
+          ),
         ],
       ),
     ],
