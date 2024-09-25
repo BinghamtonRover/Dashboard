@@ -56,6 +56,16 @@ class Sockets extends Model {
   	return result.toString().trim();
   }
 
+  /// Returns the corresponding [DashboardSocket] for the [device]
+  ///
+  /// Returns null if no device is passed or there is no corresponding socket
+  DashboardSocket? socketForDevice(Device device) => switch (device) {
+      Device.SUBSYSTEMS => data,
+      Device.VIDEO => video,
+      Device.AUTONOMY => autonomy,
+      _ => null,
+    };
+
 	@override
 	Future<void> init() async {
     isEnabled = true;
