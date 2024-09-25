@@ -1,8 +1,10 @@
 import "dart:async";
+import "dart:io";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 
 /// A view model to track options for the logs page.
 ///
@@ -127,5 +129,28 @@ class LogsViewModel with ChangeNotifier {
     if (logList == null) return [];
     return logList.toList().reversed
       .where((log) => log.level.value <= options.levelFilter.value).toList();
+  }
+
+  void openSsh(Device device, DashboardSocket socket) {
+    if (models.sockets.rover == RoverType.localhost) {
+      models.home.setMessage(
+        severity: Severity.error,
+        text: "You can't SSH into your own computer silly!",
+      );
+    } else if (socket.destination?.address == null) {
+      models.home.setMessage(
+        severity: Severity.error,
+        text: "Unable to find IP Address for ${device.humanName}, try resetting the network.",
+      );
+    } else {
+      Process.run("cmd", [
+        "/k",
+        "start",
+        "powershell",
+        "-NoExit",
+        "-command",
+        "ssh pi@${socket.destination!.address.address} -o StrictHostkeyChecking=no",
+      ]);
+    }
   }
 }

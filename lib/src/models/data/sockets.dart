@@ -54,9 +54,9 @@ class Sockets extends Model {
   }
 
   /// Returns the corresponding [DashboardSocket] for the [device]
-  /// 
+  ///
   /// Returns null if no device is passed or there is no corresponding socket
-  DashboardSocket? fromDevice(Device? device) => switch (device) {
+  DashboardSocket? socketForDevice(Device device) => switch (device) {
       Device.SUBSYSTEMS => data,
       Device.VIDEO => video,
       Device.AUTONOMY => autonomy,

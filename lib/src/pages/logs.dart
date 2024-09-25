@@ -13,10 +13,9 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
   /// Listens to the view model without disposing it.
   const LogsOptions(super.model) : super();
 
-
   /// Returns the appropriate status icon for the log messages received from [device]
-  Widget statusIcon(Device? device) {
-    final socket = models.sockets.fromDevice(device);
+  Widget statusIcon(Device device) {
+    final socket = models.sockets.socketForDevice(device);
     final lowestLevel = model.getMostSevereLevel(device);
 
     Color? iconColor = switch (lowestLevel) {
@@ -27,7 +26,7 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
       _ => null,
     };
 
-    if (device == null || socket == null || !socket.isConnected) {
+    if (socket == null || !socket.isConnected) {
       iconColor = Colors.black;
     }
 
@@ -35,45 +34,11 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
   }
 
   /// Returns a button to open an SSH connection to [device]
-  Widget sshButton(Device? device) {
-    final socket = models.sockets.fromDevice(device);
-
+  Widget? sshButton(Device device) {
+    final socket = models.sockets.socketForDevice(device);
+    if (socket == null || !Platform.isWindows) return null;
     return TextButton.icon(
-      onPressed: () {
-        if (!Platform.isWindows || device == null) {
-          return;
-        }
-
-        if (models.sockets.rover == RoverType.localhost) {
-          models.home.setMessage(
-            severity: Severity.error,
-            text: "You can't SSH into your own computer silly!",
-          );
-          return;
-        }
-
-        if (socket == null || socket.destination?.address == null) {
-          models.home.setMessage(
-            severity: Severity.error,
-            text: "Unable to find IP Address for ${device.humanName}, try resetting the network.",
-          );
-          return;
-        }
-
-        if (!socket.isConnected) {
-          models.home.setMessage(severity: Severity.error, text: "${device.humanName} is not connected");
-          return;
-        }
-
-        Process.run("cmd", [
-          "/k",
-          "start",
-          "powershell",
-          "-NoExit",
-          "-command",
-          "ssh pi@${socket.destination!.address.address} -o StrictHostkeyChecking=no",
-        ]);
-      },
+      onPressed: () => model.openSsh(device, socket),
       label: const Text("Open SSH"),
       icon: const Icon(Icons.lan),
     );
@@ -105,7 +70,7 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
                       children: [
                         statusIcon(device),
                         NetworkStatusIcon(device: device),
-                        sshButton(device),
+                        sshButton(device) ?? Container(),
                       ],
                     ),
                   ),

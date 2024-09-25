@@ -56,7 +56,7 @@ class NetworkStatusIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder<double>(  // network strength
-    valueListenable: models.sockets.fromDevice(device)!.connectionStrength,
+    valueListenable: models.sockets.socketForDevice(device)!.connectionStrength,
     builder: (context, value, child) => IconButton(
       tooltip: showTooltip
         ? "${models.sockets.connectionSummary}\nClick to reset"
