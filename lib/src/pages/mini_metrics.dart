@@ -1,6 +1,5 @@
 import "package:flutter/material.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/src/widgets/generic/reactive_widget.dart";
 import "package:rover_dashboard/widgets.dart";
 
 class MiniMetrics extends ReusableReactiveWidget<RoverMetrics> {

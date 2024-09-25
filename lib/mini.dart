@@ -16,19 +16,19 @@ import "package:rover_dashboard/app.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
-import "package:rover_dashboard/src/pages/logs.dart";
 import "package:rover_dashboard/src/pages/mini_home.dart";
-import "package:device_preview/device_preview.dart";
+import "package:rover_dashboard/src/pages/mini_logs.dart";
 import "package:rover_dashboard/src/pages/mini_metrics.dart";
 import "package:rover_dashboard/widgets.dart";
 
 class MiniViewModel with ChangeNotifier {
+  bool _darkMode = false;
+  Widget Function(BuildContext context)? _footerWidget;
+
   /// Constructor for [MiniViewModel], calls [init] to setup mini dashboard
   MiniViewModel() {
     init();
   }
-
-  bool _darkMode = false;
 
   set darkMode(bool darkMode) {
     _darkMode = darkMode;
@@ -37,6 +37,14 @@ class MiniViewModel with ChangeNotifier {
 
   /// Whether or not dark mode is enabled
   bool get darkMode => _darkMode;
+
+  set footerWidget(Widget Function(BuildContext context)? footerWidget) {
+    _footerWidget = footerWidget;
+    notifyListeners();
+  }
+
+  /// The builder for the footer widget
+  Widget Function(BuildContext context)? get footerWidget => _footerWidget;
 
   /// Initializes necessary systems and models for the Mini Dashboard
   ///
@@ -96,7 +104,7 @@ class MiniHomePage extends StatelessWidget {
                   children: [
                     const MiniHome(),
                     MiniMetrics(models.rover.metrics),
-                    LogsPage(),
+                    MiniLogs(miniViewModel: model),
                     ViewsWidget(),
                   ],
                 ),
@@ -104,11 +112,15 @@ class MiniHomePage extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: const MiniFooter(),
+        bottomNavigationBar: MiniFooter(model),
       );
 }
 
+/// Button to set the rover status to [RoverStatus.POWER_OFF], shutting off the rover
+///
+/// Displays a confirmation dialog before shutting down
 class PowerButton extends StatelessWidget {
+  /// Constructor for power button
   const PowerButton({super.key});
 
   @override
@@ -147,13 +159,19 @@ class PowerButton extends StatelessWidget {
       );
 }
 
-class MiniFooter extends StatelessWidget {
-  const MiniFooter({super.key});
+class MiniFooter extends ReusableReactiveWidget<MiniViewModel> {
+  const MiniFooter(super.model) : super();
 
   @override
-  Widget build(BuildContext context) => ColoredBox(
+  Widget build(BuildContext context, MiniViewModel model) => ColoredBox(
         color: context.colorScheme.secondary,
-        child: MessageDisplay(showLogs: false),
+        child: Row(
+          children: [
+            MessageDisplay(showLogs: false),
+            const Spacer(),
+            if (model.footerWidget != null) model.footerWidget!.call(context),
+          ],
+        ),
       );
 }
 
@@ -192,13 +210,7 @@ class MiniDashboard extends ReactiveWidget<MiniViewModel> {
 const networkErrors = {1234, 1231};
 
 void main() async {
-  runZonedGuarded(
-      () => runApp(
-            DevicePreview(
-              enabled: false,
-              builder: (context) => const MiniDashboard(),
-            ),
-          ), (error, stack) async {
+  runZonedGuarded(() => runApp(const MiniDashboard()), (error, stack) async {
     if (error is SocketException && networkErrors.contains(error.osError!.errorCode)) {
       models.home.setMessage(severity: Severity.critical, text: "Network error, restart by clicking the network icon");
     } else {
