@@ -13,26 +13,6 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
   /// Listens to the view model without disposing it.
   const LogsOptions(super.model) : super();
 
-  /// An appropriate WiFi for the connection strength of [device]
-  IconData connectionStrength(Device device) {
-    final socket = models.sockets.fromDevice(device);
-    final percentage = (socket?.connectionStrength.value ?? 0) * 100;
-
-    // Can't use a switch statement since socket?.isConnected isn't constant :(
-    if (percentage >= 0.8) {
-      return Icons.signal_wifi_statusbar_4_bar;
-    } else if (percentage >= 0.6) {
-      return Icons.network_wifi_3_bar;
-    } else if (percentage >= 0.4) {
-      return Icons.network_wifi_2_bar;
-    } else if (percentage >= 0.2) {
-      return Icons.network_wifi_1_bar;
-    } else if (socket?.isConnected ?? false) {
-      return Icons.signal_wifi_0_bar;
-    } else {
-      return Icons.signal_wifi_off_outlined;
-    }
-  }
 
   /// Returns the appropriate status icon for the log messages received from [device]
   Widget statusIcon(Device? device) {
@@ -99,88 +79,88 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
     );
   }
 
+  static const _devices = [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY];
+
   @override
   Widget build(BuildContext context, LogsViewModel model) => Column(
-      children: [
-        // Menu
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY]) // Reset devices
-              SizedBox(
-                width: 250,
-                child: Card(
-                  child: Column(
-                    children: [
-                      ListTile(
-                        onTap: () => model.options.resetDevice(device),
-                        leading: const Icon(Icons.restart_alt),
-                        title: Text("Reset ${device.humanName}"),
-                        subtitle: const Text("The device will reboot"),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            statusIcon(device),
-                            Icon(connectionStrength(device)),
-                            sshButton(device),
-                          ],
-                        ),
-                      ),
-                    ],
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          for (final device in _devices) SizedBox(
+            width: 250,
+            child: Card(
+              child: Column(
+                children: [
+                  ListTile(
+                    onTap: () => model.options.resetDevice(device),
+                    leading: const Icon(Icons.restart_alt),
+                    title: Text("Reset ${device.humanName}"),
+                    subtitle: const Text("The device will reboot"),
                   ),
-                ),
-              ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            DropdownMenu<Device?>(
-              label: const Text("Select device"),
-              initialSelection: model.options.deviceFilter,
-              onSelected: (input) {
-                model.options.setDeviceFilter(input);
-                model.update();
-              },
-              dropdownMenuEntries: [
-                for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY, null])
-                  DropdownMenuEntry(label: device?.humanName ?? "All", value: device),
-              ],
-            ),
-            const SizedBox(width: 8),
-            DropdownMenu<BurtLogLevel>(
-              label: const Text("Select severity"),
-              initialSelection: model.options.levelFilter,
-              onSelected: (input) {
-                model.options.setLevelFilter(input);
-                model.update();
-              },
-              dropdownMenuEntries: [
-                for (final level in BurtLogLevel.values.filtered)
-                  DropdownMenuEntry(label: level.humanName, value: level),
-              ],
-            ),
-            const SizedBox(width: 8),
-            SizedBox(
-              width: 250,
-              child: CheckboxListTile(
-                title: const Text("Autoscroll"),
-                subtitle: const Text("Scroll to override"),
-                value: model.options.autoscroll,
-                onChanged: (input) {
-                  model.options.setAutoscroll(input: input);
-                  if (input ?? false) model.jumpToBottom();
-                  model.update();
-                },
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        statusIcon(device),
+                        NetworkStatusIcon(device: device),
+                        sshButton(device),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ],
-    );
+          ),
+        ],
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          DropdownMenu<Device?>(
+            label: const Text("Select device"),
+            initialSelection: model.options.deviceFilter,
+            onSelected: (input) {
+              model.options.setDeviceFilter(input);
+              model.update();
+            },
+            dropdownMenuEntries: [
+              for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY, null])
+                DropdownMenuEntry(label: device?.humanName ?? "All", value: device),
+            ],
+          ),
+          const SizedBox(width: 8),
+          DropdownMenu<BurtLogLevel>(
+            label: const Text("Select severity"),
+            initialSelection: model.options.levelFilter,
+            onSelected: (input) {
+              model.options.setLevelFilter(input);
+              model.update();
+            },
+            dropdownMenuEntries: [
+              for (final level in BurtLogLevel.values.filtered)
+                DropdownMenuEntry(label: level.humanName, value: level),
+            ],
+          ),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 250,
+            child: CheckboxListTile(
+              title: const Text("Autoscroll"),
+              subtitle: const Text("Scroll to override"),
+              value: model.options.autoscroll,
+              onChanged: (input) {
+                model.options.setAutoscroll(input: input);
+                if (input ?? false) model.jumpToBottom();
+                model.update();
+              },
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
 }
 
 /// The logs page, containing the [LogsOptions] and [LogsBody] widgets.
