@@ -3,7 +3,12 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
+/// The homepage for the Mini Dashboard
+///
+/// Displays voltage/current information, subsystem statuses, gamepad selection,
+/// and options to enable/disable the dashboard and rover
 class MiniHome extends StatelessWidget {
+  /// Const constructor for the MiniHome
   const MiniHome({super.key});
 
   @override
@@ -48,7 +53,11 @@ class MiniHome extends StatelessWidget {
       );
 }
 
+/// The voltage display for the mini home page, listens to drive metrics to update data
+///
+/// Displays a battery charge icon, voltage, current, and battery temperature
 class MiniHomeVoltage extends ReusableReactiveWidget<DriveMetrics> {
+  /// Const constructor for the home voltage widget
   const MiniHomeVoltage(super.model);
 
   /// An appropriate battery icon in increments of 1/8 battery level.
@@ -116,7 +125,11 @@ class MiniHomeVoltage extends ReusableReactiveWidget<DriveMetrics> {
       );
 }
 
+/// Toggle options that appear at the bottom of the home page
+///
+/// Displays switches for enabling the dashboard or setting the rover to idle
 class MiniHomeToggleOptions extends ReusableReactiveWidget<Sockets> {
+  /// Const constructor
   const MiniHomeToggleOptions(super.model);
 
   @override
@@ -164,14 +177,17 @@ class MiniHomeToggleOptions extends ReusableReactiveWidget<Sockets> {
       );
 }
 
+/// Systems status cards for the mini home page
+///
+/// Displays a color status indicator and a button to restart the system
 class MiniHomeSystemStatus extends ReusableReactiveWidget<LogsViewModel> {
+  /// Const constructor for system status cards
   const MiniHomeSystemStatus(super.model);
 
   /// Returns the appropriate status icon for the log messages received from [device]
   Widget statusIcon(Device? device) {
-    final socket =
-        models.sockets.sockets.firstWhere((socket) => socket.device == device); //models.sockets.fromDevice(device);
-    final lowestLevel = BurtLogLevel.info; //model.lowestLevel(device);
+    final socket = models.sockets.socketForDevice(device ?? Device.DEVICE_UNDEFINED);
+    final lowestLevel = model.getMostSevereLevel(device);
 
     Color? iconColor = switch (lowestLevel) {
       BurtLogLevel.critical => Colors.red,
@@ -181,7 +197,7 @@ class MiniHomeSystemStatus extends ReusableReactiveWidget<LogsViewModel> {
       _ => null,
     };
 
-    if (device == null || /*socket == null ||*/ !socket.isConnected) {
+    if (device == null || socket == null || !socket.isConnected) {
       iconColor = Colors.black;
     }
 
