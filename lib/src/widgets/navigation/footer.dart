@@ -37,12 +37,22 @@ class Footer extends StatelessWidget {
 	);
 }
 
+/// A network status icon for the given device.
 class NetworkStatusIcon extends StatelessWidget {
+  /// The device to monitor.
   final Device device;
-  final bool showTooltip;
+
+  /// What to do when the button is pressed.
+  final VoidCallback? onPressed;
+
+  /// What to show as the tooltip.
+  final String tooltip;
+
+  /// A const constructor.
   const NetworkStatusIcon({
     required this.device,
-    this.showTooltip = false,
+    required this.onPressed,
+    required this.tooltip,
   });
 
   IconData _getNetworkIcon(double percentage) => switch(percentage) {
@@ -58,17 +68,12 @@ class NetworkStatusIcon extends StatelessWidget {
   Widget build(BuildContext context) => ValueListenableBuilder<double>(  // network strength
     valueListenable: models.sockets.socketForDevice(device)!.connectionStrength,
     builder: (context, value, child) => IconButton(
-      tooltip: showTooltip
-        ? "${models.sockets.connectionSummary}\nClick to reset"
-        : null,
+      tooltip: tooltip,
       icon: Icon(
         _getNetworkIcon(value),
         color: StatusIcons.getColor(value),
       ),
-      onPressed: () async {
-        await models.sockets.reset();
-        models.home.setMessage(severity: Severity.info, text: "Network reset");
-      },
+      onPressed: onPressed,
     ),
   );
 }
@@ -152,7 +157,14 @@ class StatusIcons extends StatelessWidget {
 					),
 				),
 			),
-			const NetworkStatusIcon(device: Device.SUBSYSTEMS, showTooltip: true),
+			NetworkStatusIcon(
+        device: Device.SUBSYSTEMS,
+        tooltip: "${models.sockets.connectionSummary}\nClick to reset",
+        onPressed: () async {
+          await models.sockets.reset();
+          models.home.setMessage(severity: Severity.info, text: "Network reset");
+        },
+      ),
 			ValueListenableBuilder<RoverStatus>(  // status
 				valueListenable: models.rover.status,
 				builder: (context, value, child) => PopupMenuButton(

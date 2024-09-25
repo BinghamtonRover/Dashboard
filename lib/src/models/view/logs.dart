@@ -75,6 +75,7 @@ class LogsViewModel with ChangeNotifier {
       onDetach: _stopListeningForScroll,
     );
     models.logs.addListener(onNewLog);
+    models.sockets.addListener(notifyListeners);
   }
 
   @override
@@ -131,25 +132,33 @@ class LogsViewModel with ChangeNotifier {
       .where((log) => log.level.value <= options.levelFilter.value).toList();
   }
 
+  /// Opens an SSH session (on Windows) for the given device.
   void openSsh(Device device, DashboardSocket socket) {
     if (models.sockets.rover == RoverType.localhost) {
-      models.home.setMessage(
-        severity: Severity.error,
-        text: "You can't SSH into your own computer silly!",
-      );
+      models.home.setMessage(severity: Severity.error, text: "You can't SSH into your own computer silly!");
     } else if (socket.destination?.address == null) {
-      models.home.setMessage(
-        severity: Severity.error,
-        text: "Unable to find IP Address for ${device.humanName}, try resetting the network.",
-      );
+      models.home.setMessage(severity: Severity.error, text: "Unable to find IP Address for ${device.humanName}, try resetting the network.");
     } else {
       Process.run("cmd", [
-        "/k",
-        "start",
-        "powershell",
-        "-NoExit",
-        "-command",
+        // Keep a Powershell window open
+        "/k", "start", "powershell", "-NoExit", "-command",
+        // SSH to the IP address, and do not care if the device fingerprint has changed
         "ssh pi@${socket.destination!.address.address} -o StrictHostkeyChecking=no",
+      ]);
+    }
+  }
+
+  /// Opens a Command prompt on Windows to ping the device.
+  void ping(Device device) {
+    final socket = models.sockets.socketForDevice(device);
+    if (socket == null || socket.destination == null) {
+      models.home.setMessage(severity: Severity.error, text: "Could not determine IP address for ${device.humanName}");
+    } else {
+      Process.run("cmd", [
+        // Keep a CMD window open
+        "/k", "start", "cmd", "/k",
+        // Ping the IP address. -t means indefinitely
+        "ping", "-t", socket.destination!.address.address,
       ]);
     }
   }

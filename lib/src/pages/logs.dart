@@ -14,23 +14,17 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
   const LogsOptions(super.model) : super();
 
   /// Returns the appropriate status icon for the log messages received from [device]
-  Widget statusIcon(Device device) {
+  Color? getStatusColor(Device device) {
     final socket = models.sockets.socketForDevice(device);
     final lowestLevel = model.getMostSevereLevel(device);
-
-    Color? iconColor = switch (lowestLevel) {
+    if (socket == null || !socket.isConnected) return Colors.black;
+    return switch (lowestLevel) {
       BurtLogLevel.critical => Colors.red,
       BurtLogLevel.info || BurtLogLevel.debug || BurtLogLevel.trace => Colors.green,
       BurtLogLevel.warning => Colors.yellow,
       BurtLogLevel.error => Colors.red,
       _ => null,
     };
-
-    if (socket == null || !socket.isConnected) {
-      iconColor = Colors.black;
-    }
-
-    return Icon(Icons.circle, color: iconColor);
   }
 
   /// Returns a button to open an SSH connection to [device]
@@ -68,8 +62,12 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        statusIcon(device),
-                        NetworkStatusIcon(device: device),
+                        Icon(Icons.circle, color: getStatusColor(device)),
+                        NetworkStatusIcon(
+                          device: device,
+                          tooltip: "Click to ping",
+                          onPressed: !Platform.isWindows ? null : () => model.ping(device),
+                        ),
                         sshButton(device) ?? Container(),
                       ],
                     ),
