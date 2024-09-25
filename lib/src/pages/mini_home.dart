@@ -17,7 +17,7 @@ class MiniHome extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 5,
-                  child: MiniHomeVoltage(models.rover.metrics),
+                  child: MiniHomeVoltage(models.rover.metrics.drive),
                 ),
                 const Divider(),
                 Expanded(
@@ -48,7 +48,7 @@ class MiniHome extends StatelessWidget {
       );
 }
 
-class MiniHomeVoltage extends ReusableReactiveWidget<RoverMetrics> {
+class MiniHomeVoltage extends ReusableReactiveWidget<DriveMetrics> {
   const MiniHomeVoltage(super.model);
 
   /// An appropriate battery icon in increments of 1/8 battery level.
@@ -80,7 +80,7 @@ class MiniHomeVoltage extends ReusableReactiveWidget<RoverMetrics> {
   }
 
   @override
-  Widget build(BuildContext context, RoverMetrics model) => Row(
+  Widget build(BuildContext context, DriveMetrics model) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
@@ -89,7 +89,7 @@ class MiniHomeVoltage extends ReusableReactiveWidget<RoverMetrics> {
             child: FittedBox(
               fit: BoxFit.fill,
               child: Icon(
-                getBatteryIcon(model.drive.batteryVoltage),
+                getBatteryIcon(model.batteryPercentage),
               ),
             ),
           ),
@@ -99,15 +99,15 @@ class MiniHomeVoltage extends ReusableReactiveWidget<RoverMetrics> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "${model.drive.batteryVoltage.toStringAsFixed(2)} V",
+                "${model.batteryVoltage.toStringAsFixed(2)} V",
                 style: context.textTheme.displaySmall,
               ),
               Text(
-                "${model.drive.data.batteryCurrent.toStringAsFixed(2)} A",
+                "${model.data.batteryCurrent.toStringAsFixed(2)} A",
                 style: context.textTheme.displaySmall,
               ),
               Text(
-                "${model.drive.data.batteryTemperature.toStringAsFixed(2)} °C",
+                "${model.data.batteryTemperature.toStringAsFixed(2)} °C",
                 style: context.textTheme.displaySmall,
               ),
             ],
