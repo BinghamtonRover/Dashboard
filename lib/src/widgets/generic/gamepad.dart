@@ -37,11 +37,19 @@ class GamepadButton extends ReusableReactiveWidget<Controller> {
         IconButton(
           icon: Stack(
             children: [
-              const Icon(Icons.sports_esports), 
+              const SizedBox(height: 32),
+              Icon(Icons.sports_esports, color: context.colorScheme.onSurface), 
               Positioned(
-                bottom: -2,
-                right: -2,
-                child: Text("${model.gamepadIndex + 1}", style: const TextStyle(fontSize: 12, color: Colors.white)),
+                bottom: 0,
+                right: 4.5,
+                child: Text(
+                  "${model.gamepadIndex + 1}",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: context.colorScheme.onSurface,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
