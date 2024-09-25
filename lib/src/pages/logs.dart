@@ -65,8 +65,8 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
                         Icon(Icons.circle, color: getStatusColor(device)),
                         NetworkStatusIcon(
                           device: device,
-                          tooltip: "Click to ping",
-                          onPressed: !Platform.isWindows ? null : () => model.ping(device),
+                          tooltip: "Ping Device",
+                          onPressed: Platform.isWindows ? () => model.ping(device) : null,
                         ),
                         sshButton(device) ?? Container(),
                       ],
@@ -82,7 +82,7 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           DropdownMenu<Device?>(
-            label: const Text("Select device"),
+            label: const Text("Select Device"),
             initialSelection: model.options.deviceFilter,
             onSelected: (input) {
               model.options.setDeviceFilter(input);
@@ -95,7 +95,7 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
           ),
           const SizedBox(width: 8),
           DropdownMenu<BurtLogLevel>(
-            label: const Text("Select severity"),
+            label: const Text("Select Severity"),
             initialSelection: model.options.levelFilter,
             onSelected: (input) {
               model.options.setLevelFilter(input);
@@ -156,7 +156,7 @@ class LogsState extends State<LogsPage> {
           onPressed: () => showDialog<void>(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text("Logs help"),
+              title: const Text("Logs Help"),
               content: Column(mainAxisSize: MainAxisSize.min, children: [
                 const Text("This page contains all logs received by the dashboard.\nSelecting a level means that only messages of that level or higher will be shown.", textAlign: TextAlign.center,),
                 const SizedBox(height: 4),
@@ -180,12 +180,12 @@ class LogsState extends State<LogsPage> {
         IconButton(
           icon: const Icon(Icons.vertical_align_bottom),
           onPressed: model.jumpToBottom,
-          tooltip: "Jump to bottom",
+          tooltip: "Jump to Bottom",
         ),
         IconButton(
           icon: const Icon(Icons.delete_forever),
           onPressed: models.logs.clear,
-          tooltip: "Clear logs",
+          tooltip: "Clear Logs",
         ),
       ],
     ),
