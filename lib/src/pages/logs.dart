@@ -124,6 +124,8 @@ class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
 /// The logs page, containing the [LogsOptions] and [LogsBody] widgets.
 ///
 /// This page lets the user view logs, set filters, and reboot the rover.
+///
+/// This must be a StatefulWidget, not a ReactiveWidget, to prevent flickering when the UI updates.
 class LogsPage extends StatefulWidget {
   @override
   LogsState createState() => LogsState();
