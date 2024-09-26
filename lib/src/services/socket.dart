@@ -7,9 +7,8 @@ import "package:rover_dashboard/models.dart";
 /// A service to send and receive Protobuf messages over a UDP socket, using [BurtSocket].
 ///
 /// This class monitors its connection to the given [device] by sending heartbeats periodically and
-/// logging the response (or lack thereof). To be notified of connection events, pass in
-/// [onConnected] and [onDisconnected] callbacks. To be notified of incoming messages, listen to the
-/// [messages] stream that streams incoming [WrappedMessage].
+/// logging the response (or lack thereof). To be notified of connection events, add a listener to [connectionStatus].
+/// To be notified of incoming messages, listen to the [messages] stream that streams incoming [WrappedMessage].
 ///
 /// To use this class:
 /// - Call [init] to open the socket.
@@ -55,7 +54,7 @@ class DashboardSocket extends BurtSocket {
 
   @override
   void onHeartbeat(Connect heartbeat, SocketInfo source) => _heartbeats++;
-  
+
   @override
   Future<void> onSettings(NetworkSettings settings) async {}
 
