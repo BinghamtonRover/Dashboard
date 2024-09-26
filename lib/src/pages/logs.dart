@@ -9,14 +9,14 @@ import "package:rover_dashboard/widgets.dart";
 /// A widget to show the options for the logs page.
 ///
 /// This is separate from the logs display so that the menu doesn't flicker when new logs arrive.
-class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
+class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
   /// Listens to the view model without disposing it.
   const LogsOptions(super.model) : super();
 
   /// Returns the appropriate status icon for the log messages received from [device]
   Color? getStatusColor(Device device) {
     final socket = models.sockets.socketForDevice(device);
-    final lowestLevel = model.getMostSevereLevel(device);
+    final lowestLevel = model.getSeverity(device);
     if (socket == null || !socket.isConnected) return Colors.black;
     return switch (lowestLevel) {
       BurtLogLevel.critical => Colors.red,
@@ -41,7 +41,7 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
   static const _devices = [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY];
 
   @override
-  Widget build(BuildContext context, LogsViewModel model) => Column(
+  Widget build(BuildContext context, LogsOptionsViewModel model) => Column(
     children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -52,7 +52,7 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
               child: Column(
                 children: [
                   ListTile(
-                    onTap: () => model.options.resetDevice(device),
+                    onTap: () => model.resetDevice(device),
                     leading: const Icon(Icons.restart_alt),
                     title: Text("Reset ${device.humanName}"),
                     subtitle: const Text("The device will reboot"),
@@ -83,11 +83,8 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
         children: [
           DropdownMenu<Device?>(
             label: const Text("Select Device"),
-            initialSelection: model.options.deviceFilter,
-            onSelected: (input) {
-              model.options.setDeviceFilter(input);
-              model.update();
-            },
+            initialSelection: model.deviceFilter,
+            onSelected: model.setDeviceFilter,
             dropdownMenuEntries: [
               for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY, null])
                 DropdownMenuEntry(label: device?.humanName ?? "All", value: device),
@@ -96,11 +93,8 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
           const SizedBox(width: 8),
           DropdownMenu<BurtLogLevel>(
             label: const Text("Select Severity"),
-            initialSelection: model.options.levelFilter,
-            onSelected: (input) {
-              model.options.setLevelFilter(input);
-              model.update();
-            },
+            initialSelection: model.levelFilter,
+            onSelected: model.setLevelFilter,
             dropdownMenuEntries: [
               for (final level in BurtLogLevel.values.filtered)
                 DropdownMenuEntry(label: level.humanName, value: level),
@@ -112,21 +106,14 @@ class LogsOptions extends ReusableReactiveWidget<LogsViewModel> {
             child: CheckboxListTile(
               title: const Text("Autoscroll"),
               subtitle: const Text("Scroll to override"),
-              value: model.options.autoscroll,
-              onChanged: (input) {
-                model.options.setAutoscroll(input: input);
-                if (input ?? false) model.jumpToBottom();
-                model.update();
-              },
+              value: model.autoscroll,
+              onChanged: model.setAutoscroll,
             ),
           ),
           const SizedBox(width: 8),
           IconButton(
-            onPressed: () {
-              model.options.paused = !model.options.paused;
-              model.update();
-            },
-            icon: Icon((model.options.paused) ? Icons.play_arrow : Icons.pause),
+            onPressed: model.togglePause,
+            icon: Icon((model.paused) ? Icons.play_arrow : Icons.pause),
           ),
         ],
       ),
@@ -151,7 +138,7 @@ class LogsState extends State<LogsPage> {
   Widget build(BuildContext context) => Scaffold(
     body: Column(children: [
       const SizedBox(height: 12),
-      LogsOptions(model),
+      LogsOptions(model.options),
       const Divider(),
       Expanded(child: LogsBody(model)),
     ],),

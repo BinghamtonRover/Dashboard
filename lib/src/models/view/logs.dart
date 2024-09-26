@@ -37,7 +37,8 @@ class LogsOptionsViewModel with ChangeNotifier {
   }
 
   /// Enables or disables [autoscroll].
-  void setAutoscroll({bool? input}) {
+  // ignore: avoid_positional_boolean_parameters
+  void setAutoscroll(bool? input) {
     if (input == null || autoscroll == input) return;
     autoscroll = input;
     Timer.run(notifyListeners);
@@ -47,6 +48,12 @@ class LogsOptionsViewModel with ChangeNotifier {
   void setLevelFilter(BurtLogLevel? input) {
     if (input == null) return;
     levelFilter = input;
+    notifyListeners();
+  }
+
+  /// Toggles whether new logs are received.
+  void togglePause() {
+    paused = !paused;
     notifyListeners();
   }
 
@@ -71,80 +78,10 @@ class LogsOptionsViewModel with ChangeNotifier {
   /// Updates [deviceSeverity] when a new message comes in.
   void onNewLog(BurtLog log) {
     final oldSeverity = deviceSeverity[log.device];
-    if (oldSeverity == null || log.level.value < oldSeverity.value) {
+    if (oldSeverity == null || log.level.isMoreSevereThan(oldSeverity)) {
       deviceSeverity[log.device] = log.level;
+      notifyListeners();
     }
-    notifyListeners();
-  }
-}
-
-/// A view model for the logs page to control which logs are shown.
-class LogsViewModel with ChangeNotifier {
-  /// The options for the log page.
-  final options = LogsOptionsViewModel();
-
-  /// The scroll controller used to implement autoscroll.
-  late final ScrollController scrollController;
-
-  void _listenForScroll(ScrollPosition position) => position.isScrollingNotifier.addListener(onScroll);
-
-  void _stopListeningForScroll(ScrollPosition position) => position.isScrollingNotifier.removeListener(onScroll);
-
-  /// Listens for incoming logs.
-  LogsViewModel() {
-    scrollController = ScrollController(
-      onAttach: _listenForScroll,
-      onDetach: _stopListeningForScroll,
-    );
-    models.logs.addListener(onNewLog);
-    models.sockets.addListener(notifyListeners);
-    models.logs.stream.listen(options.onNewLog);
-  }
-
-  @override
-  void dispose() {
-    models.logs.removeListener(onNewLog);
-    super.dispose();
-  }
-
-  /// Disables [LogsOptionsViewModel.autoscroll] when the user scrolls manually.
-  void onScroll() {
-    final disableAutoscroll = scrollController.position.pixels > 0;
-    if (disableAutoscroll != options.autoscroll && options.autoscroll) {
-      options.setAutoscroll(input: disableAutoscroll);
-    }
-  }
-
-  /// Scrolls to the bottom when a new log appears (if [LogsOptionsViewModel.autoscroll] is true).
-  void onNewLog() {
-    if (options.paused) {
-      return;
-    }
-    notifyListeners();
-    if (!scrollController.hasClients) return;
-    scrollController.jumpTo(options.autoscroll ? 0 : scrollController.offset + 67);
-  }
-
-  /// Jumps to the bottom of the logs.
-  void jumpToBottom() {
-    if (!scrollController.hasClients) return;
-    scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.easeOutBack);
-  }
-
-  /// Updates the UI.
-  void update() => notifyListeners();
-
-  /// Returns the most severe log level for all logs in [device]
-  ///
-  /// If [device] is null, returns [BurtLogLevel.info].
-  BurtLogLevel getMostSevereLevel(Device? device) => device == null ? BurtLogLevel.info : options.getSeverity(device);
-
-  /// The logs that should be shown, according to [LogsOptionsViewModel].
-  List<BurtLog> get logs {
-    final device = options.deviceFilter;
-    final logList = models.logs.logsForDevice(device);
-    if (logList == null) return [];
-    return logList.toList().reversed.where((log) => log.level.value <= options.levelFilter.value).toList();
   }
 
   /// Opens an SSH session (on Windows) for the given device.
@@ -179,5 +116,68 @@ class LogsViewModel with ChangeNotifier {
         "ping", "-t", socket.destination!.address.address,
       ]);
     }
+  }
+}
+
+/// A view model for the logs page to control which logs are shown.
+class LogsViewModel with ChangeNotifier {
+  /// The options for the log page.
+  final options = LogsOptionsViewModel();
+
+  /// The scroll controller used to implement autoscroll.
+  late final ScrollController scrollController;
+
+  void _listenForScroll(ScrollPosition position) =>
+    position.isScrollingNotifier.addListener(onScroll);
+
+  void _stopListeningForScroll(ScrollPosition position) =>
+    position.isScrollingNotifier.removeListener(onScroll);
+
+  /// Listens for incoming logs.
+  LogsViewModel() {
+    scrollController = ScrollController(
+      onAttach: _listenForScroll,
+      onDetach: _stopListeningForScroll,
+    );
+    models.logs.addListener(onNewLog);
+    models.sockets.addListener(notifyListeners);
+    models.logs.stream.listen(options.onNewLog);
+  }
+
+  @override
+  void dispose() {
+    models.logs.removeListener(onNewLog);
+    super.dispose();
+  }
+
+  /// Disables [LogsOptionsViewModel.autoscroll] when the user scrolls manually.
+  void onScroll() {
+    final disableAutoscroll = scrollController.position.pixels > 0;
+    if (disableAutoscroll != options.autoscroll && options.autoscroll) {
+      options.setAutoscroll(disableAutoscroll);
+    }
+  }
+
+  /// Scrolls to the bottom when a new log appears (if [LogsOptionsViewModel.autoscroll] is true).
+  void onNewLog() {
+    if (options.paused) return;
+    notifyListeners();
+    if (!scrollController.hasClients) return;
+    scrollController.jumpTo(options.autoscroll ? 0 : scrollController.offset + 67);
+  }
+
+  /// Jumps to the bottom of the logs.
+  void jumpToBottom() {
+    if (!scrollController.hasClients) return;
+    scrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.easeOutBack);
+  }
+
+  /// The logs that should be shown, according to [LogsOptionsViewModel].
+  List<BurtLog> get logs {
+    final device = options.deviceFilter;
+    final logList = models.logs.logsForDevice(device);
+    if (logList == null) return [];
+    return logList.toList().reversed
+      .where((log) => log.level.isAtLeast(options.levelFilter)).toList();
   }
 }
