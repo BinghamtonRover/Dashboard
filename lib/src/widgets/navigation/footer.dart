@@ -30,7 +30,7 @@ class Footer extends StatelessWidget {
             GamepadButton(models.rover.controller3),
             SerialButton(),
             const SizedBox(width: 4),
-            StatusIcons(),
+            const StatusIcons(),
           ],
         ),
       ],
@@ -76,7 +76,7 @@ class NetworkStatusIcon extends ReusableReactiveWidget<ValueNotifier<double>> {
 /// A few icons displaying the rover's current status.
 class StatusIcons extends ReactiveWidget<FooterViewModel> {
   /// A const constructor.
-  StatusIcons() : super(key: UniqueKey());
+  const StatusIcons();
 
   @override
   FooterViewModel createModel() => FooterViewModel();
