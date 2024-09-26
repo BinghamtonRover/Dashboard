@@ -13,9 +13,9 @@ class Footer extends StatelessWidget {
   /// Creates the footer.
   const Footer({this.showLogs = true});
 
-	@override
-	Widget build(BuildContext context) => ColoredBox(
-		color: Theme.of(context).colorScheme.secondary,
+  @override
+  Widget build(BuildContext context) => ColoredBox(
+    color: Theme.of(context).colorScheme.secondary,
     child: Wrap(
       alignment: WrapAlignment.spaceBetween,
       children: [
@@ -34,14 +34,11 @@ class Footer extends StatelessWidget {
         ),
       ],
     ),
-	);
+  );
 }
 
 /// A network status icon for the given device.
-class NetworkStatusIcon extends StatelessWidget {
-  /// The device to monitor.
-  final Device device;
-
+class NetworkStatusIcon extends ReusableReactiveWidget<ValueNotifier<double>> {
   /// What to do when the button is pressed.
   final VoidCallback? onPressed;
 
@@ -49,11 +46,11 @@ class NetworkStatusIcon extends StatelessWidget {
   final String tooltip;
 
   /// A const constructor.
-  const NetworkStatusIcon({
-    required this.device,
+  NetworkStatusIcon({
+    required Device device,
     required this.onPressed,
     required this.tooltip,
-  });
+  }) : super(models.sockets.socketForDevice(device)!.connectionStrength);
 
   IconData _getNetworkIcon(double percentage) => switch(percentage) {
     >= 0.8 => Icons.signal_wifi_statusbar_4_bar,
@@ -65,69 +62,65 @@ class NetworkStatusIcon extends StatelessWidget {
   };
 
   @override
-  Widget build(BuildContext context) => ValueListenableBuilder<double>(  // network strength
-    valueListenable: models.sockets.socketForDevice(device)!.connectionStrength,
-    builder: (context, value, child) => IconButton(
-      tooltip: tooltip,
-      icon: Icon(
-        _getNetworkIcon(value),
-        color: StatusIcons.getColor(value),
-      ),
-      onPressed: onPressed,
+  Widget build(BuildContext context, ValueNotifier<double> model) => IconButton(
+    tooltip: tooltip,
+    icon: Icon(
+      _getNetworkIcon(model.value),
+      color: StatusIcons.getColor(model.value),
     ),
+    onPressed: onPressed,
   );
 }
 
 /// A few icons displaying the rover's current status.
-class StatusIcons extends StatelessWidget {
+class StatusIcons extends ReactiveWidget<FooterViewModel> {
+  /// A const constructor.
+  const StatusIcons();
+
+  @override
+  FooterViewModel createModel() => FooterViewModel();
+
   /// A color representing a meter's fill.
-	static Color getColor(double percentage) {
-		if (percentage > 0.45) { return Colors.green; }
-		else if (percentage > 0.2) { return Colors.orange; }
-		else if (percentage > 0.0) { return Colors.red; }
-		else { return Colors.black; }
-	}
+  static Color getColor(double percentage) => switch (percentage) {
+    > 0.45 => Colors.green,
+    > 0.2 => Colors.orange,
+    > 0 => Colors.red,
+    _ => Colors.black,
+  };
 
-	/// Provides a const constructor.
-	const StatusIcons();
+  /// An appropriate battery icon in increments of 1/8 battery level.
+  IconData getBatteryIcon(double percentage) => switch (percentage) {
+    >= 0.84 => Icons.battery_full,
+    >= 0.72 => Icons.battery_6_bar,
+    >= 0.60 => Icons.battery_5_bar,
+    >= 0.48 => Icons.battery_4_bar,
+    >= 0.36 => Icons.battery_3_bar,
+    >= 0.24 => Icons.battery_2_bar,
+    >= 0.12 => Icons.battery_1_bar,
+    _       => Icons.battery_0_bar,
+  };
 
-	/// An appropriate battery icon in increments of 1/8 battery level.
-	IconData getBatteryIcon(double percentage) {
-		if (percentage >= 0.84) { return Icons.battery_full; }  // 80-100
-		else if (percentage >= 0.72) { return Icons.battery_6_bar; }  // 60-80
-		else if (percentage >= 0.60) { return Icons.battery_5_bar; }  // 60-80
-		else if (percentage >= 0.48) { return Icons.battery_4_bar; }  // 60-80
-		else if (percentage >= 0.36) { return Icons.battery_3_bar; }  // 60-80
-		else if (percentage >= 0.24) { return Icons.battery_2_bar; }  // 40-60
-		else if (percentage >= 0.12) { return Icons.battery_1_bar; }  // 20-40
-		else { return Icons.battery_0_bar; }  // 0-20
-	}
+  /// An appropriate battery icon representing the rover's current status.
+  IconData getStatusIcon(RoverStatus status) => switch (status) {
+    RoverStatus.DISCONNECTED => Icons.power_off,
+    RoverStatus.POWER_OFF => Icons.power_off,
+    RoverStatus.IDLE => Icons.pause_circle,
+    RoverStatus.MANUAL => Icons.play_circle,
+    RoverStatus.AUTONOMOUS => Icons.smart_toy,
+    RoverStatus.RESTART => Icons.restart_alt,
+    _ => throw ArgumentError("Unrecognized rover status: $status"),
+  };
 
-	/// An appropriate battery icon representing the rover's current status.
-	IconData getStatusIcon(RoverStatus status) {
-		switch (status) {
-			case RoverStatus.DISCONNECTED: return Icons.power_off;
-			case RoverStatus.POWER_OFF: return Icons.power_off;
-			case RoverStatus.IDLE: return Icons.pause_circle;
-			case RoverStatus.MANUAL: return Icons.play_circle;
-			case RoverStatus.AUTONOMOUS: return Icons.smart_toy;
-			case RoverStatus.RESTART: return Icons.restart_alt;
-		}
-		throw ArgumentError("Unrecognized rover status: $status");
-	}
-
-	/// The color of the rover's status icon.
-	Color getStatusColor(RoverStatus status) {
-		switch(status) {
-			case RoverStatus.DISCONNECTED: return Colors.black;
-			case RoverStatus.IDLE: return Colors.yellow;
-			case RoverStatus.MANUAL: return Colors.green;
-			case RoverStatus.AUTONOMOUS: return Colors.blueGrey;
-			case RoverStatus.POWER_OFF: return Colors.red;
-			case RoverStatus.RESTART: return Colors.yellow;
-		}
-		throw ArgumentError("Unrecognized rover status: $status");
-	}
+  /// The color of the rover's status icon.
+  Color getStatusColor(RoverStatus status) => switch(status) {
+    RoverStatus.DISCONNECTED => Colors.black,
+    RoverStatus.IDLE => Colors.yellow,
+    RoverStatus.MANUAL => Colors.green,
+    RoverStatus.AUTONOMOUS => Colors.blueGrey,
+    RoverStatus.POWER_OFF => Colors.red,
+    RoverStatus.RESTART => Colors.yellow,
+    _ => throw ArgumentError("Unrecognized rover status: $status"),
+  };
 
   /// Gets the Flutter color for the given Protobuf color.
   Color getLedColor(ProtoColor color) => switch (color) {
@@ -138,102 +131,81 @@ class StatusIcons extends StatelessWidget {
     _ => Colors.grey,
   };
 
-	@override
-	Widget build(BuildContext context) => Row(
-    mainAxisSize: MainAxisSize.min,
-		children: [
-			AnimatedBuilder(  // battery level
-				animation: Listenable.merge([models.rover.metrics.drive, models.rover.status]),
-				builder: (context, _) => Tooltip(
-					message: "Battery: ${models.rover.metrics.drive.batteryVoltage.toStringAsFixed(2)} "
-            "(${(models.rover.metrics.drive.batteryPercentage * 100).toStringAsFixed(0)}%)",
-					child: Icon(
-						models.rover.isConnected
-							? getBatteryIcon(models.rover.metrics.drive.batteryPercentage)
-							: Icons.battery_unknown,
-						color: models.rover.isConnected
-              ? getColor(models.rover.metrics.drive.batteryPercentage)
-              : Colors.black,
-					),
-				),
-			),
-          ListenableBuilder(
-            listenable: Listenable.merge([
-              models.sockets.data.connectionStrength,
-              models.sockets.video.connectionStrength,
-              models.sockets.autonomy.connectionStrength,
-            ]),
-            builder: (context, _) => NetworkStatusIcon(
-              device: Device.SUBSYSTEMS,
-              tooltip: "${models.sockets.connectionSummary}\nClick to reset",
-              onPressed: () async {
-                await models.sockets.reset();
-                models.home.setMessage(severity: Severity.info, text: "Network reset");
-              },
-            ),
+  /// Change the mode of the rover, confirming if the user wants to shut it off.
+  Future<void> changeMode(BuildContext context, RoverStatus input) => input == RoverStatus.POWER_OFF
+    ? showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Are you sure?"),
+        content: const Text("This will turn off the rover and you must physically turn it back on again"),
+        actions: [
+          TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
+          ElevatedButton(
+            onPressed: () { models.rover.settings.setStatus(input); Navigator.of(context).pop(); },
+            child: const Text("Continue"),
           ),
-			ValueListenableBuilder<RoverStatus>(  // status
-				valueListenable: models.rover.status,
-				builder: (context, value, child) => PopupMenuButton(
-					tooltip: "Change mode",
-					onSelected: (value) async {
-            if (value == RoverStatus.POWER_OFF) {
-              await showDialog<void>(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                  title: const Text("Are you sure?"),
-                  content: const Text("This will turn off the rover and you must physically turn it back on again"),
-                  actions: [
-                    TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
-                    ElevatedButton(
-                      onPressed: () { models.rover.settings.setStatus(value); Navigator.of(context).pop(); },
-                      child: const Text("Continue"),
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              await models.rover.settings.setStatus(value);
-            }
-          },
-          icon: Icon(
-						getStatusIcon(value),
-						color: getStatusColor(value),
-					),
-					itemBuilder: (_) => [
-						for (final value in RoverStatus.values)
-							if (value != RoverStatus.DISCONNECTED)  // can't select this!
-								PopupMenuItem(value: value, child: Text(value.humanName)),
-					],
-				),
-			),
-      ListenableBuilder(  // LED color
-				listenable: Listenable.merge([models.rover.metrics.drive, models.rover.status]),
-				builder: (context, child) => IconButton(
-          icon: Icon(
-            Icons.circle,
-            color: models.rover.isConnected
-              ? getLedColor(models.rover.metrics.drive.data.color)
-              : Colors.black,
-            ),
-          onPressed: () => showDialog<void>(context: context, builder: (_) => ColorEditor(ColorBuilder())),
-          tooltip: "Change LED strip",
+        ],
+      ),
+    )
+    : models.rover.settings.setStatus(input);
+
+  @override
+  Widget build(BuildContext context, FooterViewModel model) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Tooltip(  // battery level
+        message: model.batteryMessage,
+        child: Icon(
+          model.isConnected
+            ? getBatteryIcon(model.batteryPercentage)
+            : Icons.battery_unknown,
+          color: model.isConnected
+            ? getColor(model.batteryPercentage)
+            : Colors.black,
         ),
       ),
-			const SizedBox(width: 4),
-		],
-	);
+      NetworkStatusIcon(  // network icon
+        device: Device.SUBSYSTEMS,
+        tooltip: "${model.connectionSummary}\nClick to reset",
+        onPressed: model.resetNetwork,
+      ),
+      PopupMenuButton(  // rover mode
+        tooltip: "Change mode",
+        onSelected: (input) => changeMode(context, input),
+        icon: Icon(
+          getStatusIcon(model.status),
+          color: getStatusColor(model.status),
+        ),
+        itemBuilder: (_) => [
+          for (final value in RoverStatus.values)
+            if (value != RoverStatus.DISCONNECTED)  // can't select this!
+              PopupMenuItem(value: value, child: Text(value.humanName)),
+        ],
+      ),
+      IconButton(  // LED strip
+        icon: Icon(
+          Icons.circle,
+          color: model.isConnected
+            ? getLedColor(model.ledColor)
+            : Colors.black,
+          ),
+        onPressed: () => showDialog<void>(context: context, builder: (_) => ColorEditor(ColorBuilder())),
+        tooltip: "Change LED strip",
+      ),
+      const SizedBox(width: 4),
+    ],
+  );
 }
 
 /// Allows the user to connect to the firmware directly, over Serial.
 ///
 /// See [SerialModel] for an implementation.
 class SerialButton extends ReusableReactiveWidget<SerialModel> {
-	/// Provides a const constructor.
-	SerialButton() : super(models.serial);
+  /// Provides a const constructor.
+  SerialButton() : super(models.serial);
 
-	@override
-	Widget build(BuildContext context, SerialModel model) => PopupMenuButton(
+  @override
+  Widget build(BuildContext context, SerialModel model) => PopupMenuButton(
     icon: Icon(
       Icons.usb,
       color: model.hasDevice ? Colors.green : context.colorScheme.onSecondary,
@@ -249,7 +221,7 @@ class SerialButton extends ReusableReactiveWidget<SerialModel> {
         ),
       ),
     ],
-	);
+  );
 }
 
 /// Displays the latest [TaskbarMessage] from [HomeModel.message].
@@ -258,32 +230,28 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
   final bool showLogs;
 
   /// Provides a const constructor for this widget.
-	MessageDisplay({required this.showLogs}) : super(models.home);
+  MessageDisplay({required this.showLogs}) : super(models.home);
 
-	/// Gets the appropriate icon for the given severity.
-	IconData getIcon(Severity? severity) {
-		switch (severity) {
-			case Severity.info: return Icons.info;
-			case Severity.warning: return Icons.warning;
-			case Severity.error: return Icons.error;
-			case Severity.critical: return Icons.dangerous;
-      case null: return Icons.receipt_long;
-		}
-	}
+  /// Gets the appropriate icon for the given severity.
+  IconData getIcon(Severity? severity) => switch (severity) {
+    Severity.info => Icons.info,
+    Severity.warning => Icons.warning,
+    Severity.error => Icons.error,
+    Severity.critical => Icons.dangerous,
+    null => Icons.receipt_long,
+  };
 
-	/// Gets the appropriate color for the given severity.
-	Color getColor(Severity? severity) {
-		switch (severity) {
-			case null: return Colors.transparent;
-			case Severity.info: return Colors.transparent;
-			case Severity.warning: return Colors.orange;
-			case Severity.error: return Colors.red;
-			case Severity.critical: return Colors.red.shade900;
-		}
-	}
+  /// Gets the appropriate color for the given severity.
+  Color getColor(Severity? severity) => switch (severity) {
+    Severity.info => Colors.transparent,
+    Severity.warning => Colors.orange,
+    Severity.error => Colors.red,
+    Severity.critical => Colors.red.shade900,
+    null => Colors.transparent,
+  };
 
-	@override
-	Widget build(BuildContext context, HomeModel model) => SizedBox(
+  @override
+  Widget build(BuildContext context, HomeModel model) => SizedBox(
     height: 48,
     child: InkWell(
       onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (context) => LogsPage())),
@@ -315,5 +283,5 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
         ),
       ),
     ),
-	);
+  );
 }
