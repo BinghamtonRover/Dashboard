@@ -29,7 +29,7 @@ class ScienceCommandEditor extends ReactiveWidget<ScienceCommandBuilder> {
           name: "State: ",
           value: model.state,
           onChanged: model.updateState,
-          items: const [ScienceState.STOP_COLLECTING, ScienceState.COLLECT_DATA],
+          items: const [ScienceState.STOP_COLLECTING, ScienceState.COLLECT_DATA, ScienceState.STREAM_DATA],
           humanName: (state) => state.humanName,
         ),),
         const SizedBox(width: 12),

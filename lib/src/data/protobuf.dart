@@ -219,7 +219,8 @@ extension ScienceStateUtils on ScienceState {
 		switch (this) {
 			case ScienceState.SCIENCE_STATE_UNDEFINED: return "Unknown";
 			case ScienceState.STOP_COLLECTING: return "Idle";
-			case ScienceState.COLLECT_DATA: return "Collecting data";
+			case ScienceState.COLLECT_DATA: return "Start test";
+      case ScienceState.STREAM_DATA: return "Stream data";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized task: $this");
