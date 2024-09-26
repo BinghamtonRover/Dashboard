@@ -1,9 +1,10 @@
 import "package:flutter/material.dart";
 
+import "package:burt_network/serial.dart";
+
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
-import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// The footer, responsible for showing vitals and logs.
@@ -213,7 +214,7 @@ class SerialButton extends ReusableReactiveWidget<SerialModel> {
     tooltip: "Select device",
     onSelected: model.toggle,
     itemBuilder: (_) => [
-      for (final String port in SerialDevice.availablePorts) PopupMenuItem(
+      for (final String port in DelegateSerialPort.allPorts) PopupMenuItem(
         value: port,
         child: ListTile(
           title: Text(port),

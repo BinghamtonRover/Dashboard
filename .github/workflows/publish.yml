@@ -1,9 +1,9 @@
 name: Publish Windows and Android apps
 
 # Builds a Windows App Installer (.msix) for the Dashboard
-# 
+#
 # To use this action, add your Windows Certificate file, in base64 format, to a
-# repository secret called WINDOWS_CERTIFICATE. This action then: 
+# repository secret called WINDOWS_CERTIFICATE. This action then:
 # - Installs Flutter and clones your repository
 # - Decodes your text certificate into a binary .pfx file
 # - Runs flutter pub run msix:create to build and sign your Flutter app
@@ -16,7 +16,7 @@ on:
 jobs:
  build:
   runs-on: windows-latest
-  env: 
+  env:
     windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
   steps:
     - name: Clone repository
@@ -24,7 +24,7 @@ jobs:
 
     - name: Setup Java
       uses: actions/setup-java@v1
-      with: 
+      with:
         java-version: '12.x'
 
     - name: Load certificate
@@ -34,7 +34,7 @@ jobs:
 
     - name: Install Flutter
       uses: subosito/flutter-action@v2
-      with: 
+      with:
         cache: true
         cache-key: "flutter-windows"  # we don't need *the* most recent build
 
@@ -45,12 +45,13 @@ jobs:
         dart analyze
         dart run msix:create
 
-    - name: Build APK
-      run: flutter build apk
+    # Temporarily removed because Android builds are broken
+    # - name: Build APK
+    #   run: flutter build apk
 
     - name: Create Release
       uses: softprops/action-gh-release@v0.1.15
-      with: 
+      with:
         files: |
           build/windows/x64/runner/Release/Dashboard.msix
           build/app/outputs/apk/release/app-release.apk

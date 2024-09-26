@@ -22,7 +22,6 @@ export "src/services/files.dart";
 export "src/services/gamepad/gamepad.dart";
 export "src/services/gamepad/service.dart";
 export "src/services/gamepad/state.dart";
-export "src/services/serial.dart";
 
 /// A dependency injection service that manages the lifecycle of other services.
 ///

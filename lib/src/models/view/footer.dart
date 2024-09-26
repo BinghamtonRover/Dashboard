@@ -4,13 +4,28 @@ import "package:rover_dashboard/models.dart";
 
 /// A view model for the footer that updates when needed.
 class FooterViewModel with ChangeNotifier {
+  /// A list of other listenable models to subscribe to.
+  List<Listenable> get otherModels => [
+    models.rover.metrics.drive,
+    models.rover.status,
+    models.sockets.data.connectionStrength,
+    models.sockets.video.connectionStrength,
+    models.sockets.autonomy.connectionStrength,
+  ];
+
   /// Listens to all the relevant data sources.
   FooterViewModel() {
-    models.rover.metrics.drive.addListener(notifyListeners);
-    models.rover.status.addListener(notifyListeners);
-    models.sockets.data.connectionStrength.addListener(notifyListeners);
-    models.sockets.video.connectionStrength.addListener(notifyListeners);
-    models.sockets.autonomy.connectionStrength.addListener(notifyListeners);
+    for (final model in otherModels) {
+      model.addListener(notifyListeners);
+    }
+  }
+
+  @override
+  void dispose() {
+    for (final model in otherModels) {
+      model.removeListener(notifyListeners);
+    }
+    super.dispose();
   }
 
   /// Access to the drive metrics.
