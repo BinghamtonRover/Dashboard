@@ -1,34 +1,23 @@
-import "package:protobuf/protobuf.dart";
+import "dart:async";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
-/// A mixin that delegates [WrappedMessage]s to a handler via [registerHandler].
-/// 
-/// - Use [registerHandler] to invoke your handler whenever a new message is received.
-/// - Use [removeHandler] to remove your handler.
-/// - Override [allowedFallthrough] to allow certain massages to pass unhandled.
-class MessagesModel {
-	/// A set of message types that are allowed to pass through without being handled.
-	static const Set<String> allowedFallthrough = {"AutonomyData", "Disconnect"};
+export "package:burt_network/burt_network.dart" show WrappedMessageStream;
 
-	/// A set of handlers to be called based on [WrappedMessage.name].
-	final Map<String, RawDataHandler> _handlers = {};
-
-	/// Delegates the message contents to the appropriate handler.
-	void onMessage(WrappedMessage wrapper) {
-		final rawHandler = _handlers[wrapper.name];
-		if (rawHandler == null) {
-			if (allowedFallthrough.contains(wrapper.name)) return;
-			throw StateError("No handler registered for ${wrapper.name} message");
-		}
-		try { 
-      return rawHandler(wrapper.data);
-    } on InvalidProtocolBufferException {
-      // Data is corrupt, ignore it
-    }
-	}
-
+/// A single model to consolidate all messages.
+///
+/// Messages can arrive from serial devices or UDP devices, and any device can be unexpectedly
+/// disconnected at any time. To simplify the logic of subscribing for new messages, this model
+/// holds a [stream] of [WrappedMessage]s that anyone can subscribe to. When a message arrives,
+/// simply call [addMessage] to ensure it will be added to the stream.
+///
+/// Note that having this model forward [stream] to the serial and UDP streams would *not* work,
+/// as those streams can be closed when devices are disconnected, and new streams are created when
+/// devices are connected for the first time. In that case, anyone who subscribes to the stream
+/// before a device is connected (eg, in [Model.init]) won't get messages received afterwards. To
+/// get around this issue, this model uses the same [StreamController] the entire time.
+class MessagesModel extends Model {
 	/// Sends a command over the network or over Serial.
 	void sendMessage(Message message, {bool checkVersion = true}) {
     final shouldCheck = checkVersion && models.settings.dashboard.versionChecking;
@@ -42,34 +31,14 @@ class MessagesModel {
 		models.sockets.data.sendMessage(message);
 	}
 
-	/// Adds a handler for the given message type. 
-	/// 
-	/// When a new message is received, [onMessage] checks to see if its type matches [name].
-	/// If so, it calls [decoder] to parse the binary data into a Protobuf class, and then
-	/// calls [handler] with that parsed data class. 
-	/// 
-	/// For example, with a message called `ScienceData`, you would use this function as: 
-	/// ```dart
-	/// registerHandler<ScienceData>(
-	/// 	name: ScienceData().messageName,  // identify the data as a ScienceData message
-	/// 	decoder: ScienceData.fromBuffer,  // deserialize into a ScienceData instance
-	/// 	handler: (ScienceData data) => print(data.methane),  // do something with the data
-	/// );
-	/// ```
-	void registerHandler<T extends Message>({
-		required String name, 
-		required MessageDecoder<T> decoder, 
-		required MessageHandler<T> handler,
-	}) {
-		if (_handlers.containsKey(name)) {  // handler was already registered
-			throw ArgumentError("There's already a message handler for $name.");
-		} else {
-			_handlers[name] = (data) => handler(decoder(data));
-		}
-	}
+  final _controller = StreamController<WrappedMessage>.broadcast();
 
-	/// Removes the handler for a given message type. 
-	/// 
-	/// This is useful if you register a handler to update a piece of UI that is no longer on-screen.
-	void removeHandler(String name) => _handlers.remove(name);
+  /// The stream of messages. Use [WrappedMessageStream.onMessage] to subscribe to messages.
+  Stream<WrappedMessage> get stream => _controller.stream;
+
+  /// Adds a message to the [stream].
+  void addMessage(WrappedMessage message) => _controller.add(message);
+
+  @override
+  Future<void> init() async { }
 }

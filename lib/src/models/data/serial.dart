@@ -10,7 +10,7 @@ import "package:rover_dashboard/models.dart";
 /// names instead.
 ///
 /// Send messages to the connected devices using the [sendMessage] method, and all messages
-/// received all ports are forwarded to [MessagesModel.onMessage].
+/// received all ports are forwarded to [MessagesModel.addMessage].
 class SerialModel extends Model {
   /// All the connected devices and their respective serial ports.
   ///
@@ -37,7 +37,7 @@ class SerialModel extends Model {
     	models.home.setMessage(severity: Severity.error, text: "Could not connect to $port");
     	return;
     }
-    device.messages.listen(models.messages.onMessage);
+    device.messages.listen(models.messages.addMessage);
     models.home.setMessage(severity: Severity.info, text: "Connected to $port");
     devices[port] = device;
     notifyListeners();

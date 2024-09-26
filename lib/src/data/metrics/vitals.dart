@@ -37,6 +37,9 @@ class VitalsMetrics extends Metrics {
     }
   }
 
+  /// Publicly exposes [notifyListeners].
+  void notify() => notifyListeners();
+
   @override
   List<MetricLine> get allMetrics => [
     MetricLine("Voltage: ${drive.batteryVoltage.toStringAsFixed(2)} V", severity: voltageSeverity),
