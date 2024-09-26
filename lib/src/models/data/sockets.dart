@@ -10,24 +10,24 @@ class Sockets extends Model {
 	/// A UDP socket for sending and receiving Protobuf data.
 	late final data = DashboardSocket(
 		device: Device.SUBSYSTEMS,
-		onConnect: onConnect,
-		onDisconnect: onDisconnect,
+		onConnected: onConnect,
+		onDisconnected: onDisconnect,
 		messageHandler: models.messages.onMessage,
 	);
 
 	/// A UDP socket for receiving video.
 	late final video = DashboardSocket(
 		device: Device.VIDEO,
-		onConnect: onConnect,
-		onDisconnect: onDisconnect,
+		onConnected: onConnect,
+		onDisconnected: onDisconnect,
 		messageHandler: models.messages.onMessage,
 	);
 
 	/// A UDP socket for controlling autonomy.
 	late final autonomy = DashboardSocket(
 		device: Device.AUTONOMY,
-		onConnect: onConnect,
-		onDisconnect: onDisconnect,
+		onConnected: onConnect,
+		onDisconnected: onDisconnect,
 		messageHandler: models.messages.onMessage,
 	);
 
