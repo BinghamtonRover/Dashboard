@@ -5,8 +5,8 @@ import "package:rover_dashboard/models.dart";
 const confirmationDelay = Duration(seconds: 1);
 
 /// Updates sensitive settings on the rover.
-/// 
-/// Certain settings need confirmation that they were actually changed. Due to the nature of UDP, 
+///
+/// Certain settings need confirmation that they were actually changed. Due to the nature of UDP,
 /// we have no way to actually guarantee this, so we simply ask that the rover send the exact same
 /// message in response (see [UpdateSetting]). If we do not get the response after waiting for a
 /// confirmationDelay], we conclude that the rover didn't receive our request, similar to heartbeat.
@@ -22,15 +22,15 @@ class RoverSettings extends Model {
 
 	@override
 	Future<void> init() async {
-		models.messages.registerHandler<UpdateSetting>(
+		models.messages.stream.onMessage(
 			name: UpdateSetting().messageName,
-			decoder: UpdateSetting.fromBuffer,
-			handler: (settings) => _handshakes++,
+			constructor: UpdateSetting.fromBuffer,
+			callback: (settings) => _handshakes++,
 		);
 	}
 
 	/// Sends an [UpdateSetting] and awaits a response.
-	/// 
+	///
 	/// The response must be an echo of the data sent, to ensure the rover acknowledges the data.
 	/// Returns true if the handshake succeeds.
 	Future<bool> tryChangeSettings(UpdateSetting value) async {
@@ -45,7 +45,7 @@ class RoverSettings extends Model {
 	}
 
 	/// Sets the status of the rover.
-	/// 
+	///
 	/// See [RoverStatus] for details.
 	Future<void> setStatus(RoverStatus value) async {
     if (!models.rover.isConnected) return;
@@ -53,7 +53,7 @@ class RoverSettings extends Model {
       for (final controller in models.rover.controllers) {
         controller.setMode(OperatingMode.none);
       }
-    } else if (value == RoverStatus.MANUAL) { 
+    } else if (value == RoverStatus.MANUAL) {
       models.rover.setDefaultControls();
     } else {
       final message = UpdateSetting(status: value);
@@ -66,7 +66,7 @@ class RoverSettings extends Model {
 		settings.status = value;
 		models.rover.status.value = value;
 		notifyListeners();
-	} 
+	}
 
 	/// Changes the color of the rover's LED strip.
 	Future<bool> setColor(ProtoColor color, {required bool blink}) async {

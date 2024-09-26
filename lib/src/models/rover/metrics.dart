@@ -44,30 +44,30 @@ class RoverMetrics extends Model {
 
 	@override
 	Future<void> init() async {
-		models.messages.registerHandler<DriveData>(
+		models.messages.stream.onMessage(
 			name: DriveData().messageName,
-			decoder: DriveData.fromBuffer,
-			handler: drive.update,
+			constructor: DriveData.fromBuffer,
+			callback: drive.update,
 		);
-		models.messages.registerHandler<ScienceData>(
+		models.messages.stream.onMessage(
 			name: ScienceData().messageName,
-			decoder: ScienceData.fromBuffer,
-			handler: science.update,
+			constructor: ScienceData.fromBuffer,
+			callback: science.update,
 		);
-    models.messages.registerHandler<RoverPosition>(
+    models.messages.stream.onMessage(
 			name: RoverPosition().messageName,
-			decoder: RoverPosition.fromBuffer,
-			handler: position.update,
+			constructor: RoverPosition.fromBuffer,
+			callback: position.update,
 		);
-		models.messages.registerHandler<ArmData>(
+		models.messages.stream.onMessage(
 			name: ArmData().messageName,
-			decoder: ArmData.fromBuffer,
-			handler: arm.update,
+			constructor: ArmData.fromBuffer,
+			callback: arm.update,
 		);
-		models.messages.registerHandler<GripperData>(
+		models.messages.stream.onMessage(
 			name: GripperData().messageName,
-			decoder: GripperData.fromBuffer,
-			handler: gripper.update,
+			constructor: GripperData.fromBuffer,
+			callback: gripper.update,
 		);
     // versionTimer = Timer.periodic(versionInterval, _sendVersions);
 	}
