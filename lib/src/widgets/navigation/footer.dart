@@ -157,14 +157,21 @@ class StatusIcons extends StatelessWidget {
 					),
 				),
 			),
-			NetworkStatusIcon(
-        device: Device.SUBSYSTEMS,
-        tooltip: "${models.sockets.connectionSummary}\nClick to reset",
-        onPressed: () async {
-          await models.sockets.reset();
-          models.home.setMessage(severity: Severity.info, text: "Network reset");
-        },
-      ),
+          ListenableBuilder(
+            listenable: Listenable.merge([
+              models.sockets.data.connectionStrength,
+              models.sockets.video.connectionStrength,
+              models.sockets.autonomy.connectionStrength,
+            ]),
+            builder: (context, _) => NetworkStatusIcon(
+              device: Device.SUBSYSTEMS,
+              tooltip: "${models.sockets.connectionSummary}\nClick to reset",
+              onPressed: () async {
+                await models.sockets.reset();
+                models.home.setMessage(severity: Severity.info, text: "Network reset");
+              },
+            ),
+          ),
 			ValueListenableBuilder<RoverStatus>(  // status
 				valueListenable: models.rover.status,
 				builder: (context, value, child) => PopupMenuButton(
