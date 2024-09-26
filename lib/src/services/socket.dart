@@ -17,11 +17,8 @@ import "package:rover_dashboard/models.dart";
 /// - To send a message, call [sendMessage].
 /// - Call [dispose] to close the socket.
 class DashboardSocket extends BurtSocket {
-  /// A callback to run when the [device] has connected.
-  void Function(Device device) onConnected;
-
-  /// A callback to run when the [device] has disconnected.
-  void Function(Device device) onDisconnected;
+  /// Notifier for when the socket connects or disconnects
+  final ValueNotifier<bool> connectionStatus = ValueNotifier(false);
 
   /// The handler to call when a [WrappedMessage] comes in.
   final WrappedMessageHandler messageHandler;
@@ -31,8 +28,6 @@ class DashboardSocket extends BurtSocket {
 
   /// Listens for incoming messages on a UDP socket and sends heartbeats to the [device].
   DashboardSocket({
-    required this.onConnected,
-    required this.onDisconnected,
     required this.messageHandler,
     required super.device,
   }) : super(
@@ -81,8 +76,8 @@ class DashboardSocket extends BurtSocket {
     }
     // 3. Assess the current state
     connectionStrength.value = connectionStrength.value.clamp(0, 1);
-    if (isConnected && !wasConnected) onConnected(device);
-    if (wasConnected && !isConnected) onDisconnected(device);
+    if (isConnected && !wasConnected) connectionStatus.value = true;
+    if (wasConnected && !isConnected) connectionStatus.value = false;
     _isChecking = false;
   }
 
