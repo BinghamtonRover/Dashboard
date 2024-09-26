@@ -1,7 +1,8 @@
+import "dart:async";
+
 import "package:burt_network/burt_network.dart";
 import "package:flutter/foundation.dart"; // <-- Used for ValueNotifier
 
-import "package:rover_dashboard/data.dart" show WrappedMessageHandler;
 import "package:rover_dashboard/models.dart";
 
 /// A service to send and receive Protobuf messages over a UDP socket, using [BurtSocket].
@@ -19,22 +20,11 @@ class DashboardSocket extends BurtSocket {
   /// Notifier for when the socket connects or disconnects
   final ValueNotifier<bool> connectionStatus = ValueNotifier(false);
 
-  /// The handler to call when a [WrappedMessage] comes in.
-  final WrappedMessageHandler messageHandler;
-
   /// Number of times to check heart beat per seconds based on [settings.network.connectionTimeout].
   double get frequency => models.settings.network.connectionTimeout;
 
   /// Listens for incoming messages on a UDP socket and sends heartbeats to the [device].
-  DashboardSocket({
-    required this.messageHandler,
-    required super.device,
-  }) : super(
-          port: null,
-          quiet: true,
-        ) {
-    messages.listen(messageHandler);
-  }
+  DashboardSocket({required super.device}) : super(port: null, quiet: true);
 
   @override
   Duration get heartbeatInterval => Duration(milliseconds: 1000 ~/ frequency);

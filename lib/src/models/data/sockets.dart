@@ -8,22 +8,13 @@ import "package:rover_dashboard/services.dart";
 /// Coordinates all the sockets to point to the right [RoverType].
 class Sockets extends Model {
   /// A UDP socket for sending and receiving Protobuf data.
-  late final data = DashboardSocket(
-    device: Device.SUBSYSTEMS,
-    messageHandler: models.messages.onMessage,
-  );
+  late final data = DashboardSocket(device: Device.SUBSYSTEMS);
 
   /// A UDP socket for receiving video.
-  late final video = DashboardSocket(
-    device: Device.VIDEO,
-    messageHandler: models.messages.onMessage,
-  );
+  late final video = DashboardSocket(device: Device.VIDEO);
 
   /// A UDP socket for controlling autonomy.
-  late final autonomy = DashboardSocket(
-    device: Device.AUTONOMY,
-    messageHandler: models.messages.onMessage,
-  );
+  late final autonomy = DashboardSocket(device: Device.AUTONOMY);
 
   /// A list of all the sockets this model manages.
   List<DashboardSocket> get sockets => [data, video, autonomy];
@@ -33,10 +24,10 @@ class Sockets extends Model {
 
   /// The [InternetAddress] to use instead of the address on the rover.
   InternetAddress? get addressOverride => switch (rover) {
-        RoverType.rover => null,
-        RoverType.tank => models.settings.network.tankSocket.address,
-        RoverType.localhost => InternetAddress.loopbackIPv4,
-      };
+    RoverType.rover => null,
+    RoverType.tank => models.settings.network.tankSocket.address,
+    RoverType.localhost => InternetAddress.loopbackIPv4,
+  };
 
   /// A rundown of the connection strength of each device.
   String get connectionSummary {
@@ -51,39 +42,20 @@ class Sockets extends Model {
   ///
   /// Returns null if no device is passed or there is no corresponding socket
   DashboardSocket? socketForDevice(Device device) => switch (device) {
-        Device.SUBSYSTEMS => data,
-        Device.VIDEO => video,
-        Device.AUTONOMY => autonomy,
-        _ => null,
-      };
+    Device.SUBSYSTEMS => data,
+    Device.VIDEO => video,
+    Device.AUTONOMY => autonomy,
+    _ => null,
+  };
 
   @override
   Future<void> init() async {
-    data.connectionStatus.addListener(() {
-      if (data.connectionStatus.value) {
-        onConnect(data.device);
-      } else {
-        onDisconnect(data.device);
-      }
-    });
-
-    video.connectionStatus.addListener(() {
-      if (video.connectionStatus.value) {
-        onConnect(video.device);
-      } else {
-        onDisconnect(video.device);
-      }
-    });
-
-    autonomy.connectionStatus.addListener(() {
-      if (autonomy.connectionStatus.value) {
-        onConnect(autonomy.device);
-      } else {
-        onDisconnect(autonomy.device);
-      }
-    });
-
     for (final socket in sockets) {
+      socket.connectionStatus.addListener(() => socket.connectionStatus.value
+        ? onConnect(socket.device)
+        : onDisconnect(socket.device),
+      );
+      socket.messages.listen(models.messages.onMessage);
       await socket.init();
     }
     final level = Logger.level;
