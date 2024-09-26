@@ -69,6 +69,7 @@ class RoverMetrics extends Model {
 			constructor: GripperData.fromBuffer,
 			callback: gripper.update,
 		);
+    drive.addListener(vitals.notify);
     // versionTimer = Timer.periodic(versionInterval, _sendVersions);
 	}
 

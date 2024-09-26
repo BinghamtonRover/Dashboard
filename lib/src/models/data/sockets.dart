@@ -55,7 +55,7 @@ class Sockets extends Model {
         ? onConnect(socket.device)
         : onDisconnect(socket.device),
       );
-      socket.messages.listen(models.messages.onMessage);
+      socket.messages.listen(models.messages.addMessage);
       await socket.init();
     }
     final level = Logger.level;
