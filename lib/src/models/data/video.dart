@@ -17,10 +17,10 @@ class VideoModel extends Model {
 	};
 
 	/// How many frames came in the network in the past second.
-	/// 
+	///
 	/// This number is updated every frame. Use [networkFps] in the UI.
 	Map<CameraName, int> framesThisSecond = {
-		for (final name in CameraName.values) 
+		for (final name in CameraName.values)
 			name: 0,
 	};
 
@@ -28,7 +28,7 @@ class VideoModel extends Model {
 	Map<CameraName, int> networkFps = {};
 
 	/// Triggers when it's time to update a new frame.
-	/// 
+	///
 	/// This is kept here to ensure all widgets are in sync.
 	Timer? frameUpdater;
 
@@ -40,15 +40,15 @@ class VideoModel extends Model {
 
 	@override
 	Future<void> init() async {
-		models.messages.registerHandler<VideoData>(
+		models.messages.stream.onMessage<VideoData>(
 			name: VideoData().messageName,
-			decoder: VideoData.fromBuffer,
-			handler: handleData,
+			constructor: VideoData.fromBuffer,
+			callback: handleData,
 		);
-		models.messages.registerHandler<VideoCommand>(
+		models.messages.stream.onMessage<VideoCommand>(
 			name: VideoCommand().messageName,
-			decoder: VideoCommand.fromBuffer,
-			handler: (command) => _handshake = command,
+			constructor: VideoCommand.fromBuffer,
+			callback: (command) => _handshake = command,
 		);
 		fpsTimer = Timer.periodic(const Duration(seconds: 1), resetNetworkFps);
 		reset();
@@ -58,7 +58,7 @@ class VideoModel extends Model {
 	void resetNetworkFps([_]) {
 		networkFps = Map.from(framesThisSecond);
 		framesThisSecond = {
-			for (final name in CameraName.values) 
+			for (final name in CameraName.values)
 				name: 0,
 		};
 		notifyListeners();
@@ -110,13 +110,13 @@ class VideoModel extends Model {
 	/// Takes a screenshot of the current frame.
 	Future<void> saveFrame(CameraName name) async {
 		final cachedFrame = feeds[name]?.frame;
-		if (cachedFrame == null) throw ArgumentError.notNull("Feed for $name"); 
+		if (cachedFrame == null) throw ArgumentError.notNull("Feed for $name");
 		await services.files.writeImage(cachedFrame, name.humanName);
 		models.home.setMessage(severity: Severity.info, text: "Screenshot saved");
 	}
 
 	/// Updates settings for the given camera.
-	Future<void> updateCamera(String id, CameraDetails details, {bool verify = true}) async { 
+	Future<void> updateCamera(String id, CameraDetails details, {bool verify = true}) async {
 		_handshake = null;
 		final command = VideoCommand(id: id, details: details);
 		models.sockets.video.sendMessage(command);
@@ -126,7 +126,7 @@ class VideoModel extends Model {
 	}
 
 	/// Enables or disables the given camera.
-	/// 
+	///
 	/// This function is called automatically, so if the camera is not connected or otherwise available,
 	/// it'll fail silently. However, if the server simply doesn't respond, it'll show a warning.
 	Future<void> toggleCamera(CameraName name, {required bool enable}) async {
@@ -141,16 +141,16 @@ class VideoModel extends Model {
 		await Future<void>.delayed(const Duration(seconds: 2));
 		if (_handshake == null) {
 			models.home.setMessage(
-				severity: Severity.warning, 
+				severity: Severity.warning,
 				text: "Could not ${enable ? 'enable' : 'disable'} the ${name.humanName} camera",
 			);
 		}
-	} 
+	}
 }
 
 /// An exception thrown when the rover does not respond to a handshake.
 ///
 /// Certain changes require a handshake to ensure the rover has received and applied the change.
 /// If the rover fails to acknowledge or apply the change, a response will not be sent. Throw
-/// this error to indicate that. 
+/// this error to indicate that.
 class RequestNotAccepted implements Exception { }

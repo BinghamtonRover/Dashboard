@@ -57,14 +57,16 @@ class AutonomyModel with ChangeNotifier {
 	/// Listens for incoming autonomy or position data.
 	AutonomyModel() { init(); }
 
+  StreamSubscription<AutonomyData>? _subscription;
+
   /// Initializes the view model.
   Future<void> init() async {
 		recenterRover();
     await Future<void>.delayed(const Duration(seconds: 1));
-		models.messages.registerHandler<AutonomyData>(
+		_subscription = models.messages.stream.onMessage<AutonomyData>(
 			name: AutonomyData().messageName,
-			decoder: AutonomyData.fromBuffer,
-			handler: onNewData,
+			constructor: AutonomyData.fromBuffer,
+			callback: onNewData,
 		);
 		models.rover.metrics.position.addListener(recenterRover);
     models.settings.addListener(notifyListeners);
@@ -75,7 +77,7 @@ class AutonomyModel with ChangeNotifier {
 
 	@override
 	void dispose() {
-		models.messages.removeHandler(AutonomyData().messageName);
+    _subscription?.cancel();
 		models.settings.removeListener(notifyListeners);
 		models.rover.metrics.position.removeListener(recenterRover);
     badAppleAudioPlayer.dispose();

@@ -48,7 +48,11 @@ class LogsModel extends Model {
 
   @override
   Future<void> init() async {
-    models.messages.registerHandler<BurtLog>(name: BurtLog().messageName, decoder: BurtLog.fromBuffer, handler: handleLog);
+    models.messages.stream.onMessage<BurtLog>(
+      name: BurtLog().messageName,
+      constructor: BurtLog.fromBuffer,
+      callback: handleLog,
+    );
     saveToFileTimer = Timer.periodic(saveToFileInterval, saveToFile);
   }
 
