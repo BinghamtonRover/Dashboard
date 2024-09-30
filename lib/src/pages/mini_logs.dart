@@ -41,7 +41,7 @@ class _MiniLogsState extends State<MiniLogs> {
   Widget build(BuildContext context) => Column(
         children: [
           const SizedBox(height: 12),
-          LogsOptions(logsViewModel),
+          LogsOptions(logsViewModel.options),
           const Divider(),
           Expanded(child: LogsBody(logsViewModel)),
         ],

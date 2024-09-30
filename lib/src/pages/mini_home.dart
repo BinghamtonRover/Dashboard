@@ -187,7 +187,7 @@ class MiniHomeSystemStatus extends ReusableReactiveWidget<LogsViewModel> {
   /// Returns the appropriate status icon for the log messages received from [device]
   Widget statusIcon(Device? device) {
     final socket = models.sockets.socketForDevice(device ?? Device.DEVICE_UNDEFINED);
-    final lowestLevel = model.getMostSevereLevel(device);
+    final lowestLevel = model.options.getSeverity(device ?? Device.DEVICE_UNDEFINED);
 
     Color? iconColor = switch (lowestLevel) {
       BurtLogLevel.critical => Colors.red,
