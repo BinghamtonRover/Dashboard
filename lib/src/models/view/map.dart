@@ -195,8 +195,8 @@ class AutonomyModel with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Removes a marker in [gps]
-	void updateMarker(GpsCoordinates gps) {
+  /// Removes a marker from [gps]
+	void removeMarker(GpsCoordinates gps) {
 		if (markers.remove(gps)) {
 		  notifyListeners();
     } else {

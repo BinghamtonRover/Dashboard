@@ -57,7 +57,7 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
         child: GestureDetector(
           onTap: () {
             if (cell.cellType == AutonomyCell.marker) {
-              model.updateMarker(cell.coordinates);
+              model.removeMarker(cell.coordinates);
             } else if (cell.cellType == AutonomyCell.empty) {
               model.placeMarker(cell.coordinates);
             }
@@ -86,7 +86,7 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
         children: [
           // Controls
           const SizedBox(width: 4),
-          Text("Place marker: ", style: context.textTheme.titleLarge),
+          Text("Place Marker: ", style: context.textTheme.titleLarge),
           const SizedBox(width: 8),
           ElevatedButton.icon(
             icon: const Icon(Icons.add),
@@ -96,13 +96,13 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
           const SizedBox(width: 8),
           ElevatedButton.icon(
             icon: const Icon(Icons.location_on),
-            label: const Text("Drop marker here"),
+            label: const Text("Drop Marker Here"),
             onPressed: model.placeMarkerOnRover,
           ),
           const SizedBox(width: 8),
           ElevatedButton.icon(
             icon: const Icon(Icons.clear),
-            label: const Text("Clear all"),
+            label: const Text("Clear All"),
             onPressed: model.clearMarkers,
           ),
           const Spacer(),
