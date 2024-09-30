@@ -31,10 +31,13 @@ class HomeModel extends Model {
 	}
 
 	/// Sets a new message that will disappear in 3 seconds.
-	void setMessage({required Severity severity, required String text, bool permanent = false}) {
+	void setMessage({required Severity severity, required String text, bool permanent = false, bool logMessage = true}) {
     if (_hasError && severity != Severity.critical) return;  // Don't replace critical messages
 		_messageTimer?.cancel();  // the new message might be cleared if the old one were about to
 		message = TaskbarMessage(severity: severity, text: text);
+    if (logMessage) {
+      models.logs.handleLog(message!.burtLog);
+    }
 		notifyListeners();
     _hasError = permanent;
     _messageTimer = Timer(const Duration(seconds: 3), clear);

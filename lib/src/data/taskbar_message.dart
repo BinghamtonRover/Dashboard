@@ -1,6 +1,7 @@
+import "package:rover_dashboard/data.dart";
+
 /// A message to show on the taskbar, with an associated severity.
 class TaskbarMessage {
-
 	/// The severity of this message.
 	final Severity severity;
 
@@ -12,6 +13,17 @@ class TaskbarMessage {
 		required this.severity,
 		required this.text,
 	});
+
+  /// Returns the severity in the equivalent value for a [BurtLogLevel]
+  BurtLogLevel get burtLogLevel => switch (severity) {
+    Severity.info => BurtLogLevel.info,
+    Severity.warning => BurtLogLevel.warning,
+    Severity.error => BurtLogLevel.error,
+    Severity.critical => BurtLogLevel.critical,
+  };
+
+  /// Returns the message in the form of a [BurtLog]
+  BurtLog get burtLog => BurtLog(level: burtLogLevel, title: text, device: Device.DASHBOARD);
 }
 
 /// The level of danger a message represents.
