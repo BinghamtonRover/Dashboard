@@ -271,6 +271,9 @@ class AutonomyModel with ChangeNotifier {
         if (isBlack) obstacles.add(coordinate);
       }
     }
+    if (!isPlayingBadApple) {
+      return;
+    }
     data = AutonomyData(obstacles: obstacles);
     notifyListeners();
     badAppleFrame += badAppleFps;
