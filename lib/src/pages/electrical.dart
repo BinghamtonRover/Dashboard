@@ -32,7 +32,7 @@ class _LineChart extends StatelessWidget {
       result.add(
         LineSeries(
           animationDuration: 0,
-          dataLabelMapper: (datum, index) => "${datum.value}$sideUnitName",
+          dataLabelMapper: (datum, index) => "${datum.value} $sideUnitName",
           color: colors[i],
           xValueMapper: (datum, index) => datum.time / 1000,
           yValueMapper: (datum, index) => datum.value,
@@ -58,7 +58,7 @@ class _LineChart extends StatelessWidget {
         name: sideUnitName,
         minimum: minY,
         maximum: maxY,
-        labelFormat: "{value}$sideUnitName",
+        labelFormat: "{value} $sideUnitName",
       ),
       series: getChartSeries(),
       tooltipBehavior: TooltipBehavior(enable: true, animationDuration: 0),
