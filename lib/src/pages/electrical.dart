@@ -1,9 +1,9 @@
-import "package:fl_chart/fl_chart.dart";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
+import "package:syncfusion_flutter_charts/charts.dart";
 
 class _LineChart extends StatelessWidget {
   final List<Iterable<SensorReading>> readings;
@@ -13,7 +13,8 @@ class _LineChart extends StatelessWidget {
   final String title;
   final double? minY;
   final double? maxY;
-  
+  final bool vertical;
+
   const _LineChart({
     required this.readings,
     required this.colors,
@@ -22,69 +23,45 @@ class _LineChart extends StatelessWidget {
     required this.title,
     this.minY,
     this.maxY,
+    this.vertical = false,
   });
 
+  List<CartesianSeries<SensorReading, double>> getChartSeries() {
+    final result = <CartesianSeries<SensorReading, double>>[];
+    for (int i = 0; i < readings.length; i++) {
+      result.add(
+        LineSeries(
+          animationDuration: 0,
+          dataLabelMapper: (datum, index) => "${datum.value}$sideUnitName",
+          color: colors[i],
+          xValueMapper: (datum, index) => datum.time / 1000,
+          yValueMapper: (datum, index) => datum.value,
+          dataSource: readings[i].toList(),
+          width: 2.5,
+        ),
+      );
+    }
+    return result;
+  }
+
   @override
-  Widget build(BuildContext context) => LineChart(
-      LineChartData(
-        lineBarsData: [
-          for(int i = 0; i < readings.length; i++)
-            LineChartBarData(
-              color: colors[i],
-              spots: [
-                for (final reading in readings[i])
-                  if(reading.time > 0) FlSpot(reading.time / 1000, reading.value),
-              ],
-            ),
-        ],
-        titlesData: FlTitlesData(
-          topTitles: AxisTitles(
-            axisNameSize: 30,
-            axisNameWidget: Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.blue,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1,
-              ),
-            ),
-          ), 
-          leftTitles: AxisTitles(
-            axisNameWidget: Text(
-              sideUnitName,
-              style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
-            ),
-            sideTitles: const SideTitles(showTitles: true, reservedSize: 35),
-          ),
-          bottomTitles: AxisTitles(
-            axisNameWidget: Text(bottomUnitName),
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: (double value, TitleMeta meta) => SideTitleWidget(
-                axisSide: AxisSide.bottom,
-                space: 3,
-                child: Text(value.toStringAsFixed(0)),
-              ),
-            ),
-          ),
-        ),
-        extraLinesData: ExtraLinesData(horizontalLines: [HorizontalLine(y: 0)], verticalLines: [VerticalLine(x: 0)]),
-        minY: minY, maxY: maxY,
-        clipData: const FlClipData.all(),
-        lineTouchData: LineTouchData(
-          touchTooltipData: LineTouchTooltipData(
-            fitInsideVertically: true, 
-            fitInsideHorizontally: true,
-            getTooltipItems:(touchedSpots) => [
-              for(final spot in touchedSpots)
-                LineTooltipItem("${spot.y.toStringAsFixed(2)} $sideUnitName", const TextStyle(color: Colors.white)),
-            ],
-          ),
-        ),
+  Widget build(BuildContext context) => SfCartesianChart(
+      title: ChartTitle(text: title),
+      isTransposed: vertical,
+      primaryXAxis: NumericAxis(
+        name: bottomUnitName,
+        decimalPlaces: 0,
+        minimum: (readings.firstOrNull?.firstOrNull?.time ?? 0) / 1000,
+        maximum: (readings.firstOrNull?.firstOrNull?.time ?? 0) / 1000 + 5,
       ),
-      duration: const Duration(milliseconds: 10),
+      primaryYAxis: NumericAxis(
+        name: sideUnitName,
+        minimum: minY,
+        maximum: maxY,
+        labelFormat: "{value}$sideUnitName",
+      ),
+      series: getChartSeries(),
+      tooltipBehavior: TooltipBehavior(enable: true, animationDuration: 0),
     );
 }
 
@@ -92,9 +69,10 @@ class _LineChart extends StatelessWidget {
 class ElectricalPage extends ReactiveWidget<ElectricalModel> {
   /// The index of this view.
   final int index;
+
   /// A const constructor.
   const ElectricalPage({required this.index});
-  
+
   @override
   ElectricalModel createModel() => ElectricalModel();
 
@@ -140,6 +118,7 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
       title: "Voltage Graph",
       minY: 23, 
       maxY: 35,
+      vertical: model.axis,
     ),
     _LineChart(
       readings: [model.currentReadings],
@@ -148,6 +127,7 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
       sideUnitName: "A",
       title: "Current Graph",
       minY: 0,
+      vertical: model.axis,
     ),
     _LineChart(
       readings: [model.rightSpeeds, model.leftSpeeds], 
@@ -157,6 +137,7 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
       title: "Speeds",
       minY: -1,
       maxY: 1,
+      vertical: model.axis,
     ),
   ];
 }

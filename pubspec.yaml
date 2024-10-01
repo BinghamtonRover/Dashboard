@@ -23,6 +23,7 @@ dependencies:
   just_audio: ^0.9.36
   collection: ^1.18.0
   sdl_gamepad: ^1.0.1
+  syncfusion_flutter_charts: ^27.1.51
 
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
