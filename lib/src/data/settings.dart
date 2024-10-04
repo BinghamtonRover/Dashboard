@@ -1,4 +1,8 @@
+
+import "dart:ffi";
+
 import "package:flutter/material.dart";
+import "package:rover_dashboard/models.dart";
 
 import "socket.dart";
 
@@ -247,8 +251,11 @@ class DashboardSettings {
   /// Whether to have version checking on protobuf messages.
   final bool versionChecking;
 
+  List<ViewPreset> presets;
+
   /// A const constructor.
-  const DashboardSettings({
+  DashboardSettings({
+    required this.presets,
     required this.splitMode,
     required this.mapBlockSize,
     required this.maxFps,
@@ -260,8 +267,9 @@ class DashboardSettings {
 
   /// Parses Dashboard settings from JSON.
   DashboardSettings.fromJson(Json? json) : 
+    presets =  List.from(json?["presets"] ?? []),
     splitMode = SplitMode.values[json?["splitMode"] ?? SplitMode.horizontal.index],
-    mapBlockSize = json?["mapBlockSize"] ?? 1.0,
+    mapBlockSize = json?["mapBlockSize"] ?? 1.0, 
     maxFps = (json?["maxFps"] ?? 60) as int,
     splitCameras = json?["splitCameras"] ?? false,
     preferTankControls = json?["preferTankControls"] ?? false,
@@ -270,6 +278,7 @@ class DashboardSettings {
 
   /// Serializes these settings to JSON.
   Json toJson() => {
+    "presets" : presets,
     "splitMode": splitMode.index,
     "mapBlockSize": mapBlockSize,
     "maxFps": maxFps,
@@ -281,13 +290,57 @@ class DashboardSettings {
 }
 
 class ViewPreset{
-  final int numViews;
-  
-  const ViewPreset({
-    required this.numViews,
+  final String? name;
 
+  final List<DashboardView> views;
+
+  final  List<double> horizontal1;
+
+  final List<double> horizontal2;
+  final List<double> horizontal3;
+  final List<double> horizontal4;
+
+  final List<double> vertical1;
+
+  final List<double> vertical2;
+
+  
+
+  
+  
+  ViewPreset({
+    required this.name,
+    required this.views,
+    required this.horizontal1,
+    required this.horizontal2,
+    required this.vertical1,
+    required this.vertical2,
+    required this.horizontal3,
+    required this.horizontal4,
   });
 
+  ViewPreset.fromJson(Json? json ):
+    name = json?["name"] ?? "NoName",
+    views = json?["views"] ?? null,
+    horizontal1 = json?["horizontal1"] ?? null,
+    horizontal2 = json?["horizontal2"] ?? null,
+    horizontal3 = json?["horizontal3"] ?? null,
+    horizontal4 = json?["horizontal4"] ?? null,
+    vertical1 = json?["vertical1"] ?? null,
+    vertical2 = json?["vertical2"] ?? null;
+    
+
+
+  Json toJson() => {
+    "name": name,
+    "views" : views,
+    "horizontal1" : horizontal1,
+    "horizontal2" : horizontal2,
+    "horizontal3" : horizontal3,
+    "horizontal4" : horizontal4,
+    "vertical1" : vertical1,
+    "vertical2" : vertical2,
+  };
 }
 
 

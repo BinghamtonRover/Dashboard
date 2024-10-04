@@ -3,6 +3,7 @@ import "package:flutter/services.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/src/models/view/builders/preset_builder.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// Creates a widget to edit a [SocketInfo], backed by [SocketBuilder].
@@ -235,6 +236,158 @@ class TimerEditor extends ReactiveWidget<TimerBuilder> {
     ],
 	);
 }
+
+class PresetSave extends ReactiveWidget<PresetBuilder>{
+
+  PresetBuilder createModel() => PresetBuilder();
+
+  @override
+  Widget build(BuildContext context, PresetBuilder model) => AlertDialog(
+    title: const Text("Save a preset"),
+    content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 50, 
+            width: double.infinity,
+            child: TextField(
+              controller: model.myController,
+              onChanged: model.update,
+              decoration: const InputDecoration(hintText: "Preset Name"),
+            ),
+            
+          )
+        ],
+
+    ),
+    actions: [
+      TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
+      ElevatedButton(
+        onPressed: model.isValid ? () {model.save(); Navigator.of(context).pop(); } : null,
+        child: const Text("Save"), 
+      ),
+    ],
+
+  );
+  
+}
+
+
+
+class PresetLoad extends ReactiveWidget<PresetBuilder>{
+
+  PresetBuilder createModel() => PresetBuilder();
+  @override
+  Widget build(BuildContext context, PresetBuilder model) => AlertDialog(
+    title: const Text("Load a preset"),
+    content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children:  <Widget>[
+          Container(
+            child: 
+            ExpansionTile(
+            title: const Text("Saved Presets"), 
+            children: [ 
+              SizedBox(
+                height: models.settings.dashboard.presets.length != 0 ? 50 : 0,
+                child: SingleChildScrollView(
+                  child: Column(children: 
+                  [for(final ViewPreset preset in models.settings.dashboard.presets) PresetLoadList(preset)],),
+                ),
+              ),] ,
+            )            
+          ),
+          
+          
+        ],
+
+    ),
+    actions: [
+      TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
+    ],
+    
+
+  );
+  
+}
+
+class PresetLoadList extends ReactiveWidget<PresetBuilder> {
+  final ViewPreset presetName;
+  const PresetLoadList(this.presetName);
+  PresetBuilder createModel() => PresetBuilder();
+
+  @override
+  Widget build(BuildContext context, PresetBuilder model) => ListTile(
+          title: Text(presetName.name.toString()),
+          onTap: () => model.load(presetName),
+    );
+    
+  
+}
+
+class PresetDelete extends StatefulWidget{
+  final PresetBuilder model;
+  PresetDelete({required this.model});
+
+  @override
+  _PresetDelete createState() => _PresetDelete();
+  
+}
+
+class _PresetDelete extends State<PresetDelete>{
+  bool activateDelete = false;
+  ViewPreset? selectedPreset;
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+      title: const Text("Delete a preset"),
+      content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children:  <Widget>[
+            Container(
+              child: 
+              ExpansionTile(
+              title: const Text("Saved Presets"), 
+              children: [
+                SizedBox(
+                  height: models.settings.dashboard.presets.length != 0 ? 50 : 0,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: 
+                    [for(final ViewPreset preset in models.settings.dashboard.presets) ListTile(
+                      title: Text(preset.name.toString()),
+                      onTap: () {
+                        setState(() {
+                          selectedPreset = preset;
+                          activateDelete = true;
+                        });
+                      },
+                    )],),
+                  ),
+                ),] ,
+              )            
+            ),
+            
+            
+          ],
+
+      ),
+      actions: [
+        TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
+        ElevatedButton(
+          onPressed: activateDelete? () {widget.model.delete(selectedPreset!); Navigator.of(context).pop();} : null,
+          child: const Text("Delete"), 
+        ),
+      ],
+      
+
+    );
+}
+
+
+
+
+
 
 /// A widget to edit a GPS coordinate in degree/minute/seconds or decimal format.
 class GpsEditor extends ReusableReactiveWidget<GpsBuilder> {

@@ -1,18 +1,25 @@
+
+import "dart:convert";
+import "dart:ffi";
+
+import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:flutter_resizable_container/flutter_resizable_container.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
+import "package:rover_dashboard/services.dart";
+import "package:rover_dashboard/src/models/view/builders/preset_builder.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A list of views for the user to drag into their desired view area
 class ViewsList extends StatelessWidget {
   /// The size of the icon to appear under the mouse pointer when dragging
   static const double draggingIconSize = 100;
-
-  /// A const constructor
-  const ViewsList({super.key});
+  final myController = TextEditingController();
+  
+  ViewsList({super.key});
 
   /// Get a widget for the camera status of the view
   Widget getCameraStatus(DashboardView view) {
@@ -111,6 +118,25 @@ class ViewsList extends StatelessWidget {
               title: Text("Remove View"),
               trailing: Icon(Icons.delete),
             ),
+           
+          ),
+          ExpansionTile(
+            title: Text("Presets"),
+            children:[
+              ListTile(
+                title: Text("Save Preset"),
+                onTap: () => showDialog<void>(context: context, builder: (_) => PresetSave()),
+              ),
+              ListTile(
+                title: Text("Load Preset"),    
+                onTap:  () => showDialog<void>(context: context, builder: (_) => PresetLoad()),            
+              ),  
+              ListTile(
+                title: Text("Delete Preset"),
+                onTap:  () => showDialog<void>(context: context, builder: (BuildContext context) =>  PresetDelete(model: PresetBuilder(),)),            
+
+              )
+            ]
           ),
         ],
       );
@@ -130,7 +156,7 @@ class DashboardView {
   final IconData? icon;
 
   /// A unique key to use while selecting this view.
-  final Object? key;
+  final CameraName? key;
 
   /// A function to build this view.
   final ViewBuilder builder;
@@ -143,6 +169,16 @@ class DashboardView {
       {required this.name, required this.builder, this.icon, this.key,})
       : flutterKey = UniqueKey();
 
+  static final List<DashboardView> allViews = [...cameraViews, ...uiViews, blank];
+
+  static DashboardView? fromJson(Json json) => allViews
+    .firstWhereOrNull((view) => view.name == json["name"] && view.key?.value == json["cameraName"]);
+  
+  Json toJson() => {
+    "name": name,
+    "cameraName": key?.value,
+  };
+  
   /// A list of views that represent all the camera feeds.
   static final List<DashboardView> cameraViews = [
     for (final name in CameraName.values)
@@ -208,6 +244,8 @@ class DashboardView {
   );
 }
 
+
+
 /// A data model for keeping track of the on-screen views.
 class ViewsModel extends Model {
   /// The controller for the resizable row on top.
@@ -237,6 +275,41 @@ class ViewsModel extends Model {
   Future<void> init() async {
     models.settings.addListener(notifyListeners);
   }
+
+  Future<void> saveAsPreset(String? name) async {
+    for(ViewPreset preset in models.settings.dashboard.presets){
+      if(preset.name == name){
+        models.home.setMessage(
+        severity: Severity.error,
+        text: "Name is already taken, please rename preset",
+      );
+      return;
+      }
+    }
+    final preset = ViewPreset(name: name, views: views, horizontal1: horizontalController1.ratios, horizontal2: horizontalController2.ratios,  horizontal3: horizontalController3.ratios, horizontal4: horizontalController4.ratios, vertical1: verticalController.ratios, vertical2: verticalController2.ratios);
+    models.settings.dashboard.presets.add(preset);
+    await services.files.writeSettings(models.settings.all);
+  }
+
+  void loadPreset(ViewPreset preset) {
+    setNumViews(preset.views.length);
+    !preset.horizontal1.toList().isEmpty ? horizontalController1.setRatios(preset.horizontal1.toList()) : null;  
+    !preset.horizontal2.toList().isEmpty ? horizontalController2.setRatios(preset.horizontal2.toList()) : null;    
+    !preset.horizontal3.toList().isEmpty ? horizontalController3.setRatios(preset.horizontal3.toList()) : null;  
+    !preset.horizontal4.toList().isEmpty ? horizontalController4.setRatios(preset.horizontal4.toList()) : null;
+    !preset.vertical1.toList().isEmpty ? verticalController.setRatios(preset.vertical1.toList()) : null;  
+    !preset.vertical2.toList().isEmpty ? verticalController2.setRatios(preset.vertical2.toList()) : null;   
+    for(var i =0; i < preset.views.length; i++){
+      replaceView(i, preset.views[i]);
+    }
+  }
+
+  Future<void> delete(ViewPreset preset) async{
+    models.settings.dashboard.presets.remove(preset);
+    await services.files.writeSettings(models.settings.all); 
+  }
+
+
 
   @override
   void dispose() {
