@@ -265,7 +265,6 @@ class DashboardSettings {
     required this.versionChecking,
   });
 
-  /// Parses Dashboard settings from JSON.
   DashboardSettings.fromJson(Json? json) : 
     presets =  List.from(json?["presets"] ?? []),
     splitMode = SplitMode.values[json?["splitMode"] ?? SplitMode.horizontal.index],
@@ -290,24 +289,24 @@ class DashboardSettings {
 }
 
 class ViewPreset{
+  ///Preset name
   final String? name;
-
+  ///List of views that comes with the views name and if it is a cameraview its index
   final List<DashboardView> views;
-
+  ///ratio of the controller for the resizable row on top.
   final  List<double> horizontal1;
-
+  ///ratio of the controller for resizable row on bottom.
   final List<double> horizontal2;
+  ///ratio of the controller for screen 2's first row.
   final List<double> horizontal3;
+  ///ratio of the controller for screen 2's second row.
   final List<double> horizontal4;
-
+  ///ratio of the controller for the resizable column.
   final List<double> vertical1;
-
+  /// The vertical controller for screen 2.
   final List<double> vertical2;
 
-  
-
-  
-  
+  /// A const constructor.
   ViewPreset({
     required this.name,
     required this.views,
@@ -318,7 +317,8 @@ class ViewPreset{
     required this.horizontal3,
     required this.horizontal4,
   });
-
+  
+  /// Parses Dashboard settings from JSON.
   ViewPreset.fromJson(Json? json ):
     name = json?["name"] ?? "NoName",
     views = json?["views"] ?? null,
@@ -330,7 +330,7 @@ class ViewPreset{
     vertical2 = json?["vertical2"] ?? null;
     
 
-
+    /// Serializes these settings to JSON.
   Json toJson() => {
     "name": name,
     "views" : views,

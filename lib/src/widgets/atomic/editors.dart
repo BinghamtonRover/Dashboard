@@ -237,6 +237,7 @@ class TimerEditor extends ReactiveWidget<TimerBuilder> {
 	);
 }
 
+///A widget to save a preset backed by [PresetBuilder].
 class PresetSave extends ReactiveWidget<PresetBuilder>{
 
   PresetBuilder createModel() => PresetBuilder();
@@ -273,7 +274,7 @@ class PresetSave extends ReactiveWidget<PresetBuilder>{
 }
 
 
-
+///A widget to load a preset backed by [PresetBuilder].
 class PresetLoad extends ReactiveWidget<PresetBuilder>{
 
   PresetBuilder createModel() => PresetBuilder();
@@ -310,7 +311,7 @@ class PresetLoad extends ReactiveWidget<PresetBuilder>{
   );
   
 }
-
+///A widget to create a list of tiles from a preset backed by [PresetBuilder].
 class PresetLoadList extends ReactiveWidget<PresetBuilder> {
   final ViewPreset presetName;
   const PresetLoadList(this.presetName);
@@ -324,7 +325,7 @@ class PresetLoadList extends ReactiveWidget<PresetBuilder> {
     
   
 }
-
+///A stateful widget to delete a preset, includes [PresetBuilder] model.
 class PresetDelete extends StatefulWidget{
   final PresetBuilder model;
   PresetDelete({required this.model});
@@ -333,7 +334,7 @@ class PresetDelete extends StatefulWidget{
   _PresetDelete createState() => _PresetDelete();
   
 }
-
+///A widget to delete a preset backed by [PresetDelete].
 class _PresetDelete extends State<PresetDelete>{
   bool activateDelete = false;
   ViewPreset? selectedPreset;
@@ -367,8 +368,6 @@ class _PresetDelete extends State<PresetDelete>{
                 ),] ,
               )            
             ),
-            
-            
           ],
 
       ),

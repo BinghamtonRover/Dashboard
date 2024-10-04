@@ -15,13 +15,16 @@ class PresetBuilder extends ValueBuilder<void> {
   /// Updates the UI.
   void update(_) => notifyListeners();
   
+  ///Calls [saveAsPreset] in views.dart
   void save(){
     models.views.saveAsPreset(myController.text);
   }
-
+  ///Calls [loadPreset] in views.dart
   void load(ViewPreset preset){
     models.views.loadPreset(preset);
   }
+
+  ///Calls [delete] in views.dart
   void delete(ViewPreset preset){
     models.views.delete(preset);
     notifyListeners();

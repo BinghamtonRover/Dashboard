@@ -271,11 +271,13 @@ class ViewsModel extends Model {
     DashboardView.cameraViews[0],
   ];
 
+
   @override
   Future<void> init() async {
     models.settings.addListener(notifyListeners);
   }
 
+  ///Saves preset as a JSon row in settings and rewrites the settings
   Future<void> saveAsPreset(String? name) async {
     for(ViewPreset preset in models.settings.dashboard.presets){
       if(preset.name == name){
@@ -290,7 +292,7 @@ class ViewsModel extends Model {
     models.settings.dashboard.presets.add(preset);
     await services.files.writeSettings(models.settings.all);
   }
-
+  ///Loads preset from Json Row
   void loadPreset(ViewPreset preset) {
     setNumViews(preset.views.length);
     !preset.horizontal1.toList().isEmpty ? horizontalController1.setRatios(preset.horizontal1.toList()) : null;  
@@ -304,6 +306,7 @@ class ViewsModel extends Model {
     }
   }
 
+  // deletes presets and rewrites Json file
   Future<void> delete(ViewPreset preset) async{
     models.settings.dashboard.presets.remove(preset);
     await services.files.writeSettings(models.settings.all); 
