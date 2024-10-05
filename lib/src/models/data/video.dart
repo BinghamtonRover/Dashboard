@@ -98,6 +98,7 @@ class VideoModel extends Model {
 		final data = feeds[name]!
 			..details = newData.details
 			..id = newData.id;
+    print("Received video frame from $name with ${newData.frame.length} bytes");
 
 		// Some [VideoData] packets are just representing metadata, not an empty video frame.
 		// If this is one such packet (doesn't have a frame but status == enabled), don't save.
