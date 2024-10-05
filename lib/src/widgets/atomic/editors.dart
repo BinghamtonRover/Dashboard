@@ -237,7 +237,7 @@ class TimerEditor extends ReactiveWidget<TimerBuilder> {
 	);
 }
 
-///A widget to save a preset backed by [PresetBuilder].
+/// A widget to save a preset backed by [PresetBuilder].
 class PresetSave extends ReactiveWidget<PresetBuilder>{
 
   PresetBuilder createModel() => PresetBuilder();
@@ -274,10 +274,11 @@ class PresetSave extends ReactiveWidget<PresetBuilder>{
 }
 
 
-///A widget to load a preset backed by [PresetBuilder].
+/// A widget to load a preset backed by [PresetBuilder].
 class PresetLoad extends ReactiveWidget<PresetBuilder>{
-
+  @override
   PresetBuilder createModel() => PresetBuilder();
+
   @override
   Widget build(BuildContext context, PresetBuilder model) => AlertDialog(
     title: const Text("Load a preset"),
@@ -290,28 +291,23 @@ class PresetLoad extends ReactiveWidget<PresetBuilder>{
             title: const Text("Saved Presets"), 
             children: [ 
               SizedBox(
-                height: models.settings.dashboard.presets.length != 0 ? 50 : 0,
+                height: models.settings.dashboard.presets.isNotEmpty ? 50 : 0,
                 child: SingleChildScrollView(
                   child: Column(children: 
                   [for(final ViewPreset preset in models.settings.dashboard.presets) PresetLoadList(preset)],),
                 ),
               ),] ,
-            )            
+            ),            
           ),
-          
-          
         ],
-
     ),
     actions: [
       TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
     ],
-    
-
   );
-  
 }
-///A widget to create a list of tiles from a preset backed by [PresetBuilder].
+
+/// A widget to create a list of tiles from a preset backed by [PresetBuilder].
 class PresetLoadList extends ReactiveWidget<PresetBuilder> {
   final ViewPreset presetName;
   const PresetLoadList(this.presetName);
@@ -325,6 +321,7 @@ class PresetLoadList extends ReactiveWidget<PresetBuilder> {
     
   
 }
+
 ///A stateful widget to delete a preset, includes [PresetBuilder] model.
 class PresetDelete extends StatefulWidget{
   final PresetBuilder model;
@@ -351,7 +348,7 @@ class _PresetDelete extends State<PresetDelete>{
               title: const Text("Saved Presets"), 
               children: [
                 SizedBox(
-                  height: models.settings.dashboard.presets.length != 0 ? 50 : 0,
+                  height: models.settings.dashboard.presets.isNotEmpty ? 50 : 0,
                   child: SingleChildScrollView(
                     child: Column(
                       children: 
