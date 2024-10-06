@@ -121,18 +121,18 @@ class ViewsList extends StatelessWidget {
            
           ),
           ExpansionTile(
-            title: const Text("Presets"),
+            title: Text("Presets"),
             children:[
               ListTile(
-                title: const Text("Save Preset"),
+                title: Text("Save Preset"),
                 onTap: () => showDialog<void>(context: context, builder: (_) => PresetSave()),
               ),
               ListTile(
-                title: const Text("Load Preset"),    
+                title: Text("Load Preset"),    
                 onTap:  () => showDialog<void>(context: context, builder: (_) => PresetLoad()),            
               ),  
               ListTile(
-                title: const Text("Delete Preset"),
+                title: Text("Delete Preset"),
                 onTap:  () => showDialog<void>(context: context, builder: (BuildContext context) =>  PresetDelete(model: PresetBuilder(),)),            
 
               )
@@ -271,46 +271,48 @@ class ViewsModel extends Model {
     DashboardView.cameraViews[0],
   ];
 
+
   @override
   Future<void> init() async {
     models.settings.addListener(notifyListeners);
   }
 
-  /// Saves preset as a Json row in settings and rewrites the settings
+  ///Saves preset as a JSon row in settings and rewrites the settings
   Future<void> saveAsPreset(String? name) async {
-    for(final preset in models.settings.dashboard.presets){
+    for(ViewPreset preset in models.settings.dashboard.presets){
       if(preset.name == name){
         models.home.setMessage(
-          severity: Severity.error,
-          text: "Name is already taken, please rename preset",
-        );
-        return;
+        severity: Severity.error,
+        text: "Name is already taken, please rename preset",
+      );
+      return;
       }
     }
     final preset = ViewPreset(name: name, views: views, horizontal1: horizontalController1.ratios, horizontal2: horizontalController2.ratios,  horizontal3: horizontalController3.ratios, horizontal4: horizontalController4.ratios, vertical1: verticalController.ratios, vertical2: verticalController2.ratios);
     models.settings.dashboard.presets.add(preset);
     await services.files.writeSettings(models.settings.all);
   }
-
-  /// Loads preset from Json Row
+  ///Loads preset from Json Row
   void loadPreset(ViewPreset preset) {
     setNumViews(preset.views.length);
-    if(preset.horizontal1.isNotEmpty) horizontalController1.setRatios(preset.horizontal1);  
-    if(preset.horizontal2.isNotEmpty) horizontalController2.setRatios(preset.horizontal2);    
-    if(preset.horizontal3.isNotEmpty) horizontalController3.setRatios(preset.horizontal3);  
-    if(preset.horizontal4.isNotEmpty) horizontalController4.setRatios(preset.horizontal4);
-    if(preset.vertical1.isNotEmpty) verticalController.setRatios(preset.vertical1);  
-    if(preset.vertical2.isNotEmpty) verticalController2.setRatios(preset.vertical2);   
-    for(var i = 0; i < preset.views.length; i++){
+    !preset.horizontal1.toList().isEmpty ? horizontalController1.setRatios(preset.horizontal1.toList()) : null;  
+    !preset.horizontal2.toList().isEmpty ? horizontalController2.setRatios(preset.horizontal2.toList()) : null;    
+    !preset.horizontal3.toList().isEmpty ? horizontalController3.setRatios(preset.horizontal3.toList()) : null;  
+    !preset.horizontal4.toList().isEmpty ? horizontalController4.setRatios(preset.horizontal4.toList()) : null;
+    !preset.vertical1.toList().isEmpty ? verticalController.setRatios(preset.vertical1.toList()) : null;  
+    !preset.vertical2.toList().isEmpty ? verticalController2.setRatios(preset.vertical2.toList()) : null;   
+    for(var i =0; i < preset.views.length; i++){
       replaceView(i, preset.views[i]);
     }
   }
 
-  /// Deletes presets and rewrites Json file
+  // deletes presets and rewrites Json file
   Future<void> delete(ViewPreset preset) async{
     models.settings.dashboard.presets.remove(preset);
     await services.files.writeSettings(models.settings.all); 
   }
+
+
 
   @override
   void dispose() {
