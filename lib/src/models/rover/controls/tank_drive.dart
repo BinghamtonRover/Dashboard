@@ -1,10 +1,21 @@
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
+import "package:rover_dashboard/src/models/rover/controls/slew_rate_limiter.dart";
 
 import "controls.dart";
 
 /// The skid-steer drive controls.
 class DriveControls extends RoverControls {
+  /// The rate limit for the drive input
+  static const double rateLimit = 2.50;
+
+  /// The [SlewRateLimiter] for the left joystick input
+  SlewRateLimiter leftLimiter = SlewRateLimiter(rate: rateLimit);
+
+  /// The [SlewRateLimiter] for the right joystick input
+  SlewRateLimiter rightLimiter = SlewRateLimiter(rate: rateLimit);
+
   /// Whether the left shoulder was pressed last tick.
   bool leftShoulderFlag = false;
 
@@ -19,6 +30,8 @@ class DriveControls extends RoverControls {
 
   @override
   void updateState(GamepadState state) {
+    leftLimiter.rate = models.settings.dashboard.slewRateLimit;
+    rightLimiter.rate = models.settings.dashboard.slewRateLimit;
     if (!leftShoulderFlag && state.leftShoulder) throttle -= 0.1;
     leftShoulderFlag = state.leftShoulder;
     if (!rightShoulderFlag && state.rightShoulder) throttle += 0.1;
@@ -27,11 +40,16 @@ class DriveControls extends RoverControls {
   }
 
   @override
-  List<Message> parseInputs(GamepadState state) => [
-    DriveCommand(throttle: throttle, setThrottle: true),
-    DriveCommand(setLeft: true, left: state.normalLeftY),
-    DriveCommand(setRight: true, right: -1*state.normalRightY),
-  ];
+  List<Message> parseInputs(GamepadState state) {
+    final leftInput = state.normalLeftY;
+    final rightInput = -state.normalRightY;
+
+    return [
+      DriveCommand(throttle: throttle, setThrottle: true),
+      DriveCommand(setLeft: true, left: leftLimiter.calculate(leftInput)),
+      DriveCommand(setRight: true, right: rightLimiter.calculate(rightInput)),
+    ];
+  }
 
   @override
   List<Message> get onDispose => [

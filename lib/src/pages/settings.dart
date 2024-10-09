@@ -145,6 +145,12 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                 value: model.dashboard.preferTankControls,
                 onChanged: model.dashboard.updateTank,
               ),
+              NumberEditor(
+                name: "Slew Rate Limit",
+                subtitle:
+                    "The maximum acceleration of the drive (input per second)",
+                model: model.dashboard.slewRateLimit,
+              ),
               SwitchListTile(
                 title: const Text("Require version checking"),
                 subtitle: const Text("Default to version checking on"),

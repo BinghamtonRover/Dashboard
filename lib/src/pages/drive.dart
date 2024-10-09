@@ -240,7 +240,7 @@ class DrivePage extends ReactiveWidget<PositionModel> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(child: _Wheels(wheels: model.wheelsRPM, colors: model.wheelColors)),
-            Expanded(child: _BarChart(values: [model.leftWheels, model.rightWheels])),
+            Expanded(child: _BarChart(values: [model.leftWheels, -model.rightWheels])),
           ],
         ),
       ),

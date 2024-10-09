@@ -195,6 +195,9 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   /// Whether to default to tank controls. See [DashboardSettings.preferTankControls].
   bool preferTankControls;
 
+  /// The rate limit to apply to the slew rate limiter on the drive. See [DashboardSettings.slewRateLimit]
+  NumberBuilder<double> slewRateLimit;
+
   /// Whether to use version checking. See [DashboardSettings.versionChecking].
   bool versionChecking;
 
@@ -205,6 +208,7 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     splitMode = initial.splitMode,
     splitCameras = initial.splitCameras,
     preferTankControls = initial.preferTankControls,
+    slewRateLimit = NumberBuilder(initial.slewRateLimit),
     versionChecking = initial.versionChecking,
     themeMode = initial.themeMode;
 
@@ -219,6 +223,7 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     themeMode: themeMode,
     splitCameras: splitCameras,
     preferTankControls: preferTankControls,
+    slewRateLimit: slewRateLimit.value,
     versionChecking: versionChecking,
   );
 
@@ -247,6 +252,13 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   void updateTank(bool? input) {  // ignore: avoid_positional_boolean_parameters
     if (input == null) return;
     preferTankControls = input;
+    notifyListeners();
+  }
+
+  /// Updates [slewRateLimit]
+  void updateSlewRateLimit(double? input) {
+    if (input == null) return;
+    slewRateLimit.value = input;
     notifyListeners();
   }
 
