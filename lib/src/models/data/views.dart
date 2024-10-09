@@ -5,6 +5,13 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 
+extension on ResizableController {
+  void setRatios(List<double> ratios) => setSizes([
+    for (final ratio in ratios)
+      ResizableSize.ratio(ratio),
+  ]);
+}
+
 /// A function that builds a view of the given index.
 typedef ViewBuilder = Widget Function(BuildContext context, int index);
 
@@ -69,6 +76,7 @@ class ViewsModel extends Model {
   /// Loads preset from Json Row
   Future<void> loadPreset(ViewPreset preset) async {
     setNumViews(preset.views.length);
+    resetSizes();
     for(var i = 0; i < preset.views.length; i++){
       replaceView(i, preset.views[i], ignoreErrors: true);
     }
