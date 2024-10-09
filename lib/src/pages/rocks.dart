@@ -130,6 +130,8 @@ class RocksPage extends ReactiveWidget<RockModel> {
             "Rocks & Minerals",
             style: context.textTheme.headlineMedium,
           ),
+          const Spacer(),
+          ViewsSelector(index: index),
         ],
       ),
       Padding(

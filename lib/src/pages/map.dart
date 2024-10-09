@@ -147,6 +147,8 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
           ),
           onPressed: model.isPlayingBadApple ? model.stopBadApple : model.startBadApple,
         ),
+        const Spacer(),
+        ViewsSelector(index: index),
       ],),
     ),
   ],);

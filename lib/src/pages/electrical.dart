@@ -115,6 +115,8 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
         ),
         const SizedBox(width: 8),
         ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text("Clear all"), onPressed: model.clear),
+        const SizedBox(width: 8),
+        ViewsSelector(index: index),
       ],),
       if (model.axis) Expanded(child:
         Row(children: [
