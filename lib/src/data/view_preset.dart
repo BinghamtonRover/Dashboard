@@ -4,7 +4,7 @@ import "package:rover_dashboard/pages.dart";
 /// Preset for the dashboard.
 class ViewPreset {
   /// Preset name.
-  final String? name;
+  final String name;
 
   /// List of views that comes with the views name (and if it is a camera view, its camera name).
   final List<DashboardView> views;
@@ -41,7 +41,7 @@ class ViewPreset {
 
   /// Parses a view preset from JSON.
   ViewPreset.fromJson(Json? json) :
-    name = json?["name"] ?? "NoName",
+    name = json?["name"] ?? "No Name",
     views = [
       for (final viewJson in json?["views"] ?? [])
         DashboardView.fromJson(viewJson) ?? DashboardView.blank,

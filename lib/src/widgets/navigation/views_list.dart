@@ -75,7 +75,7 @@ class ViewsList extends ReusableReactiveWidget<Sockets> {
                                 for (final ViewPreset preset
                                     in models.settings.dashboard.presets)
                                   ListTile(
-                                    title: Text(preset.name.toString()),
+                                    title: Text(preset.name),
                                     onTap: () =>
                                         models.views.loadPreset(preset),
                                   ),

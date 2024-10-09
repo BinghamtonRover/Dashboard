@@ -40,43 +40,59 @@ class ViewsModel extends Model {
     models.settings.addListener(notifyListeners);
   }
 
-  ///Saves preset as a JSon row in settings and rewrites the settings
+  /// Saves the current state as a preset and updates the user's settings.
   Future<void> saveAsPreset(String? name) async {
-    for (final preset in models.settings.dashboard.presets){
-      if(preset.name == name){
-        models.home.setMessage(
+    if (name == null) return;
+    if (models.settings.dashboard.presets.any((otherPreset) => otherPreset.name == name)) {
+      models.home.setMessage(
         severity: Severity.error,
         text: "Name is already taken, please rename preset",
       );
       return;
-      }
     }
-    final copy = List<DashboardView>.from(views);
-    final preset = ViewPreset(name: name, views: copy, horizontal1: horizontalController1.ratios, horizontal2: horizontalController2.ratios,  horizontal3: horizontalController3.ratios, horizontal4: horizontalController4.ratios, vertical1: verticalController.ratios, vertical2: verticalController2.ratios);
+    final preset = toPreset(name);
     models.settings.dashboard.presets.add(preset);
     await services.files.writeSettings(models.settings.all);
   }
-  ///Loads preset from Json Row
-  void loadPreset(ViewPreset preset) {
+
+  /// Returns a [ViewPreset] to match the current state.
+  ViewPreset toPreset(String name) => ViewPreset(
+    name: name,
+    views: views.toList(),
+    horizontal1: horizontalController1.ratios,
+    horizontal2: horizontalController2.ratios,
+    vertical1: verticalController.ratios,
+    vertical2: verticalController2.ratios,
+    horizontal3: horizontalController3.ratios,
+    horizontal4: horizontalController4.ratios,
+  );
+
+  /// Loads preset from Json Row
+  Future<void> loadPreset(ViewPreset preset) async {
     setNumViews(preset.views.length);
-    if (preset.horizontal1.toList().isNotEmpty) horizontalController1.setRatios(preset.horizontal1.toList());
-    if (preset.horizontal2.toList().isNotEmpty) horizontalController2.setRatios(preset.horizontal2.toList());
-    if (preset.horizontal3.toList().isNotEmpty) horizontalController3.setRatios(preset.horizontal3.toList());
-    if (preset.horizontal4.toList().isNotEmpty) horizontalController4.setRatios(preset.horizontal4.toList());
-    if (preset.vertical1.toList().isNotEmpty) verticalController.setRatios(preset.vertical1.toList());
-    if (preset.vertical2.toList().isNotEmpty) verticalController2.setRatios(preset.vertical2.toList());
-    for(var i =0; i < preset.views.length; i++){
-      replaceView(i, preset.views[i]);
+    for(var i = 0; i < preset.views.length; i++){
+      replaceView(i, preset.views[i], ignoreErrors: true);
     }
+    // This delay is needed to prevent an error
+    //
+    // While [setNumViews] does update the number of views in the view model,
+    // it does not cause a build to occur. This small delay allows the next frame to be
+    // built, the UI to update, and *then* updates the ratios. This is necessary because
+    // the controllers listed below are directly tied to the UI.
+    await Future<void>.delayed(const Duration(seconds: 1));
+    if (preset.horizontal1.isNotEmpty) horizontalController1.setRatios(preset.horizontal1);
+    if (preset.horizontal2.isNotEmpty) horizontalController2.setRatios(preset.horizontal2);
+    if (preset.horizontal3.isNotEmpty) horizontalController3.setRatios(preset.horizontal3);
+    if (preset.horizontal4.isNotEmpty) horizontalController4.setRatios(preset.horizontal4);
+    if (preset.vertical1.isNotEmpty) verticalController.setRatios(preset.vertical1);
+    if (preset.vertical2.isNotEmpty) verticalController2.setRatios(preset.vertical2);
   }
 
   /// Deletes presets and rewrites Json file
   Future<void> delete(ViewPreset preset) async{
     models.settings.dashboard.presets.remove(preset);
-    await services.files.writeSettings(models.settings.all); 
+    await services.files.writeSettings(models.settings.all);
   }
-
-
 
   @override
   void dispose() {
@@ -115,12 +131,14 @@ class ViewsModel extends Model {
   }
 
   /// Replaces the view at the given index with the new view.
-  void replaceView(int index, DashboardView newView) {
+  void replaceView(int index, DashboardView newView, {bool ignoreErrors = false}) {
     if (views.contains(newView) && newView.name != Routes.blank) {
-      models.home.setMessage(
-        severity: Severity.error,
-        text: "That view is already on-screen",
-      );
+      if (!ignoreErrors) {
+        models.home.setMessage(
+          severity: Severity.error,
+          text: "That view is already on-screen",
+        );
+      }
       return;
     }
     views[index] = newView;
@@ -138,7 +156,6 @@ class ViewsModel extends Model {
         views.add(DashboardView.blank);
       }
     }
-    // resetSizes();
     notifyListeners();
   }
 }
