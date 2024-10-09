@@ -5,8 +5,7 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
 ///A widget to save a preset backed by [PresetBuilder].
-class PresetSave extends ReactiveWidget<PresetBuilder>{
-
+class PresetSave extends ReactiveWidget<PresetBuilder> {
   @override
   PresetBuilder createModel() => PresetBuilder();
 
@@ -14,20 +13,17 @@ class PresetSave extends ReactiveWidget<PresetBuilder>{
   Widget build(BuildContext context, PresetBuilder model) => AlertDialog(
     title: const Text("Save a preset"),
     content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            height: 50,
-            width: double.infinity,
-            child: TextField(
-              controller: model.nameController,
-              onChanged: model.update,
-              decoration: const InputDecoration(hintText: "Preset Name"),
-            ),
-
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          height: 50,
+          width: double.infinity,
+          child: TextField(
+            controller: model.nameController,
+            decoration: const InputDecoration(hintText: "Preset Name"),
           ),
-        ],
-
+        ),
+      ],
     ),
     actions: [
       TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
@@ -36,7 +32,6 @@ class PresetSave extends ReactiveWidget<PresetBuilder>{
         child: const Text("Save"),
       ),
     ],
-
   );
 
 }
