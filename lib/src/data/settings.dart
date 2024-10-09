@@ -259,10 +259,12 @@ class DashboardSettings {
     required this.versionChecking,
   });
 
-
   /// Parses settings from JSON.
   DashboardSettings.fromJson(Json? json) :
-    presets =  List.from(json?["presets"] ?? []),
+    presets = [
+      for (final presetJson in json?["presets"] ?? [])
+        ViewPreset.fromJson(presetJson),
+    ],
     splitMode = SplitMode.values[json?["splitMode"] ?? SplitMode.horizontal.index],
     mapBlockSize = json?["mapBlockSize"] ?? 1.0,
     maxFps = (json?["maxFps"] ?? 60) as int,

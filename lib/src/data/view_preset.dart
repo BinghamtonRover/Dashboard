@@ -42,13 +42,16 @@ class ViewPreset {
   /// Parses a view preset from JSON.
   ViewPreset.fromJson(Json? json) :
     name = json?["name"] ?? "NoName",
-    views = json?["views"] ?? [],
-    horizontal1 = json?["horizontal1"],
-    horizontal2 = json?["horizontal2"],
-    horizontal3 = json?["horizontal3"],
-    horizontal4 = json?["horizontal4"],
-    vertical1 = json?["vertical1"],
-    vertical2 = json?["vertical2"];
+    views = [
+      for (final viewJson in json?["views"] ?? [])
+        DashboardView.fromJson(viewJson) ?? DashboardView.blank,
+    ],
+    horizontal1 = List<double>.from(json?["horizontal1"] ?? []),
+    horizontal2 = List<double>.from(json?["horizontal2"] ?? []),
+    horizontal3 = List<double>.from(json?["horizontal3"] ?? []),
+    horizontal4 = List<double>.from(json?["horizontal4"] ?? []),
+    vertical1 = List<double>.from(json?["vertical1"] ?? []),
+    vertical2 = List<double>.from(json?["vertical2"] ?? []);
 
   /// Serializes a view preset to JSON.
   Json toJson() => {
