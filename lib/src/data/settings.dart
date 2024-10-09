@@ -1,8 +1,5 @@
-
-import "dart:ffi";
-
 import "package:flutter/material.dart";
-import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/pages.dart";
 
 import "socket.dart";
 
@@ -251,6 +248,7 @@ class DashboardSettings {
   /// Whether to have version checking on protobuf messages.
   final bool versionChecking;
 
+  /// A list of ViewPresets
   List<ViewPreset> presets;
 
   /// A const constructor.
@@ -265,6 +263,8 @@ class DashboardSettings {
     required this.versionChecking,
   });
 
+  
+  /// Parses settings from JSON.
   DashboardSettings.fromJson(Json? json) : 
     presets =  List.from(json?["presets"] ?? []),
     splitMode = SplitMode.values[json?["splitMode"] ?? SplitMode.horizontal.index],
@@ -288,20 +288,21 @@ class DashboardSettings {
   };
 }
 
+/// Preset for the dashboard.
 class ViewPreset{
-  ///Preset name
+  /// Preset name.
   final String? name;
-  ///List of views that comes with the views name and if it is a cameraview its index
+  /// List of views that comes with the views name and if it is a cameraview its index.
   final List<DashboardView> views;
-  ///ratio of the controller for the resizable row on top.
+  /// Ratio of the controller for the resizable row on top.
   final  List<double> horizontal1;
-  ///ratio of the controller for resizable row on bottom.
+  /// Ratio of the controller for resizable row on bottom.
   final List<double> horizontal2;
-  ///ratio of the controller for screen 2's first row.
+  /// Ratio of the controller for screen 2's first row.
   final List<double> horizontal3;
-  ///ratio of the controller for screen 2's second row.
+  /// Ratio of the controller for screen 2's second row.
   final List<double> horizontal4;
-  ///ratio of the controller for the resizable column.
+  /// Ratio of the controller for the resizable column.
   final List<double> vertical1;
   /// The vertical controller for screen 2.
   final List<double> vertical2;
@@ -321,14 +322,13 @@ class ViewPreset{
   /// Parses Dashboard settings from JSON.
   ViewPreset.fromJson(Json? json ):
     name = json?["name"] ?? "NoName",
-    views = json?["views"] ?? null,
-    horizontal1 = json?["horizontal1"] ?? null,
-    horizontal2 = json?["horizontal2"] ?? null,
-    horizontal3 = json?["horizontal3"] ?? null,
-    horizontal4 = json?["horizontal4"] ?? null,
-    vertical1 = json?["vertical1"] ?? null,
-    vertical2 = json?["vertical2"] ?? null;
-    
+    views = json?["views"] ?? [],
+    horizontal1 = json?["horizontal1"],
+    horizontal2 = json?["horizontal2"],
+    horizontal3 = json?["horizontal3"],
+    horizontal4 = json?["horizontal4"],
+    vertical1 = json?["vertical1"],
+    vertical2 = json?["vertical2"];
 
     /// Serializes these settings to JSON.
   Json toJson() => {

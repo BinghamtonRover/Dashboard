@@ -10,8 +10,8 @@ import "package:rover_dashboard/services.dart";
 
 /// Represents the state of a cell on the autonomy map.
 enum AutonomyCell {
-	/// This is where the rover currently is. 
-	rover, 
+	/// This is where the rover currently is.
+	rover,
 	/// This is where the rover is trying to go.
 	destination,
 	/// This cell has an obstacle the rover needs to avoid.
@@ -25,7 +25,7 @@ enum AutonomyCell {
 }
 
 /// Like an [Offset] from Flutter, but using integers instead of doubles.
-/// 
+///
 /// This is used to represent an offset from a position in a grid. Since the grid is represented
 /// as a 2D list, the x and y coordinates must be integers to act as indexes. Use this class to
 /// keep the rover centered in the UI.
@@ -39,15 +39,15 @@ class GridOffset {
 }
 
 /// A view model for the autonomy page to render a grid map.
-/// 
+///
 /// Shows a bird's-eye map of where the rover is, what's around it, where the goal is, and the path
 /// to get there. This class uses [AutonomyData] to keep track of the data as reported by the rover.
-/// The [grid] is a 2D map of width and height [gridSize] that keeps the [roverPosition] in the 
+/// The [grid] is a 2D map of width and height [gridSize] that keeps the [roverPosition] in the
 /// center (by keeping track of its [offset]) and filling the other cells with [AutonomyCell]s.
-/// 
+///
 class AutonomyModel with ChangeNotifier {
 	/// The amount of blocks in the width and height of the grid.
-	/// 
+	///
 	/// Keep this an odd number to keep the rover in the center.
 	int gridSize = 11;
 
@@ -57,14 +57,16 @@ class AutonomyModel with ChangeNotifier {
 	/// Listens for incoming autonomy or position data.
 	AutonomyModel() { init(); }
 
+  StreamSubscription<AutonomyData>? _subscription;
+
   /// Initializes the view model.
   Future<void> init() async {
 		recenterRover();
     await Future<void>.delayed(const Duration(seconds: 1));
-		models.messages.registerHandler<AutonomyData>(
+		_subscription = models.messages.stream.onMessage<AutonomyData>(
 			name: AutonomyData().messageName,
-			decoder: AutonomyData.fromBuffer,
-			handler: onNewData, 
+			constructor: AutonomyData.fromBuffer,
+			callback: onNewData,
 		);
 		models.rover.metrics.position.addListener(recenterRover);
     models.settings.addListener(notifyListeners);
@@ -75,7 +77,7 @@ class AutonomyModel with ChangeNotifier {
 
 	@override
 	void dispose() {
-		models.messages.removeHandler(AutonomyData().messageName);
+    _subscription?.cancel();
 		models.settings.removeListener(notifyListeners);
 		models.rover.metrics.position.removeListener(recenterRover);
     badAppleAudioPlayer.dispose();
@@ -85,7 +87,7 @@ class AutonomyModel with ChangeNotifier {
 	/// An empty grid of size [gridSize].
 	List<List<(GpsCoordinates, AutonomyCell)>> get empty => [
 		for (int i = 0; i < gridSize; i++) [
-			for (int j = 0; j < gridSize; j++) 
+			for (int j = 0; j < gridSize; j++)
 				(GpsCoordinates(), AutonomyCell.empty),
 		],
 	];
@@ -119,7 +121,7 @@ class AutonomyModel with ChangeNotifier {
 		}
     // Marks the rover and destination -- these should be last
     if (data.hasDestination()) markCell(result, data.destination, AutonomyCell.destination);
-		markCell(result, roverPosition, AutonomyCell.rover);	
+		markCell(result, roverPosition, AutonomyCell.rover);
 		return result;
 	}
 
@@ -127,7 +129,7 @@ class AutonomyModel with ChangeNotifier {
 	int gpsToBlock(double value) => (value / models.settings.dashboard.mapBlockSize).round();
 
 	/// Calculates a new position for [gps] based on [offset] and adds it to the [list].
-	/// 
+	///
 	/// This function filters out any coordinates that shouldn't be shown based on [gridSize].
 	void markCell(List<List<(GpsCoordinates, AutonomyCell)>> list, GpsCoordinates gps, AutonomyCell value) {
 		// Latitude is y-axis, longitude is x-axis
@@ -143,18 +145,18 @@ class AutonomyModel with ChangeNotifier {
 	}
 
 	/// Determines the new [offset] based on the current [roverPosition].
-	/// 
+	///
 	/// The autonomy grid is inherently unbounded, meaning we have to choose *somewhere* to bound the
 	/// grid. We chose to draw a grid of size [gridSize] with the rover in the center. This means we
 	/// need to add an offset to every other coordinates to draw it relative to the rover on-screen.
-	/// 
+	///
 	/// For example, say the rover is at `(2, 3)`, and there is an obstacle at `(1, 2)`, with a grid
 	/// size of `11`. The rover should be at the center, `(5, 5)`, so we need to add an offset of
 	/// `(3, 2)` to get it there. That means we should also add `(3, 2)` to the obstacle's position
 	/// so it remains `(-1, -1)` away from the rover's new position, yielding `(4, 4)`.
 	void recenterRover() {
-    // final position = isPlayingBadApple ? GpsCoordinates() : roverPosition; 
-    final position = isPlayingBadApple ? GpsCoordinates(latitude: (gridSize ~/ 2).toDouble(), longitude: (gridSize ~/ 2).toDouble()) : roverPosition; 
+    // final position = isPlayingBadApple ? GpsCoordinates() : roverPosition;
+    final position = isPlayingBadApple ? GpsCoordinates(latitude: (gridSize ~/ 2).toDouble(), longitude: (gridSize ~/ 2).toDouble()) : roverPosition;
 		final midpoint = ((gridSize - 1) / 2).floor();
 		final offsetX = midpoint - -1 * gpsToBlock(position.longitude);
 		final offsetY = midpoint - gpsToBlock(position.latitude);
@@ -205,8 +207,8 @@ class AutonomyModel with ChangeNotifier {
 	}
 
   // ==================== Bad Apple Easter Egg ====================
-  // 
-  // This Easter Egg renders the Bad Apple video in the map page by grabbing 
+  //
+  // This Easter Egg renders the Bad Apple video in the map page by grabbing
   // each frame and assigning an obstacle to each black pixel.
 
   /// Whether the UI is currently playing Bad Apple

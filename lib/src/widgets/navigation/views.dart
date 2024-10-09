@@ -3,6 +3,7 @@ import "package:flutter_resizable_container/flutter_resizable_container.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A widget to render all the views the user selected.

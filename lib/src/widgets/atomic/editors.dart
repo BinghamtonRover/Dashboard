@@ -3,7 +3,6 @@ import "package:flutter/services.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/src/models/view/builders/preset_builder.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// Creates a widget to edit a [SocketInfo], backed by [SocketBuilder].
@@ -240,6 +239,7 @@ class TimerEditor extends ReactiveWidget<TimerBuilder> {
 ///A widget to save a preset backed by [PresetBuilder].
 class PresetSave extends ReactiveWidget<PresetBuilder>{
 
+  @override
   PresetBuilder createModel() => PresetBuilder();
 
   @override
@@ -257,7 +257,7 @@ class PresetSave extends ReactiveWidget<PresetBuilder>{
               decoration: const InputDecoration(hintText: "Preset Name"),
             ),
             
-          )
+          ),
         ],
 
     ),
@@ -274,64 +274,16 @@ class PresetSave extends ReactiveWidget<PresetBuilder>{
 }
 
 
-///A widget to load a preset backed by [PresetBuilder].
-class PresetLoad extends ReactiveWidget<PresetBuilder>{
-
-  PresetBuilder createModel() => PresetBuilder();
-  @override
-  Widget build(BuildContext context, PresetBuilder model) => AlertDialog(
-    title: const Text("Load a preset"),
-    content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children:  <Widget>[
-          Container(
-            child: 
-            ExpansionTile(
-            title: const Text("Saved Presets"), 
-            children: [ 
-              SizedBox(
-                height: models.settings.dashboard.presets.length != 0 ? 50 : 0,
-                child: SingleChildScrollView(
-                  child: Column(children: 
-                  [for(final ViewPreset preset in models.settings.dashboard.presets) PresetLoadList(preset)],),
-                ),
-              ),] ,
-            )            
-          ),
-          
-          
-        ],
-
-    ),
-    actions: [
-      TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
-    ],
-    
-
-  );
-  
-}
-///A widget to create a list of tiles from a preset backed by [PresetBuilder].
-class PresetLoadList extends ReactiveWidget<PresetBuilder> {
-  final ViewPreset presetName;
-  const PresetLoadList(this.presetName);
-  PresetBuilder createModel() => PresetBuilder();
-
-  @override
-  Widget build(BuildContext context, PresetBuilder model) => ListTile(
-          title: Text(presetName.name.toString()),
-          onTap: () => model.load(presetName),
-    );
-    
-  
-}
 ///A stateful widget to delete a preset, includes [PresetBuilder] model.
 class PresetDelete extends StatefulWidget{
+  /// Model for presetBuilder.
   final PresetBuilder model;
-  PresetDelete({required this.model});
+
+  /// Listens to [model] to rebuild.
+  const PresetDelete({required this.model});
 
   @override
-  _PresetDelete createState() => _PresetDelete();
+  State<PresetDelete> createState() => _PresetDelete();
   
 }
 ///A widget to delete a preset backed by [PresetDelete].
@@ -345,28 +297,29 @@ class _PresetDelete extends State<PresetDelete>{
       content: Column(
           mainAxisSize: MainAxisSize.min,
           children:  <Widget>[
-            Container(
-              child: 
-              ExpansionTile(
-              title: const Text("Saved Presets"), 
-              children: [
-                SizedBox(
-                  height: models.settings.dashboard.presets.length != 0 ? 50 : 0,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: 
-                    [for(final ViewPreset preset in models.settings.dashboard.presets) ListTile(
-                      title: Text(preset.name.toString()),
-                      onTap: () {
-                        setState(() {
-                          selectedPreset = preset;
-                          activateDelete = true;
-                        });
-                      },
-                    )],),
-                  ),
-                ),] ,
-              )            
+            ExpansionTile(
+            title: const Text("Saved Presets"), 
+            children: [
+              SizedBox(
+                height: models.settings.dashboard.presets.isNotEmpty ? 50 : 0,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: 
+                  [for(final ViewPreset preset in models.settings.dashboard.presets) ListTile(
+                    title: Text(preset.name.toString()),
+                    onTap: () {
+                      models.home.setMessage(
+                        severity: Severity.error,
+                        text: "Are you sure you want to delete?",
+                      );
+                      setState(() {
+                        selectedPreset = preset;
+                        activateDelete = true;
+                      });
+                    },
+                  ),],),
+                ),
+              ),] ,
             ),
           ],
 

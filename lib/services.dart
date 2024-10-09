@@ -14,13 +14,14 @@
 library services;
 
 import "src/services/files.dart";
-import "src/services/gamepad.dart";
+import "src/services/gamepad/service.dart";
 import "src/services/service.dart";
 
 export "src/services/socket.dart";
 export "src/services/files.dart";
-export "src/services/gamepad.dart";
-export "src/services/serial.dart";
+export "src/services/gamepad/gamepad.dart";
+export "src/services/gamepad/service.dart";
+export "src/services/gamepad/state.dart";
 
 /// A dependency injection service that manages the lifecycle of other services.
 ///

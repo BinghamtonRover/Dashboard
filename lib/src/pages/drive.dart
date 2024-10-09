@@ -195,6 +195,8 @@ class DrivePage extends ReactiveWidget<PositionModel> {
       Row(children: [  // The header at the top
         const SizedBox(width: 8),
         Text("Drive", style: context.textTheme.headlineMedium),
+        const Spacer(),
+        ViewsSelector(index: index),
       ],),
       Expanded(
         child: Row(

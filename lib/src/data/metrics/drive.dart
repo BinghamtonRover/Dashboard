@@ -42,7 +42,6 @@ class DriveMetrics extends Metrics<DriveData> {
 		MetricLine("Throttle: ${data.throttle.toStringAsFixed(2)}", severity: throttleSeverity),
 		MetricLine("Left: ${data.left.toStringAsFixed(2)}"),
 		MetricLine("Right: ${data.right.toStringAsFixed(2)}"),
-    MetricLine("Battery: ${data.batteryVoltage.toStringAsFixed(2)}V,${data.batteryCurrent.toStringAsFixed(2)}A, ${data.batteryTemperature.toStringAsFixed(2)}°F", severity: electricalSeverity),
     MetricLine("Left Side: ${data.frontLeft.toStringAsFixed(1)}, ${data.middleLeft.toStringAsFixed(1)}, ${data.backLeft.toStringAsFixed(1)}"),
     MetricLine("Right Side: ${data.frontRight.toStringAsFixed(1)}, ${data.middleRight.toStringAsFixed(1)}, ${data.backRight.toStringAsFixed(1)}"),
   ];
@@ -66,6 +65,7 @@ class DriveMetrics extends Metrics<DriveData> {
     if(value.hasMiddleRight()) data.middleRight = value.middleRight;
     if(value.hasBackRight()) data.backRight = value.backRight;
     if (value.color != ProtoColor.PROTO_COLOR_UNDEFINED) data.color = value.color;
+    if (value.batteryTemperature != 0) data.batteryTemperature = value.batteryTemperature;
 
     if (
       (data.throttle > 0.05 && oldThrottle < 0.05) || 

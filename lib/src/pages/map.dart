@@ -10,12 +10,12 @@ import "package:rover_dashboard/widgets.dart";
 class MapPage extends ReactiveWidget<AutonomyModel> {
 	/// Gets the color for a given [AutonomyCell].
 	Color? getColor(AutonomyCell cell) => switch(cell) {
-		AutonomyCell.rover => Colors.blue,
 		AutonomyCell.destination => Colors.green,
 		AutonomyCell.obstacle => Colors.black,
 		AutonomyCell.path => Colors.blueGrey,
 		AutonomyCell.empty => Colors.white,
 		AutonomyCell.marker => Colors.red,
+		AutonomyCell.rover => Colors.transparent,
 	};
 
   /// Opens a dialog to prompt the user for GPS coordinates and places a marker there. 
@@ -57,12 +57,17 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
             child: GestureDetector(
               onTap: () => cell.$2 != AutonomyCell.marker ? () : model.updateMarker(cell.$1),
               child: Container(
-                height: double.infinity,
                 width: 24,
                 decoration: BoxDecoration(color: getColor(cell.$2), border: Border.all()),
-                child: cell.$2 != AutonomyCell.rover ? null : Transform.rotate(
-                  angle: -model.roverHeading * pi / 180, 
-                  child: const Icon(Icons.arrow_upward, size: 24),
+                child: cell.$2 != AutonomyCell.rover ? null : Container(
+                  color: Colors.blue,
+                  width: double.infinity,
+                  height: double.infinity,
+                  margin: const EdgeInsets.all(4),
+                  child: Transform.rotate(
+                    angle: -model.roverHeading * pi / 180, 
+                    child: const Icon(Icons.arrow_upward, size: 24),
+                  ),
                 ),
               ),
             ),

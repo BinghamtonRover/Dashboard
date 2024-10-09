@@ -10,7 +10,7 @@ import "package:rover_dashboard/widgets.dart";
 class SocketSwitcher extends ReusableReactiveWidget<Sockets> {
   /// A constructor for this widget.
   SocketSwitcher() : super(models.sockets);
-  
+
 	@override
 	Widget build(BuildContext context, Sockets model) => DropdownButton<RoverType>(
     value: model.rover,
@@ -26,8 +26,8 @@ class SocketSwitcher extends ReusableReactiveWidget<Sockets> {
 }
 
 /// The main dashboard page.
-/// 
-/// Each page the user could navigate to is embedded here, as a [View]. 
+///
+/// Each page the user could navigate to is embedded here, as a [View].
 class HomePage extends StatefulWidget {
 	@override
 	HomePageState createState() => HomePageState();
@@ -46,11 +46,6 @@ class HomePageState extends State<HomePage>{
       flexibleSpace: Center(child: TimerWidget()),
 			actions: [
 				SocketSwitcher(),
-        IconButton(
-          icon: const Icon(Icons.aspect_ratio),
-          tooltip: "Reset view sizes",
-          onPressed: models.views.resetSizes,
-        ),
 				IconButton(
 					icon: const Icon(Icons.settings),
 					onPressed: () => Navigator.of(context).pushNamed(Routes.settings),
@@ -73,7 +68,7 @@ class HomePageState extends State<HomePage>{
           ),
         ],
       ),
-      if (defaultTargetPlatform == TargetPlatform.android) 
+      if (defaultTargetPlatform == TargetPlatform.android)
         MobileControls(),
     ],),
 	);

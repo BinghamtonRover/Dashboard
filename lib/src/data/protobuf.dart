@@ -6,18 +6,9 @@ import "package:rover_dashboard/data.dart";
 export "package:protobuf/protobuf.dart" show GeneratedMessageGenericExtensions;
 
 /// A function that decodes a Protobuf messages serialized form.
-/// 
-/// The `.fromBuffer` constructor is a type of [MessageDecoder]. 
-typedef MessageDecoder<T extends Message> = T Function(List<int> data); 
-
-/// A callback to execute with a specific serialized Protobuf message.
-typedef MessageHandler<T extends Message> = void Function(T);
-
-/// A callback to handle any [WrappedMessage].
-typedef WrappedMessageHandler = void Function(WrappedMessage);
-
-/// A callback to execute with raw Protobuf data.
-typedef RawDataHandler = void Function(List<int> data);
+///
+/// The `.fromBuffer` constructor is a type of [MessageDecoder].
+typedef MessageDecoder<T extends Message> = T Function(List<int> data);
 
 /// Gets the name of the command message for the given device.
 String getCommandName(Device device) => switch (device) {
@@ -41,9 +32,9 @@ String getDataName(Device device) => switch (device) {
 extension UndefinedFilter<T extends ProtobufEnum> on List<T> {
   /// Filters out `_UNDEFINED` values from the list.
   List<T> get filtered => [
-    for (final value in this) 
+    for (final value in this)
       if (value.value != 0)
-        value, 
+        value,
   ];
 }
 
@@ -55,13 +46,13 @@ extension TimestampUtils on Timestamp {
 	/// Adds a [Duration] to a [Timestamp].
 	Timestamp operator +(Duration duration) => Timestamp.fromDateTime(toDateTime().add(duration));
 
-  /// Subtracts the 
+  /// Subtracts the
 	double operator -(Timestamp other) => (seconds - other.seconds).toDouble();
 }
 
-/// Decodes a wrapped Protobuf message. 
+/// Decodes a wrapped Protobuf message.
 extension Unwrapper on WrappedMessage {
-	/// Decodes the wrapped message into a message of type [T]. 
+	/// Decodes the wrapped message into a message of type [T].
 	T decode<T extends Message>(MessageDecoder<T> decoder) => decoder(data);
 }
 
@@ -85,7 +76,7 @@ extension RoverStatusHumanName on RoverStatus {
 /// Extensions for [Coordinates] messages.
 extension CoordinatesUtils on Coordinates {
 	/// Adds two coordinates.
-	Coordinates operator +(Coordinates other) => 
+	Coordinates operator +(Coordinates other) =>
 		Coordinates(x: x + other.x, y: y + other.y, z: z + other.z);
 
 	/// Returns a user-friendly format of these coordinates.
@@ -115,7 +106,7 @@ extension CameraNameUtils on CameraName {
 /// Extensions for [VideoData].
 extension VideoDataUtils on VideoData {
 	/// Whether this data has a frame to show.
-	/// 
+	///
 	/// A Protobuf `bytes` object is never null, only empty.
 	bool get hasFrame => frame.isNotEmpty;
 }
@@ -163,7 +154,7 @@ extension DeviceUtils on Device {
 /// Utilities for Gps Coordinates Data
 extension GpsUtils on GpsCoordinates {
   /// Calculate Euclidean distance between current coordinates and another set of coordinates.
-  /// 
+  ///
   /// See https://en.wikipedia.org/wiki/Geographic_coordinate_system#Length_of_a_degree
   double distanceTo(GpsCoordinates other) {
   	// Convert to distance in meters and use Pythagorean theorem
@@ -270,6 +261,14 @@ extension LogLevelUtils on BurtLogLevel {
     BurtLogLevel.trace => "[T]",
     _ => "?",
   };
+
+  /// Whether this level is more severe than another level.
+  bool isMoreSevereThan(BurtLogLevel other) =>
+    value < other.value;
+
+  /// Whether this level is at least as severe as another level.
+  bool isAtLeast(BurtLogLevel other) =>
+    value <= other.value;
 }
 
 /// Formats [BurtLog] messages in plain-text. For the UI, use widgets.
