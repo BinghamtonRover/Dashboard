@@ -4,7 +4,6 @@ import "package:flutter_resizable_container/flutter_resizable_container.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
-import "package:rover_dashboard/services.dart";
 
 /// A function that builds a view of the given index.
 typedef ViewBuilder = Widget Function(BuildContext context, int index);
@@ -52,7 +51,7 @@ class ViewsModel extends Model {
     }
     final preset = toPreset(name);
     models.settings.dashboard.presets.add(preset);
-    await services.files.writeSettings(models.settings.all);
+    await models.settings.update();
   }
 
   /// Returns a [ViewPreset] to match the current state.

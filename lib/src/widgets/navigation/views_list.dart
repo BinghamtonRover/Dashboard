@@ -5,13 +5,32 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
+/// A simple model that just listens for changes in the network and settings.
+class ViewsSidebarModel with ChangeNotifier {
+  /// Listens for changes in the network and settings.
+  ViewsSidebarModel() {
+    models.sockets.addListener(notifyListeners);
+    models.settings.addListener(notifyListeners);
+  }
+
+  @override
+  void dispose() {
+    models.sockets.removeListener(notifyListeners);
+    models.settings.removeListener(notifyListeners);
+    super.dispose();
+  }
+}
+
 /// A list of views for the user to drag into their desired view area
-class ViewsList extends ReusableReactiveWidget<Sockets> {
+class ViewsList extends ReactiveWidget<ViewsSidebarModel> {
   /// The size of the icon to appear under the mouse pointer when dragging
   static const double draggingIconSize = 100;
 
+  @override
+  ViewsSidebarModel createModel() => ViewsSidebarModel();
+
   /// A const constructor
-  ViewsList() : super(models.sockets);
+  const ViewsList();
 
   Widget _buildDraggable(DashboardView view, {Widget? dragIcon}) => Draggable<DashboardView>(
     data: view,
@@ -34,7 +53,7 @@ class ViewsList extends ReusableReactiveWidget<Sockets> {
   );
 
   @override
-  Widget build(BuildContext context, Sockets model) => ListView(
+  Widget build(BuildContext context, ViewsSidebarModel model) => ListView(
     children: [
       ExpansionTile(
         title: const Text("Presets"),
