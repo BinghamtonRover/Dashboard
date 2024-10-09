@@ -34,14 +34,14 @@ class DashboardView {
   /// A const constructor.
   DashboardView({required this.name, required this.builder, required this.iconFunc, this.key})
       : flutterKey = UniqueKey();
-  
+
   /// Expands or contracts based on number of camera/ui views.
   static final List<DashboardView> allViews = [...cameraViews, ...uiViews, blank];
 
-  /// Converts json data into allviews.
+  /// Finds the right view in [allViews] that matches the given JSON.
   static DashboardView? fromJson(Json json) => allViews
     .firstWhereOrNull((view) => view.name == json["name"] && view.key?.value == json["cameraName"]);
-  
+
   /// Converts name of uiView/cameraKey into json format
   Json toJson() => {
     "name": name,
