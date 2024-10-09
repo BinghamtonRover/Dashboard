@@ -65,14 +65,14 @@ class Sidebar extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ViewsCounter(),
-                          IconButton(
+                          TextButton.icon(
                             icon: const Icon(Icons.aspect_ratio),
-                            tooltip: "Reset View Sizes",
+                            label: const Text("Reset View Sizes"),
                             onPressed: models.views.resetSizes,
                           ),
                         ],
                       ),
-                      Expanded(child: ViewsList()),
+                      const Expanded(child: ViewsList()),
                     ],
                   ),
                 ],
@@ -114,11 +114,11 @@ class MetricsList extends ReusableReactiveWidget<Metrics> {
 extension SeverityUtil on Severity {
   /// Fetch the color based on the severity
   Color? get color => switch (this) {
-    Severity.info => Colors.blueGrey,
-    Severity.warning => Colors.orange,
-    Severity.error => Colors.red,
-    Severity.critical => Colors.red.shade900,
-  };
+        Severity.info => Colors.blueGrey,
+        Severity.warning => Colors.orange,
+        Severity.error => Colors.red,
+        Severity.critical => Colors.red.shade900,
+      };
 }
 
 /// Displays controls for the given [Controller].

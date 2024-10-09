@@ -3,6 +3,7 @@ import "dart:convert";
 import "dart:io";
 import "dart:async";
 
+import "package:flutter/foundation.dart";
 import "package:path_provider/path_provider.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -18,29 +19,29 @@ extension on Directory {
   File operator / (String filename) => File("$path/$filename");
 }
 
-/// A service to read and write to the file system. 
-/// 
+/// A service to read and write to the file system.
+///
 /// The dashboard reads and writes to files in [outputDir].
 class FilesService extends Service {
-  /// The directory where the dashboard keeps its files. 
-  /// 
+  /// The directory where the dashboard keeps its files.
+  ///
   /// This includes settings, data, images, and anything else the user or dashboard
-  /// may want to keep between sessions. Categories of output, like screenshots, 
+  /// may want to keep between sessions. Categories of output, like screenshots,
   /// should get their own subdirectory.
   late final Directory outputDir;
 
   /// The directory where all logging data is outputted
-  /// 
+  ///
   /// This includes all the different operating modes with specified folders inside
   late final Directory loggingDir;
 
   /// The directory where screenshots are stored.
-  /// 
+  ///
   /// These are only screenshots of video feeds, not of the dashboard itself.
   Directory get screenshotsDir => Directory("${outputDir.path}/screenshots");
-  
+
   /// The file containing the user's [Settings], in JSON form.
-  /// 
+  ///
   /// This file should contain the result of [Settings.toJson], and loading settings
   /// from the file should be done with [Settings.fromJson].
   File get settingsFile => outputDir / "settings.json";
@@ -49,7 +50,7 @@ class FilesService extends Service {
   final JsonEncoder jsonEncoder = const JsonEncoder.withIndent("  ");
 
   /// Ensure that files and directories that are expected to be present actually
-  /// exist on the system. If not, create them. 
+  /// exist on the system. If not, create them.
   @override
   Future<void> init() async {
     final appDir = await getApplicationDocumentsDirectory();
@@ -78,6 +79,10 @@ class FilesService extends Service {
       await writeSettings(settings);  // re-save any default values
       return settings;
     } catch (error) {
+      if (kDebugMode) {
+        print("Here are the contents of the settings file: \n$json");
+        rethrow;
+      }
       services.error = "Settings were corrupted and reset back to defaults";
       await writeSettings(Settings.fromJson({}));  // delete corrupt settings
       if (retry) {
@@ -90,17 +95,17 @@ class FilesService extends Service {
 
   /// Saves the current frame in the feed to the camera's output directory.
   Future<void> writeImage(List<int> image, String cameraName) async {
-    final dir = await Directory("${screenshotsDir.path}/$cameraName").create(recursive: true); 
+    final dir = await Directory("${screenshotsDir.path}/$cameraName").create(recursive: true);
     final files = dir.listSync();
     final number = files.isEmpty ? 1 : (int.parse(files.last.filename) + 1);
-    await File("${dir.path}/$number.jpg").writeAsBytes(image); 
+    await File("${dir.path}/$number.jpg").writeAsBytes(image);
   }
 
   /// Saves all the data in [batchedLogs] to a file by calling [logAllData].
   late final Timer dataLogger;
-  
+
   /// Holds data to be logged by [logData] when [dataLogger] fires.
-  /// 
+  ///
   /// This is used by [logData] instead of writing the data immediately because data can come in at
   /// an unpredictable and burdensome rate, which would make the dashboard write a lot of data at
   /// once to the same file(s) and overload the user's device.
