@@ -78,7 +78,7 @@ class ViewsModel extends Model {
     // it does not cause a build to occur. This small delay allows the next frame to be
     // built, the UI to update, and *then* updates the ratios. This is necessary because
     // the controllers listed below are directly tied to the UI.
-    await Future<void>.delayed(const Duration(seconds: 1));
+    await Future<void>.delayed(const Duration(milliseconds: 200));
     if (preset.horizontal1.isNotEmpty) horizontalController1.setRatios(preset.horizontal1);
     if (preset.horizontal2.isNotEmpty) horizontalController2.setRatios(preset.horizontal2);
     if (preset.horizontal3.isNotEmpty) horizontalController3.setRatios(preset.horizontal3);
