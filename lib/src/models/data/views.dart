@@ -165,4 +165,26 @@ class ViewsModel extends Model {
     }
     notifyListeners();
   }
+
+  /// Swaps two presets in the user's settings.
+  void swapPresets(int oldIndex, int newIndex) {
+    final presets = models.settings.dashboard.presets;
+      // ignore: parameter_assignments
+    if (oldIndex < newIndex) newIndex -= 1;
+    final element = presets.removeAt(oldIndex);
+    presets.insert(newIndex, element);
+    // This notifyListeners call is needed to update the UI smoothly.
+    //
+    // A ResizableListView simply *simulates* re-ordering its children. After
+    // the child is dropped in its new position, it is sent back to its original
+    // position, and it is the backend's job to actually update the underlying data.
+    //
+    // Calling [SettingsModel.update] here does the job, but its [notifyListeners] call
+    // is (correctly) placed *after* the settings file is updated on disk. This introduces
+    // a delay in the re-ordering, so items will animate back and forth.
+    //
+    // This call will update the UI based on the in-memory list before the disk is updated.
+    notifyListeners();
+    models.settings.update();
+  }
 }

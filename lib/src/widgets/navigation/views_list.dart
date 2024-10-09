@@ -10,12 +10,14 @@ class ViewsSidebarModel with ChangeNotifier {
   /// Listens for changes in the network and settings.
   ViewsSidebarModel() {
     models.sockets.addListener(notifyListeners);
+    models.views.addListener(notifyListeners);
     models.settings.addListener(notifyListeners);
   }
 
   @override
   void dispose() {
     models.sockets.removeListener(notifyListeners);
+    models.views.removeListener(notifyListeners);
     models.settings.removeListener(notifyListeners);
     super.dispose();
   }
@@ -58,16 +60,24 @@ class ViewsList extends ReactiveWidget<ViewsSidebarModel> {
       ExpansionTile(
         title: const Text("Presets"),
         children: [
+          ReorderableListView(
+            shrinkWrap: true,
+            onReorder: models.views.swapPresets,
+            children: [
           for (final preset in models.settings.dashboard.presets) ListTile(
+            key: ValueKey(preset.name),
             title: Text(preset.name),
             onTap: () => models.views.loadPreset(preset),
-            trailing: IconButton(
+            leading: IconButton(
               onPressed: () => _deletePreset(context, preset),
               icon: const Icon(Icons.remove_circle),
               splashColor: Colors.blueGrey,
               color: Colors.red,
             ),
           ),
+            ],
+          ),
+
           ListTile(
             title: const Text("Save current layout"),
             onTap: () => _savePreset(context),
