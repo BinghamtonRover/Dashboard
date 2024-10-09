@@ -89,9 +89,9 @@ class ViewsModel extends Model {
   }
 
   /// Deletes presets and rewrites Json file
-  Future<void> delete(ViewPreset preset) async{
+  Future<void> deletePreset(ViewPreset preset) async{
     models.settings.dashboard.presets.remove(preset);
-    await services.files.writeSettings(models.settings.all);
+    await models.settings.update();
   }
 
   @override
