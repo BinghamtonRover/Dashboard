@@ -252,7 +252,7 @@ class PresetSave extends ReactiveWidget<PresetBuilder>{
             height: 50,
             width: double.infinity,
             child: TextField(
-              controller: model.myController,
+              controller: model.nameController,
               onChanged: model.update,
               decoration: const InputDecoration(hintText: "Preset Name"),
             ),
@@ -284,8 +284,8 @@ class PresetDelete extends StatefulWidget{
 
   @override
   State<PresetDelete> createState() => _PresetDelete();
-
 }
+
 ///A widget to delete a preset backed by [PresetDelete].
 class _PresetDelete extends State<PresetDelete>{
   bool activateDelete = false;
@@ -322,24 +322,21 @@ class _PresetDelete extends State<PresetDelete>{
               ),] ,
             ),
           ],
-
       ),
       actions: [
         TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
         ElevatedButton(
-          onPressed: activateDelete? () {widget.model.delete(selectedPreset!); Navigator.of(context).pop();} : null,
+          onPressed: activateDelete ? delete : null,
           child: const Text("Delete"),
         ),
       ],
-
-
     );
+
+    void delete() {
+      models.views.delete(selectedPreset!);
+      Navigator.of(context).pop();
+    }
 }
-
-
-
-
-
 
 /// A widget to edit a GPS coordinate in degree/minute/seconds or decimal format.
 class GpsEditor extends ReusableReactiveWidget<GpsBuilder> {
