@@ -65,9 +65,9 @@ class Sidebar extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ViewsCounter(),
-                          IconButton(
+                          TextButton.icon(
                             icon: const Icon(Icons.aspect_ratio),
-                            tooltip: "Reset View Sizes",
+                            label: const Text("Reset View Sizes"),
                             onPressed: models.views.resetSizes,
                           ),
                         ],
