@@ -16,13 +16,13 @@ dependencies:
   fl_chart: ^0.68.0
   flutter_libserialport: ^0.4.0
   package_info_plus: ^8.0.0
-  flutter_resizable_container: ^0.4.1
+  flutter_resizable_container: ^3.0.0
   path_provider: ^2.0.14
   protobuf: ^3.0.0
   url_launcher: ^6.1.10
   just_audio: ^0.9.36
   collection: ^1.18.0
-  sdl_gamepad: ^1.0.1
+  flutter_sdl_gamepad: ^1.0.0
 
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
