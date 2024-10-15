@@ -1,4 +1,4 @@
-import "package:sdl_gamepad/sdl_gamepad.dart";
+import "package:flutter_sdl_gamepad/flutter_sdl_gamepad.dart";
 
 import "../service.dart";
 import "gamepad.dart";
@@ -45,7 +45,9 @@ class GamepadService extends Service {
 
   @override
   Future<void> init() async {
-    SdlLibrary.init();
+    if (!SdlLibrary.init()) {
+      throw StateError("Could not initialize SDL libraries");
+    }
     gamepads = List.generate(maxGamepads, MockGamepad.new);
     for (var i = 0; i < maxGamepads; i++) {
       await connect(i);

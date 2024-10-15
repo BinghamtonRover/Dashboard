@@ -49,6 +49,8 @@ class FilesService extends Service {
   /// The encoder to convert a Map<> to a json string with a nice indent
   final JsonEncoder jsonEncoder = const JsonEncoder.withIndent("  ");
 
+  bool _isInit = false;
+
   /// Ensure that files and directories that are expected to be present actually
   /// exist on the system. If not, create them.
   @override
@@ -58,6 +60,7 @@ class FilesService extends Service {
     loggingDir = await Directory("${outputDir.path}/logs/${DateTime.now().timeStamp}").create(recursive: true);
     if (!settingsFile.existsSync()) await writeSettings(null);
     dataLogger = Timer.periodic(const Duration(seconds: 5), logAllData);
+    _isInit = true;
   }
 
   @override
@@ -139,6 +142,7 @@ class FilesService extends Service {
 
   /// Outputs error to log file
   Future<void> logError(Object error, StackTrace stack) async{
+    if (!_isInit) return;
     final file = loggingDir / "errors.log";
     await file.writeAsString("${DateTime.now().timeStamp} $error $stack\n", mode: FileMode.writeOnlyAppend);
   }
