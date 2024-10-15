@@ -241,6 +241,9 @@ class DashboardSettings {
   /// Tank controls offer more custom control, but modern drive controls are more intuitive.
   final bool preferTankControls;
 
+  /// The rate to apply to the drive slew rate limiter
+  final double slewRateLimit;
+
   /// Whether to have version checking on protobuf messages.
   final bool versionChecking;
 
@@ -256,6 +259,7 @@ class DashboardSettings {
     required this.themeMode,
     required this.splitCameras,
     required this.preferTankControls,
+    required this.slewRateLimit,
     required this.versionChecking,
   });
 
@@ -270,6 +274,7 @@ class DashboardSettings {
     maxFps = (json?["maxFps"] ?? 60) as int,
     splitCameras = json?["splitCameras"] ?? false,
     preferTankControls = json?["preferTankControls"] ?? false,
+    slewRateLimit = json?["slewRateLimit"] ?? 2.50,
     versionChecking = json?["versionChecking"] ?? true,
     themeMode = ThemeMode.values.byName(json?["theme"] ?? ThemeMode.system.name);
 
@@ -282,6 +287,7 @@ class DashboardSettings {
     "theme": themeMode.name,
     "splitCameras": splitCameras,
     "preferTankControls": preferTankControls,
+    "slewRateLimit": slewRateLimit,
     "versionChecking": versionChecking,
   };
 }
