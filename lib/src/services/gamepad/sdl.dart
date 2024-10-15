@@ -1,4 +1,4 @@
-import "package:sdl_gamepad/sdl_gamepad.dart" as sdl;
+import "package:flutter_sdl_gamepad/flutter_sdl_gamepad.dart" as sdl;
 
 import "state.dart";
 import "gamepad.dart";

@@ -22,7 +22,7 @@ dependencies:
   url_launcher: ^6.1.10
   just_audio: ^0.9.36
   collection: ^1.18.0
-  sdl_gamepad: ^1.0.1
+  flutter_sdl_gamepad: ^1.0.0
 
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
