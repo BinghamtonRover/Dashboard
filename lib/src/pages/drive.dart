@@ -72,14 +72,11 @@ class _BarChart extends StatelessWidget {
       groupVertically: true,
       barRods: [
         BarChartRodData(
-          color: Colors.pink,
+          color: Colors.blue,
           fromY: 0,
           toY: values[0],
           width: 30,
-          rodStackItems: [
-            BarChartRodStackItem(0, values[0], Colors.blue),   
-            BarChartRodStackItem(values[0], values[0] - 0.0001, Colors.pink),
-          ],
+          borderRadius: BorderRadius.circular(0),
         ),
       ],
     ),
@@ -88,14 +85,11 @@ class _BarChart extends StatelessWidget {
       groupVertically: true,
       barRods: [
         BarChartRodData(
-          color: Colors.pink,
+          color: Colors.blue,
           fromY: 0,
           toY: values[1],
           width: 30,
-          rodStackItems: [
-            BarChartRodStackItem(0, values[1], Colors.blue),   
-            BarChartRodStackItem(values[1], values[1] - 0.0001, Colors.pink),
-          ],
+          borderRadius: BorderRadius.circular(0),
         ),
       ],
     ),
