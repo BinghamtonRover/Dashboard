@@ -106,4 +106,10 @@ class GamepadState {
 
   /// Whether the D-pad's up button is being pressed.
   bool get dpadUp => normalDpadY > 0;
+
+  /// Whether the D-pad's left button is being pressed.
+  bool get dpadLeft => normalDpadX < 0;
+
+  /// Whether the D-pad's right button is being pressed.
+  bool get dpadRight => normalDpadX > 0;
 }

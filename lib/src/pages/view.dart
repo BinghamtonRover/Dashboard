@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
+import "package:rover_dashboard/src/pages/controller.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A function that builds a view of the given index.
@@ -114,6 +115,11 @@ class DashboardView {
       name: Routes.drive,
       iconFunc: () => Icon(Icons.drive_eta, color: Colors.black.withOpacity(0.5)),
       builder: (context, index) => DrivePage(index: index),
+    ),
+    DashboardView(
+      name: Routes.controllers,
+      iconFunc: () => Icon(Icons.sports_esports, color: Colors.black.withOpacity(0.5)),
+      builder: (context, index) => ControllersPage(index: index),
     ),
     DashboardView(
       name: Routes.rocks,
