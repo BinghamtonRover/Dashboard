@@ -6,33 +6,62 @@ import "package:rover_dashboard/src/widgets/generic/reactive_widget.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// The UI Page to display the controller status
-class ControllersPage extends StatelessWidget {
+class ControllersPage extends StatefulWidget {
   /// The index of this view.
   final int index;
-
-  List<Controller> get _controllers => [
-        models.rover.controller1,
-        models.rover.controller2,
-        models.rover.controller3,
-      ];
 
   /// Const constructor for [ControllersPage]
   const ControllersPage({required this.index, super.key});
 
   @override
-  Widget build(BuildContext context) {
-    if (!_controllers.any((e) => e.isConnected)) {
-      return const Text("No Controllers are Connected.");
-    }
+  State<ControllersPage> createState() => _ControllersPageState();
+}
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        for (final controller in _controllers)
-          if (controller.isConnected) _ControllerWidget(controller),
-      ],
-    );
-  }
+class _ControllersPageState extends State<ControllersPage> {
+  Controller selectedController = models.rover.controller1;
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          Row(
+            children: [
+              const Spacer(),
+              const Text("Controller: "),
+              DropdownButton<Controller>(
+                value: selectedController,
+                items: [
+                  DropdownMenuItem(
+                    value: models.rover.controller1,
+                    child: const Text("Controller 1"),
+                  ),
+                  DropdownMenuItem(
+                    value: models.rover.controller2,
+                    child: const Text("Controller 2"),
+                  ),
+                  DropdownMenuItem(
+                    value: models.rover.controller3,
+                    child: const Text("Controller 3"),
+                  ),
+                ],
+                onChanged: (Controller? value) {
+                  if (value == null) {
+                    return;
+                  }
+
+                  setState(() {
+                    selectedController = value;
+                  });
+                },
+              ),
+              const Spacer(),
+              ViewsSelector(index: widget.index),
+            ],
+          ),
+          Expanded(
+            child: Center(child: _ControllerWidget(selectedController)),
+          ),
+        ],
+      );
 }
 
 /// Displays data for the provided [Controller]
@@ -66,8 +95,8 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
   const _ControllerWidget(super.model);
 
   double _getBackgroundFitWidth(Size widgetSize) {
-    final fitWidth = max(widgetSize.width, imageSize.width);
-    final fitHeight = min(widgetSize.height, imageSize.height);
+    final fitWidth = widgetSize.width;
+    final fitHeight = widgetSize.height;
 
     return min(fitWidth, fitHeight / (imageSize.height / imageSize.width));
   }
@@ -177,130 +206,133 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
         (_getBackgroundFitWidth(widgetSize) / imageSize.width) * 7.5;
 
     final state = model.gamepad.getState();
-    return Stack(
-      children: [
-        Image.asset("assets/gamesir_controller.png"),
-        Positioned(
-          left: aOffset.dx,
-          top: aOffset.dy,
-          child: _ControllerButton(
-            value: state?.buttonA ?? false,
-            radius: buttonRadius,
-            outlineWidth: outlineWidth,
+    return Opacity(
+      opacity: model.isConnected ? 1 : 0.50,
+      child: Stack(
+        children: [
+          Image.asset("assets/gamesir_controller.png"),
+          Positioned(
+            left: aOffset.dx,
+            top: aOffset.dy,
+            child: _ControllerButton(
+              value: state?.buttonA ?? false,
+              radius: buttonRadius,
+              outlineWidth: outlineWidth,
+            ),
           ),
-        ),
-        Positioned(
-          left: bOffset.dx,
-          top: bOffset.dy,
-          child: _ControllerButton(
-            value: state?.buttonB ?? false,
-            radius: buttonRadius,
-            outlineWidth: outlineWidth,
+          Positioned(
+            left: bOffset.dx,
+            top: bOffset.dy,
+            child: _ControllerButton(
+              value: state?.buttonB ?? false,
+              radius: buttonRadius,
+              outlineWidth: outlineWidth,
+            ),
           ),
-        ),
-        Positioned(
-          left: xOffset.dx,
-          top: xOffset.dy,
-          child: _ControllerButton(
-            value: state?.buttonX ?? false,
-            radius: buttonRadius,
-            outlineWidth: outlineWidth,
+          Positioned(
+            left: xOffset.dx,
+            top: xOffset.dy,
+            child: _ControllerButton(
+              value: state?.buttonX ?? false,
+              radius: buttonRadius,
+              outlineWidth: outlineWidth,
+            ),
           ),
-        ),
-        Positioned(
-          left: yOffset.dx,
-          top: yOffset.dy,
-          child: _ControllerButton(
-            value: state?.buttonY ?? false,
-            radius: buttonRadius,
-            outlineWidth: outlineWidth,
+          Positioned(
+            left: yOffset.dx,
+            top: yOffset.dy,
+            child: _ControllerButton(
+              value: state?.buttonY ?? false,
+              radius: buttonRadius,
+              outlineWidth: outlineWidth,
+            ),
           ),
-        ),
-        Positioned(
-          left: lbOffset.dx,
-          top: lbOffset.dy,
-          child: _ControllerButton(
-            value: state?.leftShoulder ?? false,
-            radius: buttonRadius,
-            outlineWidth: outlineWidth,
+          Positioned(
+            left: lbOffset.dx,
+            top: lbOffset.dy,
+            child: _ControllerButton(
+              value: state?.leftShoulder ?? false,
+              radius: buttonRadius,
+              outlineWidth: outlineWidth,
+            ),
           ),
-        ),
-        Positioned(
-          left: rbOffset.dx,
-          top: rbOffset.dy,
-          child: _ControllerButton(
-            value: state?.rightShoulder ?? false,
-            radius: buttonRadius,
-            outlineWidth: outlineWidth,
+          Positioned(
+            left: rbOffset.dx,
+            top: rbOffset.dy,
+            child: _ControllerButton(
+              value: state?.rightShoulder ?? false,
+              radius: buttonRadius,
+              outlineWidth: outlineWidth,
+            ),
           ),
-        ),
-        Positioned(
-          left: startOffset.dx,
-          top: startOffset.dy,
-          child: _ControllerButton(
-            value: state?.buttonStart ?? false,
-            radius: buttonRadius,
-            outlineWidth: outlineWidth,
+          Positioned(
+            left: startOffset.dx,
+            top: startOffset.dy,
+            child: _ControllerButton(
+              value: state?.buttonStart ?? false,
+              radius: buttonRadius,
+              outlineWidth: outlineWidth,
+            ),
           ),
-        ),
-        Positioned(
-          left: selectOffset.dx,
-          top: selectOffset.dy,
-          child: _ControllerButton(
-            value: state?.buttonBack ?? false,
-            radius: buttonRadius,
-            outlineWidth: outlineWidth,
+          Positioned(
+            left: selectOffset.dx,
+            top: selectOffset.dy,
+            child: _ControllerButton(
+              value: state?.buttonBack ?? false,
+              radius: buttonRadius,
+              outlineWidth: outlineWidth,
+            ),
           ),
-        ),
-        Positioned(
-          left: dPadUpOffset.dx,
-          top: dPadUpOffset.dy,
-          child: _ControllerButton(
-            value: state?.dpadUp ?? false,
-            radius: buttonRadius,
-            outlineWidth: outlineWidth,
+          Positioned(
+            left: dPadUpOffset.dx,
+            top: dPadUpOffset.dy,
+            child: _ControllerButton(
+              value: state?.dpadUp ?? false,
+              radius: buttonRadius,
+              outlineWidth: outlineWidth,
+            ),
           ),
-        ),
-        Positioned(
-          left: dPadDownOffset.dx,
-          top: dPadDownOffset.dy,
-          child: _ControllerButton(
-            value: state?.dpadDown ?? false,
-            radius: buttonRadius,
-            outlineWidth: outlineWidth,
+          Positioned(
+            left: dPadDownOffset.dx,
+            top: dPadDownOffset.dy,
+            child: _ControllerButton(
+              value: state?.dpadDown ?? false,
+              radius: buttonRadius,
+              outlineWidth: outlineWidth,
+            ),
           ),
-        ),
-        Positioned(
-          left: dPadLeftOffset.dx,
-          top: dPadLeftOffset.dy,
-          child: _ControllerButton(
-            value: state?.dpadLeft ?? false,
-            radius: buttonRadius,
-            outlineWidth: outlineWidth,
+          Positioned(
+            left: dPadLeftOffset.dx,
+            top: dPadLeftOffset.dy,
+            child: _ControllerButton(
+              value: state?.dpadLeft ?? false,
+              radius: buttonRadius,
+              outlineWidth: outlineWidth,
+            ),
           ),
-        ),
-        Positioned(
-          left: dPadRightOffset.dx,
-          top: dPadRightOffset.dy,
-          child: _ControllerButton(
-            value: state?.dpadRight ?? false,
-            radius: buttonRadius,
-            outlineWidth: outlineWidth,
+          Positioned(
+            left: dPadRightOffset.dx,
+            top: dPadRightOffset.dy,
+            child: _ControllerButton(
+              value: state?.dpadRight ?? false,
+              radius: buttonRadius,
+              outlineWidth: outlineWidth,
+            ),
           ),
-        ),
-        _controllerJoystick(
-          x: state?.normalLeftX ?? 0,
-          y: -1 * (state?.normalLeftY ?? 0),
-          offsetOnImage: leftStick,
-          widgetSize: widgetSize,
-        ),
-        _controllerJoystick(
-          x: state?.normalRightX ?? 0,
-          y: -1 * (state?.normalRightY ?? 0),
-          offsetOnImage: rightStick,
-          widgetSize: widgetSize,
-        ),
-      ],
+          _controllerJoystick(
+            x: state?.normalLeftX ?? 0,
+            y: -1 * (state?.normalLeftY ?? 0),
+            offsetOnImage: leftStick,
+            widgetSize: widgetSize,
+          ),
+          _controllerJoystick(
+            x: state?.normalRightX ?? 0,
+            y: -1 * (state?.normalRightY ?? 0),
+            offsetOnImage: rightStick,
+            widgetSize: widgetSize,
+          ),
+        ],
+      ),
     );
   }
 }
