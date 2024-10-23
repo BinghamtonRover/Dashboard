@@ -51,6 +51,8 @@ class DesktopGamepad extends Gamepad {
       normalRightY: -state.normalRightJoystickY,
       normalShoulder: state.normalShoulders.toDouble(),
       normalTrigger: state.normalTriggers,
+      normalLeftTrigger: state.normalLeftTrigger,
+      normalRightTrigger: state.normalRightTrigger,
     );
   }
 }

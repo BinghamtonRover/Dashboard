@@ -56,6 +56,12 @@ class GamepadState {
   /// A normalized reading of the triggers.
   final double normalTrigger;
 
+  /// A normalized reading of the left trigger
+  final double normalLeftTrigger;
+
+  /// A normalized reading of the right trigger
+  final double normalRightTrigger;
+
   /// A normalized reading of the shoulder buttons.
   final double normalShoulder;
 
@@ -86,6 +92,8 @@ class GamepadState {
     required this.buttonBack,
     required this.buttonStart,
     required this.normalTrigger,
+    required this.normalLeftTrigger,
+    required this.normalRightTrigger,
     required this.normalShoulder,
     required this.normalLeftX,
     required this.normalLeftY,

@@ -2,7 +2,6 @@
 
 import "package:flutter/material.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/src/widgets/generic/reactive_widget.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// The UI Page to display the controller status
@@ -58,7 +57,12 @@ class _ControllersPageState extends State<ControllersPage> {
             ],
           ),
           Expanded(
-            child: Center(child: _ControllerWidget(selectedController)),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Center(
+                child: _ControllerWidget(selectedController),
+              ),
+            ),
           ),
         ],
       );
@@ -71,6 +75,9 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
   static const double normalButtonRadius = 40;
   static const double normalJoystickRadius = 70;
   static const double joystickMaxOffset = 40;
+  static const double normalTriggerWidth = 30;
+  static const double normalTriggerHeight = 80;
+  static const double normalTriggerOutline = 10;
 
   static const Offset buttonA = Offset(727, 230);
   static const Offset buttonB = Offset(784, 173);
@@ -80,6 +87,9 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
   static const Offset leftBumper = Offset(186, 16);
   static const Offset rightBumper = Offset(726, 16);
 
+  static const Offset leftTrigger = Offset(40, 35);
+  static const Offset rightTrigger = Offset(872, 35);
+
   static const Offset select = Offset(349, 112);
   static const Offset start = Offset(558, 112);
 
@@ -88,8 +98,8 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
   static const Offset dPadLeft = Offset(125, 175);
   static const Offset dPadRight = Offset(227, 175);
 
-  static const Offset leftStick = Offset(289, 293);
-  static const Offset rightStick = Offset(616, 293);
+  static const Offset leftStick = Offset(289, 295);
+  static const Offset rightStick = Offset(616, 295);
 
   /// Const constructor for Controller Widget
   const _ControllerWidget(super.model);
@@ -101,7 +111,8 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
     var fitWidth = widgetSize.width;
     var fitHeight = widgetSize.height;
 
-    if (imageSize.width < widgetSize.width) {
+    if (imageSize.width < widgetSize.width &&
+        imageSize.height < widgetSize.height) {
       fitWidth = imageSize.width;
       fitHeight = imageSize.height;
     }
@@ -150,6 +161,35 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
     );
   }
 
+  Widget _analogTrigger({
+    required double value,
+    required Size widgetSize,
+  }) {
+    final scaleFactor = _getBackgroundFitWidth(widgetSize) / imageSize.width;
+
+    final triggerWidth = normalTriggerWidth * scaleFactor;
+    final triggerHeight = normalTriggerHeight * scaleFactor;
+    final borderWidth = normalTriggerOutline * scaleFactor;
+
+    return Container(
+      width: triggerWidth,
+      height: triggerHeight,
+      alignment: Alignment.bottomCenter,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.yellow,
+          width: borderWidth,
+          strokeAlign: BorderSide.strokeAlignOutside,
+        ),
+      ),
+      child: Container(
+        width: triggerWidth,
+        height: value * triggerHeight,
+        color: Colors.yellow,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, Controller model) {
     final renderBox = context.findAncestorRenderObjectOfType<RenderBox>();
@@ -179,6 +219,14 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
     );
     final rbOffset = _getPositionedOffset(
       offsetOnImage: rightBumper,
+      widgetSize: widgetSize,
+    );
+    final ltOffset = _getPositionedOffset(
+      offsetOnImage: leftTrigger,
+      widgetSize: widgetSize,
+    );
+    final rtOffset = _getPositionedOffset(
+      offsetOnImage: rightTrigger,
       widgetSize: widgetSize,
     );
     final startOffset = _getPositionedOffset(
@@ -271,6 +319,22 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
             ),
           ),
           Positioned(
+            left: ltOffset.dx,
+            top: ltOffset.dy,
+            child: _analogTrigger(
+              value: state?.normalLeftTrigger ?? 0,
+              widgetSize: widgetSize,
+            ),
+          ),
+          Positioned(
+            left: rtOffset.dx,
+            top: rtOffset.dy,
+            child: _analogTrigger(
+              value: state?.normalRightTrigger ?? 0,
+              widgetSize: widgetSize,
+            ),
+          ),
+          Positioned(
             left: startOffset.dx,
             top: startOffset.dy,
             child: _ControllerButton(
@@ -351,7 +415,6 @@ class _ControllerButton extends StatelessWidget {
     required this.value,
     required this.radius,
     required this.outlineWidth,
-    super.key,
   });
 
   @override
