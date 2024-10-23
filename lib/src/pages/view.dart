@@ -92,6 +92,11 @@ class DashboardView {
   /// A list of views that represent all non-camera feeds.
   static final List<DashboardView> uiViews = [
     DashboardView(
+      name: Routes.controllers,
+      iconFunc: () => Icon(Icons.sports_esports, color: Colors.black.withOpacity(0.5)),
+      builder: (context, index) => ControllersPage(index: index),
+    ),
+    DashboardView(
       name: Routes.science,
       iconFunc: () => Icon(Icons.science, color: Colors.black.withOpacity(0.5)),
       builder: (context, index) => SciencePage(index: index),
@@ -115,11 +120,6 @@ class DashboardView {
       name: Routes.drive,
       iconFunc: () => Icon(Icons.drive_eta, color: Colors.black.withOpacity(0.5)),
       builder: (context, index) => DrivePage(index: index),
-    ),
-    DashboardView(
-      name: Routes.controllers,
-      iconFunc: () => Icon(Icons.sports_esports, color: Colors.black.withOpacity(0.5)),
-      builder: (context, index) => ControllersPage(index: index),
     ),
     DashboardView(
       name: Routes.rocks,
