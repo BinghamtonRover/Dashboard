@@ -98,8 +98,13 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
       (_getBackgroundFitWidth(widgetSize) / imageSize.width) * normalValue;
 
   double _getBackgroundFitWidth(Size widgetSize) {
-    final fitWidth = widgetSize.width;
-    final fitHeight = widgetSize.height;
+    var fitWidth = widgetSize.width;
+    var fitHeight = widgetSize.height;
+
+    if (imageSize.width < widgetSize.width) {
+      fitWidth = imageSize.width;
+      fitHeight = imageSize.height;
+    }
 
     return min(fitWidth, fitHeight / (imageSize.height / imageSize.width));
   }
@@ -210,7 +215,7 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
       opacity: model.isConnected ? 1 : 0.50,
       child: Stack(
         children: [
-          Image.asset("assets/gamesir_controller.png"),
+          Image.asset("assets/gamesir_controller.png", fit: BoxFit.contain),
           Positioned(
             left: aOffset.dx,
             top: aOffset.dy,
