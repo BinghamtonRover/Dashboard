@@ -89,10 +89,13 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
   static const Offset dPadRight = Offset(227, 175);
 
   static const Offset leftStick = Offset(289, 293);
-  static const Offset rightStick = Offset(618, 293);
+  static const Offset rightStick = Offset(616, 293);
 
   /// Const constructor for Controller Widget
   const _ControllerWidget(super.model);
+
+  double _getScaledValue(double normalValue, Size widgetSize) =>
+      (_getBackgroundFitWidth(widgetSize) / imageSize.width) * normalValue;
 
   double _getBackgroundFitWidth(Size widgetSize) {
     final fitWidth = widgetSize.width;
@@ -198,12 +201,9 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
       widgetSize: widgetSize,
     );
 
-    final buttonRadius =
-        (_getBackgroundFitWidth(widgetSize) / imageSize.width) *
-            normalButtonRadius;
+    final buttonRadius = _getScaledValue(normalButtonRadius, widgetSize);
 
-    final outlineWidth =
-        (_getBackgroundFitWidth(widgetSize) / imageSize.width) * 7.5;
+    final outlineWidth = _getScaledValue(7.5, widgetSize);
 
     final state = model.gamepad.getState();
     return Opacity(
