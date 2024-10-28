@@ -24,6 +24,10 @@ dependencies:
   collection: ^1.18.0
   flutter_sdl_gamepad: ^1.0.0
 
+dependency_overrides:
+  flutter_libserialport:
+    git: https://github.com/snabble/flutter_libserialport.git
+
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
   flutter_launcher_icons: ^0.14.1
