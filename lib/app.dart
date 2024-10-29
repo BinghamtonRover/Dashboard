@@ -26,7 +26,6 @@ class RoverControlDashboard extends ReusableReactiveWidget<SettingsModel> {
     debugShowCheckedModeBanner: false,
     themeMode: models.isReady ? model.dashboard.themeMode : ThemeMode.system,
     theme: ThemeData(
-      useMaterial3: false,
       colorScheme: const ColorScheme.light(
         primary: binghamtonGreen,
         secondary: binghamtonGreen,
