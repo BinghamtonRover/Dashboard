@@ -57,7 +57,7 @@ class DashboardView {
         ),
   ];
 
-    /// An icon to indicate the status of the given camera.
+  /// An icon to indicate the status of the given camera.
   static Widget getCameraStatus(BuildContext context, CameraName name) {
     if (!models.sockets.video.isConnected) {
       return Icon(Icons.signal_wifi_off, color: context.colorScheme.onSurface.withOpacity(0.5));
