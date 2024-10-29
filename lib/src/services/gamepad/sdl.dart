@@ -32,27 +32,5 @@ class DesktopGamepad extends Gamepad {
   bool get isConnected => _sdl.isConnected;
 
   @override
-  GamepadState getState() {
-    final state = _sdl.getState();
-    return GamepadState(
-      buttonA: state.buttonA,
-      buttonB: state.buttonB,
-      buttonX: state.buttonX,
-      buttonY: state.buttonY,
-      buttonBack: state.buttonBack,
-      buttonStart: state.buttonStart,
-      normalDpadX: state.normalDpadX.toDouble(),
-      normalDpadY: state.normalDpadY.toDouble(),
-      normalLeftX: state.normalLeftJoystickX,
-      // These Y values are flipped because sdl_gamepad follows the standard convention,
-      // where positive means the joystick is moving towards the user (down).
-      normalLeftY: -state.normalLeftJoystickY,
-      normalRightX: state.normalRightJoystickX,
-      normalRightY: -state.normalRightJoystickY,
-      normalShoulder: state.normalShoulders.toDouble(),
-      normalTrigger: state.normalTriggers,
-      normalLeftTrigger: state.normalLeftTrigger,
-      normalRightTrigger: state.normalRightTrigger,
-    );
-  }
+  GamepadState getState() => _sdl.getState();
 }

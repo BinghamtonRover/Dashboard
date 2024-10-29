@@ -2,6 +2,7 @@
 
 import "package:flutter/material.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// The UI Page to display the controller status
