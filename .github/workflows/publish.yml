@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           distribution: "zulu"
           java-version: '17'
@@ -91,6 +91,10 @@ jobs:
 
       - name: Organize files
         run: |
+          ls -al
+          ls -al dashboard*
+          ls -al dashboard_android
+          ls -al dashboard_windows
           mv dashboard_android/app-release.apk dashboard_android.apk
           mv dashboard_windows/dashboard.msix dashboard_windows.msix
 
