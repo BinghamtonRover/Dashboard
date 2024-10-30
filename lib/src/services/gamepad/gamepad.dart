@@ -1,3 +1,5 @@
+import "package:rover_dashboard/src/services/gamepad/mock.dart";
+
 import "state.dart";
 import "sdl.dart";
 
@@ -18,7 +20,8 @@ abstract class Gamepad extends Service {
   Gamepad(this.controllerIndex);
 
   /// Returns a functional instance of this class, or a mock on unsupported platforms.
-  factory Gamepad.forPlatform(int index) => DesktopGamepad(index);
+  factory Gamepad.forPlatform(int index) => isSdlSupported
+    ? DesktopGamepad(index) : MockGamepad(index);
 
   /// Gets the current state of the gamepad, or null if it's not connected.
   GamepadState? getState();

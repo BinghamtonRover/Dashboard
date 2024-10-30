@@ -1,7 +1,19 @@
+import "dart:io";
 import "package:flutter_sdl_gamepad/flutter_sdl_gamepad.dart" as sdl;
 
 import "state.dart";
 import "gamepad.dart";
+
+/// Whether `package:sdl_gamepad` has been tested on this platform.
+bool get isSdlSupported => Platform.isWindows || Platform.isLinux;
+
+/// Initializes the SDL libraries.
+void initSdl() {
+  if (!isSdlSupported) return;
+  if (!sdl.SdlLibrary.init()) {
+    throw StateError("Could not initialize SDL libraries");
+  }
+}
 
 /// A cross-platform implementation based on the `sdl_gamepad` package.
 class DesktopGamepad extends Gamepad {
