@@ -1,8 +1,7 @@
 import "package:flutter/material.dart";
+import "package:rover_dashboard/data.dart";
 
-import "socket.dart";
-
-/// A collection of functions for parsing [Settings]. 
+/// A collection of functions for parsing [Settings].
 extension SettingsParser on Json {
   /// Parses a [SocketInfo] that may not be present.
   SocketInfo? getSocket(String key) {
@@ -15,7 +14,7 @@ extension SettingsParser on Json {
 /// Settings relating to science.
 class ScienceSettings {
   /// How many frames to render per second.
-  /// 
+  ///
   /// This does not affect how many frames are sent by the rover per second.
   final bool scrollableGraphs;
 
@@ -26,7 +25,7 @@ class ScienceSettings {
   const ScienceSettings({required this.scrollableGraphs, required this.numSamples});
 
   /// Parses a [ScienceSettings] from JSON.
-  ScienceSettings.fromJson(Json? json) : 
+  ScienceSettings.fromJson(Json? json) :
     numSamples = json?["numSamples"] ?? 3,
     scrollableGraphs = json?["scrollableGraphs"] ?? false;
 
@@ -76,7 +75,7 @@ class ArmSettings {
  });
 
   /// Parses arm settings from a JSON map.
-  ArmSettings.fromJson(Json? json) : 
+  ArmSettings.fromJson(Json? json) :
     shoulder = json?["shoulder"] ?? 0.005,
     elbow = json?["elbow"] ?? 0.005,
     swivel = json?["swivel"] ?? 0.2,
@@ -102,8 +101,8 @@ class ArmSettings {
 /// Settings related to network configuration.
 class NetworkSettings {
   /// The amount of time, in seconds, the dashboard should wait before determining it's
-  /// lost connection to the rover. For reference, the rover should be sending messages 
-  /// at least once per second. 
+  /// lost connection to the rover. For reference, the rover should be sending messages
+  /// at least once per second.
   final double connectionTimeout;
 
   /// The address and port of the subsystems program.
@@ -116,7 +115,7 @@ class NetworkSettings {
   final SocketInfo autonomySocket;
 
   /// The address of the tank. The port is ignored.
-  /// 
+  ///
   /// The Tank is a model rover that has all the same programs as the rover. This field does not
   /// include port numbers because ports are specific to the program, and the tank will have many
   /// programs running. Instead, the IP address of all the other programs should be swapped with
@@ -133,7 +132,7 @@ class NetworkSettings {
   });
 
   /// Parses network settings from a JSON map.
-  NetworkSettings.fromJson(Json? json) : 
+  NetworkSettings.fromJson(Json? json) :
     subsystemsSocket = json?.getSocket("subsystemsSocket") ?? SocketInfo.raw("192.168.1.20", 8001),
     videoSocket = json?.getSocket("videoSocket") ?? SocketInfo.raw("192.168.1.30", 8002),
     autonomySocket = json?.getSocket("autonomySocket") ?? SocketInfo.raw("192.168.1.30", 8003),
@@ -151,7 +150,7 @@ class NetworkSettings {
 }
 
 /// Settings relating to easter eggs.
-/// 
+///
 /// Implement these! Ask Levi for details.
 class EasterEggsSettings {
   /// Whether to do a SEGA-like intro during boot.
@@ -161,7 +160,7 @@ class EasterEggsSettings {
   /// Whether clippy should appear by log messages.
   final bool enableClippy;
   /// Whether to render Bad Apple in the Map page.
-  final bool badApple;  
+  final bool badApple;
 
   /// A const constructor.
   const EasterEggsSettings({
@@ -172,7 +171,7 @@ class EasterEggsSettings {
   });
 
   /// Parses easter eggs settings from JSON.
-  EasterEggsSettings.fromJson(Json? json) : 
+  EasterEggsSettings.fromJson(Json? json) :
     segaIntro = json?["segaIntro"] ?? true,
     segaSound = json?["segaSound"] ?? true,
     enableClippy = json?["enableClippy"] ?? true,
@@ -191,9 +190,9 @@ class EasterEggsSettings {
 enum SplitMode {
   /// Two views are split horizontally, one atop the other.
   horizontal("Top and bottom"),
-  /// Two views are split vertically, side-by-side. 
+  /// Two views are split vertically, side-by-side.
   vertical("Side by side");
-  
+
   /// The name to show in the UI.
   final String humanName;
   /// A const constructor.
@@ -216,7 +215,7 @@ class DashboardSettings {
   final SplitMode splitMode;
 
   /// The precision of the GPS grid.
-  /// 
+  ///
   /// Since GPS coordinates are decimal values, we divide by this value to get the index of the cell
   /// each coordinate belongs to. Smaller sizes means more blocks, but we should be careful that the
   /// blocks are big enough to the margin of error of our GPS. This value must be synced with the
@@ -224,29 +223,33 @@ class DashboardSettings {
   final double mapBlockSize;
 
   /// How many frames to render per second.
-  /// 
+  ///
   /// This does not affect how many frames are sent by the rover per second.
   final int maxFps;
 
-  /// The theme of the Dashboard. 
+  /// The theme of the Dashboard.
   final ThemeMode themeMode;
 
-  /// Whether to split cameras into their own controls. 
-  /// 
+  /// Whether to split cameras into their own controls.
+  ///
   /// When this is disabled, some other modes, like arm or drive, may move the cameras.
   /// When this is enabled, only the dedicated camera control mode can move the cameras.
   final bool splitCameras;
 
   /// Whether to default to tank drive controls.
-  /// 
+  ///
   /// Tank controls offer more custom control, but modern drive controls are more intuitive.
   final bool preferTankControls;
 
   /// Whether to have version checking on protobuf messages.
   final bool versionChecking;
 
+  /// A list of ViewPresets
+  final List<ViewPreset> presets;
+
   /// A const constructor.
   const DashboardSettings({
+    required this.presets,
     required this.splitMode,
     required this.mapBlockSize,
     required this.maxFps,
@@ -256,8 +259,12 @@ class DashboardSettings {
     required this.versionChecking,
   });
 
-  /// Parses Dashboard settings from JSON.
-  DashboardSettings.fromJson(Json? json) : 
+  /// Parses settings from JSON.
+  DashboardSettings.fromJson(Json? json) :
+    presets = [
+      for (final presetJson in json?["presets"] ?? [])
+        ViewPreset.fromJson(presetJson),
+    ],
     splitMode = SplitMode.values[json?["splitMode"] ?? SplitMode.horizontal.index],
     mapBlockSize = json?["mapBlockSize"] ?? 1.0,
     maxFps = (json?["maxFps"] ?? 60) as int,
@@ -268,6 +275,7 @@ class DashboardSettings {
 
   /// Serializes these settings to JSON.
   Json toJson() => {
+    "presets" : presets,
     "splitMode": splitMode.index,
     "mapBlockSize": mapBlockSize,
     "maxFps": maxFps,
@@ -278,13 +286,13 @@ class DashboardSettings {
   };
 }
 
-/// Contains the settings for running the dashboard and the rover. 
+/// Contains the settings for running the dashboard and the rover.
 class Settings {
   /// Settings for the network, like IP addresses and ports.
   final NetworkSettings network;
 
   /// Settings for easter eggs.
-  /// 
+  ///
   /// Please, please, please -- do not remove these (Levi Lesches, '25).
   final EasterEggsSettings easterEggs;
 
@@ -307,7 +315,7 @@ class Settings {
   });
 
   /// Initialize settings from Json.
-  Settings.fromJson(Json json) : 
+  Settings.fromJson(Json json) :
     network = NetworkSettings.fromJson(json["network"]),
     easterEggs = EasterEggsSettings.fromJson(json["easterEggs"]),
     science = ScienceSettings.fromJson(json["science"]),
@@ -315,7 +323,7 @@ class Settings {
     dashboard = DashboardSettings.fromJson(json["dashboard"]);
 
   /// Converts the data from the settings instance to Json.
-  Json toJson() => { 
+  Json toJson() => {
     "network": network.toJson(),
     "easterEggs": easterEggs.toJson(),
     "science": science.toJson(),

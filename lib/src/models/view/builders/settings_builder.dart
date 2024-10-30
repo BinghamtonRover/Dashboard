@@ -197,6 +197,9 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
 
   /// Whether to use version checking. See [DashboardSettings.versionChecking].
   bool versionChecking;
+  
+  ///Builder for the presets.
+  List<ViewPreset> preset;
 
 	/// Modifies the given [DashboardSettings].
   DashboardSettingsBuilder(DashboardSettings initial) : 
@@ -206,7 +209,8 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     splitCameras = initial.splitCameras,
     preferTankControls = initial.preferTankControls,
     versionChecking = initial.versionChecking,
-    themeMode = initial.themeMode;
+    themeMode = initial.themeMode,
+    preset = initial.presets;
 
   @override
   bool get isValid => fps.isValid && blockSize.isValid;
@@ -220,6 +224,7 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     splitCameras: splitCameras,
     preferTankControls: preferTankControls,
     versionChecking: versionChecking,
+    presets: preset,
   );
 
   /// Updates the [splitMode] when a new one is selected.

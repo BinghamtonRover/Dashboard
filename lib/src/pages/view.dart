@@ -1,3 +1,4 @@
+import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -22,7 +23,7 @@ class DashboardView {
   Widget Function() iconFunc;
 
   /// A unique key to use while selecting this view.
-  final Object? key;
+  final CameraName? key;
 
   /// A function to build this view.
   final ViewBuilder builder;
@@ -33,6 +34,19 @@ class DashboardView {
   /// A const constructor.
   DashboardView({required this.name, required this.builder, required this.iconFunc, this.key})
       : flutterKey = UniqueKey();
+
+  /// Expands or contracts based on number of camera/ui views.
+  static final List<DashboardView> allViews = [...cameraViews, ...uiViews, blank];
+
+  /// Finds the right view in [allViews] that matches the given JSON.
+  static DashboardView? fromJson(Json json) => allViews
+    .firstWhereOrNull((view) => view.name == json["name"] && view.key?.value == json["cameraName"]);
+
+  /// Converts name of uiView/cameraKey into json format
+  Json toJson() => {
+    "name": name,
+    "cameraName": key?.value,
+  };
 
   /// A list of views that represent all the camera feeds.
   static final List<DashboardView> cameraViews = [

@@ -1,4 +1,5 @@
-import "package:sdl_gamepad/sdl_gamepad.dart";
+import "package:flutter_sdl_gamepad/flutter_sdl_gamepad.dart";
+import "package:rover_dashboard/src/services/gamepad/sdl.dart";
 
 import "../service.dart";
 import "gamepad.dart";
@@ -24,6 +25,10 @@ class GamepadService extends Service {
   /// The maximum number of gamepads that will be connected.
   static const maxGamepads = 3;
 
+  /// Gets a list of currently connected gamepads.
+  static Iterable<int> getConnectedGamepads() => isSdlSupported
+    ? SdlGamepad.getConnectedGamepadIds() : [];
+
   /// A list of gamepads that are currently connected.
   ///
   /// Note that the index in this list does **not** correspond to [Gamepad.controllerIndex]. The
@@ -45,7 +50,7 @@ class GamepadService extends Service {
 
   @override
   Future<void> init() async {
-    SdlLibrary.init();
+    if (isSdlSupported) initSdl();
     gamepads = List.generate(maxGamepads, MockGamepad.new);
     for (var i = 0; i < maxGamepads; i++) {
       await connect(i);
@@ -67,7 +72,7 @@ class GamepadService extends Service {
       return;
     }
     gamepads[operatorIndex] = MockGamepad(0);
-    for (final osIndex in SdlGamepad.getConnectedGamepadIds()) {
+    for (final osIndex in getConnectedGamepads()) {
       if (osIndexes.contains(osIndex)) continue;
       final gamepad = Gamepad.forPlatform(osIndex);
       await gamepad.init();

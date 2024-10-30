@@ -13,11 +13,10 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
 
   @override
   Widget build(BuildContext context, ViewsModel model) {
-    final childData = List<ResizableChildData>.generate(
+    final childData = List<ResizableChild>.generate(
       (model.views.length > 1) ? model.views.length : 0,
-      (index) => ResizableChildData(
+      (index) => ResizableChild(
         minSize: 100,
-        startingRatio: 0.5,
         child: _ViewArea(model: model, index: index),
       ),
     );
@@ -33,42 +32,36 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
             SplitMode.horizontal => Axis.vertical,
             SplitMode.vertical => Axis.horizontal,
           },
-          dividerWidth: 8,
+          divider: const ResizableDivider(thickness: 8, color: Colors.black),
           controller: switch (models.settings.dashboard.splitMode) {
             SplitMode.horizontal => model.verticalController,
             SplitMode.vertical => model.horizontalController1,
           },
-          dividerColor: Colors.black,
           children: childData.sublist(0, 2),
         ),
       3 || 4 => ResizableContainer(
           controller: model.verticalController,
           direction: Axis.vertical,
-          dividerWidth: 8,
-          dividerColor: Colors.black,
+          divider: const ResizableDivider(thickness: 8, color: Colors.black),
           children: [
-            ResizableChildData(
+            ResizableChild(
               minSize: 100,
-              startingRatio: 0.5,
               child: ResizableContainer(
                 controller: model.horizontalController1,
+                divider: const ResizableDivider(thickness: 8, color: Colors.black),
                 direction: Axis.horizontal,
-                dividerWidth: 8,
-                dividerColor: Colors.black,
                 children: childData.sublist(0, 2),
               ),
             ),
             if (model.views.length == 3)
               childData[2]
             else
-              ResizableChildData(
+              ResizableChild(
                 minSize: 100,
-                startingRatio: 0.5,
                 child: ResizableContainer(
                   controller: model.horizontalController2,
                   direction: Axis.horizontal,
-                  dividerWidth: 8,
-                  dividerColor: Colors.black,
+                  divider: const ResizableDivider(thickness: 8, color: Colors.black),
                   children: childData.sublist(2, 4),
                 ),
               ),
@@ -80,28 +73,23 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
               child: ResizableContainer(
                 controller: model.verticalController,
                 direction: Axis.vertical,
-                dividerWidth: 8,
-                dividerColor: Colors.black,
+                divider: const ResizableDivider(thickness: 8, color: Colors.black),
                 children: [
-                  ResizableChildData(
+                  ResizableChild(
                     minSize: 100,
-                    startingRatio: 0.5,
                     child: ResizableContainer(
                       controller: model.horizontalController1,
                       direction: Axis.horizontal,
-                      dividerWidth: 8,
-                      dividerColor: Colors.black,
+                      divider: const ResizableDivider(thickness: 8, color: Colors.black),
                       children: childData.sublist(0, 2),
                     ),
                   ),
-                  ResizableChildData(
+                  ResizableChild(
                     minSize: 100,
-                    startingRatio: 0.5,
                     child: ResizableContainer(
                       controller: model.horizontalController2,
                       direction: Axis.horizontal,
-                      dividerWidth: 8,
-                      dividerColor: Colors.black,
+                      divider: const ResizableDivider(thickness: 8, color: Colors.black),
                       children: childData.sublist(2, 4),
                     ),
                   ),
@@ -117,28 +105,23 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
               child: ResizableContainer(
                 controller: model.verticalController2,
                 direction: Axis.vertical,
-                dividerWidth: 8,
-                dividerColor: Colors.black,
+                divider: const ResizableDivider(thickness: 8, color: Colors.black),
                 children: [
-                  ResizableChildData(
+                  ResizableChild(
                     minSize: 100,
-                    startingRatio: 0.5,
                     child: ResizableContainer(
                       controller: model.horizontalController3,
                       direction: Axis.horizontal,
-                      dividerWidth: 8,
-                      dividerColor: Colors.black,
+                      divider: const ResizableDivider(thickness: 8, color: Colors.black),
                       children: childData.sublist(4, 6),
                     ),
                   ),
-                  ResizableChildData(
+                  ResizableChild(
                     minSize: 100,
-                    startingRatio: 0.5,
                     child: ResizableContainer(
                       controller: model.horizontalController4,
                       direction: Axis.horizontal,
-                      dividerWidth: 8,
-                      dividerColor: Colors.black,
+                      divider: const ResizableDivider(thickness: 8, color: Colors.black),
                       children: childData.sublist(6, 8),
                     ),
                   ),

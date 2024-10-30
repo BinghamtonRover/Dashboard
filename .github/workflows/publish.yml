@@ -25,7 +25,7 @@ jobs:
     - name: Setup Java
       uses: actions/setup-java@v1
       with:
-        java-version: '12.x'
+        java-version: '17'
 
     - name: Load certificate
       run: |
@@ -45,15 +45,14 @@ jobs:
         dart analyze
         dart run msix:create
 
-    # Temporarily removed because Android builds are broken
-    # - name: Build APK
-    #   run: flutter build apk
+    - name: Build APK
+      run: flutter build apk
 
     - name: Create Release
       uses: softprops/action-gh-release@v0.1.15
       with:
-        # build/app/outputs/apk/release/app-release.apk
         files: |
+          build/app/outputs/apk/release/app-release.apk
           build/windows/x64/runner/Release/Dashboard.msix
         name: ${{ github.ref_name }}
         generate_release_notes: true
