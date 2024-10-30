@@ -95,8 +95,8 @@ jobs:
           ls -al dashboard*
           ls -al dashboard_android
           ls -al dashboard_windows
-          mv dashboard_android/app-release.apk dashboard_android.apk
-          mv dashboard_windows/dashboard.msix dashboard_windows.msix
+          mv app-release.apk dashboard_android.apk
+          mv dashboard.msix dashboard_windows.msix
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
