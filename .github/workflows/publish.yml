@@ -14,46 +14,86 @@ on:
     tags: "*"
 
 jobs:
- build:
-  runs-on: windows-latest
-  env:
-    windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
-  steps:
-    - name: Clone repository
-      uses: actions/checkout@v3
+  build_android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
 
-    - name: Setup Java
-      uses: actions/setup-java@v1
-      with:
-        java-version: '17'
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '17'
 
-    - name: Load certificate
-      run: |
-        echo "${{ env.windows_certificate }}" > windows_certificate_decoded.txt
-        openssl enc -base64 -d -in windows_certificate_decoded.txt -out windows_certificate.pfx
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          cache-key: "flutter-ubuntu"  # we don't need *the* most recent build
 
-    - name: Install Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        cache: true
-        cache-key: "flutter-windows"  # we don't need *the* most recent build
+      - name: Build APK
+        run: flutter build apk
 
-    - name: Build MSIX file
-      run: |
-        flutter clean
-        flutter pub get
-        dart analyze
-        dart run msix:create
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_android
+          path: build/app/outputs/apk/release/app-release.apk
+  # End of build_android
 
-    - name: Build APK
-      run: flutter build apk
+  build_windows:
+    runs-on: windows-latest
+    env:
+      windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v0.1.15
-      with:
-        files: |
-          build/app/outputs/apk/release/app-release.apk
-          build/windows/x64/runner/Release/Dashboard.msix
-        name: ${{ github.ref_name }}
-        generate_release_notes: true
-        fail_on_unmatched_files: true
+      - name: Load certificate
+        run: |
+          echo "${{ env.windows_certificate }}" > windows_certificate_decoded.txt
+          openssl enc -base64 -d -in windows_certificate_decoded.txt -out windows_certificate.pfx
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          cache-key: "flutter-windows"  # we don't need *the* most recent build
+
+      - name: Build MSIX
+        run: |
+          flutter pub get
+          dart run msix:create
+
+      - name: Upload MSIX
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_windows
+          path: build/windows/x64/runner/Release/Dashboard.msix
+  # End of build_windows
+
+  generate_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Android release
+        uses: actions/download-artifact@v4
+        with:
+          name: dashboard_android
+          path: dashboard.apk
+
+      - name: Download Windows release
+        uses: actions/download-artifact@v4
+        with:
+          name: dashboard_windows
+          path: dashboard.msix
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          files: |
+            dashboard.apk
+            dashboard.msix
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+  # end of generate_release
