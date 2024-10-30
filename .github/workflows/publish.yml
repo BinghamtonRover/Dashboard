@@ -15,6 +15,7 @@ on:
 
 jobs:
   build_android:
+    name: Build Android APK
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
@@ -42,6 +43,7 @@ jobs:
   # End of build_android
 
   build_windows:
+    name: Build Windows MSIX
     runs-on: windows-latest
     env:
       windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
@@ -73,6 +75,7 @@ jobs:
   # End of build_windows
 
   generate_release:
+    needs: [build_android, build_windows]
     runs-on: ubuntu-latest
     steps:
       - name: Download Android release
