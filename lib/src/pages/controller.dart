@@ -20,54 +20,61 @@ class ControllersPage extends StatefulWidget {
 class _ControllersPageState extends State<ControllersPage> {
   Controller selectedController = models.rover.controller1;
 
+  void _setController(Controller? value) {
+    if (value == null) return;
+    setState(() => selectedController = value);
+  }
+
   @override
   Widget build(BuildContext context) => Column(
+    children: [
+      const SizedBox(height: 16),
+      Row(
         children: [
-          Row(
-            children: [
-              const Spacer(),
-              const Text("Controller: "),
-              DropdownButton<Controller>(
-                value: selectedController,
-                items: [
-                  DropdownMenuItem(
-                    value: models.rover.controller1,
-                    child: const Text("Controller 1"),
-                  ),
-                  DropdownMenuItem(
-                    value: models.rover.controller2,
-                    child: const Text("Controller 2"),
-                  ),
-                  DropdownMenuItem(
-                    value: models.rover.controller3,
-                    child: const Text("Controller 3"),
-                  ),
-                ],
-                onChanged: (Controller? value) {
-                  if (value == null) {
-                    return;
-                  }
-
-                  setState(() {
-                    selectedController = value;
-                  });
-                },
+          const Spacer(),
+          const Text("Controller: "),
+          DropdownButton<Controller>(
+            value: selectedController,
+            onChanged: _setController,
+            items: [
+              DropdownMenuItem(
+                value: models.rover.controller1,
+                child: const Text("Controller 1"),
               ),
-              const Spacer(),
-              ViewsSelector(index: widget.index),
+              DropdownMenuItem(
+                value: models.rover.controller2,
+                child: const Text("Controller 2"),
+              ),
+              DropdownMenuItem(
+                value: models.rover.controller3,
+                child: const Text("Controller 3"),
+              ),
             ],
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Center(
-                child: _ControllerWidget(selectedController),
-              ),
-            ),
+          const SizedBox(width: 8),
+          FilledButton(
+            onPressed: selectedController.isConnected
+              ? selectedController.gamepad.pulse : null,
+            child: const Text("Vibrate"),
           ),
+          const Spacer(),
+          ViewsSelector(index: widget.index),
         ],
-      );
+      ),
+      Expanded(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Center(
+            child: _ControllerWidget(selectedController),
+          ),
+        ),
+      ),
+    ],
+  );
 }
+
+/// The color to fill in all gamepad buttons with.
+const gamepadColor = Colors.blue;
 
 /// Displays data for the provided [Controller]
 class _ControllerWidget extends ReusableReactiveWidget<Controller> {
@@ -106,14 +113,13 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
   const _ControllerWidget(super.model);
 
   double _getScaledValue(double normalValue, Size widgetSize) =>
-      (_getBackgroundFitWidth(widgetSize) / imageSize.width) * normalValue;
+    (_getBackgroundFitWidth(widgetSize) / imageSize.width) * normalValue;
 
   double _getBackgroundFitWidth(Size widgetSize) {
     var fitWidth = widgetSize.width;
     var fitHeight = widgetSize.height;
 
-    if (imageSize.width < widgetSize.width &&
-        imageSize.height < widgetSize.height) {
+    if (imageSize.width < widgetSize.width && imageSize.height < widgetSize.height) {
       fitWidth = imageSize.width;
       fitHeight = imageSize.height;
     }
@@ -155,7 +161,7 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
         width: joystickRadius,
         height: joystickRadius,
         decoration: BoxDecoration(
-          color: Colors.yellow,
+          color: gamepadColor,
           borderRadius: BorderRadius.circular(10000),
         ),
       ),
@@ -178,7 +184,7 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
       alignment: Alignment.bottomCenter,
       decoration: BoxDecoration(
         border: Border.all(
-          color: Colors.yellow,
+          color: gamepadColor,
           width: borderWidth,
           strokeAlign: BorderSide.strokeAlignOutside,
         ),
@@ -186,7 +192,7 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
       child: Container(
         width: triggerWidth,
         height: value * triggerHeight,
-        color: Colors.yellow,
+        color: gamepadColor,
       ),
     );
   }
@@ -196,7 +202,7 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
     final renderBox = context.findAncestorRenderObjectOfType<RenderBox>();
 
     final widgetSize =
-        (renderBox == null || !renderBox.hasSize) ? imageSize : renderBox.size;
+      (renderBox == null || !renderBox.hasSize) ? imageSize : renderBox.size;
 
     final aOffset = _getPositionedOffset(
       offsetOnImage: buttonA,
@@ -255,140 +261,56 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
       widgetSize: widgetSize,
     );
 
+
+
     final buttonRadius = _getScaledValue(normalButtonRadius, widgetSize);
-
     final outlineWidth = _getScaledValue(7.5, widgetSize);
-
     final state = model.gamepad.getState();
+
+    Widget buttonWidget({
+      required Offset offset,
+      bool? value,
+    }) =>  Positioned(
+      left: offset.dx,
+      top: offset.dy,
+      child: _ControllerButton(
+        value: value ?? false,
+        radius: buttonRadius,
+        outlineWidth: outlineWidth,
+      ),
+    );
+
+    Widget triggerWidget({
+      required Offset offset,
+      required double? value,
+    }) => Positioned(
+      left: offset.dx,
+      top: offset.dy,
+      child: _analogTrigger(
+        value: value ?? 0,
+        widgetSize: widgetSize,
+      ),
+    );
+
     return Opacity(
       opacity: model.isConnected ? 1 : 0.50,
       child: Stack(
         children: [
           Image.asset("assets/gamesir_controller.png", fit: BoxFit.contain),
-          Positioned(
-            left: aOffset.dx,
-            top: aOffset.dy,
-            child: _ControllerButton(
-              value: state?.buttonA ?? false,
-              radius: buttonRadius,
-              outlineWidth: outlineWidth,
-            ),
-          ),
-          Positioned(
-            left: bOffset.dx,
-            top: bOffset.dy,
-            child: _ControllerButton(
-              value: state?.buttonB ?? false,
-              radius: buttonRadius,
-              outlineWidth: outlineWidth,
-            ),
-          ),
-          Positioned(
-            left: xOffset.dx,
-            top: xOffset.dy,
-            child: _ControllerButton(
-              value: state?.buttonX ?? false,
-              radius: buttonRadius,
-              outlineWidth: outlineWidth,
-            ),
-          ),
-          Positioned(
-            left: yOffset.dx,
-            top: yOffset.dy,
-            child: _ControllerButton(
-              value: state?.buttonY ?? false,
-              radius: buttonRadius,
-              outlineWidth: outlineWidth,
-            ),
-          ),
-          Positioned(
-            left: lbOffset.dx,
-            top: lbOffset.dy,
-            child: _ControllerButton(
-              value: state?.leftShoulder ?? false,
-              radius: buttonRadius,
-              outlineWidth: outlineWidth,
-            ),
-          ),
-          Positioned(
-            left: rbOffset.dx,
-            top: rbOffset.dy,
-            child: _ControllerButton(
-              value: state?.rightShoulder ?? false,
-              radius: buttonRadius,
-              outlineWidth: outlineWidth,
-            ),
-          ),
-          Positioned(
-            left: ltOffset.dx,
-            top: ltOffset.dy,
-            child: _analogTrigger(
-              value: state?.normalLeftTrigger ?? 0,
-              widgetSize: widgetSize,
-            ),
-          ),
-          Positioned(
-            left: rtOffset.dx,
-            top: rtOffset.dy,
-            child: _analogTrigger(
-              value: state?.normalRightTrigger ?? 0,
-              widgetSize: widgetSize,
-            ),
-          ),
-          Positioned(
-            left: startOffset.dx,
-            top: startOffset.dy,
-            child: _ControllerButton(
-              value: state?.buttonStart ?? false,
-              radius: buttonRadius,
-              outlineWidth: outlineWidth,
-            ),
-          ),
-          Positioned(
-            left: selectOffset.dx,
-            top: selectOffset.dy,
-            child: _ControllerButton(
-              value: state?.buttonBack ?? false,
-              radius: buttonRadius,
-              outlineWidth: outlineWidth,
-            ),
-          ),
-          Positioned(
-            left: dPadUpOffset.dx,
-            top: dPadUpOffset.dy,
-            child: _ControllerButton(
-              value: state?.dpadUp ?? false,
-              radius: buttonRadius,
-              outlineWidth: outlineWidth,
-            ),
-          ),
-          Positioned(
-            left: dPadDownOffset.dx,
-            top: dPadDownOffset.dy,
-            child: _ControllerButton(
-              value: state?.dpadDown ?? false,
-              radius: buttonRadius,
-              outlineWidth: outlineWidth,
-            ),
-          ),
-          Positioned(
-            left: dPadLeftOffset.dx,
-            top: dPadLeftOffset.dy,
-            child: _ControllerButton(
-              value: state?.dpadLeft ?? false,
-              radius: buttonRadius,
-              outlineWidth: outlineWidth,
-            ),
-          ),
-          Positioned(
-            left: dPadRightOffset.dx,
-            top: dPadRightOffset.dy,
-            child: _ControllerButton(
-              value: state?.dpadRight ?? false,
-              radius: buttonRadius,
-              outlineWidth: outlineWidth,
-            ),
-          ),
+          buttonWidget(offset: aOffset, value: state?.buttonA),
+          buttonWidget(offset: bOffset, value: state?.buttonB),
+          buttonWidget(offset: xOffset, value: state?.buttonX),
+          buttonWidget(offset: yOffset, value: state?.buttonY),
+          buttonWidget(offset: lbOffset, value: state?.leftShoulder),
+          buttonWidget(offset: rbOffset, value: state?.rightShoulder),
+          buttonWidget(offset: startOffset, value: state?.buttonStart),
+          buttonWidget(offset: selectOffset, value: state?.buttonBack),
+          buttonWidget(offset: dPadUpOffset, value: state?.dpadUp),
+          buttonWidget(offset: dPadDownOffset, value: state?.dpadDown),
+          buttonWidget(offset: dPadLeftOffset, value: state?.dpadLeft),
+          buttonWidget(offset: dPadRightOffset, value: state?.dpadRight),
+          triggerWidget(offset: ltOffset, value: state?.normalLeftTrigger),
+          triggerWidget(offset: rtOffset, value: state?.normalRightTrigger),
           _controllerJoystick(
             x: state?.normalLeftX ?? 0,
             y: -1 * (state?.normalLeftY ?? 0),
@@ -420,15 +342,15 @@ class _ControllerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        width: radius,
-        height: radius,
-        decoration: BoxDecoration(
-          color: value ? Colors.yellow : Colors.transparent,
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: Colors.yellow,
-            width: outlineWidth,
-          ),
-        ),
-      );
+    width: radius,
+    height: radius,
+    decoration: BoxDecoration(
+      color: value ? gamepadColor : Colors.transparent,
+      shape: BoxShape.circle,
+      border: Border.all(
+        color: gamepadColor,
+        width: outlineWidth,
+      ),
+    ),
+  );
 }
