@@ -92,9 +92,6 @@ jobs:
       - name: Organize files
         run: |
           ls -al
-          ls -al dashboard*
-          ls -al dashboard_android
-          ls -al dashboard_windows
           mv app-release.apk dashboard_android.apk
           mv dashboard.msix dashboard_windows.msix
 
