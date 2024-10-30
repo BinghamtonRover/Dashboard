@@ -200,77 +200,27 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
   @override
   Widget build(BuildContext context, Controller model) {
     final renderBox = context.findAncestorRenderObjectOfType<RenderBox>();
-
-    final widgetSize =
-      (renderBox == null || !renderBox.hasSize) ? imageSize : renderBox.size;
-
-    final aOffset = _getPositionedOffset(
-      offsetOnImage: buttonA,
-      widgetSize: widgetSize,
-    );
-    final bOffset = _getPositionedOffset(
-      offsetOnImage: buttonB,
-      widgetSize: widgetSize,
-    );
-    final xOffset = _getPositionedOffset(
-      offsetOnImage: buttonX,
-      widgetSize: widgetSize,
-    );
-    final yOffset = _getPositionedOffset(
-      offsetOnImage: buttonY,
-      widgetSize: widgetSize,
-    );
-    final lbOffset = _getPositionedOffset(
-      offsetOnImage: leftBumper,
-      widgetSize: widgetSize,
-    );
-    final rbOffset = _getPositionedOffset(
-      offsetOnImage: rightBumper,
-      widgetSize: widgetSize,
-    );
-    final ltOffset = _getPositionedOffset(
-      offsetOnImage: leftTrigger,
-      widgetSize: widgetSize,
-    );
-    final rtOffset = _getPositionedOffset(
-      offsetOnImage: rightTrigger,
-      widgetSize: widgetSize,
-    );
-    final startOffset = _getPositionedOffset(
-      offsetOnImage: start,
-      widgetSize: widgetSize,
-    );
-    final selectOffset = _getPositionedOffset(
-      offsetOnImage: select,
-      widgetSize: widgetSize,
-    );
-    final dPadUpOffset = _getPositionedOffset(
-      offsetOnImage: dPadUp,
-      widgetSize: widgetSize,
-    );
-    final dPadDownOffset = _getPositionedOffset(
-      offsetOnImage: dPadDown,
-      widgetSize: widgetSize,
-    );
-    final dPadLeftOffset = _getPositionedOffset(
-      offsetOnImage: dPadLeft,
-      widgetSize: widgetSize,
-    );
-    final dPadRightOffset = _getPositionedOffset(
-      offsetOnImage: dPadRight,
-      widgetSize: widgetSize,
-    );
-
-
-
+    final widgetSize = (renderBox == null || !renderBox.hasSize) ? imageSize : renderBox.size;
     final buttonRadius = _getScaledValue(normalButtonRadius, widgetSize);
     final outlineWidth = _getScaledValue(7.5, widgetSize);
     final state = model.gamepad.getState();
 
-    Widget buttonWidget({
-      required Offset offset,
-      bool? value,
-    }) =>  Positioned(
+    final aOffset = _getPositionedOffset(offsetOnImage: buttonA, widgetSize: widgetSize);
+    final bOffset = _getPositionedOffset(offsetOnImage: buttonB, widgetSize: widgetSize);
+    final xOffset = _getPositionedOffset(offsetOnImage: buttonX, widgetSize: widgetSize);
+    final yOffset = _getPositionedOffset(offsetOnImage: buttonY, widgetSize: widgetSize);
+    final lbOffset = _getPositionedOffset(offsetOnImage: leftBumper, widgetSize: widgetSize);
+    final rbOffset = _getPositionedOffset(offsetOnImage: rightBumper, widgetSize: widgetSize);
+    final ltOffset = _getPositionedOffset(offsetOnImage: leftTrigger, widgetSize: widgetSize);
+    final rtOffset = _getPositionedOffset(offsetOnImage: rightTrigger, widgetSize: widgetSize);
+    final startOffset = _getPositionedOffset(offsetOnImage: start, widgetSize: widgetSize);
+    final selectOffset = _getPositionedOffset(offsetOnImage: select, widgetSize: widgetSize);
+    final dPadUpOffset = _getPositionedOffset(offsetOnImage: dPadUp, widgetSize: widgetSize);
+    final dPadDownOffset = _getPositionedOffset(offsetOnImage: dPadDown, widgetSize: widgetSize);
+    final dPadLeftOffset = _getPositionedOffset(offsetOnImage: dPadLeft, widgetSize: widgetSize);
+    final dPadRightOffset = _getPositionedOffset(offsetOnImage: dPadRight, widgetSize: widgetSize);
+
+    Widget buttonWidget({required Offset offset, bool? value}) =>  Positioned(
       left: offset.dx,
       top: offset.dy,
       child: _ControllerButton(
@@ -280,10 +230,7 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
       ),
     );
 
-    Widget triggerWidget({
-      required Offset offset,
-      required double? value,
-    }) => Positioned(
+    Widget triggerWidget({required Offset offset, required double? value}) => Positioned(
       left: offset.dx,
       top: offset.dy,
       child: _analogTrigger(
@@ -347,10 +294,7 @@ class _ControllerButton extends StatelessWidget {
     decoration: BoxDecoration(
       color: value ? gamepadColor : Colors.transparent,
       shape: BoxShape.circle,
-      border: Border.all(
-        color: gamepadColor,
-        width: outlineWidth,
-      ),
+      border: Border.all(color: gamepadColor, width: outlineWidth),
     ),
   );
 }
