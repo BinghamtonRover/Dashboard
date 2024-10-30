@@ -19,11 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Java
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
+          distribution: "zulu"
           java-version: '17'
 
       - name: Install Flutter
@@ -49,7 +50,7 @@ jobs:
       windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
     steps:
       - name: Clone repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Load certificate
         run: |
@@ -71,7 +72,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dashboard_windows
-          path: build/windows/x64/runner/Release/Dashboard.msix
+          path: build/windows/x64/runner/Release/dashboard.msix
   # End of build_windows
 
   generate_release:
@@ -88,12 +89,17 @@ jobs:
         with:
           name: dashboard_windows
 
+      - name: Organize files
+        run: |
+          mv dashboard_android/app-release.apk dashboard_android.apk
+          mv dashboard_windows/dashboard.msix dashboard_windows.msix
+
       - name: Create Release
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v2
         with:
           files: |
-            dashboard.apk
-            dashboard.msix
+            dashboard_android.apk
+            dashboard_windows.msix
           name: ${{ github.ref_name }}
           generate_release_notes: true
           fail_on_unmatched_files: true
