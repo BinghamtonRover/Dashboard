@@ -82,13 +82,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dashboard_android
-          path: dashboard.apk
 
       - name: Download Windows release
         uses: actions/download-artifact@v4
         with:
           name: dashboard_windows
-          path: dashboard.msix
 
       - name: Create Release
         uses: softprops/action-gh-release@v0.1.15
