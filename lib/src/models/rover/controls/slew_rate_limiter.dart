@@ -2,6 +2,12 @@
 /// limiting acceleration of motors preventing shaking or high
 /// current draw.
 ///
+/// The maximum rate of change of the input (the rate) affects how rapidly the input can be changed.
+/// The [calculate] method returns the input clamped between (input - (previous * dt))
+/// and (input + (previous * dt))
+/// 
+/// When this is not being frequently updated via [calculate], it is recommended to call [reset]
+///
 /// Implementation inspired from WPILib
 /// https://github.com/wpilibsuite/allwpilib/blob/main/wpimath/src/main/native/include/frc/filter/SlewRateLimiter.h
 class SlewRateLimiter {

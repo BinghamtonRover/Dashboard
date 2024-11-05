@@ -195,7 +195,7 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   /// Whether to default to tank controls. See [DashboardSettings.preferTankControls].
   bool preferTankControls;
 
-  /// The rate limit to apply to the slew rate limiter on the drive. See [DashboardSettings.slewRateLimit]
+  /// The maximum rate of change to apply to the drive joystick inputs. See [DashboardSettings.slewRateLimit]
   NumberBuilder<double> slewRateLimit;
 
   /// Whether to use version checking. See [DashboardSettings.versionChecking].

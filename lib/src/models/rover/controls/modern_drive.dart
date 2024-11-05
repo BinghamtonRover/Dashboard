@@ -14,7 +14,7 @@ class ModernDriveControls extends RoverControls {
   /// How far to swivel the cameras each tick.
   static const cameraSwivelIncrement = -1;
 
-  /// The rate limit in [-1.0, 1.0] per second for the motor speeds
+  /// The rate limit in joystick units per second for the motor speeds
   static const rateLimit = 1.50;
 
   /// The [SlewRateLimiter] for the left wheel speeds

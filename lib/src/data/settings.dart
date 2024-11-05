@@ -242,7 +242,7 @@ class DashboardSettings {
   /// Tank controls offer more custom control, but modern drive controls are more intuitive.
   final bool preferTankControls;
 
-  /// The rate to apply to the drive slew rate limiter
+  /// The maximum rate of change to apply to the drive joystick inputs
   final double slewRateLimit;
 
   /// Whether to have version checking on protobuf messages.
