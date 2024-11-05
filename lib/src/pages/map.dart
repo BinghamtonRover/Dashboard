@@ -19,7 +19,8 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
       };
 
   /// Opens a dialog to prompt the user for GPS coordinates and places a marker there.
-  void placeMarker(BuildContext context, AutonomyModel model) => showDialog<void>(
+  void placeMarker(BuildContext context, AutonomyModel model) =>
+      showDialog<void>(
         context: context,
         builder: (_) => AlertDialog(
           title: const Text("Add a Marker"),
@@ -28,7 +29,9 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
             children: [GpsEditor(model.markerBuilder)],
           ),
           actions: [
-            TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
+            TextButton(
+                child: const Text("Cancel"),
+                onPressed: () => Navigator.of(context).pop()),
             ElevatedButton(
               onPressed: model.markerBuilder.isValid
                   ? () {
@@ -64,7 +67,10 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
           },
           child: Container(
             width: 24,
-            decoration: BoxDecoration(color: getColor(cell.cellType), border: Border.all()),
+            decoration: BoxDecoration(
+              color: getColor(cell.cellType),
+              border: Border.all(),
+            ),
             child: cell.cellType != AutonomyCell.rover
                 ? null
                 : Container(
@@ -82,82 +88,100 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
       );
 
   /// The controls for creating, placing, and removing markers
-  Widget markerControls(BuildContext context, AutonomyModel model) => Row(
+  Widget markerControls(BuildContext context, AutonomyModel model) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Controls
-          const SizedBox(width: 4),
           Text("Place Marker: ", style: context.textTheme.titleLarge),
-          const SizedBox(width: 8),
+          const SizedBox(height: 8),
           ElevatedButton.icon(
             icon: const Icon(Icons.add),
             label: const Text("Add Marker"),
             onPressed: () => placeMarker(context, model),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(height: 8),
           ElevatedButton.icon(
             icon: const Icon(Icons.location_on),
             label: const Text("Drop Marker Here"),
             onPressed: model.placeMarkerOnRover,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(height: 8),
           ElevatedButton.icon(
             icon: const Icon(Icons.clear),
             label: const Text("Clear All"),
             onPressed: model.clearMarkers,
           ),
-          const Spacer(),
-          Text("Zoom: ", style: context.textTheme.titleLarge),
-          Expanded(
-            flex: 2,
-            child: Slider(
-              value: model.gridSize.toDouble(),
-              min: 1,
-              max: 41,
-              divisions: 20,
-              label: "${model.gridSize}x${model.gridSize}",
-              onChanged: (value) => model.zoom(value.toInt()),
-            ),
-          ),
         ],
       );
 
   @override
-  Widget build(BuildContext context, AutonomyModel model) => Column(
-        children: [
-          MapPageHeader(model: model, index: index),
-          const SizedBox(height: 24),
-          Expanded(
-            child: Row(
-              children: [
-                if (!model.isPlayingBadApple) ...[
-                  const SizedBox(width: 16),
-                  const MapLegend(),
-                  const SizedBox(width: 16),
-                ],
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      for (final row in model.grid.reversed)
-                        Expanded(
-                          child: Row(
-                            children: [
-                              for (final cell in row) createCell(model, cell),
-                            ],
+  Widget build(BuildContext context, AutonomyModel model) => LayoutBuilder(
+        builder: (context, constraints) => Column(
+          children: [
+            MapPageHeader(model: model, index: index),
+            Expanded(
+              child: Row(
+                children: [
+                  if (constraints.maxWidth > 700) ...[
+                    const SizedBox(width: 16),
+                    const MapLegend(),
+                    const SizedBox(width: 16),
+                  ],
+                  const Spacer(),
+                  AspectRatio(
+                    aspectRatio: 1,
+                    child: Column(
+                      children: [
+                        for (final row in model.grid.reversed)
+                          Expanded(
+                            child: Row(
+                              children: [
+                                for (final cell in row) createCell(model, cell),
+                              ],
+                            ),
                           ),
-                        ),
-                      if (!model.isPlayingBadApple) markerControls(context, model),
-                      const SizedBox(height: 4),
-                      AutonomyCommandEditor(model),
-                      const SizedBox(height: 12),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 16),
-              ],
+                  const SizedBox(width: 16),
+                  const Spacer(),
+                  Flexible(
+                    flex: 3,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        markerControls(context, model),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Zoom:", style: context.textTheme.titleLarge),
+                            AbsorbPointer(
+                              absorbing: model.isPlayingBadApple,
+                              child: Slider(
+                                value: model.gridSize.clamp(1, 41).toDouble(),
+                                min: 1,
+                                max: 41,
+                                divisions: 20,
+                                label: "${model.gridSize}x${model.gridSize}",
+                                onChanged: (value) => model.zoom(value.toInt()),
+                              ),
+                            ),
+                          ],
+                        ),
+                        // const SizedBox(height: 4),
+                        AutonomyCommandEditor(model),
+                        // const SizedBox(height: 12),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  // const SizedBox(width: 32),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
 }
 
@@ -168,29 +192,44 @@ class MapLegend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const SizedBox(height: 4),
           Text("Legend:", style: context.textTheme.titleLarge),
-          const SizedBox(height: 8),
-          Container(width: 24, height: 24, color: Colors.blue),
-          const SizedBox(height: 4),
-          Text("Rover", style: context.textTheme.titleMedium),
-          const SizedBox(height: 24),
-          Container(width: 24, height: 24, color: Colors.green),
-          const SizedBox(height: 4),
-          Text("Destination", style: context.textTheme.titleMedium),
-          const SizedBox(height: 24),
-          Container(width: 24, height: 24, color: Colors.black),
-          const SizedBox(height: 4),
-          Text("Obstacle", style: context.textTheme.titleMedium),
-          const SizedBox(height: 24),
-          Container(width: 24, height: 24, color: Colors.blueGrey),
-          const SizedBox(height: 4),
-          Text("Path", style: context.textTheme.titleMedium),
-          const SizedBox(height: 24),
-          Container(width: 24, height: 24, color: Colors.red),
-          const SizedBox(height: 4),
-          Text("Marker", style: context.textTheme.titleMedium),
+          Column(
+            children: [
+              Container(width: 24, height: 24, color: Colors.blue),
+              const SizedBox(height: 2),
+              Text("Rover", style: context.textTheme.titleMedium),
+            ],
+          ),
+          Column(
+            children: [
+              Container(width: 24, height: 24, color: Colors.green),
+              const SizedBox(height: 2),
+              Text("Destination", style: context.textTheme.titleMedium),
+            ],
+          ),
+          Column(
+            children: [
+              Container(width: 24, height: 24, color: Colors.black),
+              const SizedBox(height: 2),
+              Text("Obstacle", style: context.textTheme.titleMedium),
+            ],
+          ),
+          Column(
+            children: [
+              Container(width: 24, height: 24, color: Colors.blueGrey),
+              const SizedBox(height: 2),
+              Text("Path", style: context.textTheme.titleMedium),
+            ],
+          ),
+          Column(
+            children: [
+              Container(width: 24, height: 24, color: Colors.red),
+              const SizedBox(height: 2),
+              Text("Marker", style: context.textTheme.titleMedium),
+            ],
+          ),
         ],
       );
 }
@@ -219,10 +258,15 @@ class MapPageHeader extends StatelessWidget {
               IconButton(
                 iconSize: 48,
                 icon: CircleAvatar(
-                  backgroundImage: const AssetImage("assets/bad_apple_thumbnail.webp"),
-                  child: model.isPlayingBadApple ? const Icon(Icons.block, color: Colors.red, size: 36) : null,
+                  backgroundImage:
+                      const AssetImage("assets/bad_apple_thumbnail.webp"),
+                  child: model.isPlayingBadApple
+                      ? const Icon(Icons.block, color: Colors.red, size: 36)
+                      : null,
                 ),
-                onPressed: model.isPlayingBadApple ? model.stopBadApple : model.startBadApple,
+                onPressed: model.isPlayingBadApple
+                    ? model.stopBadApple
+                    : model.startBadApple,
               ),
             const Spacer(),
             ViewsSelector(index: index),
