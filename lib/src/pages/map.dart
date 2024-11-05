@@ -1,4 +1,5 @@
 import "dart:math";
+import "package:burt_network/generated.dart";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/models.dart";
@@ -30,8 +31,9 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
           ),
           actions: [
             TextButton(
-                child: const Text("Cancel"),
-                onPressed: () => Navigator.of(context).pop()),
+              child: const Text("Cancel"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
             ElevatedButton(
               onPressed: model.markerBuilder.isValid
                   ? () {
@@ -49,40 +51,75 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
   /// The index of this view.
   final int index;
 
+  /// Builder for autonomy commands
+  final AutonomyCommandBuilder commandBuilder = AutonomyCommandBuilder();
+
   /// A const constructor.
-  const MapPage({required this.index});
+  MapPage({required this.index});
 
   @override
   AutonomyModel createModel() => AutonomyModel();
 
   /// Creates a widget to display the cell data for the provided [cell]
   Widget createCell(AutonomyModel model, MapCellData cell) => Expanded(
-        child: GestureDetector(
-          onTap: () {
-            if (cell.cellType == AutonomyCell.marker) {
-              model.removeMarker(cell.coordinates);
-            } else if (cell.cellType == AutonomyCell.empty) {
-              model.placeMarker(cell.coordinates);
+        child: DragTarget<AutonomyCell>(
+          onAcceptWithDetails: (details) {
+            switch (details.data) {
+              case AutonomyCell.destination:
+                {
+                  commandBuilder.gps.latDecimal.value = cell.coordinates.latitude;
+                  commandBuilder.gps.longDecimal.value = cell.coordinates.longitude;
+
+                  commandBuilder.submit();
+                  break;
+                }
+              case AutonomyCell.obstacle:
+                {
+                  final obstacleData = AutonomyData(obstacles: [cell.coordinates]);
+                  models.sockets.autonomy.sendMessage(obstacleData);
+                  break;
+                }
+              case AutonomyCell.marker:
+                {
+                  if (cell.cellType == AutonomyCell.marker) {
+                    model.removeMarker(cell.coordinates);
+                  } else if (cell.cellType == AutonomyCell.empty) {
+                    model.placeMarker(cell.coordinates);
+                  }
+                  break;
+                }
+              // ignore: no_default_cases
+              default:
+                break;
             }
           },
-          child: Container(
-            width: 24,
-            decoration: BoxDecoration(
-              color: getColor(cell.cellType),
-              border: Border.all(),
-            ),
-            child: cell.cellType != AutonomyCell.rover
-                ? null
-                : Container(
-                    color: Colors.blue,
-                    width: double.infinity,
-                    height: double.infinity,
-                    margin: const EdgeInsets.all(4),
-                    child: Transform.rotate(
-                      angle: -model.roverHeading * pi / 180,
-                      child: const Icon(Icons.arrow_upward, size: 24),
+          builder: (context, candidates, rejects) => GestureDetector(
+            onTap: () {
+              if (cell.cellType == AutonomyCell.marker) {
+                model.removeMarker(cell.coordinates);
+              } else if (cell.cellType == AutonomyCell.empty) {
+                model.placeMarker(cell.coordinates);
+              }
+            },
+            child: Container(
+              width: 24,
+              decoration: BoxDecoration(
+                color: getColor(cell.cellType),
+                border: Border.all(),
+              ),
+              child: cell.cellType != AutonomyCell.rover
+                  ? null
+                  : Container(
+                      color: Colors.blue,
+                      width: double.infinity,
+                      height: double.infinity,
+                      margin: const EdgeInsets.all(4),
+                      child: Transform.rotate(
+                        angle: -model.roverHeading * pi / 180,
+                        child: const Icon(Icons.arrow_upward, size: 24),
+                      ),
                     ),
-                  ),
+            ),
           ),
         ),
       );
@@ -170,7 +207,7 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
                           ],
                         ),
                         // const SizedBox(height: 4),
-                        AutonomyCommandEditor(model),
+                        AutonomyCommandEditor(commandBuilder, model),
                         // const SizedBox(height: 12),
                       ],
                     ),
@@ -202,19 +239,39 @@ class MapLegend extends StatelessWidget {
               Text("Rover", style: context.textTheme.titleMedium),
             ],
           ),
-          Column(
-            children: [
-              Container(width: 24, height: 24, color: Colors.green),
-              const SizedBox(height: 2),
-              Text("Destination", style: context.textTheme.titleMedium),
-            ],
+          Draggable<AutonomyCell>(
+            data: AutonomyCell.destination,
+            dragAnchorStrategy: (draggable, context, position) =>
+                const Offset(12, 12),
+            feedback: Container(
+              width: 24,
+              height: 24,
+              color: Colors.green.withOpacity(0.50),
+            ),
+            child: Column(
+              children: [
+                Container(width: 24, height: 24, color: Colors.green),
+                const SizedBox(height: 2),
+                Text("Destination", style: context.textTheme.titleMedium),
+              ],
+            ),
           ),
-          Column(
-            children: [
-              Container(width: 24, height: 24, color: Colors.black),
-              const SizedBox(height: 2),
-              Text("Obstacle", style: context.textTheme.titleMedium),
-            ],
+          Draggable<AutonomyCell>(
+            data: AutonomyCell.obstacle,
+            dragAnchorStrategy: (draggable, context, position) =>
+                const Offset(12, 12),
+            feedback: Container(
+              width: 24,
+              height: 24,
+              color: Colors.black.withOpacity(0.50),
+            ),
+            child: Column(
+              children: [
+                Container(width: 24, height: 24, color: Colors.black),
+                const SizedBox(height: 2),
+                Text("Obstacle", style: context.textTheme.titleMedium),
+              ],
+            ),
           ),
           Column(
             children: [
@@ -223,12 +280,22 @@ class MapLegend extends StatelessWidget {
               Text("Path", style: context.textTheme.titleMedium),
             ],
           ),
-          Column(
-            children: [
-              Container(width: 24, height: 24, color: Colors.red),
-              const SizedBox(height: 2),
-              Text("Marker", style: context.textTheme.titleMedium),
-            ],
+          Draggable<AutonomyCell>(
+            data: AutonomyCell.marker,
+            dragAnchorStrategy: (draggable, context, position) =>
+                const Offset(12, 12),
+            feedback: Container(
+              width: 24,
+              height: 24,
+              color: Colors.red.withOpacity(0.50),
+            ),
+            child: Column(
+              children: [
+                Container(width: 24, height: 24, color: Colors.red),
+                const SizedBox(height: 2),
+                Text("Marker", style: context.textTheme.titleMedium),
+              ],
+            ),
           ),
         ],
       );

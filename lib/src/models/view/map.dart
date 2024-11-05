@@ -119,9 +119,11 @@ class AutonomyModel with ChangeNotifier {
 			markCell(result, obstacle, AutonomyCell.obstacle);
 		}
     if (isPlayingBadApple) return result;
-		for (final path in data.path) {
-			markCell(result, path, AutonomyCell.path);
-		}
+    for (final path in data.path) {
+      if (!data.obstacles.contains(path)) {
+        markCell(result, path, AutonomyCell.path);
+      }
+    }
 		for (final marker in markers) {
 			markCell(result, marker, AutonomyCell.marker);
 		}

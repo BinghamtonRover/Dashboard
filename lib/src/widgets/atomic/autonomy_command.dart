@@ -5,14 +5,11 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A widget to edit an [AutonomyCommand].
-class AutonomyCommandEditor extends ReactiveWidget<AutonomyCommandBuilder> {
+class AutonomyCommandEditor extends ReusableReactiveWidget<AutonomyCommandBuilder> {
   /// The autonomy view model.
   final AutonomyModel dataModel;
   /// A const constructor.
-  const AutonomyCommandEditor(this.dataModel);
-
-  @override
-  AutonomyCommandBuilder createModel() => AutonomyCommandBuilder();
+  const AutonomyCommandEditor(super.model, this.dataModel);
 
   /// Opens a dialog to prompt the user to create an [AutonomyCommand] and sends it to the rover.
   void createTask(BuildContext context, AutonomyCommandBuilder command) => showDialog<void>(
