@@ -67,15 +67,18 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
             switch (details.data) {
               case AutonomyCell.destination:
                 {
-                  commandBuilder.gps.latDecimal.value = cell.coordinates.latitude;
-                  commandBuilder.gps.longDecimal.value = cell.coordinates.longitude;
+                  commandBuilder.gps.latDecimal.value =
+                      cell.coordinates.latitude;
+                  commandBuilder.gps.longDecimal.value =
+                      cell.coordinates.longitude;
 
                   commandBuilder.submit();
                   break;
                 }
               case AutonomyCell.obstacle:
                 {
-                  final obstacleData = AutonomyData(obstacles: [cell.coordinates]);
+                  final obstacleData =
+                      AutonomyData(obstacles: [cell.coordinates]);
                   models.sockets.autonomy.sendMessage(obstacleData);
                   break;
                 }
@@ -159,7 +162,7 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
             Expanded(
               child: Row(
                 children: [
-                  if (constraints.maxWidth > 700) ...[
+                  if (constraints.maxWidth > 880) ...[
                     const SizedBox(width: 16),
                     const MapLegend(),
                     const SizedBox(width: 16),
@@ -183,7 +186,7 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
                   const SizedBox(width: 16),
                   const Spacer(),
                   Flexible(
-                    flex: 3,
+                    flex: 4,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
