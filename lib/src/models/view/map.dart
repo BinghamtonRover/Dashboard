@@ -149,7 +149,9 @@ class AutonomyModel with ChangeNotifier {
       }
     }
 		for (final marker in markers) {
-			markCell(result, marker, AutonomyCell.marker);
+      if (!data.obstacles.contains(marker)) {
+        markCell(result, marker, AutonomyCell.marker);
+      }
 		}
     // Marks the rover and destination -- these should be last
     if (data.hasDestination()) markCell(result, data.destination, AutonomyCell.destination);
