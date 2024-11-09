@@ -46,10 +46,10 @@ class AutonomyCommandEditor extends ReusableReactiveWidget<AutonomyCommandBuilde
   Widget build(BuildContext context, AutonomyCommandBuilder model) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Autonomy: ", style: context.textTheme.titleLarge),
+          Text("Autonomy:", style: context.textTheme.titleLarge),
           Text(
             "${dataModel.data.state.humanName}, ${dataModel.data.task.humanName}",
-            style: context.textTheme.titleLarge,
+            style: context.textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           ElevatedButton.icon(

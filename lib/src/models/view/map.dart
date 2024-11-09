@@ -38,6 +38,15 @@ class GridOffset {
 	const GridOffset(this.x, this.y);
 }
 
+extension _GpsCoordinatesToBlock on GpsCoordinates {
+  GpsCoordinates get toGridBlock => GpsCoordinates(
+        latitude:
+            (latitude / models.settings.dashboard.mapBlockSize).roundToDouble(),
+        longitude:
+            (longitude / models.settings.dashboard.mapBlockSize).roundToDouble(),
+      );
+}
+
 /// A record representing data necessary to display a cell in the map
 typedef MapCellData = ({GpsCoordinates coordinates, AutonomyCell cellType});
 
@@ -105,6 +114,21 @@ class AutonomyModel with ChangeNotifier {
 
 	/// The rover's current position.
 	GpsCoordinates get roverPosition => models.rover.metrics.position.data.gps;
+  
+  /// The cell type of the rover that isn't [AutonomyCell.rover]
+  AutonomyCell get roverCellType {
+    final roverCoordinates = roverPosition..toGridBlock;
+
+    if (data.hasDestination() && data.destination == roverCoordinates) {
+      return AutonomyCell.destination;
+    } else if (markers.contains(roverCoordinates)) {
+      return AutonomyCell.marker;
+    } else if (data.path.contains(roverCoordinates)) {
+      return AutonomyCell.path;
+    }
+
+    return AutonomyCell.empty;
+  }
 
   /// The rover's heading
   double get roverHeading => models.rover.metrics.position.angle;
@@ -193,7 +217,9 @@ class AutonomyModel with ChangeNotifier {
 
   /// Places a marker at the rover's current position.
   void placeMarkerOnRover() {
-    markers.add(roverPosition);
+    if (!markers.contains(roverPosition.toGridBlock)) {
+      markers.add(roverPosition.toGridBlock);
+    }
     notifyListeners();
   }
 

@@ -10,13 +10,13 @@ import "package:rover_dashboard/widgets.dart";
 /// Displays a bird's-eye view of the rover and its path to the goal.
 class MapPage extends ReactiveWidget<AutonomyModel> {
   /// Gets the color for a given [AutonomyCell].
-  Color? getColor(AutonomyCell cell) => switch (cell) {
+  Color? getColor(AutonomyCell cell, AutonomyModel model) => switch (cell) {
         AutonomyCell.destination => Colors.green,
         AutonomyCell.obstacle => Colors.black,
         AutonomyCell.path => Colors.blueGrey,
         AutonomyCell.empty => Colors.white,
         AutonomyCell.marker => Colors.red,
-        AutonomyCell.rover => Colors.transparent,
+        AutonomyCell.rover => getColor(model.roverCellType, model),
       };
 
   /// Opens a dialog to prompt the user for GPS coordinates and places a marker there.
@@ -84,9 +84,9 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
                 }
               case AutonomyCell.marker:
                 {
-                  if (cell.cellType == AutonomyCell.marker) {
+                  if (model.markers.contains(cell.coordinates)) {
                     model.removeMarker(cell.coordinates);
-                  } else if (cell.cellType == AutonomyCell.empty) {
+                  } else {
                     model.placeMarker(cell.coordinates);
                   }
                   break;
@@ -98,28 +98,33 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
           },
           builder: (context, candidates, rejects) => GestureDetector(
             onTap: () {
-              if (cell.cellType == AutonomyCell.marker) {
+              if (model.markers.contains(cell.coordinates)) {
                 model.removeMarker(cell.coordinates);
-              } else if (cell.cellType == AutonomyCell.empty) {
+              } else {
                 model.placeMarker(cell.coordinates);
               }
             },
             child: Container(
               width: 24,
               decoration: BoxDecoration(
-                color: getColor(cell.cellType),
+                color: getColor(cell.cellType, model),
                 border: Border.all(),
               ),
               child: cell.cellType != AutonomyCell.rover
                   ? null
-                  : Container(
-                      color: Colors.blue,
-                      width: double.infinity,
-                      height: double.infinity,
-                      margin: const EdgeInsets.all(4),
-                      child: Transform.rotate(
-                        angle: -model.roverHeading * pi / 180,
-                        child: const Icon(Icons.arrow_upward, size: 24),
+                  : LayoutBuilder(
+                      builder: (context, constraints) => Container(
+                        color: Colors.blue,
+                        width: double.infinity,
+                        height: double.infinity,
+                        margin: EdgeInsets.all(constraints.maxWidth / 15),
+                        child: Transform.rotate(
+                          angle: -model.roverHeading * pi / 180,
+                          child: Icon(
+                            Icons.arrow_upward,
+                            size: constraints.maxWidth * 24 / 30,
+                          ),
+                        ),
                       ),
                     ),
             ),
@@ -161,32 +166,38 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
             MapPageHeader(model: model, index: index),
             Expanded(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (constraints.maxWidth > 880) ...[
+                  if (constraints.maxWidth > 700) ...[
                     const SizedBox(width: 16),
                     const MapLegend(),
-                    const SizedBox(width: 16),
                   ],
-                  const Spacer(),
-                  AspectRatio(
-                    aspectRatio: 1,
-                    child: Column(
-                      children: [
-                        for (final row in model.grid.reversed)
-                          Expanded(
-                            child: Row(
-                              children: [
-                                for (final cell in row) createCell(model, cell),
-                              ],
+                  const SizedBox(width: 16),
+                  Flexible(
+                    flex: 10,
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: Column(
+                        children: [
+                          for (final row in model.grid.reversed)
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  for (final cell in row)
+                                    createCell(model, cell),
+                                ],
+                              ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
                   const Spacer(),
-                  Flexible(
-                    flex: 4,
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxWidth: 250,
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,14 +220,11 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
                             ),
                           ],
                         ),
-                        // const SizedBox(height: 4),
                         AutonomyCommandEditor(commandBuilder, model),
-                        // const SizedBox(height: 12),
                       ],
                     ),
                   ),
-                  const Spacer(),
-                  // const SizedBox(width: 32),
+                  const SizedBox(width: 16),
                 ],
               ),
             ),
