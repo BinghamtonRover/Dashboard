@@ -177,19 +177,26 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
                     flex: 10,
                     child: AspectRatio(
                       aspectRatio: 1,
-                      child: Column(
-                        children: [
-                          for (final row in model.grid.reversed)
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  for (final cell in row)
-                                    createCell(model, cell),
-                                ],
+                      child: (!model.isPlayingBadApple)
+                          ? Column(
+                              children: [
+                                for (final row in model.grid.reversed)
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        for (final cell in row)
+                                          createCell(model, cell),
+                                      ],
+                                    ),
+                                  ),
+                              ],
+                            )
+                          : CustomPaint(
+                              painter: _BadApplePainter(
+                                frameNumber: model.badAppleFrame,
+                                obstacles: model.data.obstacles,
                               ),
                             ),
-                        ],
-                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -198,18 +205,21 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
                     constraints: const BoxConstraints(
                       maxWidth: 250,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        markerControls(context, model),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Zoom:", style: context.textTheme.titleLarge),
-                            AbsorbPointer(
-                              absorbing: model.isPlayingBadApple,
-                              child: Slider(
+                    child: AbsorbPointer(
+                      absorbing: model.isPlayingBadApple,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          markerControls(context, model),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Zoom:",
+                                style: context.textTheme.titleLarge,
+                              ),
+                              Slider(
                                 value: model.gridSize.clamp(1, 41).toDouble(),
                                 min: 1,
                                 max: 41,
@@ -217,11 +227,11 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
                                 label: "${model.gridSize}x${model.gridSize}",
                                 onChanged: (value) => model.zoom(value.toInt()),
                               ),
-                            ),
-                          ],
-                        ),
-                        AutonomyCommandEditor(commandBuilder, model),
-                      ],
+                            ],
+                          ),
+                          AutonomyCommandEditor(commandBuilder, model),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -351,4 +361,86 @@ class MapPageHeader extends StatelessWidget {
           ],
         ),
       );
+}
+
+class _BadApplePainter extends CustomPainter {
+  final int frameNumber;
+  final List<GpsCoordinates> obstacles;
+
+  _BadApplePainter({required this.frameNumber, required this.obstacles});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawRect(
+      Rect.fromLTRB(0, 0, size.width, size.height),
+      Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.fill,
+    );
+    drawGrid(canvas, size);
+    drawPixels(canvas, size);
+  }
+
+  void drawGrid(Canvas canvas, Size size) {
+    final linePaint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.butt;
+
+    final borderPaint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 1
+      ..strokeCap = StrokeCap.square
+      ..style = PaintingStyle.stroke;
+
+    // Columns
+    for (var i = 1; i <= 49; i++) {
+      canvas.drawLine(
+        Offset(i * size.width / 50, 0),
+        Offset(i * size.width / 50, size.height),
+        linePaint,
+      );
+    }
+
+    // Rows
+    for (var i = 1; i <= 49; i++) {
+      canvas.drawLine(
+        Offset(0, i * size.height / 50),
+        Offset(size.width, i * size.height / 50),
+        linePaint,
+      );
+    }
+
+    canvas.drawRect(
+      Rect.fromCenter(
+        center: Offset(size.width, size.height) / 2,
+        width: size.width - 1,
+        height: size.height - 1,
+      ),
+      borderPaint,
+    );
+  }
+
+  void drawPixels(Canvas canvas, Size size) {
+    final boxWidth = size.width / 50;
+    final boxHeight = size.height / 50;
+
+    final paint = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.fill;
+
+    for (final coordinates in obstacles) {
+      final rect = Rect.fromLTWH(
+        size.width - (coordinates.longitude + 1) * boxHeight,
+        size.height - coordinates.latitude * boxWidth,
+        boxWidth,
+        boxHeight,
+      );
+      canvas.drawRect(rect, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_BadApplePainter oldDelegate) =>
+      frameNumber != oldDelegate.frameNumber;
 }
