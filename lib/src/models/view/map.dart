@@ -100,12 +100,21 @@ class AutonomyModel with ChangeNotifier {
 	}
 
 	/// An empty grid of size [gridSize].
-	AutonomyGrid get empty => [
-		for (int i = 0; i < gridSize; i++) [
-			for (int j = 0; j < gridSize; j++)
-				(coordinates: GpsCoordinates(longitude: -j.toDouble() + offset.x, latitude: i.toDouble() - offset.y), cellType: AutonomyCell.empty),
-		],
-	];
+  AutonomyGrid get empty => [
+        for (int i = 0; i < gridSize; i++)
+          [
+            for (int j = 0; j < gridSize; j++)
+              (
+                coordinates: GpsCoordinates(
+                  longitude: (-j.toDouble() + offset.x) *
+                      models.settings.dashboard.mapBlockSize,
+                  latitude: (i.toDouble() - offset.y) *
+                      models.settings.dashboard.mapBlockSize,
+                ),
+                cellType: AutonomyCell.empty
+              ),
+          ],
+      ];
 
 	/// A list of markers manually placed by the user. Useful for the Extreme Retrieval Mission.
 	List<GpsCoordinates> markers = [];
