@@ -257,8 +257,6 @@ class AutonomyModel with ChangeNotifier {
 
   /// Whether the UI is currently playing Bad Apple
   bool isPlayingBadApple = false;
-  /// A timer to update the map for every frame of Bad Apple
-  Timer? badAppleTimer;
   /// Which frame in the Bad Apple video we are up to right now
   int badAppleFrame = 0;
   /// The audio player for the Bad Apple music
@@ -267,6 +265,8 @@ class AutonomyModel with ChangeNotifier {
   static const badAppleFps = 1;
   /// The last frame of Bad Apple
   static const badAppleLastFrame = 6570;
+  /// A stopwatch to track the current time in the bad apple video
+  final Stopwatch _badAppleStopwatch = Stopwatch();
 
   /// Starts playing Bad Apple.
   Future<void> startBadApple() async {
@@ -274,14 +274,36 @@ class AutonomyModel with ChangeNotifier {
     notifyListeners();
     zoom(50);
     badAppleFrame = 0;
-    badAppleTimer = Timer.periodic(const Duration(milliseconds: 1000 ~/ 30), _loadBadAppleFrame);
-    await badAppleAudioPlayer.setAsset("assets/bad_apple2.mp3");
-    badAppleAudioPlayer.play().ignore();
+    Timer.run(() async {
+      await badAppleAudioPlayer.setAsset("assets/bad_apple2.mp3");
+      _badAppleStopwatch.start();
+      badAppleAudioPlayer.play().ignore();
+    });
+
+    while (isPlayingBadApple) {
+      await Future<void>.delayed(Duration.zero);
+      badAppleFrame =
+          ((_badAppleStopwatch.elapsedMicroseconds.toDouble() / 1e6) * 30.0)
+              .round();
+      if (badAppleFrame >= badAppleLastFrame) {
+        stopBadApple();
+        break;
+      }
+      final obstacles = await _loadBadAppleFrame(badAppleFrame);
+      if (obstacles == null) {
+        continue;
+      }
+      if (!isPlayingBadApple) {
+        break;
+      }
+      data = AutonomyData(obstacles: obstacles);
+      notifyListeners();
+    }
   }
 
-  Future<void> _loadBadAppleFrame(_) async {
+  Future<List<GpsCoordinates>?> _loadBadAppleFrame(int videoFrame) async {
     // final filename = "assets/bad_apple/image_480.jpg";
-    final filename = "assets/bad_apple/image_$badAppleFrame.jpg";
+    final filename = "assets/bad_apple/image_$videoFrame.jpg";
     final buffer = await rootBundle.loadBuffer(filename);
     final codec = await instantiateImageCodecWithSize(buffer);
     final frame = await codec.getNextFrame();
@@ -289,42 +311,40 @@ class AutonomyModel with ChangeNotifier {
     if (image.height != 50 || image.width != 50) {
       models.home.setMessage(severity: Severity.error, text: "Wrong Bad Apple frame size");
       stopBadApple();
-      return;
+      return null;
     }
     final imageData = await image.toByteData();
     if (imageData == null) {
       models.home.setMessage(severity: Severity.error, text: "Could not load Bad Apple frame");
       stopBadApple();
-      return;
+      return null;
     }
     var offset = 0;
     final obstacles = <GpsCoordinates>[];
     for (var row = 0; row < image.height; row++) {
       for (var col = 0; col < image.width; col++) {
-        final pixel = [
-          for (var channel = 0; channel < 4; channel++)
-            imageData.getUint8(offset++),
-        ];
-        final isBlack = pixel.first < 100;  // dealing with lossy compression, not 255 and 0
-        final coordinate = GpsCoordinates(latitude: (row - image.height).abs().toDouble(), longitude: col.toDouble());
+        final pixel = imageData.getUint8(offset++);
+        imageData.getUint8(offset++);
+        imageData.getUint8(offset++);
+        imageData.getUint8(offset++);
+        final isBlack = pixel < 100;  // dealing with lossy compression, not 255 and 0
+        final coordinate = GpsCoordinates(latitude: (row - image.height).abs().toDouble(), longitude: (image.width - col - 1).abs().toDouble());
         if (isBlack) obstacles.add(coordinate);
       }
     }
     if (!isPlayingBadApple) {
-      return;
+      return null;
     }
-    data = AutonomyData(obstacles: obstacles);
-    notifyListeners();
-    badAppleFrame += badAppleFps;
-    if (badAppleFrame >= badAppleLastFrame) stopBadApple();
+    return obstacles;
   }
 
   /// Stops playing Bad Apple and resets the UI.
   void stopBadApple() {
     isPlayingBadApple = false;
-    badAppleTimer?.cancel();
     data = AutonomyData();
     badAppleAudioPlayer.stop();
+    _badAppleStopwatch.stop();
+    _badAppleStopwatch.reset();
     zoom(11);
     notifyListeners();
   }

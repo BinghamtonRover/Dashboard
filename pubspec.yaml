@@ -20,9 +20,10 @@ dependencies:
   path_provider: ^2.0.14
   protobuf: ^3.0.0
   url_launcher: ^6.1.10
-  just_audio: ^0.9.36
+  just_audio: ^0.9.42
   collection: ^1.18.0
   flutter_sdl_gamepad: ^1.0.0
+  just_audio_windows: ^0.2.2
 
 dependency_overrides:
   flutter_libserialport:
