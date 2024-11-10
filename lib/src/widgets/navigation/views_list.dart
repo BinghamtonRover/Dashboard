@@ -57,26 +57,50 @@ class ViewsList extends ReactiveWidget<ViewsSidebarModel> {
   @override
   Widget build(BuildContext context, ViewsSidebarModel model) => ListView(
     children: [
-      ExpansionTile(
-        title: const Text("Presets"),
-        children: [
-          ReorderableListView(
-            shrinkWrap: true,
-            onReorder: models.views.swapPresets,
+          ExpansionTile(
+            title: const Text("Presets"),
             children: [
-          for (final preset in models.settings.dashboard.presets) ListTile(
-            key: ValueKey(preset.name),
-            title: Text(preset.name),
-            onTap: () => models.views.loadPreset(preset),
-            leading: IconButton(
-              onPressed: () => _deletePreset(context, preset),
-              icon: const Icon(Icons.remove_circle),
-              splashColor: Colors.blueGrey,
-              color: Colors.red,
-            ),
-          ),
-            ],
-          ),
+              ReorderableListView(
+                shrinkWrap: true,
+                onReorder: models.views.swapPresets,
+                children: [
+                  for (final preset in models.settings.dashboard.presets)
+                    ListTile(
+                      key: ValueKey(preset.name),
+                      title: Text(preset.name),
+                      onTap: () => models.views.loadPreset(preset),
+                      leading: IconButton(
+                        onPressed: () => _deletePreset(context, preset),
+                        icon: const Icon(Icons.remove_circle),
+                        splashColor: Colors.blueGrey,
+                        color: Colors.red,
+                      ),
+                      trailing: Padding(
+                        padding: const EdgeInsets.only(right: 16),
+                        child: Tooltip(
+                          message: "Set as default preset",
+                          waitDuration: const Duration(milliseconds: 500),
+                          child: IconButton(
+                            onPressed: () {
+                              if (models.settings.dashboard.defaultPreset !=
+                                  preset.name) {
+                                models.views.setDefaultPreset(preset.name);
+                              } else {
+                                models.views.setDefaultPreset("");
+                              }
+                            },
+                            icon: (models.settings.dashboard.defaultPreset ==
+                                    preset.name)
+                                ? const Icon(Icons.star)
+                                : const Icon(Icons.star_outline),
+                            splashColor: Colors.blueGrey,
+                            color: Colors.yellow,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
 
           ListTile(
             title: const Text("Save current layout"),

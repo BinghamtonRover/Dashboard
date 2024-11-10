@@ -247,9 +247,11 @@ class DashboardSettings {
   /// A list of ViewPresets
   final List<ViewPreset> presets;
 
+  /// The default preset to load on startup
+  final String defaultPreset;
+
   /// A const constructor.
   const DashboardSettings({
-    required this.presets,
     required this.splitMode,
     required this.mapBlockSize,
     required this.maxFps,
@@ -257,7 +259,33 @@ class DashboardSettings {
     required this.splitCameras,
     required this.preferTankControls,
     required this.versionChecking,
+    required this.presets,
+    required this.defaultPreset,
   });
+
+  /// Returns a copy of the settings with the non-null fields replaced by the provided value
+  DashboardSettings copyWith({
+    SplitMode? splitMode,
+    double? mapBlockSize,
+    int? maxFps,
+    ThemeMode? themeMode,
+    bool? splitCameras,
+    bool? preferTankControls,
+    bool? versionChecking,
+    List<ViewPreset>? presets,
+    String? defaultPreset,
+  }) =>
+      DashboardSettings(
+        splitMode: splitMode ?? this.splitMode,
+        mapBlockSize: mapBlockSize ?? this.mapBlockSize,
+        maxFps: maxFps ?? this.maxFps,
+        themeMode: themeMode ?? this.themeMode,
+        splitCameras: splitCameras ?? this.splitCameras,
+        preferTankControls: preferTankControls ?? this.preferTankControls,
+        versionChecking: versionChecking ?? this.versionChecking,
+        presets: presets ?? this.presets,
+        defaultPreset: defaultPreset ?? this.defaultPreset,
+      );
 
   /// Parses settings from JSON.
   DashboardSettings.fromJson(Json? json) :
@@ -265,6 +293,7 @@ class DashboardSettings {
       for (final presetJson in json?["presets"] ?? [])
         ViewPreset.fromJson(presetJson),
     ],
+    defaultPreset = json?["defaultPreset"] ?? "",
     splitMode = SplitMode.values[json?["splitMode"] ?? SplitMode.horizontal.index],
     mapBlockSize = json?["mapBlockSize"] ?? 1.0,
     maxFps = (json?["maxFps"] ?? 60) as int,
@@ -275,7 +304,6 @@ class DashboardSettings {
 
   /// Serializes these settings to JSON.
   Json toJson() => {
-    "presets" : presets,
     "splitMode": splitMode.index,
     "mapBlockSize": mapBlockSize,
     "maxFps": maxFps,
@@ -283,6 +311,8 @@ class DashboardSettings {
     "splitCameras": splitCameras,
     "preferTankControls": preferTankControls,
     "versionChecking": versionChecking,
+    "presets": presets,
+    "defaultPreset": defaultPreset,
   };
 }
 
@@ -313,6 +343,21 @@ class Settings {
     required this.arm,
     required this.dashboard,
   });
+
+  /// Creates a copy of the settings with the provided fields modified
+  Settings copyWith({
+    NetworkSettings? network,
+    EasterEggsSettings? easterEggs,
+    ArmSettings? arm,
+    ScienceSettings? science,
+    DashboardSettings? dashboard,
+  }) => Settings(
+      network: network ?? this.network,
+      easterEggs: easterEggs ?? this.easterEggs,
+      science: science ?? this.science,
+      arm: arm ?? this.arm,
+      dashboard: dashboard ?? this.dashboard,
+    );
 
   /// Initialize settings from Json.
   Settings.fromJson(Json json) :

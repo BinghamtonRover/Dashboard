@@ -1,3 +1,4 @@
+import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:flutter_resizable_container/flutter_resizable_container.dart";
 
@@ -44,6 +45,15 @@ class ViewsModel extends Model {
   @override
   Future<void> init() async {
     models.settings.addListener(notifyListeners);
+    final defaultPresetName = models.settings.dashboard.defaultPreset;
+    if (defaultPresetName != "") {
+      final defaultPreset = models.settings.dashboard.presets
+          .firstWhereOrNull((preset) => preset.name == defaultPresetName);
+      if (defaultPreset == null) {
+        return;
+      }
+      await loadPreset(defaultPreset);
+    }
   }
 
   /// Saves the current state as a preset and updates the user's settings.
@@ -76,29 +86,55 @@ class ViewsModel extends Model {
   /// Loads preset from Json Row
   Future<void> loadPreset(ViewPreset preset) async {
     setNumViews(preset.views.length);
-    resetSizes();
-    for(var i = 0; i < preset.views.length; i++){
-      replaceView(i, preset.views[i], ignoreErrors: true);
-    }
-    // This delay is needed to prevent an error
+    // This has to be done after frame rendering to avoid an error
     //
     // While [setNumViews] does update the number of views in the view model,
-    // it does not cause a build to occur. This small delay allows the next frame to be
+    // it does not cause a build to occur. This callback allows the next frame to be
     // built, the UI to update, and *then* updates the ratios. This is necessary because
     // the controllers listed below are directly tied to the UI.
-    await Future<void>.delayed(const Duration(milliseconds: 200));
-    if (preset.horizontal1.isNotEmpty) horizontalController1.setRatios(preset.horizontal1);
-    if (preset.horizontal2.isNotEmpty) horizontalController2.setRatios(preset.horizontal2);
-    if (preset.horizontal3.isNotEmpty) horizontalController3.setRatios(preset.horizontal3);
-    if (preset.horizontal4.isNotEmpty) horizontalController4.setRatios(preset.horizontal4);
-    if (preset.vertical1.isNotEmpty) verticalController.setRatios(preset.vertical1);
-    if (preset.vertical2.isNotEmpty) verticalController2.setRatios(preset.vertical2);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      resetSizes();
+      for (var i = 0; i < preset.views.length; i++) {
+        replaceView(i, preset.views[i], ignoreErrors: true);
+      }
+
+      // This callback is needed for the same reason above
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (preset.horizontal1.isNotEmpty) {
+          horizontalController1.setRatios(preset.horizontal1);
+        }
+        if (preset.horizontal2.isNotEmpty) {
+          horizontalController2.setRatios(preset.horizontal2);
+        }
+        if (preset.horizontal3.isNotEmpty) {
+          horizontalController3.setRatios(preset.horizontal3);
+        }
+        if (preset.horizontal4.isNotEmpty) {
+          horizontalController4.setRatios(preset.horizontal4);
+        }
+        if (preset.vertical1.isNotEmpty) {
+          verticalController.setRatios(preset.vertical1);
+        }
+        if (preset.vertical2.isNotEmpty) {
+          verticalController2.setRatios(preset.vertical2);
+        }
+      });
+    });
   }
 
   /// Deletes presets and rewrites Json file
   Future<void> deletePreset(ViewPreset preset) async{
     models.settings.dashboard.presets.remove(preset);
     await models.settings.update();
+  }
+
+  /// Sets the default preset to [preset]
+  Future<void> setDefaultPreset(String preset) async {
+    await models.settings.update(
+      models.settings.all.copyWith(
+          dashboard:
+              models.settings.dashboard.copyWith(defaultPreset: preset)),
+    );
   }
 
   @override
