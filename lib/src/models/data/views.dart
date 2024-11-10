@@ -132,8 +132,8 @@ class ViewsModel extends Model {
   Future<void> setDefaultPreset(String preset) async {
     await models.settings.update(
       models.settings.all.copyWith(
-          dashboard:
-              models.settings.dashboard.copyWith(defaultPreset: preset)),
+        dashboard: models.settings.dashboard.copyWith(defaultPreset: preset),
+      ),
     );
   }
 
