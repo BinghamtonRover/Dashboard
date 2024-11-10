@@ -215,7 +215,9 @@ class AutonomyModel with ChangeNotifier {
 
 	/// A handler to call when new data arrives. Updates [data] and the UI.
 	void onNewData(AutonomyData value) {
-		data = value;
+    if (!isPlayingBadApple) {
+      data = value;
+    }
 		services.files.logData(value);
 		notifyListeners();
 	}
