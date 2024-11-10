@@ -275,16 +275,18 @@ class AutonomyModel with ChangeNotifier {
     zoom(50);
     badAppleFrame = 0;
     Timer.run(() async {
-      await badAppleAudioPlayer.setAsset("assets/bad_apple2.mp3");
-      _badAppleStopwatch.start();
+      await badAppleAudioPlayer.setAsset("assets/bad_apple2.mp3", preload: false);
       badAppleAudioPlayer.play().ignore();
+      _badAppleStopwatch.start();
     });
 
     while (isPlayingBadApple) {
       await Future<void>.delayed(Duration.zero);
-      badAppleFrame =
-          ((_badAppleStopwatch.elapsedMicroseconds.toDouble() / 1e6) * 30.0)
-              .round();
+      var sampleTime = _badAppleStopwatch.elapsed;
+      if (badAppleAudioPlayer.position != Duration.zero) {
+        sampleTime = badAppleAudioPlayer.position;
+      }
+      badAppleFrame = ((sampleTime.inMicroseconds.toDouble() / 1e6) * 30.0).round();
       if (badAppleFrame >= badAppleLastFrame) {
         stopBadApple();
         break;
