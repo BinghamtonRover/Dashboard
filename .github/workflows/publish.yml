@@ -1,4 +1,4 @@
-name: Publish Windows and Android apps
+name: Publish Windows, MacOS, and Android
 
 # Builds a Windows App Installer (.msix) for the Dashboard
 #
@@ -88,8 +88,14 @@ jobs:
           cache: true
           cache-key: "flutter-macos"  # we don't need *the* most recent build
 
+      - name: Check on Flutter
+        run: flutter doctor -v
+
       - name: Install AppDmg tool
         run: npm install --global appdmg
+
+      - name: Install dependencies
+        run: brew install automake libtool
 
       - name: Build MacOS release
         run: flutter build macos
