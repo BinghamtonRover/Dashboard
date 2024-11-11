@@ -14,67 +14,66 @@ on:
     tags: "*"
 
 jobs:
-  build_android:
-    name: Build Android APK
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
+  # build_android:
+  #   name: Build Android APK
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Clone repository
+  #       uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: "zulu"
-          java-version: '17'
+  #     - name: Setup Java
+  #       uses: actions/setup-java@v4
+  #       with:
+  #         distribution: "zulu"
+  #         java-version: '17'
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          cache: true
-          cache-key: "flutter-ubuntu"  # we don't need *the* most recent build
+  #     - name: Install Flutter
+  #       uses: subosito/flutter-action@v2
+  #       with:
+  #         cache: true
+  #         cache-key: "flutter-ubuntu"  # we don't need *the* most recent build
 
-      - name: Build APK
-        run: flutter build apk
+  #     - name: Build APK
+  #       run: flutter build apk
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: dashboard_android
-          path: build/app/outputs/apk/release/app-release.apk
-  # End of build_android
+  #     - name: Upload APK
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: dashboard_android
+  #         path: build/app/outputs/apk/release/app-release.apk
+  # # End of build_android
 
-  build_windows:
-    name: Build Windows MSIX
-    runs-on: windows-latest
-    env:
-      windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
+  # build_windows:
+  #   name: Build Windows MSIX
+  #   runs-on: windows-latest
+  #   env:
+  #     windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
+  #   steps:
+  #     - name: Clone repository
+  #       uses: actions/checkout@v4
 
-      - name: Load certificate
-        run: |
-          echo "${{ env.windows_certificate }}" > windows_certificate_decoded.txt
-          openssl enc -base64 -d -in windows_certificate_decoded.txt -out windows_certificate.pfx
+  #     - name: Load certificate
+  #       run: |
+  #         echo "${{ env.windows_certificate }}" > windows_certificate_decoded.txt
+  #         openssl enc -base64 -d -in windows_certificate_decoded.txt -out windows_certificate.pfx
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          cache: true
-          cache-key: "flutter-windows"  # we don't need *the* most recent build
+  #     - name: Install Flutter
+  #       uses: subosito/flutter-action@v2
+  #       with:
+  #         cache: true
+  #         cache-key: "flutter-windows"  # we don't need *the* most recent build
 
-      - name: Build MSIX
-        run: |
-          flutter pub get
-          dart run msix:create
+  #     - name: Build MSIX
+  #       run: |
+  #         flutter pub get
+  #         dart run msix:create
 
-      - name: Upload MSIX
-        uses: actions/upload-artifact@v4
-        with:
-          name: dashboard_windows
-          path: build/windows/x64/runner/Release/dashboard.msix
-  # End of build_windows
-
+  #     - name: Upload MSIX
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: dashboard_windows
+  #         path: build/windows/x64/runner/Release/dashboard.msix
+  # # End of build_windows
 
   build_macos:
     name: Build MacOS DMG
@@ -107,40 +106,40 @@ jobs:
           path: rover_control_dashboard.dmg
   # End of build_windows
 
-  generate_release:
-    needs: [build_android, build_windows, build_macos]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download Android release
-        uses: actions/download-artifact@v4
-        with:
-          name: dashboard_android
+  # generate_release:
+  #   needs: [build_android, build_windows, build_macos]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Download Android release
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: dashboard_android
 
-      - name: Download Windows release
-        uses: actions/download-artifact@v4
-        with:
-          name: dashboard_windows
+  #     - name: Download Windows release
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: dashboard_windows
 
-      - name: Download MacOS release
-        uses: actions/download-artifact@v4
-        with:
-          name: dashboard_macos
+  #     - name: Download MacOS release
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: dashboard_macos
 
-      - name: Organize files
-        run: |
-          ls -al
-          mv app-release.apk dashboard_android.apk
-          mv dashboard.msix dashboard_windows.msix
-          mv rover_control_dashboard.dmg dashboard_macos.dmg
+  #     - name: Organize files
+  #       run: |
+  #         ls -al
+  #         mv app-release.apk dashboard_android.apk
+  #         mv dashboard.msix dashboard_windows.msix
+  #         mv rover_control_dashboard.dmg dashboard_macos.dmg
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            dashboard_android.apk
-            dashboard_windows.msix
-            dashboard_macos.dmg
-          name: ${{ github.ref_name }}
-          generate_release_notes: true
-          fail_on_unmatched_files: true
-  # end of generate_release
+  #     - name: Create Release
+  #       uses: softprops/action-gh-release@v2
+  #       with:
+  #         files: |
+  #           dashboard_android.apk
+  #           dashboard_windows.msix
+  #           dashboard_macos.dmg
+  #         name: ${{ github.ref_name }}
+  #         generate_release_notes: true
+  #         fail_on_unmatched_files: true
+  # # end of generate_release
