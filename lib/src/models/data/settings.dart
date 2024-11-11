@@ -29,10 +29,10 @@ class SettingsModel extends Model {
 	}
 
 	/// Replaces the current settings with the provided ones.
-	Future<void> update(Settings value) async {
+	Future<void> update([Settings? value]) async {
 		try {
-			await services.files.writeSettings(value);
-			all = value;
+			await services.files.writeSettings(value ?? all);
+			if (value != null) all = value;
 			notifyListeners();
 		} catch (error) {
 			models.home.setMessage(severity: Severity.critical, text: "Could not save settings: $error");
