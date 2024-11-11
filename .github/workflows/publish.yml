@@ -75,8 +75,40 @@ jobs:
           path: build/windows/x64/runner/Release/dashboard.msix
   # End of build_windows
 
+
+  build_macos:
+    name: Build MacOS DMG
+    runs-on: macos-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          cache-key: "flutter-macos"  # we don't need *the* most recent build
+
+      - name: Install AppDmg tool
+        run: npm install --global appdmg
+
+      - name: Build MacOS release
+        run: flutter build macos
+
+      - name: Package into DMG file
+        run: |
+          cd macos/installer
+          appdmg config.json rover_control_dashboard.dmg
+
+      - name: Upload DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_macos
+          path: rover_control_dashboard.dmg
+  # End of build_windows
+
   generate_release:
-    needs: [build_android, build_windows]
+    needs: [build_android, build_windows, build_macos]
     runs-on: ubuntu-latest
     steps:
       - name: Download Android release
@@ -89,11 +121,17 @@ jobs:
         with:
           name: dashboard_windows
 
+      - name: Download MacOS release
+        uses: actions/download-artifact@v4
+        with:
+          name: dashboard_macos
+
       - name: Organize files
         run: |
           ls -al
           mv app-release.apk dashboard_android.apk
           mv dashboard.msix dashboard_windows.msix
+          mv rover_control_dashboard.dmg dashboard_macos.dmg
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -101,6 +139,7 @@ jobs:
           files: |
             dashboard_android.apk
             dashboard_windows.msix
+            dashboard_macos.dmg
           name: ${{ github.ref_name }}
           generate_release_notes: true
           fail_on_unmatched_files: true
