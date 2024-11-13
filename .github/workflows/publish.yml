@@ -101,7 +101,7 @@ jobs:
         run: flutter build macos
 
       - name: Package into DMG file
-        run: appdmg macos/installer/config.json dashboard_macos.dmg
+        run: appdmg macos/installer_config.json dashboard_macos.dmg
 
       - name: Upload DMG
         uses: actions/upload-artifact@v4
