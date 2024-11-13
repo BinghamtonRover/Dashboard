@@ -231,8 +231,7 @@ class AutonomyModel with ChangeNotifier {
   /// Places a marker at the rover's current position.
   void placeMarkerOnRover() {
     if (!markers.any((e) => e.toGridBlock == roverPosition.toGridBlock)) {
-      markers.add(roverPosition);
-      notifyListeners();
+      placeMarker(roverPosition);
     }
   }
 
