@@ -42,6 +42,9 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 	/// Since the tank runs multiple programs, the port is discarded and only the address is used.
 	final SocketBuilder tankSocket;
 
+  /// The view model representing the [SocketInfo] for the base station program.
+  final SocketBuilder marsSocket;
+
   /// The view model for [NetworkSettings.connectionTimeout].
   final NumberBuilder<double> connectionTimeout;
 
@@ -54,13 +57,15 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 		videoSocket = SocketBuilder(initial.videoSocket),
 		autonomySocket = SocketBuilder(initial.autonomySocket),
 		tankSocket = SocketBuilder(initial.tankSocket),
+    marsSocket = SocketBuilder(initial.marsSocket),
     connectionTimeout = NumberBuilder<double>(initial.connectionTimeout, min: 0);
 
 	@override
 	bool get isValid => dataSocket.isValid
 		&& videoSocket.isValid
 		&& autonomySocket.isValid
-		&& tankSocket.isValid;
+		&& tankSocket.isValid
+    && marsSocket.isValid;
 
 	@override
 	NetworkSettings get value => NetworkSettings(
@@ -68,6 +73,7 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 		videoSocket: videoSocket.value,
 		autonomySocket: autonomySocket.value,
 		tankSocket: tankSocket.value,
+    marsSocket: marsSocket.value,
 		connectionTimeout: connectionTimeout.value,
 	);
 }

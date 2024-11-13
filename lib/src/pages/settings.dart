@@ -60,6 +60,7 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               SocketEditor(name: "Subsystems socket", model: model.network.dataSocket),
               SocketEditor(name: "Video socket", model: model.network.videoSocket),
               SocketEditor(name: "Autonomy socket", model: model.network.autonomySocket),
+              SocketEditor(name: "Mars socket", model: model.network.marsSocket),
               SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
               NumberEditor(name: "Heartbeats per second", model: model.network.connectionTimeout),
               if (Platform.isWindows) ListTile(
