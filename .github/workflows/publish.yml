@@ -101,15 +101,13 @@ jobs:
         run: flutter build macos
 
       - name: Package into DMG file
-        run: |
-          cd macos/installer
-          appdmg config.json rover_control_dashboard.dmg
+        run: appdmg macos/installer/config.json dashboard_macos.dmg
 
       - name: Upload DMG
         uses: actions/upload-artifact@v4
         with:
           name: dashboard_macos
-          path: rover_control_dashboard.dmg
+          path: dashboard_macos.dmg
   # End of build_windows
 
   # generate_release:
