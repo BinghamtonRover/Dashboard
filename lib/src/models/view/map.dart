@@ -128,11 +128,11 @@ class AutonomyModel with ChangeNotifier {
   AutonomyCell get roverCellType {
     final roverCoordinates = roverPosition.toGridBlock;
 
-    if (data.hasDestination() && data.destination == roverCoordinates) {
+    if (data.hasDestination() && data.destination.toGridBlock == roverCoordinates) {
       return AutonomyCell.destination;
-    } else if (markers.contains(roverCoordinates)) {
+    } else if (markers.any((e) => e.toGridBlock == roverCoordinates)) {
       return AutonomyCell.marker;
-    } else if (data.path.contains(roverCoordinates)) {
+    } else if (data.path.map((e) => e.toGridBlock).contains(roverCoordinates.toGridBlock)) {
       return AutonomyCell.path;
     }
 
@@ -230,10 +230,10 @@ class AutonomyModel with ChangeNotifier {
 
   /// Places a marker at the rover's current position.
   void placeMarkerOnRover() {
-    if (!markers.contains(roverPosition.toGridBlock)) {
-      markers.add(roverPosition.toGridBlock);
+    if (!markers.any((e) => e.toGridBlock == roverPosition.toGridBlock)) {
+      markers.add(roverPosition);
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   /// Removes a marker from [gps]
