@@ -126,7 +126,7 @@ class AutonomyModel with ChangeNotifier {
   
   /// The cell type of the rover that isn't [AutonomyCell.rover]
   AutonomyCell get roverCellType {
-    final roverCoordinates = roverPosition..toGridBlock;
+    final roverCoordinates = roverPosition.toGridBlock;
 
     if (data.hasDestination() && data.destination == roverCoordinates) {
       return AutonomyCell.destination;
@@ -224,7 +224,7 @@ class AutonomyModel with ChangeNotifier {
 
 	/// Places the marker at [coordinates].
 	void placeMarker(GpsCoordinates coordinates) {
-		markers.add(coordinates);
+		markers.add(coordinates.deepCopy());
 		notifyListeners();
 	}
 
