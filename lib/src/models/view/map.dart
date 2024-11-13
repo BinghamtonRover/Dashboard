@@ -261,6 +261,8 @@ class AutonomyModel with ChangeNotifier {
   bool isPlayingBadApple = false;
   /// Which frame in the Bad Apple video we are up to right now
   int badAppleFrame = 0;
+  /// The zoom of the map before playing bad apple
+  late int _originalZoom = gridSize;
   /// The audio player for the Bad Apple music
   final badAppleAudioPlayer = AudioPlayer();
   /// How many frames in a second are being shown
@@ -274,6 +276,7 @@ class AutonomyModel with ChangeNotifier {
   Future<void> startBadApple() async {
     isPlayingBadApple = true;
     notifyListeners();
+    _originalZoom = gridSize;
     zoom(50);
     badAppleFrame = 0;
     Timer.run(() async {
@@ -349,7 +352,7 @@ class AutonomyModel with ChangeNotifier {
     badAppleAudioPlayer.stop();
     _badAppleStopwatch.stop();
     _badAppleStopwatch.reset();
-    zoom(11);
+    zoom(_originalZoom);
     notifyListeners();
   }
 }
