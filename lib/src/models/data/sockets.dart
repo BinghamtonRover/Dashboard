@@ -102,7 +102,7 @@ class Sockets extends Model {
     data.destination = settings.subsystemsSocket.copyWith(address: addressOverride);
     video.destination = settings.videoSocket.copyWith(address: addressOverride);
     autonomy.destination = settings.autonomySocket.copyWith(address: addressOverride);
-    baseStation.destination = settings.marsSocket.copyWith(address: addressOverride);
+    baseStation.destination = settings.baseSocket.copyWith(address: addressOverride);
   }
 
   /// Resets all the sockets.

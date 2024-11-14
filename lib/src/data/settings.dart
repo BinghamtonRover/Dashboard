@@ -98,6 +98,44 @@ class ArmSettings {
   };
 }
 
+/// Settings related to the base station
+class BaseStationSettings {
+  /// The latitude of the base station
+  final double latitude;
+
+  /// The longitude of the base station
+  final double longitude;
+
+  /// The altitude of the base station in meters
+  final double altitude;
+
+  /// The angle tolerance in degrees
+  final double angleTolerance;
+
+  /// Const constructor for base station settings
+  const BaseStationSettings({
+    required this.latitude,
+    required this.longitude,
+    required this.altitude,
+    required this.angleTolerance,
+  });
+
+  /// Parses base station settings from json
+  BaseStationSettings.fromJson(Json? json) :
+    latitude = json?["latitude"] ?? 0,
+    longitude = json?["longitude"] ?? 0,
+    altitude = json?["altitude"] ?? 0,
+    angleTolerance = json?["angleTolerance"] ?? 5;
+
+  /// Serializes the base station settings to a json map
+  Json toJson() => {
+    "latitude": latitude,
+    "longitude": longitude,
+    "altitude": altitude,
+    "angleTolerance": angleTolerance,
+  };
+}
+
 /// Settings related to network configuration.
 class NetworkSettings {
   /// The amount of time, in seconds, the dashboard should wait before determining it's
@@ -123,7 +161,7 @@ class NetworkSettings {
   final SocketInfo tankSocket;
 
   /// The address and port of the base station program.
-  final SocketInfo marsSocket;
+  final SocketInfo baseSocket;
 
   /// Creates a new network settings object.
   NetworkSettings({
@@ -131,7 +169,7 @@ class NetworkSettings {
     required this.videoSocket,
     required this.autonomySocket,
     required this.tankSocket,
-    required this.marsSocket,
+    required this.baseSocket,
     required this.connectionTimeout,
   });
 
@@ -141,7 +179,7 @@ class NetworkSettings {
     videoSocket = json?.getSocket("videoSocket") ?? SocketInfo.raw("192.168.1.30", 8002),
     autonomySocket = json?.getSocket("autonomySocket") ?? SocketInfo.raw("192.168.1.30", 8003),
     tankSocket = json?.getSocket("tankSocket") ?? SocketInfo.raw("192.168.1.40", 8000),
-    marsSocket = json?.getSocket("marsSocket") ?? SocketInfo.raw("192.168.1.50", 8005),
+    baseSocket = json?.getSocket("baseSocket") ?? SocketInfo.raw("192.168.1.50", 8005),
     connectionTimeout = json?["connectionTimeout"] ?? 5;
 
   /// Serializes these settings to JSON.
@@ -150,7 +188,7 @@ class NetworkSettings {
     "videoSocket": videoSocket.toJson(),
     "autonomySocket": autonomySocket.toJson(),
     "tankSocket": tankSocket.toJson(),
-    "marsSocket": marsSocket.toJson(),
+    "baseSocket": baseSocket.toJson(),
     "connectionTimeout": connectionTimeout,
   };
 }
@@ -308,12 +346,16 @@ class Settings {
   /// Settings for the science analysis.
   final ScienceSettings science;
 
+  /// Settings for the base station
+  final BaseStationSettings baseStation;
+
   /// Settings related to the dashboard itself.
   final DashboardSettings dashboard;
 
   /// A const constructor.
   const Settings({
     required this.network,
+    required this.baseStation,
     required this.easterEggs,
     required this.science,
     required this.arm,
@@ -323,6 +365,7 @@ class Settings {
   /// Initialize settings from Json.
   Settings.fromJson(Json json) :
     network = NetworkSettings.fromJson(json["network"]),
+    baseStation = BaseStationSettings.fromJson(json["baseStation"]),
     easterEggs = EasterEggsSettings.fromJson(json["easterEggs"]),
     science = ScienceSettings.fromJson(json["science"]),
     arm = ArmSettings.fromJson(json["arm"]),
@@ -331,6 +374,7 @@ class Settings {
   /// Converts the data from the settings instance to Json.
   Json toJson() => {
     "network": network.toJson(),
+    "baseStation": baseStation.toJson(),
     "easterEggs": easterEggs.toJson(),
     "science": science.toJson(),
     "arm": arm.toJson(),

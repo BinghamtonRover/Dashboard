@@ -60,7 +60,7 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               SocketEditor(name: "Subsystems socket", model: model.network.dataSocket),
               SocketEditor(name: "Video socket", model: model.network.videoSocket),
               SocketEditor(name: "Autonomy socket", model: model.network.autonomySocket),
-              SocketEditor(name: "Mars socket", model: model.network.marsSocket),
+              SocketEditor(name: "Base station socket", model: model.network.baseSocket),
               SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
               NumberEditor(name: "Heartbeats per second", model: model.network.connectionTimeout),
               if (Platform.isWindows) ListTile(
@@ -89,6 +89,20 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                     ),
                   );
                 },
+              ),
+            ],
+          ),
+          const Divider(),
+          ValueEditor<BaseStationSettings>(
+            name: "Base Station settings",
+            children: [
+              NumberEditor(name: "Latitude", model: model.baseStation.latitude),
+              NumberEditor(name: "Longitude", model: model.baseStation.longitude),
+              NumberEditor(name: "Altitude (m)", model: model.baseStation.altitude),
+              NumberEditor(
+                name: "Angle Tolerance",
+                subtitle: "The angle threshold for the antenna facing the rover",
+                model: model.baseStation.angleTolerance,
               ),
             ],
           ),
