@@ -1,6 +1,7 @@
 import "dart:async";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/src/data/metrics/antenna.dart";
 
 /// A data model that listens for updated data and provides [Metrics] to the UI.
 class RoverMetrics extends Model {
@@ -22,11 +23,14 @@ class RoverMetrics extends Model {
   /// Vitals data from the rover.
   final vitals = VitalsMetrics();
 
+  /// Data from the Base Station Antenna
+  final antenna = AntennaMetrics();
+
 	/// A list of all the metrics to iterate over.
 	///
 	/// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
 	/// when new data is received. As a getter, every time it is called it will use new data.
-	List<Metrics> get allMetrics => [vitals, position, drive, science, arm, gripper];
+	List<Metrics> get allMetrics => [vitals, position, drive, science, arm, gripper, antenna];
 
   /// Whether the given command is supported by the rover.
   bool isSupportedVersion(Message command) {
@@ -40,6 +44,7 @@ class RoverMetrics extends Model {
     DriveCommand().messageName: drive,
     ArmCommand().messageName: arm,
     GripperCommand().messageName: gripper,
+    AntennaCommand().messageName: antenna,
   };
 
 	@override
@@ -69,6 +74,11 @@ class RoverMetrics extends Model {
 			constructor: GripperData.fromBuffer,
 			callback: gripper.update,
 		);
+    models.messages.stream.onMessage(
+      name: AntennaData().messageName,
+      constructor: AntennaData.fromBuffer,
+      callback: antenna.update,
+    );
     drive.addListener(vitals.notify);
     // versionTimer = Timer.periodic(versionInterval, _sendVersions);
 	}
