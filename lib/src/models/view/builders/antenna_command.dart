@@ -73,8 +73,13 @@ class AntennaCommandBuilder extends ValueBuilder<AntennaCommand> {
   @override
   AntennaCommand get value => AntennaCommand(
         version: Version(major: 1),
+        mode: mode,
+        angleTolerance: models.settings.baseStation.angleTolerance,
         roverCoordinatesOverride:
             overrideRoverCoordinates ? roverCoordinatesOverride.value : null,
+        baseStationCoordinates: overrideBaseStationCoordinates
+            ? baseStationCoordinatesOverride.value
+            : null,
       );
 
   /// Sends the command to the base station socket
