@@ -27,7 +27,15 @@ void main() async {
 			if (error is SocketException && networkErrors.contains(error.osError!.errorCode)) {
 				models.home.setMessage(severity: Severity.critical, text: "Network error, restart by clicking the network icon");
 			} else {
-        models.home.setMessage(severity: Severity.critical, text: "Dashboard error. See the logs");
+        models.logs.handleLog(
+          BurtLog(
+            level: BurtLogLevel.critical,
+            title: "Dashboard Error",
+            body: error.toString(),
+            device: Device.DASHBOARD,
+          ),
+        );
+        // models.home.setMessage(severity: Severity.critical, text: "Dashboard error. See the logs", logMessage: false);
         await services.files.logError(error, stack);
 				Error.throwWithStackTrace(error, stack);
 			}

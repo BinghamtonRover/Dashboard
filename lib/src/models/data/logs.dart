@@ -85,6 +85,9 @@ class LogsModel extends Model {
         case BurtLogLevel.warning: models.home.setMessage(severity: Severity.warning, text: log.title, logMessage: false);
         case BurtLogLevel.error: models.home.setMessage(severity: Severity.error, text: log.title, logMessage: false);
         case BurtLogLevel.info: // Info messages from other devices are not important enough to show here
+          if (log.device == Device.VIDEO) {
+            models.home.setMessage(severity: Severity.info, text: log.title, logMessage: false);
+          }
         case BurtLogLevel.debug:
         case BurtLogLevel.trace:
         case BurtLogLevel.BURT_LOG_LEVEL_UNDEFINED:
