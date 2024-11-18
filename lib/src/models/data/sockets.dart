@@ -20,7 +20,7 @@ class Sockets extends Model {
   late final baseStation = DashboardSocket(device: Device.BASE_STATION);
 
   /// A list of all the sockets this model manages.
-  List<DashboardSocket> get sockets => [data, video, autonomy];
+  List<DashboardSocket> get sockets => [data, video, autonomy, baseStation];
 
   /// The rover-like system currently in use.
   RoverType rover = RoverType.rover;
