@@ -151,7 +151,6 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                 value: model.dashboard.versionChecking,
                 onChanged: model.dashboard.updateVersionChecking,
               ),
-
               Row(children: [
                 const SizedBox(
                   width: 200,
