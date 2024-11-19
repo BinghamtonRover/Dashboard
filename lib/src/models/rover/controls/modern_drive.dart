@@ -14,14 +14,14 @@ class ModernDriveControls extends RoverControls {
   /// How far to swivel the cameras each tick.
   static const cameraSwivelIncrement = -1;
 
-  /// The rate limit in joystick units per second for the motor speeds
-  static const rateLimit = 1.50;
-
   /// The [SlewRateLimiter] for the left wheel speeds
-  SlewRateLimiter leftLimiter = SlewRateLimiter(rate: rateLimit);
+  SlewRateLimiter leftLimiter = SlewRateLimiter(rate: models.settings.dashboard.slewRateLimit);
 
   /// The [SlewRateLimiter] for the right wheel speeds
-  SlewRateLimiter rightLimiter = SlewRateLimiter(rate: rateLimit);
+  SlewRateLimiter rightLimiter = SlewRateLimiter(rate: models.settings.dashboard.slewRateLimit);
+
+  /// The [SlewRateLimiter] for the throttle input
+  SlewRateLimiter throttleLimiter = SlewRateLimiter(rate: models.settings.dashboard.throttleRateLimit);
 
   /// The angle of the front tilt servo.
   double frontTilt = 90;
@@ -71,7 +71,7 @@ class ModernDriveControls extends RoverControls {
       return [
         DriveCommand(left: leftLimiter.calculate(left / 2), setLeft: true),
         DriveCommand(right: rightLimiter.calculate(right / 2), setRight: true),
-        DriveCommand(throttle: throttle, setThrottle: true),
+        DriveCommand(throttle: throttleLimiter.calculate(throttle), setThrottle: true),
       ];
     }
     final direction = state.normalLeftX * 20; // [-1, 1] --> [-45, 45]
@@ -79,7 +79,7 @@ class ModernDriveControls extends RoverControls {
     return [
       DriveCommand(left: leftLimiter.calculate(speed * left), setLeft: true),
       DriveCommand(right: rightLimiter.calculate(speed * right), setRight: true),
-      DriveCommand(throttle: throttle, setThrottle: true),
+      DriveCommand(throttle: throttleLimiter.calculate(throttle), setThrottle: true),
     ];
   }
 
@@ -139,6 +139,7 @@ class ModernDriveControls extends RoverControls {
   void updateState(GamepadState state) {
     leftLimiter.rate = models.settings.dashboard.slewRateLimit;
     rightLimiter.rate = models.settings.dashboard.slewRateLimit;
+    throttleLimiter.rate = models.settings.dashboard.throttleRateLimit;
 
     updateThrottle(state);
     updateCameras(state);

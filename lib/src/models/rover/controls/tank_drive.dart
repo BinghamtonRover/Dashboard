@@ -10,11 +10,17 @@ class DriveControls extends RoverControls {
   /// The rate limit for the drive input
   static const double rateLimit = 1.50;
 
+  /// The rate limit for the throttle
+  static const double throttleRateLimit = 0.50;
+
   /// The [SlewRateLimiter] for the left joystick input
   SlewRateLimiter leftLimiter = SlewRateLimiter(rate: rateLimit);
 
   /// The [SlewRateLimiter] for the right joystick input
   SlewRateLimiter rightLimiter = SlewRateLimiter(rate: rateLimit);
+
+  /// The [SlewRateLimiter] for the throttle, prevents sudden jumps in speed
+  SlewRateLimiter throttleLimiter = SlewRateLimiter(rate: throttleRateLimit);
 
   /// Whether the left shoulder was pressed last tick.
   bool leftShoulderFlag = false;
@@ -32,6 +38,7 @@ class DriveControls extends RoverControls {
   void updateState(GamepadState state) {
     leftLimiter.rate = models.settings.dashboard.slewRateLimit;
     rightLimiter.rate = models.settings.dashboard.slewRateLimit;
+    throttleLimiter.rate = models.settings.dashboard.throttleRateLimit;
     if (!leftShoulderFlag && state.leftShoulder) throttle -= 0.1;
     leftShoulderFlag = state.leftShoulder;
     if (!rightShoulderFlag && state.rightShoulder) throttle += 0.1;
@@ -45,7 +52,7 @@ class DriveControls extends RoverControls {
     final rightInput = -state.normalRightY;
 
     return [
-      DriveCommand(throttle: throttle, setThrottle: true),
+      DriveCommand(throttle: throttleLimiter.calculate(throttle), setThrottle: true),
       DriveCommand(setLeft: true, left: leftLimiter.calculate(leftInput)),
       DriveCommand(setRight: true, right: rightLimiter.calculate(rightInput)),
     ];

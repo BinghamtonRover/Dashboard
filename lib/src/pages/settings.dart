@@ -147,9 +147,13 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               ),
               NumberEditor(
                 name: "Slew Rate Limit",
-                subtitle:
-                    "The maximum acceleration of the drive (input per second)",
+                subtitle: "The maximum acceleration of the drive (input per second)",
                 model: model.dashboard.slewRateLimit,
+              ),
+              NumberEditor(
+                name: "Throttle Rate Limit",
+                subtitle: "The maximum acceleration of the drive throttle (input per second)",
+                model: model.dashboard.throttleRateLimit,
               ),
               SwitchListTile(
                 title: const Text("Require version checking"),

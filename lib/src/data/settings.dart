@@ -244,6 +244,9 @@ class DashboardSettings {
   /// The maximum rate of change to apply to the drive joystick inputs
   final double slewRateLimit;
 
+  /// The maximum rate of change to apply to the drive throttle
+  final double throttleRateLimit;
+
   /// Whether to have version checking on protobuf messages.
   final bool versionChecking;
 
@@ -262,6 +265,7 @@ class DashboardSettings {
     required this.splitCameras,
     required this.preferTankControls,
     required this.slewRateLimit,
+    required this.throttleRateLimit,
     required this.versionChecking,
     required this.presets,
     required this.defaultPreset,
@@ -279,7 +283,8 @@ class DashboardSettings {
     maxFps = (json?["maxFps"] ?? 60) as int,
     splitCameras = json?["splitCameras"] ?? false,
     preferTankControls = json?["preferTankControls"] ?? false,
-    slewRateLimit = json?["slewRateLimit"] ?? 2.50,
+    slewRateLimit = json?["slewRateLimit"] ?? 1.50,
+    throttleRateLimit = json?["throttleRateLimit"] ?? 0.50,
     versionChecking = json?["versionChecking"] ?? true,
     themeMode = ThemeMode.values.byName(json?["theme"] ?? ThemeMode.system.name);
 
@@ -292,6 +297,7 @@ class DashboardSettings {
     "splitCameras": splitCameras,
     "preferTankControls": preferTankControls,
     "slewRateLimit": slewRateLimit,
+    "throttleRateLimit": throttleRateLimit,
     "versionChecking": versionChecking,
     "presets": presets,
     "defaultPreset": defaultPreset,
