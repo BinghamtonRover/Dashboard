@@ -271,6 +271,10 @@ class AutonomyModel with ChangeNotifier {
   void handleDrag(AutonomyCell data, MapCellData cell) {
     switch (data) {
       case AutonomyCell.destination:
+        if (models.rover.isConnected && RoverStatus.AUTONOMOUS != models.rover.status.value) {
+          models.home.setMessage(severity: Severity.error, text: "You must be in autonomy mode");
+          return;
+        }
         commandBuilder.gps.latDecimal.value = cell.coordinates.latitude;
         commandBuilder.gps.longDecimal.value = cell.coordinates.longitude;
         commandBuilder.submit();
