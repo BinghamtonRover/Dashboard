@@ -98,5 +98,6 @@ class Controller extends Model {
       // print(message.toProto3Json());
       models.messages.sendMessage(message);
     }
+    notifyListeners();
   }
 }

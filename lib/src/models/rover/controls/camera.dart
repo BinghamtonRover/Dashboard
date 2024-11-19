@@ -44,7 +44,7 @@ class CameraControls extends RoverControls {
     final newFrontSwivel = state.normalLeftX;
     final newFrontTilt = state.normalLeftY;
     final newRearSwivel = state.normalRightX;
-    final newRearTilt = -1 * state.normalRightY;
+    final newRearTilt = -1 * state.normalRightJoystickY;
     if (newFrontSwivel.abs() >= 0.05 || newFrontTilt.abs() >= 0.05) {
       // Update the front camera. Now, choose which axis
       if (newFrontSwivel.abs() > newFrontTilt.abs()) {

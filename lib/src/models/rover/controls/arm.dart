@@ -52,7 +52,7 @@ class ArmControls extends RoverControls {
 		// Gripper
 		if (state.normalDpadY != 0) GripperCommand(lift: MotorCommand(moveRadians: state.normalDpadY * settings.lift)),
 		if (state.normalDpadX != 0) GripperCommand(rotate: MotorCommand(moveRadians: state.normalDpadX * settings.rotate)),
-		if (state.normalTrigger != 0) GripperCommand(pinch: MotorCommand(moveRadians: state.normalTrigger * settings.pinch)),
+		if (state.normalTriggers != 0) GripperCommand(pinch: MotorCommand(moveRadians: state.normalTriggers * settings.pinch)),
 
 		// Custom actions
 		if (state.buttonA && !isAPressed) () { isAPressed = true; return GripperCommand(open: true); }(),
