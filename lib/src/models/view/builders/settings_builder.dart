@@ -232,13 +232,6 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     defaultPreset: defaultPreset,
   );
 
-  /// Updates the [splitMode] when a new one is selected.
-  void updateSplitMode(SplitMode? mode) {
-    if (mode == null) return;
-    splitMode = mode;
-    notifyListeners();
-  }
-
   /// Updates the [themeMode].
   void updateThemeMode(ThemeMode? input) {
     if (input == null) return;

@@ -61,42 +61,42 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
   @override
   Widget build(BuildContext context, ViewsModel model) => switch (model.views.length) {
     1 => Column(
-        children: [
-          Expanded(child: model.children[0].child),
-        ],
-      ),
+      children: [
+        Expanded(child: model.children[0].child),
+      ],
+    ),
     2 => ResizableContainer(
-        direction: switch (models.settings.dashboard.splitMode) {
-          SplitMode.horizontal => Axis.vertical,
-          SplitMode.vertical => Axis.horizontal,
-        },
-        divider: divider,
-        controller: switch (models.settings.dashboard.splitMode) {
-          SplitMode.horizontal => model.verticalController1,
-          SplitMode.vertical => model.horizontalController1,
-        },
-        children: model.children.sublist(0, 2),
-      ),
+      direction: switch (models.settings.dashboard.splitMode) {
+        SplitMode.horizontal => Axis.vertical,
+        SplitMode.vertical => Axis.horizontal,
+      },
+      divider: divider,
+      controller: switch (models.settings.dashboard.splitMode) {
+        SplitMode.horizontal => model.verticalController1,
+        SplitMode.vertical => model.horizontalController1,
+      },
+      children: model.children.sublist(0, 2),
+    ),
     3 || 4 => ResizableContainer(
-        controller: model.verticalController1,
-        direction: Axis.vertical,
-        divider: divider,
-        children: [
+      controller: model.verticalController1,
+      direction: Axis.vertical,
+      divider: divider,
+      children: [
+        nestChild(
+          controller: model.horizontalController1,
+          children: model.children.sublist(0, 2),
+          axis: Axis.horizontal,
+        ),
+        if (model.views.length == 3)
+          model.children[2]
+        else
           nestChild(
-            controller: model.horizontalController1,
-            children: model.children.sublist(0, 2),
+            controller: model.horizontalController2,
+            children: model.children.sublist(2, 4),
             axis: Axis.horizontal,
           ),
-          if (model.views.length == 3)
-            model.children[2]
-          else
-            nestChild(
-              controller: model.horizontalController2,
-              children: model.children.sublist(2, 4),
-              axis: Axis.horizontal,
-            ),
-        ],
-      ),
+      ],
+    ),
     8 => Row(
       children: [
         Expanded(  // left page

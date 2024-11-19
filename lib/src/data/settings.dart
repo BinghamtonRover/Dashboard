@@ -212,7 +212,7 @@ extension ThemeModeUtils on ThemeMode {
 /// Settings related to the dashboard itself, not the rover.
 class DashboardSettings {
   /// How the Dashboard should split when only two views are present.
-  final SplitMode splitMode;
+  SplitMode splitMode;
 
   /// The precision of the GPS grid.
   ///

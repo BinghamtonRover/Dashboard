@@ -62,17 +62,21 @@ class ViewsModel extends Model with PresetsModel {
   @override
   ViewPreset toPreset(String name) => ViewPreset(
     name: name,
+    splitMode: splitMode,
     views: views.toList(),
-    horizontal1: horizontalController1.ratios,
-    horizontal2: horizontalController2.ratios,
-    horizontal3: horizontalController3.ratios,
-    horizontal4: horizontalController4.ratios,
-    vertical1: verticalController1.ratios,
-    vertical2: verticalController2.ratios,
+    horizontal1: (views.length > 2) || (views.length == 2 && splitMode == SplitMode.vertical)
+      ? horizontalController1.ratios : [],
+    horizontal2: views.length > 3 ? horizontalController2.ratios : [],
+    horizontal3: views.length == 8 ? horizontalController3.ratios : [],
+    horizontal4: views.length == 8 ? horizontalController4.ratios : [],
+    vertical1: (views.length == 2 && splitMode == SplitMode.horizontal) || views.length > 2
+      ? verticalController1.ratios : [],
+    vertical2: views.length == 8 ? verticalController2.ratios : [],
   );
 
   @override
   Future<void> loadPreset(ViewPreset preset) async {
+    updateSplitMode(preset.splitMode);
     views = List.filled(views.length, DashboardView.blank, growable: true);
     setNumViews(preset.views.length);
     await nextFrame();  // wait for the views to render

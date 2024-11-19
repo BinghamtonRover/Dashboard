@@ -57,6 +57,25 @@ class ViewsList extends ReactiveWidget<ViewsSidebarModel> {
   @override
   Widget build(BuildContext context, ViewsSidebarModel model) => ListView(
     children: [
+      Row(children: [
+        const SizedBox(
+          width: 100,
+          child: ListTile(
+            title: Text("Split"),
+          ),
+        ),
+        DropdownMenu<SplitMode>(
+          initialSelection: models.views.splitMode,
+          onSelected: models.views.updateSplitMode,
+          textStyle: context.textTheme.bodyMedium,
+          dropdownMenuEntries: [
+            for (final value in SplitMode.values) DropdownMenuEntry(
+              value: value,
+              label: value.humanName,
+            ),
+          ],
+        ),
+      ],),
       ExpansionTile(
         title: const Text("Presets"),
         children: [
@@ -68,15 +87,7 @@ class ViewsList extends ReactiveWidget<ViewsSidebarModel> {
                 key: ValueKey(preset.name),
                 title: Text(preset.name),
                 onTap: () => models.views.loadPreset(preset),
-                leading: IconButton(
-                  onPressed: () => _deletePreset(context, preset),
-                  icon: const Icon(Icons.remove_circle),
-                  splashColor: Colors.blueGrey,
-                  color: Colors.red,
-                ),
-                trailing: Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: Tooltip(
+                leading: Tooltip(
                     message: "Set as default preset",
                     waitDuration: const Duration(milliseconds: 500),
                     child: IconButton(
@@ -87,6 +98,24 @@ class ViewsList extends ReactiveWidget<ViewsSidebarModel> {
                       splashColor: Colors.blueGrey,
                       color: Colors.orange,
                     ),
+                  ),
+                trailing: Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: MenuAnchor(
+                    builder: (context, controller, child) => IconButton(
+                      icon: const Icon(Icons.more_vert),
+                      onPressed: () => controller.isOpen ? controller.close() : controller.open(),
+                    ),
+                    menuChildren: [
+                      MenuItemButton(
+                        child: const Text("Update"),
+                        onPressed: () => models.views.updatePreset(preset),
+                      ),
+                      MenuItemButton(
+                        child: const Text("Delete"),
+                        onPressed: () => _deletePreset(context, preset),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -153,26 +182,26 @@ class ViewsSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => PopupMenuButton<DashboardView>(
-        tooltip: "Select a feed",
-        icon: const Icon(Icons.expand_more),
-        onSelected: (view) => models.views.replaceView(index, view),
-        itemBuilder: (_) => [
-          const PopupMenuItem(enabled: false, child: Text("Cameras")),
-          for (final view in DashboardView.cameraViews) _buildItem(view),
-          const PopupMenuDivider(),
-          const PopupMenuItem(enabled: false, child: Text("Controls")),
-          for (final view in DashboardView.uiViews) _buildItem(view),
-        ],
-      );
+    tooltip: "Select a feed",
+    icon: const Icon(Icons.expand_more),
+    onSelected: (view) => models.views.replaceView(index, view),
+    itemBuilder: (_) => [
+      const PopupMenuItem(enabled: false, child: Text("Cameras")),
+      for (final view in DashboardView.cameraViews) _buildItem(view),
+      const PopupMenuDivider(),
+      const PopupMenuItem(enabled: false, child: Text("Controls")),
+      for (final view in DashboardView.uiViews) _buildItem(view),
+    ],
+  );
 
   PopupMenuItem<DashboardView> _buildItem(DashboardView view) => PopupMenuItem(
-        value: view,
-        child: Row(
-          children: [
-            view.icon,
-            const SizedBox(width: 8),
-            Text(view.name),
-          ],
-        ),
-      );
+    value: view,
+    child: Row(
+      children: [
+        view.icon,
+        const SizedBox(width: 8),
+        Text(view.name),
+      ],
+    ),
+  );
 }

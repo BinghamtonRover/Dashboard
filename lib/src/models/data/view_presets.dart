@@ -92,4 +92,22 @@ mixin PresetsModel on ChangeNotifier {
 
   /// The list of all available presets.
   List<ViewPreset> get presets => settings.presets;
+
+  /// The current [DashboardSettings.splitMode].
+  SplitMode get splitMode => settings.splitMode;
+
+  /// Updates [DashboardSettings.splitMode].
+  void updateSplitMode(SplitMode? value) {
+    if (value == null) return;
+    settings.splitMode = value;
+    models.settings.update();
+    notifyListeners();
+  }
+
+  /// Replaces the given preset with the current state using [toPreset].
+  Future<void> updatePreset(ViewPreset preset) async {
+    final index = presets.indexOf(preset);
+    presets[index] = toPreset(preset.name);
+    await models.settings.update();
+  }
 }
