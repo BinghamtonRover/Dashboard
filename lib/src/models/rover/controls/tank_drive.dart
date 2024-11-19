@@ -8,7 +8,7 @@ import "controls.dart";
 /// The skid-steer drive controls.
 class DriveControls extends RoverControls {
   /// The rate limit for the drive input
-  static const double rateLimit = 2.50;
+  static const double rateLimit = 1.50;
 
   /// The [SlewRateLimiter] for the left joystick input
   SlewRateLimiter leftLimiter = SlewRateLimiter(rate: rateLimit);
