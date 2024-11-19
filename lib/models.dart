@@ -57,6 +57,8 @@ export "src/models/view/builders/settings_builder.dart";
 export "src/models/view/builders/throttle.dart";
 export "src/models/view/builders/timer_builder.dart";
 export "src/models/view/builders/video_builder.dart";
+export "src/models/view/builders/preset_builder.dart";
+
 
 /// A wrapper model around all other data models used by the app.
 ///

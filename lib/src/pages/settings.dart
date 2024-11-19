@@ -161,25 +161,6 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                 const SizedBox(
                   width: 200,
                   child: ListTile(
-                    title: Text("Split mode"),
-                  ),
-                ),
-                const Spacer(),
-                DropdownMenu<SplitMode>(
-                  initialSelection: model.dashboard.splitMode,
-                  onSelected: model.dashboard.updateSplitMode,
-                  dropdownMenuEntries: [
-                    for (final value in SplitMode.values) DropdownMenuEntry(
-                      value: value,
-                      label: value.humanName,
-                    ),
-                  ],
-                ),
-              ],),
-              Row(children: [
-                const SizedBox(
-                  width: 200,
-                  child: ListTile(
                     title: Text("Theme mode"),
                   ),
                 ),

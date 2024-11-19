@@ -86,7 +86,7 @@ class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
             initialSelection: model.deviceFilter,
             onSelected: model.setDeviceFilter,
             dropdownMenuEntries: [
-              for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY, null])
+              for (final device in [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY, Device.DASHBOARD, null])
                 DropdownMenuEntry(label: device?.humanName ?? "All", value: device),
             ],
           ),

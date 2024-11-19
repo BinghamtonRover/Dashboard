@@ -64,7 +64,7 @@ class ModernDriveControls extends RoverControls {
 
   /// Gets all commands for the wheels based on the gamepad state.
   List<DriveCommand> getWheelCommands(GamepadState state) {
-    final speed = state.normalTrigger; // sum of both triggers, [-1, 1]
+    final speed = state.normalTriggers;  // sum of both triggers, [-1, 1]
     if (speed == 0) {
       final left = state.normalLeftX;
       final right = state.normalLeftX;
@@ -113,7 +113,7 @@ class ModernDriveControls extends RoverControls {
     final newFrontSwivel = state.normalDpadX;
     final newFrontTilt = state.normalDpadY;
     final newRearSwivel = state.normalRightX;
-    final newRearTilt = state.normalRightY;
+    final newRearTilt = state.normalRightJoystickY;
     if (newFrontSwivel.abs() >= 0.05 || newFrontTilt.abs() >= 0.05) {
       // Update the front camera. Now, choose which axis
       if (newFrontSwivel.abs() > newFrontTilt.abs()) {
