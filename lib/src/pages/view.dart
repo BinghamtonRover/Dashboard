@@ -139,10 +139,9 @@ class DashboardView {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Convoluted way to get all horizontal space filled
           Row(children: [const Spacer(), ViewsSelector(index: index)]),
           const Spacer(),
-          const Text("Drag in or choose a view"),
+          const Text("Drag in or choose a view", textAlign: TextAlign.center),
           const Spacer(),
         ],
       ),

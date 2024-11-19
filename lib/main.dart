@@ -10,6 +10,7 @@ library main;
 
 import "dart:async";
 import "dart:io";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/app.dart";
@@ -32,8 +33,11 @@ void logError(Object error, StackTrace? stackTrace) => models.logs.handleLog(
 void main() async {
   // Logs sync errors to the logs page
   FlutterError.onError = (FlutterErrorDetails details) {
-    logError(details.exception, details.stack);
-    FlutterError.presentError(details);  // do the regular error behavior
+    if (kDebugMode) {
+      FlutterError.presentError(details);  // do the regular error behavior
+    } else {
+      logError(details.exception, details.stack);
+    }
   };
   // Logs async errors to the logs page
   runZonedGuarded(
@@ -42,8 +46,11 @@ void main() async {
       if (error is SocketException && networkErrors.contains(error.osError!.errorCode)) {
         models.home.setMessage(severity: Severity.critical, text: "Network error, restart by clicking the network icon");
       } else {
-        logError(error, stackTrace);
-        Error.throwWithStackTrace(error, stackTrace);  // do the regular error behavior
+        if (kDebugMode) {
+          Error.throwWithStackTrace(error, stackTrace);  // do the regular error behavior
+        } else {
+          logError(error, stackTrace);
+        }
       }
     }
   );
