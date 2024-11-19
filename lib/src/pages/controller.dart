@@ -5,6 +5,8 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/widgets.dart";
 
+import "controllers/button.dart";
+
 /// A view model to select and listen to a gamepad.
 class ControllersViewModel with ChangeNotifier {
   /// The gamepad to listen to.
@@ -240,10 +242,11 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
     Widget buttonWidget({required Offset offset, bool? value}) =>  Positioned(
       left: offset.dx,
       top: offset.dy,
-      child: _ControllerButton(
-        value: value ?? false,
+      child: ControllerButton(
+        isPressed: value ?? false,
         radius: buttonRadius,
-        outlineWidth: outlineWidth,
+        borderWidth: outlineWidth,
+        color: gamepadColor,
       ),
     );
 
@@ -291,27 +294,4 @@ class _ControllerWidget extends ReusableReactiveWidget<Controller> {
       ),
     );
   }
-}
-
-class _ControllerButton extends StatelessWidget {
-  final double radius;
-  final double outlineWidth;
-  final bool value;
-
-  const _ControllerButton({
-    required this.value,
-    required this.radius,
-    required this.outlineWidth,
-  });
-
-  @override
-  Widget build(BuildContext context) => Container(
-    width: radius,
-    height: radius,
-    decoration: BoxDecoration(
-      color: value ? gamepadColor : Colors.transparent,
-      shape: BoxShape.circle,
-      border: Border.all(color: gamepadColor, width: outlineWidth),
-    ),
-  );
 }
