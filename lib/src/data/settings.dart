@@ -248,7 +248,7 @@ class DashboardSettings {
   final List<ViewPreset> presets;
 
   /// The default preset to load on startup
-  String defaultPreset;
+  String? defaultPreset;
 
   /// A const constructor.
   DashboardSettings({
@@ -269,7 +269,7 @@ class DashboardSettings {
       for (final presetJson in json?["presets"] ?? [])
         ViewPreset.fromJson(presetJson),
     ],
-    defaultPreset = json?["defaultPreset"] ?? "",
+    defaultPreset = json?["defaultPreset"],
     splitMode = SplitMode.values[json?["splitMode"] ?? SplitMode.horizontal.index],
     mapBlockSize = json?["mapBlockSize"] ?? 1.0,
     maxFps = (json?["maxFps"] ?? 60) as int,

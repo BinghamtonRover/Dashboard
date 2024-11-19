@@ -33,8 +33,11 @@ void logError(Object error, StackTrace? stackTrace) => models.logs.handleLog(
 void main() async {
   // Logs sync errors to the logs page
   FlutterError.onError = (FlutterErrorDetails details) {
-    logError(details.exception, details.stack);
-    FlutterError.presentError(details);  // do the regular error behavior
+    if (kDebugMode) {
+      FlutterError.presentError(details);  // do the regular error behavior
+    } else {
+      logError(details.exception, details.stack);
+    }
   };
   // Logs async errors to the logs page
   runZonedGuarded(

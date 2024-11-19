@@ -1,23 +1,23 @@
-import "package:collection/collection.dart";
-import "package:flutter/material.dart";
+import "dart:async";
+
+import "package:flutter/scheduler.dart";
 import "package:flutter_resizable_container/flutter_resizable_container.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 
+import "view_presets.dart";
+
 extension on ResizableController {
-  void setRatios(List<double> ratios) => setChildren([
-    for (final ratio in ratios) ResizableChild(
-      minSize: 100,
-      size: ResizableSize.ratio(ratio),
-      child: Container(),
-    ),
+  void setRatios(List<double> ratios) => setSizes([
+    for (final ratio in ratios)
+      ResizableSize.ratio(ratio),
   ]);
 }
 
 /// A data model for keeping track of the on-screen views.
-class ViewsModel extends Model {
+class ViewsModel extends Model with PresetsModel {
   /// The controller for the resizable row on top.
   final horizontalController1 = ResizableController();
 
@@ -44,29 +44,10 @@ class ViewsModel extends Model {
   @override
   Future<void> init() async {
     models.settings.addListener(notifyListeners);
-    final defaultPresetName = models.settings.dashboard.defaultPreset;
-    final defaultPreset = models.settings.dashboard.presets
-      .firstWhereOrNull((preset) => preset.name == defaultPresetName);
-    if (defaultPreset == null) return;
-    loadPreset(defaultPreset).ignore();
+    unawaited(loadDefaultPreset());
   }
 
-  /// Saves the current state as a preset and updates the user's settings.
-  Future<void> saveAsPreset(String? name) async {
-    if (name == null) return;
-    if (models.settings.dashboard.presets.any((otherPreset) => otherPreset.name == name)) {
-      models.home.setMessage(
-        severity: Severity.error,
-        text: "Name is already taken, please rename preset",
-      );
-      return;
-    }
-    final preset = toPreset(name);
-    models.settings.dashboard.presets.add(preset);
-    await models.settings.update();
-  }
-
-  /// Returns a [ViewPreset] to match the current state.
+  @override
   ViewPreset toPreset(String name) => ViewPreset(
     name: name,
     views: views.toList(),
@@ -78,31 +59,29 @@ class ViewsModel extends Model {
     vertical2: verticalController2.ratios,
   );
 
-  /// Loads preset from Json Row
+  /// Waits for the next frame to build.
+  Future<void> nextFrame() {
+    final completer = Completer<void>();
+    SchedulerBinding.instance.addPostFrameCallback((_) => completer.complete());
+    return completer.future;
+  }
+
+  @override
   Future<void> loadPreset(ViewPreset preset) async {
+    views = List.filled(views.length, DashboardView.blank, growable: true);
     setNumViews(preset.views.length);
-    resetSizes();
-    for (var i = 0; i < preset.views.length; i++) {
-      replaceView(i, preset.views[i], ignoreErrors: true);
-    }
+    await nextFrame();  // wait for the views to render
+    views = preset.views.toList();
+    // Wait one frame to build the new children, another for resizable_container to render
+    await nextFrame();
+    await nextFrame();
     if (preset.horizontal1.isNotEmpty) horizontalController1.setRatios(preset.horizontal1);
     if (preset.horizontal2.isNotEmpty) horizontalController2.setRatios(preset.horizontal2);
     if (preset.horizontal3.isNotEmpty) horizontalController3.setRatios(preset.horizontal3);
     if (preset.horizontal4.isNotEmpty) horizontalController4.setRatios(preset.horizontal4);
     if (preset.vertical1.isNotEmpty) verticalController1.setRatios(preset.vertical1);
     if (preset.vertical2.isNotEmpty) verticalController2.setRatios(preset.vertical2);
-  }
-
-  /// Deletes presets and rewrites Json file
-  Future<void> deletePreset(ViewPreset preset) async{
-    models.settings.dashboard.presets.remove(preset);
-    await models.settings.update();
-  }
-
-  /// Sets the default preset to [preset]
-  Future<void> setDefaultPreset(String preset) async {
-    models.settings.dashboard.defaultPreset = preset;
-    await models.settings.update();
+    notifyListeners();
   }
 
   @override
@@ -119,20 +98,27 @@ class ViewsModel extends Model {
 
   /// Resets the size of all the views.
   void resetSizes() {
-    if (views.length == 2 &&
-        models.settings.dashboard.splitMode == SplitMode.horizontal) {
+    if (
+      views.length == 2
+      && models.settings.dashboard.splitMode == SplitMode.horizontal
+    ) {
       verticalController1.setRatios([0.5, 0.5]);
     } else if (views.length > 2) {
       verticalController1.setRatios([0.5, 0.5]);
     }
-    if (views.length == 2 &&
-        models.settings.dashboard.splitMode == SplitMode.vertical) {
+    if (
+      views.length == 2
+      && models.settings.dashboard.splitMode == SplitMode.vertical
+    ) {
       horizontalController1.setRatios([0.5, 0.5]);
     } else if (views.length > 2) {
       horizontalController1.setRatios([0.5, 0.5]);
     }
-    if (views.length == 4) horizontalController2.setRatios([0.5, 0.5]);
+    if (views.length == 4) {
+      horizontalController2.setRatios([0.5, 0.5]);
+    }
     if (views.length == 8) {
+      horizontalController1.setRatios([0.5, 0.5]);
       horizontalController2.setRatios([0.5, 0.5]);
       horizontalController3.setRatios([0.5, 0.5]);
       horizontalController4.setRatios([0.5, 0.5]);
@@ -168,27 +154,5 @@ class ViewsModel extends Model {
       }
     }
     notifyListeners();
-  }
-
-  /// Swaps two presets in the user's settings.
-  void swapPresets(int oldIndex, int newIndex) {
-    final presets = models.settings.dashboard.presets;
-      // ignore: parameter_assignments
-    if (oldIndex < newIndex) newIndex -= 1;
-    final element = presets.removeAt(oldIndex);
-    presets.insert(newIndex, element);
-    // This notifyListeners call is needed to update the UI smoothly.
-    //
-    // A ResizableListView simply *simulates* re-ordering its children. After
-    // the child is dropped in its new position, it is sent back to its original
-    // position, and it is the backend's job to actually update the underlying data.
-    //
-    // Calling [SettingsModel.update] here does the job, but its [notifyListeners] call
-    // is (correctly) placed *after* the settings file is updated on disk. This introduces
-    // a delay in the re-ordering, so items will animate back and forth.
-    //
-    // This call will update the UI based on the in-memory list before the disk is updated.
-    notifyListeners();
-    models.settings.update();
   }
 }
