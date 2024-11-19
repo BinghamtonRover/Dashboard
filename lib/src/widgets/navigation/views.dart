@@ -66,6 +66,7 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
       ],
     ),
     2 => ResizableContainer(
+      key: const ValueKey(1),
       direction: switch (models.settings.dashboard.splitMode) {
         SplitMode.horizontal => Axis.vertical,
         SplitMode.vertical => Axis.horizontal,
@@ -78,6 +79,7 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
       children: model.children.sublist(0, 2),
     ),
     3 || 4 => ResizableContainer(
+      key: const ValueKey(2),
       controller: model.verticalController1,
       direction: Axis.vertical,
       divider: divider,
@@ -101,6 +103,7 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
       children: [
         Expanded(  // left page
           child: ResizableContainer(
+            key: const ValueKey(3),
             controller: model.verticalController1,
             direction: Axis.vertical,
             divider: divider,
@@ -125,6 +128,7 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
         ),
         Expanded(  // right page
           child: ResizableContainer(
+            key: const ValueKey(4),
             controller: model.verticalController2,
             direction: Axis.vertical,
             divider: divider,

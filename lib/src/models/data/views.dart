@@ -14,6 +14,8 @@ extension on ResizableController {
     for (final ratio in ratios)
       ResizableSize.ratio(ratio),
   ]);
+
+  void reset([int size = 0]) => setRatios(List.filled(size, 0.5));
 }
 
 /// A data model for keeping track of the on-screen views.
@@ -69,19 +71,25 @@ class ViewsModel extends Model with PresetsModel {
     horizontal2: views.length > 3 ? horizontalController2.ratios : [],
     horizontal3: views.length == 8 ? horizontalController3.ratios : [],
     horizontal4: views.length == 8 ? horizontalController4.ratios : [],
-    vertical1: (views.length == 2 && splitMode == SplitMode.horizontal) || views.length > 2
+    vertical1: (views.length > 2) || (views.length == 2 && splitMode == SplitMode.horizontal)
       ? verticalController1.ratios : [],
     vertical2: views.length == 8 ? verticalController2.ratios : [],
   );
 
+  /// Whether there is a preset already loading.
+  bool isLoadingPreset = false;
+
   @override
   Future<void> loadPreset(ViewPreset preset) async {
+    if (isLoadingPreset) return;
+    isLoadingPreset = true;
     updateSplitMode(preset.splitMode);
     views = List.filled(views.length, DashboardView.blank, growable: true);
+    // Wait for all views to reset so as not to cause overflow issues
+    await nextFrame();
     setNumViews(preset.views.length);
-    await nextFrame();  // wait for the views to render
-    views = preset.views.toList();
-    // Wait one frame to build the new children, another for resizable_container to render
+    // Wait 3 frames for flutter_resizable container to load
+    await nextFrame();
     await nextFrame();
     await nextFrame();
     if (preset.horizontal1.isNotEmpty) horizontalController1.setRatios(preset.horizontal1);
@@ -90,7 +98,9 @@ class ViewsModel extends Model with PresetsModel {
     if (preset.horizontal4.isNotEmpty) horizontalController4.setRatios(preset.horizontal4);
     if (preset.vertical1.isNotEmpty) verticalController1.setRatios(preset.vertical1);
     if (preset.vertical2.isNotEmpty) verticalController2.setRatios(preset.vertical2);
+    views = preset.views.toList();
     notifyListeners();
+    isLoadingPreset = false;
   }
 
   /// Waits for the next frame to build.
@@ -106,29 +116,30 @@ class ViewsModel extends Model with PresetsModel {
       views.length == 2
       && models.settings.dashboard.splitMode == SplitMode.horizontal
     ) {
-      verticalController1.setRatios([0.5, 0.5]);
-    } else if (views.length > 2) {
-      verticalController1.setRatios([0.5, 0.5]);
-    }
-    if (
+      verticalController1.reset(2);
+    } else if (
       views.length == 2
       && models.settings.dashboard.splitMode == SplitMode.vertical
     ) {
-      horizontalController1.setRatios([0.5, 0.5]);
-    } else if (views.length > 2) {
-      horizontalController1.setRatios([0.5, 0.5]);
+      horizontalController1.reset(2);
+    } else if (views.length == 3) {
+      horizontalController1.reset(2);
+      verticalController1.reset(2);
     }
     if (views.length == 4) {
-      horizontalController2.setRatios([0.5, 0.5]);
+      horizontalController1.reset(2);
+      horizontalController2.reset(2);
+      verticalController1.reset(2);
     }
     if (views.length == 8) {
-      horizontalController1.setRatios([0.5, 0.5]);
-      horizontalController2.setRatios([0.5, 0.5]);
-      horizontalController3.setRatios([0.5, 0.5]);
-      horizontalController4.setRatios([0.5, 0.5]);
-      verticalController1.setRatios([0.5, 0.5]);
-      verticalController2.setRatios([0.5, 0.5]);
+      horizontalController1.reset(2);
+      horizontalController2.reset(2);
+      horizontalController3.reset(2);
+      horizontalController4.reset(2);
+      verticalController1.reset(2);
+      verticalController2.reset(2);
     }
+    notifyListeners();
   }
 
   /// Replaces the view at the given index with the new view.
