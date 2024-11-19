@@ -11,6 +11,7 @@ class ControllerButton extends StatelessWidget {
   /// Whether the button is pressed or not.
   final bool isPressed;
 
+  /// The color of the button.
   final Color color;
 
   /// Draws a small circle to represent a button that can be pressed.
