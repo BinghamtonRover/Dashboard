@@ -33,7 +33,7 @@ mixin PresetsModel on ChangeNotifier {
   }
 
   /// Sets the default preset to [preset]
-  Future<void> setDefaultPreset(String preset) async {
+  Future<void> setDefaultPreset(String? preset) async {
     settings.defaultPreset = preset;
     await models.settings.update();
   }
@@ -76,4 +76,20 @@ mixin PresetsModel on ChangeNotifier {
     if (defaultPreset == null) return;
     loadPreset(defaultPreset);
   }
+
+  /// Sets or clears this preset as the default.
+  void toggleDefaultPreset(ViewPreset preset) {
+    if (settings.defaultPreset != preset.name) {
+      models.views.setDefaultPreset(preset.name);
+    } else {
+      models.views.setDefaultPreset(null);
+    }
+  }
+
+  /// Returns whether this preset is the default.
+  bool isDefaultPreset(ViewPreset preset) =>
+    settings.defaultPreset == preset.name;
+
+  /// The list of all available presets.
+  List<ViewPreset> get presets => settings.presets;
 }

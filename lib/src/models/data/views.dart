@@ -48,6 +48,18 @@ class ViewsModel extends Model with PresetsModel {
   }
 
   @override
+  void dispose() {
+    models.settings.removeListener(notifyListeners);
+    horizontalController1.dispose();
+    horizontalController2.dispose();
+    horizontalController3.dispose();
+    horizontalController4.dispose();
+    verticalController1.dispose();
+    verticalController2.dispose();
+    super.dispose();
+  }
+
+  @override
   ViewPreset toPreset(String name) => ViewPreset(
     name: name,
     views: views.toList(),
@@ -58,13 +70,6 @@ class ViewsModel extends Model with PresetsModel {
     vertical1: verticalController1.ratios,
     vertical2: verticalController2.ratios,
   );
-
-  /// Waits for the next frame to build.
-  Future<void> nextFrame() {
-    final completer = Completer<void>();
-    SchedulerBinding.instance.addPostFrameCallback((_) => completer.complete());
-    return completer.future;
-  }
 
   @override
   Future<void> loadPreset(ViewPreset preset) async {
@@ -84,16 +89,11 @@ class ViewsModel extends Model with PresetsModel {
     notifyListeners();
   }
 
-  @override
-  void dispose() {
-    models.settings.removeListener(notifyListeners);
-    horizontalController1.dispose();
-    horizontalController2.dispose();
-    horizontalController3.dispose();
-    horizontalController4.dispose();
-    verticalController1.dispose();
-    verticalController2.dispose();
-    super.dispose();
+  /// Waits for the next frame to build.
+  Future<void> nextFrame() {
+    final completer = Completer<void>();
+    SchedulerBinding.instance.addPostFrameCallback((_) => completer.complete());
+    return completer.future;
   }
 
   /// Resets the size of all the views.
