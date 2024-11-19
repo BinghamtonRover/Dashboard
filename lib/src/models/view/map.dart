@@ -123,7 +123,7 @@ class AutonomyModel with ChangeNotifier {
 
 	/// The rover's current position.
 	GpsCoordinates get roverPosition => models.rover.metrics.position.data.gps;
-  
+
   /// The cell type of the rover that isn't [AutonomyCell.rover]
   AutonomyCell get roverCellType {
     final roverCoordinates = roverPosition.toGridBlock;
@@ -250,6 +250,39 @@ class AutonomyModel with ChangeNotifier {
 		markerBuilder.clear();
 		notifyListeners();
 	}
+
+  /// Builder for autonomy commands
+  final AutonomyCommandBuilder commandBuilder = AutonomyCommandBuilder();
+
+  /// Adds or removes a marker at the given location.
+  void toggleMarker(MapCellData cell) {
+    if (markers.contains(cell.coordinates)) {
+      removeMarker(cell.coordinates);
+    } else {
+      placeMarker(cell.coordinates);
+    }
+  }
+
+  /// Handles when a specific tile was dropped onto a grid cell.
+  ///
+  /// - If it's a destination tile, then the rover will go there
+  /// - If it's an obstacle tile, the rover will avoid it
+  /// - If it's a marker tile, draws or removes a Dashboard marker
+  void handleDrag(AutonomyCell data, MapCellData cell) {
+    switch (data) {
+      case AutonomyCell.destination:
+        commandBuilder.gps.latDecimal.value = cell.coordinates.latitude;
+        commandBuilder.gps.longDecimal.value = cell.coordinates.longitude;
+        commandBuilder.submit();
+      case AutonomyCell.obstacle:
+        final obstacleData = AutonomyData(obstacles: [cell.coordinates]);
+        models.sockets.autonomy.sendMessage(obstacleData);
+      case AutonomyCell.marker: toggleMarker(cell);
+      case AutonomyCell.rover: break;
+      case AutonomyCell.path: break;
+      case AutonomyCell.empty: break;
+    }
+  }
 
   // ==================== Bad Apple Easter Egg ====================
   //

@@ -44,36 +44,36 @@ class AutonomyCommandEditor extends ReusableReactiveWidget<AutonomyCommandBuilde
 
   @override
   Widget build(BuildContext context, AutonomyCommandBuilder model) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Autonomy:", style: context.textTheme.titleLarge),
-          Text(
-            "${dataModel.data.state.humanName}, ${dataModel.data.task.humanName}",
-            style: context.textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          ElevatedButton.icon(
-            icon: const Icon(Icons.add),
-            label: const Text("New Task"),
-            onPressed: () {
-              if (RoverStatus.AUTONOMOUS == models.rover.status.value) {
-                createTask(context, model);
-              } else {
-                models.home.setMessage(
-                  severity: Severity.error,
-                  text: "You must be in autonomy mode to do that",
-                );
-              }
-            },
-          ),
-          const SizedBox(height: 8),
-          ElevatedButton(
-            style: const ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(Colors.red),
-            ),
-            onPressed: model.abort,
-            child: const Text("ABORT"),
-          ),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text("Autonomy:", style: context.textTheme.titleLarge),
+      Text(
+        "${dataModel.data.state.humanName}, ${dataModel.data.task.humanName}",
+        style: context.textTheme.titleMedium,
+      ),
+      const SizedBox(height: 8),
+      ElevatedButton.icon(
+        icon: const Icon(Icons.add),
+        label: const Text("New Task"),
+        onPressed: () {
+          if (!models.rover.isConnected || RoverStatus.AUTONOMOUS == models.rover.status.value) {
+            createTask(context, model);
+          } else {
+            models.home.setMessage(
+              severity: Severity.error,
+              text: "You must be in autonomy mode to do that",
+            );
+          }
+        },
+      ),
+      const SizedBox(height: 8),
+      ElevatedButton(
+        style: const ButtonStyle(
+          backgroundColor: WidgetStatePropertyAll(Colors.red),
+        ),
+        onPressed: model.abort,
+        child: const Text("ABORT"),
+      ),
+    ],
+  );
 }
