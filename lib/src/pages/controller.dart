@@ -5,12 +5,28 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/widgets.dart";
 
+/// A view model to select and listen to a gamepad.
 class ControllersViewModel with ChangeNotifier {
+  /// The gamepad to listen to.
   Controller selectedController = models.rover.controller1;
 
+  /// Starts listening to the gamepad.
+  ControllersViewModel() {
+    selectedController.addListener(notifyListeners);
+  }
+
+  @override
+  void dispose() {
+    selectedController.removeListener(notifyListeners);
+    super.dispose();
+  }
+
+  /// Changes which controller is being listened to.
   void setController(Controller? value) {
     if (value == null) return;
+    selectedController.removeListener(notifyListeners);
     selectedController = value;
+    selectedController.addListener(notifyListeners);
     notifyListeners();
   }
 }
