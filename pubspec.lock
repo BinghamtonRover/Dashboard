@@ -186,12 +186,11 @@ packages:
   flutter_libserialport:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "6d8b2807c132041da9fa06c34bce8a6f831ff1f5"
-      url: "https://github.com/snabble/flutter_libserialport.git"
-    source: git
-    version: "0.5.0"
+      name: flutter_libserialport
+      sha256: "20c320dcde8592a16f9badc0cacad61b1fb283dbec647b6ebfc1020f8274c67b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -203,10 +202,9 @@ packages:
   flutter_resizable_container:
     dependency: "direct main"
     description:
-      name: flutter_resizable_container
-      sha256: "5b15c79c6cc338ed79640c706bb5176baa3333d92fd3627ad279aa3e25d2f0e7"
-      url: "https://pub.dev"
-    source: hosted
+      path: "D:\\Flutter\\Packages\\flutter_resizable_container"
+      relative: false
+    source: path
     version: "3.0.0"
   flutter_sdl_gamepad:
     dependency: "direct main"

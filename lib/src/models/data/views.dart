@@ -7,14 +7,14 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 
 extension on ResizableController {
-  void setRatios(List<double> ratios) => setSizes([
-    for (final ratio in ratios)
-      ResizableSize.ratio(ratio),
+  void setRatios(List<double> ratios) => setChildren([
+    for (final ratio in ratios) ResizableChild(
+      minSize: 100,
+      size: ResizableSize.ratio(ratio),
+      child: Container(),
+    ),
   ]);
 }
-
-/// A function that builds a view of the given index.
-typedef ViewBuilder = Widget Function(BuildContext context, int index);
 
 /// A data model for keeping track of the on-screen views.
 class ViewsModel extends Model {
@@ -31,7 +31,7 @@ class ViewsModel extends Model {
   final horizontalController4 = ResizableController();
 
   /// The controller for the resizable column.
-  final verticalController = ResizableController();
+  final verticalController1 = ResizableController();
 
   /// The vertical controller for screen 2.
   final verticalController2 = ResizableController();
@@ -41,19 +41,14 @@ class ViewsModel extends Model {
     DashboardView.cameraViews[0],
   ];
 
-
   @override
   Future<void> init() async {
     models.settings.addListener(notifyListeners);
     final defaultPresetName = models.settings.dashboard.defaultPreset;
-    if (defaultPresetName != "") {
-      final defaultPreset = models.settings.dashboard.presets
-          .firstWhereOrNull((preset) => preset.name == defaultPresetName);
-      if (defaultPreset == null) {
-        return;
-      }
-      await loadPreset(defaultPreset);
-    }
+    final defaultPreset = models.settings.dashboard.presets
+      .firstWhereOrNull((preset) => preset.name == defaultPresetName);
+    if (defaultPreset == null) return;
+    loadPreset(defaultPreset).ignore();
   }
 
   /// Saves the current state as a preset and updates the user's settings.
@@ -77,49 +72,25 @@ class ViewsModel extends Model {
     views: views.toList(),
     horizontal1: horizontalController1.ratios,
     horizontal2: horizontalController2.ratios,
-    vertical1: verticalController.ratios,
-    vertical2: verticalController2.ratios,
     horizontal3: horizontalController3.ratios,
     horizontal4: horizontalController4.ratios,
+    vertical1: verticalController1.ratios,
+    vertical2: verticalController2.ratios,
   );
 
   /// Loads preset from Json Row
   Future<void> loadPreset(ViewPreset preset) async {
     setNumViews(preset.views.length);
-    // This has to be done after frame rendering to avoid an error
-    //
-    // While [setNumViews] does update the number of views in the view model,
-    // it does not cause a build to occur. This callback allows the next frame to be
-    // built, the UI to update, and *then* updates the ratios. This is necessary because
-    // the controllers listed below are directly tied to the UI.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      resetSizes();
-      for (var i = 0; i < preset.views.length; i++) {
-        replaceView(i, preset.views[i], ignoreErrors: true);
-      }
-
-      // This callback is needed for the same reason above
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (preset.horizontal1.isNotEmpty) {
-          horizontalController1.setRatios(preset.horizontal1);
-        }
-        if (preset.horizontal2.isNotEmpty) {
-          horizontalController2.setRatios(preset.horizontal2);
-        }
-        if (preset.horizontal3.isNotEmpty) {
-          horizontalController3.setRatios(preset.horizontal3);
-        }
-        if (preset.horizontal4.isNotEmpty) {
-          horizontalController4.setRatios(preset.horizontal4);
-        }
-        if (preset.vertical1.isNotEmpty) {
-          verticalController.setRatios(preset.vertical1);
-        }
-        if (preset.vertical2.isNotEmpty) {
-          verticalController2.setRatios(preset.vertical2);
-        }
-      });
-    });
+    resetSizes();
+    for (var i = 0; i < preset.views.length; i++) {
+      replaceView(i, preset.views[i], ignoreErrors: true);
+    }
+    if (preset.horizontal1.isNotEmpty) horizontalController1.setRatios(preset.horizontal1);
+    if (preset.horizontal2.isNotEmpty) horizontalController2.setRatios(preset.horizontal2);
+    if (preset.horizontal3.isNotEmpty) horizontalController3.setRatios(preset.horizontal3);
+    if (preset.horizontal4.isNotEmpty) horizontalController4.setRatios(preset.horizontal4);
+    if (preset.vertical1.isNotEmpty) verticalController1.setRatios(preset.vertical1);
+    if (preset.vertical2.isNotEmpty) verticalController2.setRatios(preset.vertical2);
   }
 
   /// Deletes presets and rewrites Json file
@@ -130,11 +101,8 @@ class ViewsModel extends Model {
 
   /// Sets the default preset to [preset]
   Future<void> setDefaultPreset(String preset) async {
-    await models.settings.update(
-      models.settings.all.copyWith(
-        dashboard: models.settings.dashboard.copyWith(defaultPreset: preset),
-      ),
-    );
+    models.settings.dashboard.defaultPreset = preset;
+    await models.settings.update();
   }
 
   @override
@@ -144,7 +112,7 @@ class ViewsModel extends Model {
     horizontalController2.dispose();
     horizontalController3.dispose();
     horizontalController4.dispose();
-    verticalController.dispose();
+    verticalController1.dispose();
     verticalController2.dispose();
     super.dispose();
   }
@@ -153,9 +121,9 @@ class ViewsModel extends Model {
   void resetSizes() {
     if (views.length == 2 &&
         models.settings.dashboard.splitMode == SplitMode.horizontal) {
-      verticalController.setRatios([0.5, 0.5]);
+      verticalController1.setRatios([0.5, 0.5]);
     } else if (views.length > 2) {
-      verticalController.setRatios([0.5, 0.5]);
+      verticalController1.setRatios([0.5, 0.5]);
     }
     if (views.length == 2 &&
         models.settings.dashboard.splitMode == SplitMode.vertical) {
@@ -168,7 +136,7 @@ class ViewsModel extends Model {
       horizontalController2.setRatios([0.5, 0.5]);
       horizontalController3.setRatios([0.5, 0.5]);
       horizontalController4.setRatios([0.5, 0.5]);
-      verticalController.setRatios([0.5, 0.5]);
+      verticalController1.setRatios([0.5, 0.5]);
       verticalController2.setRatios([0.5, 0.5]);
     }
   }

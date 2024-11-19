@@ -10,6 +10,7 @@ library main;
 
 import "dart:async";
 import "dart:io";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/app.dart";
@@ -42,8 +43,11 @@ void main() async {
       if (error is SocketException && networkErrors.contains(error.osError!.errorCode)) {
         models.home.setMessage(severity: Severity.critical, text: "Network error, restart by clicking the network icon");
       } else {
-        logError(error, stackTrace);
-        Error.throwWithStackTrace(error, stackTrace);  // do the regular error behavior
+        if (kDebugMode) {
+          Error.throwWithStackTrace(error, stackTrace);  // do the regular error behavior
+        } else {
+          logError(error, stackTrace);
+        }
       }
     }
   );
