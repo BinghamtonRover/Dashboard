@@ -5,8 +5,18 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/widgets.dart";
 
+class ControllersViewModel with ChangeNotifier {
+  Controller selectedController = models.rover.controller1;
+
+  void setController(Controller? value) {
+    if (value == null) return;
+    selectedController = value;
+    notifyListeners();
+  }
+}
+
 /// The UI Page to display the controller status
-class ControllersPage extends StatefulWidget {
+class ControllersPage extends ReactiveWidget<ControllersViewModel> {
   /// The index of this view.
   final int index;
 
@@ -14,19 +24,10 @@ class ControllersPage extends StatefulWidget {
   const ControllersPage({required this.index, super.key});
 
   @override
-  State<ControllersPage> createState() => _ControllersPageState();
-}
-
-class _ControllersPageState extends State<ControllersPage> {
-  Controller selectedController = models.rover.controller1;
-
-  void _setController(Controller? value) {
-    if (value == null) return;
-    setState(() => selectedController = value);
-  }
+  ControllersViewModel createModel() => ControllersViewModel();
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context, ControllersViewModel model) => Column(
     children: [
       const SizedBox(height: 16),
       Row(
@@ -34,8 +35,8 @@ class _ControllersPageState extends State<ControllersPage> {
           const Spacer(),
           const Text("Controller: "),
           DropdownButton<Controller>(
-            value: selectedController,
-            onChanged: _setController,
+            value: model.selectedController,
+            onChanged: model.setController,
             items: [
               DropdownMenuItem(
                 value: models.rover.controller1,
@@ -53,19 +54,19 @@ class _ControllersPageState extends State<ControllersPage> {
           ),
           const SizedBox(width: 8),
           FilledButton(
-            onPressed: selectedController.isConnected
-              ? selectedController.gamepad.pulse : null,
+            onPressed: model.selectedController.isConnected
+              ? model.selectedController.gamepad.pulse : null,
             child: const Text("Vibrate"),
           ),
           const Spacer(),
-          ViewsSelector(index: widget.index),
+          ViewsSelector(index: index),
         ],
       ),
       Expanded(
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Center(
-            child: _ControllerWidget(selectedController),
+            child: _ControllerWidget(model.selectedController),
           ),
         ),
       ),
