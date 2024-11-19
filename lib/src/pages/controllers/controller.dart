@@ -46,6 +46,8 @@ class ControllerWidget extends ReusableReactiveWidget<Controller> {
     required double y,
     required Offset offsetOnImage,
     required Size widgetSize,
+    // TODO(Levi-Lesches): Support thumbstick presses, https://github.com/Levi-Lesches/sdl_gamepad/issues/1
+    required bool? isPressed,
   }) {
     final scaleFactor = _getBackgroundFitWidth(widgetSize) / imageSize.width;
 
@@ -62,7 +64,7 @@ class ControllerWidget extends ReusableReactiveWidget<Controller> {
         width: joystickRadius,
         height: joystickRadius,
         decoration: BoxDecoration(
-          color: gamepadColor,
+          color: (isPressed ?? false) ? gamepadColor : null,
           borderRadius: BorderRadius.circular(10000),
         ),
       ),
@@ -161,12 +163,14 @@ class ControllerWidget extends ReusableReactiveWidget<Controller> {
             y: -1 * (state?.normalLeftY ?? 0),
             offsetOnImage: leftStick,
             widgetSize: widgetSize,
+            isPressed: true,
           ),
           _controllerJoystick(
             x: state?.normalRightX ?? 0,
             y: -1 * (state?.normalRightY ?? 0),
             offsetOnImage: rightStick,
             widgetSize: widgetSize,
+            isPressed: true,
           ),
         ],
       ),

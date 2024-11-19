@@ -8,7 +8,7 @@ class ArmControls extends RoverControls {
 	ArmSettings get settings => models.settings.arm;
 
 	/// The coordinates of the gripper.
-	/// 
+	///
 	/// The arm uses IK to move all the joints to stay at these coordinates.
 	Coordinates ik = Coordinates(x: 0.5, y: 0.5, z: 0.5);
 
@@ -38,15 +38,15 @@ class ArmControls extends RoverControls {
 	@override
 	List<Message> parseInputs(GamepadState state) => [
     // Manual control
-    if (state.normalRightX.abs() > state.normalRightJoystickY.abs() && state.normalRightX != 0) 
+    if (state.normalRightX.abs() > state.normalRightY.abs() && state.normalRightX != 0)
       ArmCommand(swivel: MotorCommand(moveRadians: state.normalRightX * settings.swivel)),
-    if (state.normalRightJoystickY.abs() > state.normalRightX.abs() && state.normalRightJoystickY != 0) 
-      ArmCommand(shoulder: MotorCommand(moveRadians: state.normalRightJoystickY * settings.shoulder)),
+    if (state.normalRightY.abs() > state.normalRightX.abs() && state.normalRightY != 0)
+      ArmCommand(shoulder: MotorCommand(moveRadians: state.normalRightY * settings.shoulder)),
     if (state.normalLeftY != 0) ArmCommand(elbow: MotorCommand(moveRadians: state.normalLeftY * settings.elbow)),
-    // The bumpers should be pseudo-IK: Move the shoulder and elbow in sync. 
-    if (state.normalShoulders != 0) ArmCommand(
-      shoulder: MotorCommand(moveRadians: state.normalShoulders * settings.shoulder * -1),
-      elbow: MotorCommand(moveRadians: state.normalShoulders * settings.elbow),
+    // The bumpers should be pseudo-IK: Move the shoulder and elbow in sync.
+    if (state.normalShoulder != 0) ArmCommand(
+      shoulder: MotorCommand(moveRadians: state.normalShoulder * settings.shoulder * -1),
+      elbow: MotorCommand(moveRadians: state.normalShoulder * settings.elbow),
     ),
 
 		// Gripper
