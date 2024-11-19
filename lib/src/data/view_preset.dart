@@ -6,6 +6,9 @@ class ViewPreset {
   /// Preset name.
   final String name;
 
+  /// The split mode of this preset.
+  final SplitMode splitMode;
+
   /// List of views that comes with the views name (and if it is a camera view, its camera name).
   final List<DashboardView> views;
 
@@ -30,6 +33,7 @@ class ViewPreset {
   /// A const constructor.
   ViewPreset({
     required this.name,
+    required this.splitMode,
     required this.views,
     required this.horizontal1,
     required this.horizontal2,
@@ -42,6 +46,7 @@ class ViewPreset {
   /// Parses a view preset from JSON.
   ViewPreset.fromJson(Json? json) :
     name = json?["name"] ?? "No Name",
+    splitMode = SplitMode.values.byName(json?["splitMode"] ?? "vertical"),
     views = [
       for (final viewJson in json?["views"] ?? [])
         DashboardView.fromJson(viewJson) ?? DashboardView.blank,
@@ -56,6 +61,7 @@ class ViewPreset {
   /// Serializes a view preset to JSON.
   Json toJson() => {
     "name": name,
+    "splitMode": splitMode.name,
     "views" : views,
     "horizontal1" : horizontal1,
     "horizontal2" : horizontal2,

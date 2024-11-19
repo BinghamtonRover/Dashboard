@@ -1,3 +1,5 @@
+import "package:flutter_sdl_gamepad/flutter_sdl_gamepad.dart" as sdl;
+
 /// The battery level of a gamepad.
 enum GamepadBatteryLevel {
   /// The battery is running low.
@@ -26,84 +28,25 @@ enum GamepadBatteryLevel {
 
 /// The complete state of a gamepad.
 ///
-/// A "normal" value means a value that is linked to two buttons. For example, both triggers
-/// contribute to the [normalTrigger] value, so if the left was pressed less than the right,
-/// the "normalized" result would be a small positive value. In general, the normal values range
-/// from -1.0 to +1.0, inclusive, with -1 meaning all the way to one side, +1 to the other, and
-/// 0 indicates that neither button is pressed.
-///
-/// For digital buttons, a normalized value will only ever be -1, 0, or +1. For analog inputs,
-/// including pressure-sensitive triggers, the value will be in the range [-1.0, +1.0].
-class GamepadState {
-  /// Whether the A button was pressed.
-  final bool buttonA;
+/// Acts as a wrapper around [sdl.GamepadState] to allow backwards compatibility with older
+/// rover gamepad APIs
+typedef GamepadState = sdl.GamepadState;
 
-  /// Whether the B button was pressed.
-  final bool buttonB;
-
-  /// Whether the X button was pressed.
-  final bool buttonX;
-
-  /// Whether the Y button was pressed.
-  final bool buttonY;
-
-  /// Whether the Back or Select button was pressed.
-  final bool buttonBack;
-
-  /// Whether the Start or Options button was pressed.
-  final bool buttonStart;
-
-  /// A normalized reading of the triggers.
-  final double normalTrigger;
-
-  /// A normalized reading of the shoulder buttons.
-  final double normalShoulder;
-
+/// An extension on [GamepadState] to allow for backwards compatibility with
+/// the rover joystick direction system
+extension RoverGamepadState on GamepadState {
   /// A normalized reading of the left joystick's X-axis.
-  final double normalLeftX;
+  double get normalLeftX => normalLeftJoystickX;
 
   /// A normalized reading of the left joystick's Y-axis.
-  final double normalLeftY;
+  double get normalLeftY => -normalLeftJoystickY;
 
   /// A normalized reading of the right joystick's X-axis.
-  final double normalRightX;
+  double get normalRightX => normalRightJoystickX;
 
-  /// A normalized reading of the right joystick's X-axis.
-  final double normalRightY;
+  /// A normalized reading of the right joystick's Y-axis.
+  double get normalRightY => -normalRightJoystickY;
 
-  /// A normalized reading of the D-pad's X-axis.
-  final double normalDpadX;
-
-  /// A normalized reading of the D-pad's X-axis.
-  final double normalDpadY;
-
-  /// Creates a new representation of the gamepad state.
-  const GamepadState({
-    required this.buttonA,
-    required this.buttonB,
-    required this.buttonX,
-    required this.buttonY,
-    required this.buttonBack,
-    required this.buttonStart,
-    required this.normalTrigger,
-    required this.normalShoulder,
-    required this.normalLeftX,
-    required this.normalLeftY,
-    required this.normalRightX,
-    required this.normalRightY,
-    required this.normalDpadX,
-    required this.normalDpadY,
-  });
-
-  /// Whether the left shoulder is being pressed.
-  bool get leftShoulder => normalShoulder < 0;
-
-  /// Whether the right shoulder is being pressed.
-  bool get rightShoulder => normalShoulder > 0;
-
-  /// Whether the D-pad's down button is being pressed.
-  bool get dpadDown => normalDpadY < 0;
-
-  /// Whether the D-pad's up button is being pressed.
-  bool get dpadUp => normalDpadY > 0;
+  /// A normalized reading of the shoulder buttons.
+  double get normalShoulder => normalShoulders.toDouble();
 }

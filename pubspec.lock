@@ -203,10 +203,11 @@ packages:
   flutter_resizable_container:
     dependency: "direct main"
     description:
-      name: flutter_resizable_container
-      sha256: "5b15c79c6cc338ed79640c706bb5176baa3333d92fd3627ad279aa3e25d2f0e7"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: set-children-public
+      resolved-ref: ee68851d5db330a47451dccff601ba4d0feb4896
+      url: "https://github.com/Levi-Lesches/flutter_resizable_container"
+    source: git
     version: "3.0.0"
   flutter_sdl_gamepad:
     dependency: "direct main"

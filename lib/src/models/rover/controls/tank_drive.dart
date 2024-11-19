@@ -30,7 +30,7 @@ class DriveControls extends RoverControls {
   List<Message> parseInputs(GamepadState state) => [
     DriveCommand(throttle: throttle, setThrottle: true),
     DriveCommand(setLeft: true, left: state.normalLeftY),
-    DriveCommand(setRight: true, right: -1*state.normalRightY),
+    DriveCommand(setRight: true, right: -1*state.normalRightJoystickY),
   ];
 
   @override
