@@ -1,4 +1,5 @@
 import "dart:async";
+import "package:burt_network/burt_network.dart";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -38,10 +39,12 @@ class GridOffset {
 }
 
 extension _GpsCoordinatesToBlock on GpsCoordinates {
-  GpsCoordinates get toGridBlock => GpsCoordinates(
-    latitude: (latitude / models.settings.dashboard.mapBlockSize).roundToDouble(),
-    longitude: (longitude / models.settings.dashboard.mapBlockSize).roundToDouble(),
-  );
+  GpsCoordinates get toGridBlock {
+    final (latitudeMeters, longitudeMeters) = inMeters;
+    return GpsCoordinates(
+    latitude: (latitudeMeters / models.settings.dashboard.mapBlockSize).roundToDouble(),
+    longitude: (longitudeMeters / models.settings.dashboard.mapBlockSize).roundToDouble(),
+  );}
 }
 
 /// A record representing data necessary to display a cell in the map
@@ -96,14 +99,12 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 
 	/// An empty grid of size [gridSize].
   AutonomyGrid get empty => [
-    for (int i = 0; i < gridSize; i++) [
-      for (int j = 0; j < gridSize; j++) (
-        coordinates: GpsCoordinates(
-          longitude: (-j.toDouble() + offset.x) *
-            models.settings.dashboard.mapBlockSize,
-          latitude: (i.toDouble() - offset.y) *
-            models.settings.dashboard.mapBlockSize,
-        ),
+    for (int latitude = 0; latitude < gridSize; latitude++) [
+      for (int longitude = 0; longitude < gridSize; longitude++) (
+        coordinates: (
+          (latitude.toDouble() - offset.y) * precisionMeters,
+          (-longitude.toDouble() + offset.x) * precisionMeters
+        ).toGpsCoordinates,
         cellType: AutonomyCell.empty
       ),
     ],
@@ -117,6 +118,9 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 
 	/// The rover's current position.
 	GpsCoordinates get roverPosition => models.rover.metrics.position.data.gps;
+
+  /// The precision of the grid
+  double get precisionMeters => models.settings.dashboard.mapBlockSize;
 
   /// The cell type of the rover that isn't [AutonomyCell.rover]
   AutonomyCell get roverCellType {
@@ -174,8 +178,9 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 		// - rover.longitude => (gridSize - 1) / 2
 		// - rover.latitude => (gridSize - 1) / 2
 		// Then, everything else should be offset by that
-		final x = -1 * gpsToBlock(gps.longitude) + offset.x;
-		final y = gpsToBlock(gps.latitude) + offset.y;
+    final (latitudeMeters, longitudeMeters) = gps.inMeters;
+    final x = (-longitudeMeters / precisionMeters).round() + offset.x;
+    final y = (latitudeMeters / precisionMeters).round() + offset.y;
 		if (x < 0 || x >= gridSize) return;
 		if (y < 0 || y >= gridSize) return;
 		grid[y][x] = (coordinates: gps, cellType: value);
@@ -193,10 +198,11 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 	/// so it remains `(-1, -1)` away from the rover's new position, yielding `(4, 4)`.
 	void recenterRover() {
     // final position = isPlayingBadApple ? GpsCoordinates() : roverPosition;
-    final position = isPlayingBadApple ? GpsCoordinates(latitude: (gridSize ~/ 2).toDouble(), longitude: (gridSize ~/ 2).toDouble()) : roverPosition;
+    final position = roverPosition;
 		final midpoint = ((gridSize - 1) / 2).floor();
-		final offsetX = midpoint - -1 * gpsToBlock(position.longitude);
-		final offsetY = midpoint - gpsToBlock(position.latitude);
+    final (latitudeMeters, longitudeMeters) = position.inMeters;
+    final offsetX = midpoint + (longitudeMeters / precisionMeters).round();
+    final offsetY = midpoint - (latitudeMeters / precisionMeters).round();
 		offset = GridOffset(offsetX, offsetY);
 		notifyListeners();
 	}
