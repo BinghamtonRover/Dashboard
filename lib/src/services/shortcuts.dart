@@ -150,16 +150,9 @@ class ShortcutsService extends Service {
   Future<void> init() async {
     register(
       ShortcutKey([LogicalKeyboardKey.space], identifier: "safety e-stop"),
-      callback: () {
-        final statusNotifier = models.rover.status;
-
-        if (statusNotifier.value == RoverStatus.MANUAL ||
-            statusNotifier.value == RoverStatus.AUTONOMOUS) {
-          models.home.setMessage(
-            severity: Severity.info,
-            text: "Setting rover status to idle",
-          );
-          statusNotifier.value = RoverStatus.IDLE;
+      callback: () async {
+        if (models.rover.status.value != RoverStatus.DISCONNECTED) {
+          await models.rover.settings.setStatus(RoverStatus.IDLE);
         }
       },
     );
@@ -173,15 +166,11 @@ class ShortcutsService extends Service {
         ],
         identifier: "enable rover",
       ),
-      callback: () {
-        final statusNotifier = models.rover.status;
+      callback: () async {
+        final status = models.rover.status.value;
 
-        if (statusNotifier.value == RoverStatus.IDLE) {
-          models.home.setMessage(
-            severity: Severity.info,
-            text: "Setting rover status to manual",
-          );
-          statusNotifier.value = RoverStatus.MANUAL;
+        if (status == RoverStatus.IDLE) {
+          await models.rover.settings.setStatus(RoverStatus.MANUAL);
         }
       },
     );
