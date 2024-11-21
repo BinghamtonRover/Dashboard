@@ -185,6 +185,43 @@ class ShortcutsService extends Service {
         }
       },
     );
+
+    register(
+      ShortcutKey(
+        [LogicalKeyboardKey.keyK],
+        modifiers: [KeyModifier.control],
+        identifier: "connect to rover",
+      ),
+      callback: () async {
+        await models.sockets.setRover(RoverType.rover);
+      },
+    );
+
+    register(
+      ShortcutKey(
+        [LogicalKeyboardKey.keyK],
+        modifiers: [KeyModifier.control, KeyModifier.shift],
+        identifier: "connect to local",
+      ),
+      callback: () async {
+        await models.sockets.setRover(RoverType.localhost);
+      },
+    );
+
+    register(
+      ShortcutKey(
+        [LogicalKeyboardKey.keyN],
+        modifiers: [KeyModifier.control],
+        identifier: "reset network",
+      ),
+      callback: () async {
+        models.home.setMessage(
+          severity: Severity.info,
+          text: "Resetting network",
+        );
+        await models.sockets.reset();
+      },
+    );
     HardwareKeyboard.instance.addHandler(_handleRawKeyEvent);
   }
 
