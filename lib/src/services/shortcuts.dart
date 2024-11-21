@@ -177,6 +177,10 @@ class ShortcutsService extends Service {
         final statusNotifier = models.rover.status;
 
         if (statusNotifier.value == RoverStatus.IDLE) {
+          models.home.setMessage(
+            severity: Severity.info,
+            text: "Setting rover status to manual",
+          );
           statusNotifier.value = RoverStatus.MANUAL;
         }
       },
