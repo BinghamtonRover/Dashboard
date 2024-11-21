@@ -138,6 +138,14 @@ class ShortcutsService extends Service {
     _shortcutList.add(shortcut);
   }
 
+  /// Removes a shortcut from the global listeners
+  ///
+  /// The shortcuts which match the provided identifier string will be removed
+  void unregister(String identifier) {
+    _callbackMap.removeWhere((key, callback) => key == identifier);
+    _shortcutList.removeWhere((e) => e.identifier == identifier);
+  }
+
   @override
   Future<void> init() async {
     register(
