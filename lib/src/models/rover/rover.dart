@@ -49,6 +49,19 @@ class Rover extends Model {
 	/// The current status of the rover.
 	ValueNotifier<RoverStatus> status = ValueNotifier(RoverStatus.DISCONNECTED);
 
+  void _onStatusChange() {
+    if (status.value != RoverStatus.IDLE) {
+      return;
+    }
+    for (final controller in controllers) {
+      final messages = controller.controls.onDispose;
+
+      for (final message in messages) {
+        models.messages.sendMessage(message);
+      }
+    }
+  }
+
 	@override
 	Future<void> init() async {
     setDefaultControls();
@@ -60,12 +73,14 @@ class Rover extends Model {
 
 		metrics.addListener(notifyListeners);
 		settings.addListener(notifyListeners);
+    status.addListener(_onStatusChange);
 	}
 
 	@override
 	void dispose() {
 		metrics.removeListener(notifyListeners);
 		settings.removeListener(notifyListeners);
+    status.removeListener(_onStatusChange);
 
 		metrics.dispose();
 		controller1.dispose();
