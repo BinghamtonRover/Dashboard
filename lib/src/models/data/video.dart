@@ -2,7 +2,6 @@ import "dart:async";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/services.dart";
 
 /// A data model to stream video from the rover.
 class VideoModel extends Model {
@@ -108,11 +107,9 @@ class VideoModel extends Model {
 	}
 
 	/// Takes a screenshot of the current frame.
-	Future<void> saveFrame(CameraName name) async {
-		final cachedFrame = feeds[name]?.frame;
-		if (cachedFrame == null) throw ArgumentError.notNull("Feed for $name");
-		await services.files.writeImage(cachedFrame, name.humanName);
-		models.home.setMessage(severity: Severity.info, text: "Screenshot saved");
+	void saveFrame(String id, CameraDetails details) {
+    final command = VideoCommand(id: id, details: details, takeSnapshot: true);
+    models.sockets.video.sendMessage(command);
 	}
 
 	/// Updates settings for the given camera.

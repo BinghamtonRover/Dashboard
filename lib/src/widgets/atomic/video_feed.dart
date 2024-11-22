@@ -199,7 +199,7 @@ class VideoFeedState extends State<VideoFeed> {
             if (data.hasFrame())
               IconButton(
                 icon: const Icon(Icons.add_a_photo),
-                onPressed: () => models.video.saveFrame(widget.name),
+                onPressed: () => models.video.saveFrame(data.id, data.details),
               ),
             IconButton(
               icon: const Icon(Icons.settings),
