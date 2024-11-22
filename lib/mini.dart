@@ -1,13 +1,3 @@
-/// The entrypoint of the app.
-///
-/// These `library` declarations are not needed, the default name for a Dart library is simply the
-/// name of the file. However, DartDoc comments placed above a library declaration will show up on
-/// the libraries page in the generated documentation.
-///
-/// This library's main purpose is to execute the app defined in the app library and is designed to
-/// be as simple as possible.
-library main;
-
 import "dart:async";
 import "dart:io";
 import "package:flutter/material.dart";
@@ -22,6 +12,11 @@ import "package:rover_dashboard/src/pages/mini_logs.dart";
 import "package:rover_dashboard/src/pages/mini_metrics.dart";
 import "package:rover_dashboard/widgets.dart";
 
+/// View model for the Mini dashboard home page
+/// 
+/// Stores the function to define the extra widget displayed on the
+/// footer, and initializes all necessary data, services, and other
+/// view models
 class MiniViewModel with ChangeNotifier {
   Widget Function(BuildContext context)? _footerWidget;
 
@@ -60,10 +55,16 @@ class MiniViewModel with ChangeNotifier {
   }
 }
 
+/// The main app page for the Mini dashboard
+/// 
+/// Displays a header with the dashboard version, a tab bar view
+/// to select between the home page, metrics/controls, logs, and
+/// a page to display a view
 class MiniHomePage extends StatelessWidget {
+  /// The Mini Dashboard view model
   final MiniViewModel model;
 
-  /// A const constructor
+  /// A const constructor for the mini home page
   const MiniHomePage({required this.model});
 
   @override
@@ -153,7 +154,14 @@ class PowerButton extends StatelessWidget {
       );
 }
 
+/// The footer for the mini dashboard
+/// 
+/// Displays any necessary messages in the left of the footer, and
+/// a custom defined widget on the right side. The custom widget space
+/// is used by pages such as the Logs page to display extra information
+/// in a small amount of space
 class MiniFooter extends ReusableReactiveWidget<MiniViewModel> {
+  /// Const constructor for the mini dashboard footer
   const MiniFooter(super.model) : super();
 
   @override
@@ -169,7 +177,12 @@ class MiniFooter extends ReusableReactiveWidget<MiniViewModel> {
       );
 }
 
+/// The main widget for the mini dashboard
+/// 
+/// Initializes the Material App, necessary themes, and defines the
+/// routes to the home and settings page
 class MiniDashboard extends ReactiveWidget<MiniViewModel> {
+  /// Const constructor for the mini dashboard
   const MiniDashboard();
 
   @override
