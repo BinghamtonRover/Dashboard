@@ -2,7 +2,12 @@ import "package:flutter/material.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
+/// Metrics for the Mini Dashboard
+/// 
+/// Displays 2 columns of expansion tiles, the left is the regular rover
+/// metrics, and the right is the controls
 class MiniMetrics extends ReusableReactiveWidget<RoverMetrics> {
+  /// Const constructor for mini metrics
   const MiniMetrics(super.model);
 
   @override
@@ -12,7 +17,7 @@ class MiniMetrics extends ReusableReactiveWidget<RoverMetrics> {
           Expanded(
             flex: 3,
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               children: [
                 Text(
                   "Metrics",

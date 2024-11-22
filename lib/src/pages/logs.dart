@@ -142,27 +142,32 @@ List<Widget> getLogsActions(BuildContext context, LogsViewModel model) => [
                 ListTile(
                     leading: criticalWidget,
                     title: const Text("Critical"),
-                    subtitle: const Text("The rover is in a broken state and may shutdown")),
+                    subtitle: const Text("The rover is in a broken state and may shutdown"),),
                 const ListTile(
                     leading: errorWidget,
                     title: Text("Error"),
-                    subtitle: Text("Something you tried didn't work, but the rover can still function")),
+                    subtitle: Text("Something you tried didn't work, but the rover can still function"),
+                ),
                 const ListTile(
                     leading: warningWidget,
                     title: Text("Warning"),
-                    subtitle: Text("Something may have gone wrong, you should check it out")),
+                    subtitle: Text("Something may have gone wrong, you should check it out"),
+                ),
                 ListTile(
                     leading: infoWidget,
                     title: const Text("Info"),
-                    subtitle: const Text("The rover is functioning normally")),
+                    subtitle: const Text("The rover is functioning normally"),
+                ),
                 const ListTile(
                     leading: debugWidget,
                     title: Text("Debug"),
-                    subtitle: Text("Extra information that shows what the rover's thinking")),
+                    subtitle: Text("Extra information that shows what the rover's thinking"),
+                ),
                 const ListTile(
                     leading: traceWidget,
                     title: Text("Trace"),
-                    subtitle: Text("Values from the code to debug specific issues")),
+                    subtitle: Text("Values from the code to debug specific issues"),
+                ),
                 const SizedBox(height: 12),
               ],
             ),
