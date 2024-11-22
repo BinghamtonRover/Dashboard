@@ -27,7 +27,10 @@ class _MiniLogsState extends State<MiniLogs> {
   void initState() {
     // The footer has to be set in Timer.run since otherwise it will try to rebuild during build
     Timer.run(
-        () => widget.miniViewModel.footerWidget = (context) => Row(children: getLogsActions(context, logsViewModel)));
+      () => widget.miniViewModel.footerWidget = (context) => Row(
+            children: getLogsActions(context, logsViewModel),
+          ),
+    );
     super.initState();
   }
 
