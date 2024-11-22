@@ -175,7 +175,12 @@ class VideoFeedState extends State<VideoFeed> {
             details: data.details,
           ),
         ),
-        Expanded(child: RawImage(image: imageLoader.image, fit: BoxFit.contain)),
+        Expanded(
+          child: InteractiveViewer(
+            minScale: 1,
+            child: RawImage(image: imageLoader.image, fit: BoxFit.contain),
+          ),
+        ),
       ],
     )
     : Center(child: Text(errorMessage, textAlign: TextAlign.center));
