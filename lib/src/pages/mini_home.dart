@@ -143,11 +143,16 @@ class MiniHomeToggleOptions extends ReusableReactiveWidget<Sockets> {
               Switch(
                 value: model.isEnabled,
                 onChanged: (enabled) async {
-                  if (model.rover != RoverType.localhost) {
-                    await model.setRover(RoverType.localhost);
+                  if (enabled) {
+                    if (model.rover != RoverType.localhost) {
+                      await model.setRover(RoverType.localhost);
+                    }
                   }
 
                   if (!enabled) {
+                    for (final socket in model.sockets) {
+                      await socket.dispose();
+                    }
                     await model.disable();
                   } else {
                     await model.init();

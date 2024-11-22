@@ -15,6 +15,7 @@ import "package:flutter/material.dart";
 import "package:rover_dashboard/app.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/src/pages/mini_home.dart";
 import "package:rover_dashboard/src/pages/mini_logs.dart";
@@ -22,21 +23,12 @@ import "package:rover_dashboard/src/pages/mini_metrics.dart";
 import "package:rover_dashboard/widgets.dart";
 
 class MiniViewModel with ChangeNotifier {
-  bool _darkMode = false;
   Widget Function(BuildContext context)? _footerWidget;
 
   /// Constructor for [MiniViewModel], calls [init] to setup mini dashboard
   MiniViewModel() {
     init();
   }
-
-  set darkMode(bool darkMode) {
-    _darkMode = darkMode;
-    notifyListeners();
-  }
-
-  /// Whether or not dark mode is enabled
-  bool get darkMode => _darkMode;
 
   set footerWidget(Widget Function(BuildContext context)? footerWidget) {
     _footerWidget = footerWidget;
@@ -56,7 +48,15 @@ class MiniViewModel with ChangeNotifier {
     await models.sockets.setRover(RoverType.localhost);
     await models.sockets.disable();
 
+    models.settings.addListener(notifyListeners);
+
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    models.settings.removeListener(notifyListeners);
+    super.dispose();
   }
 }
 
@@ -72,15 +72,9 @@ class MiniHomePage extends StatelessWidget {
           automaticallyImplyLeading: false,
           title: Text("Dashboard v${models.home.version ?? ''}"),
           actions: [
-            Row(
-              children: [
-                const Text(
-                  "Dark Mode",
-                  style: TextStyle(color: Colors.white),
-                ),
-                const SizedBox(width: 5),
-                Switch(value: model.darkMode, onChanged: (value) => model.darkMode = value),
-              ],
+            IconButton(
+              onPressed: () => Navigator.of(context).pushNamed(Routes.settings),
+              icon: const Icon(Icons.settings),
             ),
             const SizedBox(width: 10),
             const PowerButton(),
@@ -185,7 +179,7 @@ class MiniDashboard extends ReactiveWidget<MiniViewModel> {
   Widget build(BuildContext context, MiniViewModel model) => MaterialApp(
         title: "Binghamton University Rover Team",
         debugShowCheckedModeBanner: false,
-        themeMode: model.darkMode ? ThemeMode.dark : ThemeMode.light,
+        themeMode: models.isReady ? models.settings.dashboard.themeMode : ThemeMode.system,
         theme: ThemeData(
           colorScheme: const ColorScheme.light(
             primary: binghamtonGreen,
@@ -203,6 +197,10 @@ class MiniDashboard extends ReactiveWidget<MiniViewModel> {
           ),
         ),
         home: MiniHomePage(model: model),
+        routes: {
+          Routes.home: (_) => MiniHomePage(model: model),
+          Routes.settings: (_) => SettingsPage(),
+        },
       );
 }
 
@@ -214,8 +212,15 @@ void main() async {
     if (error is SocketException && networkErrors.contains(error.osError!.errorCode)) {
       models.home.setMessage(severity: Severity.critical, text: "Network error, restart by clicking the network icon");
     } else {
-      models.home.setMessage(severity: Severity.critical, text: "Dashboard error. See the logs");
-      await services.files.logError(error, stack);
+      models.home.setMessage(severity: Severity.critical, text: "Dashboard error. See the logs", logMessage: false);
+      models.logs.handleLog(
+        BurtLog(
+          level: BurtLogLevel.critical,
+          title: "Dashboard Error. Click for details",
+          body: "$error\n$stack",
+          device: Device.DASHBOARD,
+        ),
+      );
       Error.throwWithStackTrace(error, stack);
     }
   });
