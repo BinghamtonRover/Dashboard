@@ -140,15 +140,9 @@ class FilesService extends Service {
       WrappedMessage.fromBuffer(base64.decode(line)),
   ];
 
-  /// Outputs error to log file
-  Future<void> logError(Object error, StackTrace stack) async{
-    if (!_isInit) return;
-    final file = loggingDir / "errors.log";
-    await file.writeAsString("${DateTime.now().timeStamp} $error $stack\n", mode: FileMode.writeOnlyAppend);
-  }
-
   /// Outputs a log to its device's respective log file.
   Future<void> logMessage(BurtLog log) async {
+    if (!_isInit) return;
     final file = loggingDir / "${log.device.humanName}.log";
     await file.writeAsString("${log.format()}\n", mode: FileMode.writeOnlyAppend);
   }
