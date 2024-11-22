@@ -39,7 +39,7 @@ class ShortcutKey {
 }
 
 /// Callback for when a shortcut key is pressed
-typedef ShortcutCallback = void Function();
+typedef ShortcutCallback = bool Function();
 
 /// A service for global shortcuts in the dashboard
 ///
@@ -111,18 +111,26 @@ class ShortcutsService extends Service {
       return false;
     }
 
+    var handled = false;
+
     for (final shortcut in shortcuts) {
       final callback = _callbackMap[shortcut.identifier];
 
       if (callback != null) {
-        callback();
+        handled = callback() || handled;
       }
     }
 
-    return true;
+    return handled;
   }
 
   /// Registers a [ShortcutKey] to the global shortcut listeners
+  ///
+  /// The provided callback returns a boolean, which indicates whether or
+  /// not Flutter events should be ignored. For example, if you are typing in a textbox,
+  /// and have a shortcut key is pressed while typing, if the callback returns
+  /// true, that key will not be typed into the textbox, but if it returns
+  /// false, it will.
   ///
   /// The shortcut will only get called once all the required keys are pressed, and will not be repeated
   void register(
@@ -150,10 +158,11 @@ class ShortcutsService extends Service {
   Future<void> init() async {
     register(
       ShortcutKey([LogicalKeyboardKey.space], identifier: "safety e-stop"),
-      callback: () async {
+      callback: () {
         if (models.rover.status.value != RoverStatus.DISCONNECTED) {
-          await models.rover.settings.setStatus(RoverStatus.IDLE);
+          models.rover.settings.setStatus(RoverStatus.IDLE);
         }
+        return false;
       },
     );
 
@@ -166,12 +175,13 @@ class ShortcutsService extends Service {
         ],
         identifier: "enable rover",
       ),
-      callback: () async {
+      callback: () {
         final status = models.rover.status.value;
 
         if (status == RoverStatus.IDLE) {
-          await models.rover.settings.setStatus(RoverStatus.MANUAL);
+          models.rover.settings.setStatus(RoverStatus.MANUAL);
         }
+        return false;
       },
     );
 
@@ -181,8 +191,9 @@ class ShortcutsService extends Service {
         modifiers: [KeyModifier.control],
         identifier: "connect to rover",
       ),
-      callback: () async {
-        await models.sockets.setRover(RoverType.rover);
+      callback: () {
+        models.sockets.setRover(RoverType.rover);
+        return false;
       },
     );
 
@@ -192,8 +203,9 @@ class ShortcutsService extends Service {
         modifiers: [KeyModifier.control, KeyModifier.shift],
         identifier: "connect to local",
       ),
-      callback: () async {
-        await models.sockets.setRover(RoverType.localhost);
+      callback: () {
+        models.sockets.setRover(RoverType.localhost);
+        return false;
       },
     );
 
@@ -203,12 +215,13 @@ class ShortcutsService extends Service {
         modifiers: [KeyModifier.control],
         identifier: "reset network",
       ),
-      callback: () async {
+      callback: () {
         models.home.setMessage(
           severity: Severity.info,
           text: "Resetting network",
         );
-        await models.sockets.reset();
+        models.sockets.reset();
+        return false;
       },
     );
     HardwareKeyboard.instance.addHandler(_handleRawKeyEvent);
