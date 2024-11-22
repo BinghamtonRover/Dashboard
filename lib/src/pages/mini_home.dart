@@ -168,7 +168,7 @@ class MiniHomeToggleOptions extends ReusableReactiveWidget<Sockets> {
               ValueListenableBuilder(
                 valueListenable: models.rover.status,
                 builder: (context, value, child) => Switch(
-                  value: value != RoverStatus.IDLE,
+                  value: value == RoverStatus.IDLE,
                   onChanged: (idle) async {
                     final value = idle ? RoverStatus.IDLE : RoverStatus.MANUAL;
 
