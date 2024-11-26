@@ -25,6 +25,7 @@ dependencies:
   flutter_sdl_gamepad: ^1.0.0
 
 dependency_overrides:
+  # https://github.com/BinghamtonRover/flutter_sdl_gamepad/pull/1 remove after this is merged
   flutter_sdl_gamepad:
     git: 
       url: https://github.com/BinghamtonRover/flutter_sdl_gamepad
