@@ -63,8 +63,12 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: 3.24.3
           cache: true
           cache-key: "flutter-windows"  # we don't need *the* most recent build
+
+      - name: Flutter Doctor
+        run: flutter doctor
 
       - name: Build MSIX
         run: |
