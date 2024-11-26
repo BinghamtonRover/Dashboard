@@ -24,6 +24,16 @@ dependencies:
   collection: ^1.18.0
   flutter_sdl_gamepad: ^1.0.0
 
+dependency_overrides:
+  flutter_sdl_gamepad:
+    git: 
+      url: https://github.com/BinghamtonRover/flutter_sdl_gamepad
+      ref: macos
+  sdl3:
+    git: 
+      url: https://github.com/Levi-Lesches/sdl3
+      ref: dylib
+
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
