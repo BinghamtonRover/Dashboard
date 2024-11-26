@@ -1,7 +1,19 @@
+import "dart:io";
 import "package:flutter_sdl_gamepad/flutter_sdl_gamepad.dart" as sdl;
 
 import "state.dart";
 import "gamepad.dart";
+
+/// Whether `package:sdl_gamepad` has been tested on this platform.
+bool get isSdlSupported => Platform.isWindows || Platform.isLinux;
+
+/// Initializes the SDL libraries.
+void initSdl() {
+  if (!isSdlSupported) return;
+  if (!sdl.SdlLibrary.init()) {
+    throw StateError("Could not initialize SDL libraries");
+  }
+}
 
 /// A cross-platform implementation based on the `sdl_gamepad` package.
 class DesktopGamepad extends Gamepad {
@@ -32,25 +44,5 @@ class DesktopGamepad extends Gamepad {
   bool get isConnected => _sdl.isConnected;
 
   @override
-  GamepadState getState() {
-    final state = _sdl.getState();
-    return GamepadState(
-      buttonA: state.buttonA,
-      buttonB: state.buttonB,
-      buttonX: state.buttonX,
-      buttonY: state.buttonY,
-      buttonBack: state.buttonBack,
-      buttonStart: state.buttonStart,
-      normalDpadX: state.normalDpadX.toDouble(),
-      normalDpadY: state.normalDpadY.toDouble(),
-      normalLeftX: state.normalLeftJoystickX,
-      // These Y values are flipped because sdl_gamepad follows the standard convention,
-      // where positive means the joystick is moving towards the user (down).
-      normalLeftY: -state.normalLeftJoystickY,
-      normalRightX: state.normalRightJoystickX,
-      normalRightY: -state.normalRightJoystickY,
-      normalShoulder: state.normalShoulders.toDouble(),
-      normalTrigger: state.normalTriggers,
-    );
-  }
+  GamepadState getState() => _sdl.getState();
 }

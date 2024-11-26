@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
+import "package:rover_dashboard/src/pages/controller.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A function that builds a view of the given index.
@@ -120,6 +121,11 @@ class DashboardView {
       iconFunc: () => Icon(Icons.landslide, color: Colors.black.withOpacity(0.5)),
       builder: (context, index) => RocksPage(index: index),
     ),
+    DashboardView(
+      name: Routes.controllers,
+      iconFunc: () => Icon(Icons.sports_esports, color: Colors.black.withOpacity(0.5)),
+      builder: (context, index) => ControllersPage(index: index),
+    ),
   ];
 
   /// A blank view.
@@ -133,10 +139,9 @@ class DashboardView {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Convoluted way to get all horizontal space filled
           Row(children: [const Spacer(), ViewsSelector(index: index)]),
           const Spacer(),
-          const Text("Drag in or choose a view"),
+          const Text("Drag in or choose a view", textAlign: TextAlign.center),
           const Spacer(),
         ],
       ),

@@ -1,10 +1,10 @@
 name: rover_dashboard
 description: Graphical application for remotely operating the rover.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 2024.9.26+15  # Always increment the build number, never go down, even on new versions
+version: 2024.10.28+16  # Always increment the build number, never go down, even on new versions
 
 environment:
-  sdk: ^3.2.2
+  sdk: ^3.5.0
 
 # Prefer to use `flutter pub add packageName` rather than modify this section by hand.
 dependencies:
@@ -13,7 +13,7 @@ dependencies:
   burt_network:
     git: https://github.com/BinghamtonRover/Networking.git
   file_picker: ^8.0.0+1
-  fl_chart: ^0.68.0
+  fl_chart: ^0.69.0
   flutter_libserialport: ^0.4.0
   package_info_plus: ^8.0.0
   flutter_resizable_container: ^3.0.0
@@ -25,24 +25,32 @@ dependencies:
   flutter_sdl_gamepad: ^1.0.0
 
 dependency_overrides:
-  # https://github.com/BinghamtonRover/flutter_sdl_gamepad/pull/1 remove after this is merged
+  # See: https://github.com/BinghamtonRover/flutter_sdl_gamepad/pull/1
   flutter_sdl_gamepad:
-    git: 
+    git:
       url: https://github.com/BinghamtonRover/flutter_sdl_gamepad
       ref: macos
   sdl3:
-    git: 
+    git:
       url: https://github.com/Levi-Lesches/sdl3
       ref: dylib
+  # See: https://github.com/jpnurmi/flutter_libserialport/issues/108
+  flutter_libserialport:
+    git: https://github.com/snabble/flutter_libserialport.git
+  # See: https://github.com/andyhorn/flutter_resizable_container/pull/61
+  flutter_resizable_container:
+    git:
+      url: https://github.com/Levi-Lesches/flutter_resizable_container
+      ref: set-children-public
 
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.1
   flutter_test:
     sdk: flutter
-  icons_launcher: ^2.1.0
+  icons_launcher: ^3.0.0
   msix: ^3.9.1
-  very_good_analysis: ^5.0.0+1
+  very_good_analysis: ^6.0.0
 
 # Generates icons for the given platforms
 #   Run: flutter pub run icons_launcher:create
@@ -63,7 +71,7 @@ flutter_launcher_icons:
 # Builds a Windows .msix App Installer file for the Dashboard.
 #   Command: dart run msix:create
 msix_config:
-  msix_version: 2024.9.26.15
+  msix_version: 2024.10.28.16
   display_name: Dashboard
   publisher_display_name: Binghamton University Rover Team
   identity_name: edu.binghamton.rover

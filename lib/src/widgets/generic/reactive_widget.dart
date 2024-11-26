@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 
-/// A widget that listens to a [ChangeNotifier] (called the view model) and updates when it does. 
-/// 
+/// A widget that listens to a [ChangeNotifier] (called the view model) and updates when it does.
+///
 /// - If you're listening to an existing view model, use [ReusableReactiveWidget].
 /// - If you're listening to a view model created by this widget, use [ReactiveWidget].
 abstract class ReactiveWidgetInterface<T extends ChangeNotifier> extends StatefulWidget {
@@ -9,8 +9,8 @@ abstract class ReactiveWidgetInterface<T extends ChangeNotifier> extends Statefu
   const ReactiveWidgetInterface({super.key});
   /// Creates the view model. This is only called once in the widget's lifetime.
   T createModel();
-  /// Whether this widget should dispose the model after it's destroyed. 
-  /// 
+  /// Whether this widget should dispose the model after it's destroyed.
+  ///
   /// Normally, we want the widget to clean up after itself and dispose its view model. But it's
   /// also common for one view model to create and depend on another model. In this case, if we
   /// are listening to the sub-model, we don't want to dispose it while the parent model is still
@@ -23,8 +23,8 @@ abstract class ReactiveWidgetInterface<T extends ChangeNotifier> extends Statefu
   /// Builds the UI according to the state in [model].
 	Widget build(BuildContext context, T model);
 
-  /// This function gives you an opportunity to update the view model when the widget updates. 
-  /// 
+  /// This function gives you an opportunity to update the view model when the widget updates.
+  ///
   /// For more details, see [State.didUpdateWidget].
   @mustCallSuper
   void didUpdateWidget(covariant ReactiveWidgetInterface<T> oldWidget, T model) { }
@@ -43,7 +43,7 @@ abstract class ReactiveWidget<T extends ChangeNotifier> extends ReactiveWidgetIn
   bool get shouldDispose => true;
 }
 
-/// A [ReactiveWidgetInterface] that "borrows" a view model and does not dispose of it. 
+/// A [ReactiveWidgetInterface] that "borrows" a view model and does not dispose of it.
 abstract class ReusableReactiveWidget<T extends ChangeNotifier> extends ReactiveWidgetInterface<T> {
   /// The model to borrow.
   final T model;
@@ -60,7 +60,7 @@ abstract class ReusableReactiveWidget<T extends ChangeNotifier> extends Reactive
 /// A state for [ReactiveWidget] that manages the [model].
 class ReactiveWidgetState<T extends ChangeNotifier> extends State<ReactiveWidgetInterface<T>>{
 	/// The model to listen to.
-	late final T model;
+	late T model;
 
 	@override
 	void initState() {
@@ -79,6 +79,16 @@ class ReactiveWidgetState<T extends ChangeNotifier> extends State<ReactiveWidget
   @override
   void didUpdateWidget(covariant ReactiveWidgetInterface<T> oldWidget) {
     widget.didUpdateWidget(oldWidget, model);
+    if (oldWidget is ReusableReactiveWidget<T> && widget is ReusableReactiveWidget<T>) {
+      final newModel = (widget as ReusableReactiveWidget<T>).model;
+      if (model != newModel) {
+        // Stop listening to the old one, listen to the new one.
+        // Don't dispose of the old one since it's reusable.
+        model.removeListener(listener);
+        model = newModel;
+        model.addListener(listener);
+      }
+    }
     super.didUpdateWidget(oldWidget);
   }
 
