@@ -6,8 +6,14 @@ import "package:rover_dashboard/models.dart";
 
 import "settings.dart";
 
+/// A model that updates whenever any controller changes mode or connection.
+class ControllerModes with ChangeNotifier {
+  /// Notifies that one of the controllers has changed modes.
+  void update() => notifyListeners();
+}
+
 /// The model to control the entire rover.
-/// 
+///
 /// Find more specific functionality in this class's fields.
 class Rover extends Model {
 	/// Monitors metrics coming from the rover.
@@ -24,6 +30,12 @@ class Rover extends Model {
 
   /// Listens for inputs on the third connected gamepad.
 	final controller3 = Controller(2, NoControls());
+
+  /// Listens for changes to any controller.
+  final controllerModes = ControllerModes();
+
+  /// Listens for inputs on the keyboard.
+  final keyboardController = KeyboardController();
 
   /// Sets all the gamepads to their default controls.
   void setDefaultControls() {
@@ -47,13 +59,14 @@ class Rover extends Model {
 	ValueNotifier<RoverStatus> status = ValueNotifier(RoverStatus.DISCONNECTED);
 
 	@override
-	Future<void> init() async { 
+	Future<void> init() async {
     setDefaultControls();
     await metrics.init();
 		await controller1.init();
 		await controller2.init();
     await controller3.init();
 		await settings.init();
+    await keyboardController.init();
 
 		metrics.addListener(notifyListeners);
 		settings.addListener(notifyListeners);
@@ -69,6 +82,7 @@ class Rover extends Model {
 		controller2.dispose();
     controller3.dispose();
 		settings.dispose();
+    keyboardController.dispose();
 		super.dispose();
 	}
 }

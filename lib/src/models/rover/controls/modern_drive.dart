@@ -2,6 +2,10 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
+extension on (num, num) {
+  (double, double) operator * (double other) => ($1 * other, $2 * other);
+}
+
 /// Modern drive controls, similar to most racing video games.
 ///
 /// Triggers are for acceleration, left stick for steering.
@@ -37,29 +41,22 @@ class ModernDriveControls extends RoverControls {
   OperatingMode get mode => OperatingMode.modernDrive;
 
   /// Gets the speeds of the wheels based on the speed and direction.
-  (double, double) getWheelSpeeds(double speed, double direction) {
+  static (double, double) getWheelSpeeds(double speed, double direction) {
     const slope = 1 / 90;
-    if (direction < -45) {  // trying to turn too far left
-      return (-1, 1);
+    if (speed == 0) {
+      return (direction / 2, -direction / 2);
+    } else if (direction < -45) {  // trying to turn too far left
+      return (-1, 1) * speed;
     } else if (direction >= -45 && direction < 45) {  // [-45, 45]
-      return (slope * direction + 0.5, slope * direction - 0.5);
+      return (slope * direction + 0.5, slope * direction - 0.5) * speed;
     } else {  // trying to turn too far right
-      return (1, -1);
+      return (1, -1) * speed;
     }
   }
 
   /// Gets all commands for the wheels based on the gamepad state.
   List<DriveCommand> getWheelCommands(GamepadState state) {
     final speed = state.normalTriggers;  // sum of both triggers, [-1, 1]
-    if (speed == 0) {
-      final left = state.normalLeftX;
-      final right = state.normalLeftX;
-      return [
-        DriveCommand(left: left / 2, setLeft: true),
-        DriveCommand(right: right / 2, setRight: true),
-        DriveCommand(throttle: throttle, setThrottle: true),
-      ];
-    }
     final direction = state.normalLeftX * 20;  // [-1, 1] --> [-45, 45]
     final (double left, double right) = getWheelSpeeds(speed, direction);
     return [
