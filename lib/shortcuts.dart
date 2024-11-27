@@ -11,7 +11,8 @@ final shortcuts = <ShortcutActivator, Intent>{
   ...WidgetsApp.defaultShortcuts,
   const SingleActivator(LogicalKeyboardKey.space): const VoidCallbackIntent(stopEverything),
   const CharacterActivator("n"): VoidCallbackIntent(models.sockets.reset),
-  const CharacterActivator("l"): VoidCallbackIntent(models.sockets.toggleRoverType),
+  const CharacterActivator("l"): VoidCallbackIntent(models.sockets.toggleRover),
+  const CharacterActivator("t"): VoidCallbackIntent(models.sockets.toggleTank),
 };
 
 /// Sends all available stop commands and puts the rover into idle mode.

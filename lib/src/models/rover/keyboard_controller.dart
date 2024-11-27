@@ -98,6 +98,7 @@ class KeyboardController extends Model {
     },
     "Reset the network": "N",
     "Toggle localhost mode": "L",
+    "Toggle tank mode": "T",
     "Stop immediately": "Space",
   };
 }

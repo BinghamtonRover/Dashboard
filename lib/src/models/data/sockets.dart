@@ -116,12 +116,22 @@ class Sockets extends Model {
     }
   }
 
-  /// Toggles the network connection type.
-  void toggleRoverType() {
+  /// Toggles the network connection type between rover and localhost.
+  void toggleRover() {
     final newRoverType = switch(rover) {
       RoverType.localhost => RoverType.rover,
       RoverType.rover => RoverType.localhost,
       RoverType.tank => RoverType.rover,
+    };
+    setRover(newRoverType);
+  }
+
+  /// Toggles the network connection type between tank and localhost.
+  void toggleTank() {
+    final newRoverType = switch(rover) {
+      RoverType.localhost => RoverType.tank,
+      RoverType.rover => RoverType.tank,
+      RoverType.tank => RoverType.localhost,
     };
     setRover(newRoverType);
   }
