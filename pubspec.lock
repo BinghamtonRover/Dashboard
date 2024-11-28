@@ -46,7 +46,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: ceeb9602a332d612bd9392d2b865403eea76b465
+      resolved-ref: ba31838a1a1307e6c5507cba89643f4f62217971
       url: "https://github.com/BinghamtonRover/Networking.git"
     source: git
     version: "2.0.0"
@@ -205,7 +205,7 @@ packages:
     description:
       path: "."
       ref: set-children-public
-      resolved-ref: ee68851d5db330a47451dccff601ba4d0feb4896
+      resolved-ref: cf2f237653a48389a99081dbb5086c1acce03f7f
       url: "https://github.com/Levi-Lesches/flutter_resizable_container"
     source: git
     version: "3.0.0"
