@@ -50,9 +50,9 @@ class ArmModel with ChangeNotifier {
 
   /// The angles of the arm.
   ArmAngles get angles => (
-        shoulder: arm.shoulder.angle,
-        elbow: arm.elbow.angle,
-        lift: gripper.lift.angle,
+        shoulder: arm.shoulder.currentAngle,
+        elbow: arm.elbow.currentAngle,
+        lift: gripper.lift.currentAngle,
       );
 
   /// The position of the mouse, if it's in the box.
