@@ -145,6 +145,8 @@ extension DeviceUtils on Device {
 			case Device.GRIPPER: return "Gripper";
 			case Device.SCIENCE: return "Science";
 			case Device.DRIVE: return "Drive";
+			case Device.BASE_STATION: return "Base Station";
+			case Device.ANTENNA: return "Antenna";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized device: $this");

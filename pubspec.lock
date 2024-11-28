@@ -45,11 +45,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: ba31838a1a1307e6c5507cba89643f4f62217971
+      ref: "2.1.0"
+      resolved-ref: "61c1952afe2210099ccde59220356db647dc79ae"
       url: "https://github.com/BinghamtonRover/Networking.git"
     source: git
-    version: "2.0.0"
+    version: "2.1.0"
   characters:
     dependency: transitive
     description:
