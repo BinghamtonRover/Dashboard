@@ -40,11 +40,12 @@ class GridOffset {
 
 extension _GpsCoordinatesToBlock on GpsCoordinates {
   GpsCoordinates get toGridBlock {
-    final (latitudeMeters, longitudeMeters) = inMeters;
+    final (:lat, :long) = inMeters;
     return GpsCoordinates(
-    latitude: (latitudeMeters / models.settings.dashboard.mapBlockSize).roundToDouble(),
-    longitude: (longitudeMeters / models.settings.dashboard.mapBlockSize).roundToDouble(),
-  );}
+      latitude: (lat / models.settings.dashboard.mapBlockSize).roundToDouble(),
+      longitude: (long / models.settings.dashboard.mapBlockSize).roundToDouble(),
+    );
+  }
 }
 
 /// A record representing data necessary to display a cell in the map
@@ -102,9 +103,9 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
     for (int latitude = 0; latitude < gridSize; latitude++) [
       for (int longitude = 0; longitude < gridSize; longitude++) (
         coordinates: (
-          (latitude.toDouble() - offset.y) * precisionMeters,
-          (-longitude.toDouble() + offset.x) * precisionMeters
-        ).toGpsCoordinates,
+          lat: (latitude.toDouble() - offset.y) * precisionMeters,
+          long: (-longitude.toDouble() + offset.x) * precisionMeters
+        ).toGps(),
         cellType: AutonomyCell.empty
       ),
     ],
@@ -178,9 +179,9 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 		// - rover.longitude => (gridSize - 1) / 2
 		// - rover.latitude => (gridSize - 1) / 2
 		// Then, everything else should be offset by that
-    final (latitudeMeters, longitudeMeters) = gps.inMeters;
-    final x = (-longitudeMeters / precisionMeters).round() + offset.x;
-    final y = (latitudeMeters / precisionMeters).round() + offset.y;
+    final (:lat, :long) = gps.inMeters;
+    final x = (-long / precisionMeters).round() + offset.x;
+    final y = (lat / precisionMeters).round() + offset.y;
 		if (x < 0 || x >= gridSize) return;
 		if (y < 0 || y >= gridSize) return;
 		grid[y][x] = (coordinates: gps, cellType: value);
@@ -200,9 +201,9 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
     // final position = isPlayingBadApple ? GpsCoordinates() : roverPosition;
     final position = roverPosition;
 		final midpoint = ((gridSize - 1) / 2).floor();
-    final (latitudeMeters, longitudeMeters) = position.inMeters;
-    final offsetX = midpoint + (longitudeMeters / precisionMeters).round();
-    final offsetY = midpoint - (latitudeMeters / precisionMeters).round();
+    final (:lat, :long) = position.inMeters;
+    final offsetX = midpoint + (long / precisionMeters).round();
+    final offsetY = midpoint - (lat / precisionMeters).round();
 		offset = GridOffset(offsetX, offsetY);
 		notifyListeners();
 	}
