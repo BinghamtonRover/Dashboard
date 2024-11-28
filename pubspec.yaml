@@ -13,7 +13,7 @@ dependencies:
   burt_network:
     git:
       url: https://github.com/BinghamtonRover/Networking.git
-      ref: 2.1.0
+      ref: 2.2.0
   file_picker: ^8.0.0+1
   fl_chart: ^0.69.0
   flutter_libserialport: ^0.4.0
@@ -22,9 +22,10 @@ dependencies:
   path_provider: ^2.0.14
   protobuf: ^3.0.0
   url_launcher: ^6.1.10
-  just_audio: ^0.9.36
+  just_audio: ^0.9.42
   collection: ^1.18.0
   flutter_sdl_gamepad: ^1.0.0
+  just_audio_windows: ^0.2.2
 
 dependency_overrides:
   flutter_libserialport:

@@ -37,8 +37,8 @@ class PositionMetrics extends Metrics<RoverPosition> {
 	@override
 	List<MetricLine> get allMetrics => [  
     MetricLine("GPS: "),
-    MetricLine("  Latitude: ${data.gps.latitude.toStringAsFixed(6)}°",),
-		MetricLine("  Longitude: ${data.gps.longitude.toStringAsFixed(6)}°",),
+    MetricLine("  Latitude: ${data.gps.latitude.toStringAsFixed(10)}°",),
+		MetricLine("  Longitude: ${data.gps.longitude.toStringAsFixed(10)}°",),
 		MetricLine("  Altitude: ${data.gps.altitude.toStringAsFixed(2)} m"),
 		MetricLine("Orientation:",),
 		MetricLine("  X: ${data.orientation.x.toStringAsFixed(2)}°", severity: getRotationSeverity(data.orientation.x)),
