@@ -59,7 +59,7 @@ class ScienceAnalysis {
 	final SampleData data = SampleData();
 
 	/// Passes the overriden data to the sensor's test to determine signs of life.
-	ScienceResult get testResult => data.readings.isEmpty 
+	ScienceResult get testResult => data.readings.isEmpty
 		? ScienceResult.loading : sensor.test(SampleData()
 			..min = testBuilder.min.value
 			..average = testBuilder.average.value
@@ -67,7 +67,7 @@ class ScienceAnalysis {
 		);
 
 	/// Clears all readings from this analysis.
-	void clear() { 
+	void clear() {
 		data.clear();
 		testBuilder.update(data);
 	}
@@ -87,7 +87,7 @@ class ScienceModel with ChangeNotifier {
 	/// A list of all the samples for all the sensors.
 	Map<ScienceSensor, List<ScienceAnalysis>> allSamples = {
 		for (final sensor in sensors) sensor: [
-			for (int i = 0; i < models.settings.science.numSamples; i++) 
+			for (int i = 0; i < models.settings.science.numSamples; i++)
 				ScienceAnalysis(sensor),
 		],
 	};
@@ -140,11 +140,14 @@ class ScienceModel with ChangeNotifier {
 	/// Whether the page is currently loading.
 	bool isLoading = false;
 
+  /// Whether the pump command has just been sent.
+  bool isPumping = false;
+
 	/// The error, if any, that occurred while loading the data.
 	String? errorText;
 
   /// Adds a value to the correct analysis for the sensor and sample.
-  void addReading(ScienceSensor sensor, int sample, Timestamp timestamp, double value) => 
+  void addReading(ScienceSensor sensor, int sample, Timestamp timestamp, double value) =>
     allSamples[sensor]![sample].addReading(timestamp, value);
 
 	/// Adds a [WrappedMessage] containing a [ScienceData] to the UI.
@@ -154,9 +157,9 @@ class ScienceModel with ChangeNotifier {
 		final sample = data.sample;
 		if (!wrapper.hasTimestamp()) { throw ArgumentError("Data is missing a timestamp"); }
 		if (sample >= numSamples) throw RangeError("Got data for sample #${sample + 1}, but there are only $numSamples samples.\nChange the number of samples in the settings and reload.");
-		if (data.co2 != 0) addReading(co2, sample, wrapper.timestamp, data.co2); 
-		if (data.humidity != 0) addReading(humidity, sample, wrapper.timestamp, data.humidity); 
-		if (data.temperature != 0) addReading(temperature, sample, wrapper.timestamp, data.temperature); 
+		if (data.co2 != 0) addReading(co2, sample, wrapper.timestamp, data.co2);
+		if (data.humidity != 0) addReading(humidity, sample, wrapper.timestamp, data.humidity);
+		if (data.temperature != 0) addReading(temperature, sample, wrapper.timestamp, data.temperature);
 	}
 
 	/// Clears all the readings from all the samples.
@@ -169,6 +172,18 @@ class ScienceModel with ChangeNotifier {
 		isListening = true;
 		models.home.setMessage(severity: Severity.info, text: "Science UI will update on new data");
 	}
+
+  /// Sends a [ScienceCommand] to fill  the pumps
+  Future<void> fillPumps() async{
+    isPumping = true;
+    notifyListeners();
+    models.messages.sendMessage(ScienceCommand(pumps: PumpState.PUMP_ON));
+    models.home.setMessage(severity: Severity.info, text: "Science command submitted. Check the video feed to confirm");
+    await Future<void>.delayed(const Duration(seconds: 3));
+    isPumping = false;
+    notifyListeners();
+    return;
+  }
 
 	/// Calls [addMessage] for each message in the picked file.
 	Future<void> loadFile() async {

@@ -9,7 +9,7 @@ import "package:rover_dashboard/widgets.dart";
 /// Allows desktop users to scroll with their mouse or other device.
 class DesktopScrollBehavior extends MaterialScrollBehavior {
   @override
-  Set<PointerDeviceKind> get dragDevices => { 
+  Set<PointerDeviceKind> get dragDevices => {
     PointerDeviceKind.touch,
     PointerDeviceKind.mouse,
     PointerDeviceKind.stylus,
@@ -30,12 +30,12 @@ class ScrollingRow extends ReusableReactiveWidget<SettingsModel> {
 
 	@override
 	Widget build(BuildContext context, SettingsModel model) => SizedBox(
-    height: height, 
+    height: height,
     child: model.science.scrollableGraphs
 			? ScrollConfiguration(
 			  behavior: DesktopScrollBehavior(),
 				child: ListView(
-					scrollDirection: Axis.horizontal, 
+					scrollDirection: Axis.horizontal,
 					children: [for (final child in children) SizedBox(width: 400, child: child)],
 				),
 			)
@@ -53,7 +53,7 @@ class ChartsRow extends StatelessWidget {
 	/// The height of this row.
 	final double height;
 
-	/// The data for these charts. 
+	/// The data for these charts.
 	final List<ScienceAnalysis> analyses;
 
 	/// The chart to show for each piece of data.
@@ -61,9 +61,9 @@ class ChartsRow extends StatelessWidget {
 
 	/// A const constructor.
 	const ChartsRow({
-		required this.title, 
-		required this.analyses, 
-		required this.builder, 
+		required this.title,
+		required this.analyses,
+		required this.builder,
 		this.height = 300,
 	});
 
@@ -95,9 +95,9 @@ class SciencePage extends ReactiveWidget<ScienceModel> {
 	static final red = HSVColor.fromColor(Colors.red);
 	/// Purple, used as the color for the last sample.
 	static final purple = HSVColor.fromColor(Colors.purple);
-	/// Gets a color between red and purple 
+	/// Gets a color between red and purple
 	///
-	/// [value] must be between 0.0 and 1.0. 
+	/// [value] must be between 0.0 and 1.0.
 	Color getColor(double value) => HSVColor.lerp(red, purple, value)!.toColor();
 
 	/// The `package:fl_chart` helper class for the details charts.
@@ -105,19 +105,19 @@ class SciencePage extends ReactiveWidget<ScienceModel> {
 		lineBarsData: [
 			LineChartBarData(
 				spots: [
-					for (final reading in analysis.data.readings) 
+					for (final reading in analysis.data.readings)
 						FlSpot(reading.time, reading.value),
-				], 
+				],
 				color: color,
 				preventCurveOverShooting: true,
 				isCurved: true,
 			),
-		], 
+		],
 		titlesData: FlTitlesData(
-			topTitles: const AxisTitles(), 
+			topTitles: const AxisTitles(),
 			bottomTitles: AxisTitles(
 				sideTitles: SideTitles(
-					showTitles: true, 
+					showTitles: true,
 					getTitlesWidget: (double value, TitleMeta meta) => SideTitleWidget(
 						axisSide: AxisSide.bottom,
 						space: 3,
@@ -140,10 +140,10 @@ class SciencePage extends ReactiveWidget<ScienceModel> {
 			BarChartGroupData(x: 2, barRods: [BarChartRodData(color: color, fromY: 0, toY: analysis.data.max ?? 0)]),
 		],
 		titlesData: FlTitlesData(
-			topTitles: const AxisTitles(), 
+			topTitles: const AxisTitles(),
 			bottomTitles: AxisTitles(
 				sideTitles: SideTitles(
-					showTitles: true, 
+					showTitles: true,
 					getTitlesWidget: (double value, TitleMeta meta) => SideTitleWidget(
 						axisSide: AxisSide.bottom,
 						space: 3,
@@ -167,10 +167,16 @@ class SciencePage extends ReactiveWidget<ScienceModel> {
 	Widget build(BuildContext context, ScienceModel model) => Column(children: [
     Row(children: [  // The header at the top
       const SizedBox(width: 8),
-      Text("Science Analysis", style: context.textTheme.headlineMedium), 
+      Text("Science Analysis", style: context.textTheme.headlineMedium),
       const SizedBox(width: 12),
       if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
       const Spacer(),
+      ElevatedButton(
+        onPressed: model.isPumping ? null : model.fillPumps,
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+        child: const Text("Fill Pumps"),
+      ),
+      const SizedBox(width: 12),
       DropdownButton(
         value: model.sample,
         onChanged: model.updateSample,
