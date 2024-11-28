@@ -96,7 +96,7 @@ class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
             initialSelection: model.levelFilter,
             onSelected: model.setLevelFilter,
             dropdownMenuEntries: [
-              for (final level in UndefinedFilter(BurtLogLevel.values).filtered)
+              for (final level in BurtLogLevel.values.filtered)
                 DropdownMenuEntry(label: level.humanName, value: level),
             ],
           ),

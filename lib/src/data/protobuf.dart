@@ -1,6 +1,5 @@
 import "dart:math";
 
-import "package:protobuf/protobuf.dart";
 import "package:rover_dashboard/data.dart";
 
 export "package:protobuf/protobuf.dart" show GeneratedMessageGenericExtensions;
@@ -27,16 +26,6 @@ String getDataName(Device device) => switch (device) {
 	Device.DRIVE => "DriveData",
 	_ => "Unknown",
 };
-
-/// Utilities for a list of Protobuf enums.
-extension UndefinedFilter<T extends ProtobufEnum> on List<T> {
-  /// Filters out `_UNDEFINED` values from the list.
-  List<T> get filtered => [
-    for (final value in this)
-      if (value.value != 0)
-        value,
-  ];
-}
 
 /// Utilities for [Timestamp]s.
 extension TimestampUtils on Timestamp {
