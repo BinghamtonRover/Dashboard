@@ -58,7 +58,7 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 	}
 
 	/// Sends this command to the rover using [Sockets.autonomy].
-	Future<void> submit() async {
+	Future<void> submit(AutonomyCommand value) async {
 		_handshake = null;
 		isLoading = true;
 		notifyListeners();

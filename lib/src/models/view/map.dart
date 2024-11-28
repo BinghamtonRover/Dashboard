@@ -278,9 +278,14 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
           models.home.setMessage(severity: Severity.error, text: "You must be in autonomy mode");
           return;
         }
-        commandBuilder.gps.latDecimal.value = cell.coordinates.latitude;
-        commandBuilder.gps.longDecimal.value = cell.coordinates.longitude;
-        commandBuilder.submit();
+        final command = AutonomyCommand(
+          task: AutonomyTask.GPS_ONLY,
+          destination: GpsCoordinates(
+            latitude: cell.coordinates.latitude,
+            longitude: cell.coordinates.longitude,
+          ),
+        );
+        commandBuilder.submit(command);
       case AutonomyCell.obstacle:
         final obstacleData = AutonomyData(obstacles: [cell.coordinates]);
         models.sockets.autonomy.sendMessage(obstacleData);

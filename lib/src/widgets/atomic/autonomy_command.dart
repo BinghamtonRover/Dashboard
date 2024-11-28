@@ -35,7 +35,7 @@ class AutonomyCommandEditor extends ReusableReactiveWidget<AutonomyCommandBuilde
       actions: [
         TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
         ElevatedButton(
-          onPressed: command.isLoading ? null : () { command.submit(); Navigator.of(context).pop(); },
+          onPressed: command.isLoading ? null : () { command.submit(command.value); Navigator.of(context).pop(); },
           child: const Text("Submit"),
         ),
       ],
