@@ -1,3 +1,6 @@
+import "dart:async";
+
+import "package:flutter/foundation.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
@@ -18,19 +21,24 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
   /// A constructor to call [init] when created.
 	AutonomyCommandBuilder() { init(); }
 
+  @override
+  List<ChangeNotifier> get otherBuilders => [models.rover.status];
+
+  StreamSubscription<AutonomyCommand>? _subscription;
+
 	/// Listens for incoming confirmations from the rover that it received the command.
   Future<void> init() async {
     await Future<void>.delayed(const Duration(seconds: 1));
-		models.messages.registerHandler<AutonomyCommand>(
+		_subscription = models.messages.stream.onMessage(
 			name: AutonomyCommand().messageName,
-			decoder: AutonomyCommand.fromBuffer,
-			handler: (data) => _handshake = data,
+			constructor: AutonomyCommand.fromBuffer,
+			callback: (data) => _handshake = data,
 		);
 	}
 
 	@override
 	void dispose() {
-		models.messages.removeHandler(AutonomyCommand().messageName);
+    _subscription?.cancel();
 		super.dispose();
 	}
 

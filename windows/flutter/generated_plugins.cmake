@@ -4,11 +4,11 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   flutter_libserialport
-  just_audio_windows
   url_launcher_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  flutter_sdl_gamepad
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

@@ -1,9 +1,9 @@
-name: Publish Windows and Android apps
+name: Publish Windows, MacOS, and Android
 
 # Builds a Windows App Installer (.msix) for the Dashboard
-# 
+#
 # To use this action, add your Windows Certificate file, in base64 format, to a
-# repository secret called WINDOWS_CERTIFICATE. This action then: 
+# repository secret called WINDOWS_CERTIFICATE. This action then:
 # - Installs Flutter and clones your repository
 # - Decodes your text certificate into a binary .pfx file
 # - Runs flutter pub run msix:create to build and sign your Flutter app
@@ -14,46 +14,135 @@ on:
     tags: "*"
 
 jobs:
- build:
-  runs-on: windows-latest
-  env: 
-    windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
-  steps:
-    - name: Clone repository
-      uses: actions/checkout@v3
+  build_android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
 
-    - name: Setup Java
-      uses: actions/setup-java@v1
-      with: 
-        java-version: '12.x'
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: '17'
 
-    - name: Load certificate
-      run: |
-        echo "${{ env.windows_certificate }}" > windows_certificate_decoded.txt
-        openssl enc -base64 -d -in windows_certificate_decoded.txt -out windows_certificate.pfx
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          cache-key: "flutter-ubuntu"  # we don't need *the* most recent build
 
-    - name: Install Flutter
-      uses: subosito/flutter-action@v2
-      with: 
-        cache: true
-        cache-key: "flutter-windows"  # we don't need *the* most recent build
+      - name: Build APK
+        run: flutter build apk
 
-    - name: Build MSIX file
-      run: |
-        flutter clean
-        flutter pub get
-        dart analyze
-        dart run msix:create
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_android
+          path: build/app/outputs/apk/release/app-release.apk
+  # End of build_android
 
-    - name: Build APK
-      run: flutter build apk
+  build_windows:
+    name: Build Windows MSIX
+    runs-on: windows-latest
+    env:
+      windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v0.1.15
-      with: 
-        files: |
-          build/windows/x64/runner/Release/Dashboard.msix
-          build/app/outputs/apk/release/app-release.apk
-        name: ${{ github.ref_name }}
-        generate_release_notes: true
-        fail_on_unmatched_files: true
+      - name: Load certificate
+        run: |
+          echo "${{ env.windows_certificate }}" > windows_certificate_decoded.txt
+          openssl enc -base64 -d -in windows_certificate_decoded.txt -out windows_certificate.pfx
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          cache-key: "flutter-windows"  # we don't need *the* most recent build
+
+      - name: Build MSIX
+        run: |
+          flutter pub get
+          dart run msix:create
+
+      - name: Upload MSIX
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_windows
+          path: build/windows/x64/runner/Release/dashboard.msix
+  # # End of build_windows
+
+  build_macos:
+    name: Build MacOS DMG
+    runs-on: macos-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          cache-key: "flutter-macos"  # we don't need *the* most recent build
+
+      - name: Check on Flutter
+        run: flutter doctor -v
+
+      - name: Install AppDmg tool
+        run: npm install --global appdmg
+
+      - name: Install dependencies
+        run: brew install automake libtool
+
+      - name: Build MacOS release
+        run: flutter build macos
+
+      - name: Package into DMG file
+        run: appdmg macos/installer_config.json dashboard_macos.dmg
+
+      - name: Upload DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_macos
+          path: dashboard_macos.dmg
+  # End of build_windows
+
+  generate_release:
+    needs: [build_android, build_windows, build_macos]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Android release
+        uses: actions/download-artifact@v4
+        with:
+          name: dashboard_android
+
+      - name: Download Windows release
+        uses: actions/download-artifact@v4
+        with:
+          name: dashboard_windows
+
+      - name: Download MacOS release
+        uses: actions/download-artifact@v4
+        with:
+          name: dashboard_macos
+
+      - name: Organize files
+        run: |
+          ls -al
+          mv app-release.apk dashboard_android.apk
+          mv dashboard.msix dashboard_windows.msix
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dashboard_android.apk
+            dashboard_windows.msix
+            dashboard_macos.dmg
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+  # # end of generate_release

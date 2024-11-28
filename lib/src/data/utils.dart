@@ -14,7 +14,7 @@ extension MapRecords<K, V> on Map<K, V> {
 /// Helpful extensions on [DateTime]s.
 extension DateTimeTimestamp on DateTime{
   /// Formats this [DateTime] as a simple timestamp.
-  String get timeStamp => "$year-$month-$day-$hour-$minute"; 
+  String get timeStamp => "$year-$month-$day-$hour-$minute";
 }
 
 /// A list that can manage its own length.

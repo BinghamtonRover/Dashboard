@@ -16,7 +16,7 @@ class SocketEditor extends ReusableReactiveWidget<SocketBuilder> {
 	/// Creates a widget to edit host and port data for a socket.
 	const SocketEditor({
 		required this.name,
-		required SocketBuilder model, 
+		required SocketBuilder model,
 		this.editPort = true,
 	}) : super(model);
 
@@ -62,7 +62,7 @@ class NumberEditor extends ReusableReactiveWidget<NumberBuilder> {
 	/// Creates a widget to modify a number.
 	const NumberEditor({
     required NumberBuilder model,
-		required this.name, 
+		required this.name,
 		this.subtitle,
 		this.titleFlex = 4,
 		this.width,
@@ -121,11 +121,11 @@ class DropdownEditor<T> extends StatelessWidget {
 	Widget build(BuildContext context) => Row(
 		children: [
 			Text(name),
-			const SizedBox(width: 12), 
+			const SizedBox(width: 12),
 			DropdownButton<T>(
 				focusNode: FocusNode(),
 				value: value,
-				onChanged: (input) { 
+				onChanged: (input) {
 					if (input == null) return;
 					onChanged(input);
 				},
@@ -155,7 +155,7 @@ class ColorEditor extends ReusableReactiveWidget<ColorBuilder> {
           final result = await model.setColor();
           if (result && context.mounted) Navigator.of(context).pop();
         },
-        child: const Text("Save"), 
+        child: const Text("Save"),
       ),
     ],
     content: Column(
@@ -186,7 +186,7 @@ class ColorEditor extends ReusableReactiveWidget<ColorBuilder> {
         ),
         const SizedBox(height: 16),
         CheckboxListTile(
-          value: model.blink, 
+          value: model.blink,
           onChanged: model.updateBlink,
           title: const Text("Blink"),
         ),
@@ -199,7 +199,7 @@ class ColorEditor extends ReusableReactiveWidget<ColorBuilder> {
 class TimerEditor extends ReactiveWidget<TimerBuilder> {
   @override
   TimerBuilder createModel() => TimerBuilder();
-  
+
 	@override
 	Widget build(BuildContext context, TimerBuilder model) => AlertDialog(
     title: const Text("Start a timer"),
@@ -207,7 +207,7 @@ class TimerEditor extends ReactiveWidget<TimerBuilder> {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          height: 50, 
+          height: 50,
           width: double.infinity,
           child: TextField(
             controller: model.nameController,
@@ -216,7 +216,7 @@ class TimerEditor extends ReactiveWidget<TimerBuilder> {
           ),
         ),
         SizedBox(
-          height: 50, 
+          height: 50,
           width: double.infinity,
           child: TextField(
             onChanged: model.duration.update,
@@ -230,7 +230,7 @@ class TimerEditor extends ReactiveWidget<TimerBuilder> {
       TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
       ElevatedButton(
         onPressed: model.isValid ? () { model.start(); Navigator.of(context).pop(); } : null,
-        child: const Text("Save"), 
+        child: const Text("Save"),
       ),
     ],
 	);
@@ -246,7 +246,7 @@ class GpsEditor extends ReusableReactiveWidget<GpsBuilder> {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       DropdownEditor(
-        name: "Type", 
+        name: "Type",
         value: model.type,
         onChanged: model.updateType,
         items: GpsType.values,
@@ -293,7 +293,7 @@ class ThrottleEditor extends ReactiveWidget<ThrottleBuilder> {
     actions: [
       ElevatedButton(
         onPressed: !model.isValid || model.isLoading ? null : () async {
-          await model.save(); 
+          await model.save();
           if (!context.mounted) return;
           Navigator.of(context).pop();
          },
@@ -304,5 +304,5 @@ class ThrottleEditor extends ReactiveWidget<ThrottleBuilder> {
         child: const Text("Cancel"),
       ),
     ],
-  ); 
+  );
 }

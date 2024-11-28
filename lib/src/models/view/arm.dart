@@ -6,61 +6,67 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
 /// View model for the arm inverse kinematics page
-/// 
+///
 /// This view model gets its data from [RoverMetrics.arm] and [RoverMetrics.position].
-class ArmModel with ChangeNotifier{
+class ArmModel with ChangeNotifier {
   /// The [Metrics] model for arm data.
   ArmData get arm => models.rover.metrics.arm.data;
+
   /// The [Metrics] model for gripper data.
   GripperData get gripper => models.rover.metrics.gripper.data;
 
   /// The timer that updates this page.
   Timer? timer;
 
-  /// Whether or not laser is on
-  bool laser = false;
+  /// The state that the user wants to set the laser to
+  bool desiredLaserState = false;
 
-  /// Starts a timer to refresh at 100 Hz.
+  /// Sets the initial laser state to the current laser state and starts a timer to refresh at 100 Hz.
   ArmModel() {
+    desiredLaserState = gripper.laserState.toBool();
     timer = Timer.periodic(const Duration(milliseconds: 10), _update);
   }
 
-	@override
-	void dispose() {
+  @override
+  void dispose() {
     timer?.cancel();
-		super.dispose();
-	}
-
-	void _update([_]) {
-    notifyListeners();
-    final command = GripperCommand(laserState: laser ? BoolState.ON : BoolState.OFF);
-    models.messages.sendMessage(command);
+    super.dispose();
   }
 
-  /// updates the state of [laser]
-  void switchLaser(){
-    laser = !laser;
+  void _update([_]) {
+    if (desiredLaserState != gripper.laserState.toBool()) {
+      final command = GripperCommand(laserState: desiredLaserState ? BoolState.ON : BoolState.OFF);
+      models.messages.sendMessage(command);
+    }
+    notifyListeners();
+  }
+
+  /// Sets the laser on or off
+  void setLaser({required bool laser}) {
+    desiredLaserState = laser;
+    final command = GripperCommand(laserState: desiredLaserState ? BoolState.ON : BoolState.OFF);
+    models.messages.sendMessage(command);
   }
 
   /// The angles of the arm.
   ArmAngles get angles => (
-    shoulder: arm.shoulder.angle,
-    elbow: arm.elbow.angle,
-    lift: gripper.lift.angle,
-  );
+        shoulder: arm.shoulder.currentAngle,
+        elbow: arm.elbow.currentAngle,
+        lift: gripper.lift.currentAngle,
+      );
 
   /// The position of the mouse, if it's in the box.
   Offset? mousePosition;
 
   /// The angles to send the arm to [mousePosition].
   ArmAngles? ikAngles;
-  
+
   /// Updates the position of the mouse to [mousePosition].
   void onHover(PointerHoverEvent event) {
     mousePosition = event.localPosition;
     notifyListeners();
   }
-  
+
   /// Clears [mousePosition].
   void cancelIK(_) {
     mousePosition = null;
@@ -84,4 +90,9 @@ class ArmModel with ChangeNotifier{
 typedef ArmAngles = ({double shoulder, double elbow, double lift});
 
 /// The coordinates of each joint of the arm.
-typedef ArmCoordinates = ({Offset shoulder, Offset elbow, Offset wrist, Offset fingers});
+typedef ArmCoordinates = ({
+  Offset shoulder,
+  Offset elbow,
+  Offset wrist,
+  Offset fingers,
+});

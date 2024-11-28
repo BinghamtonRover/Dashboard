@@ -8,7 +8,7 @@ class ArmControls extends RoverControls {
 	ArmSettings get settings => models.settings.arm;
 
 	/// The coordinates of the gripper.
-	/// 
+	///
 	/// The arm uses IK to move all the joints to stay at these coordinates.
 	Coordinates ik = Coordinates(x: 0.5, y: 0.5, z: 0.5);
 
@@ -38,12 +38,12 @@ class ArmControls extends RoverControls {
 	@override
 	List<Message> parseInputs(GamepadState state) => [
     // Manual control
-    if (state.normalRightX.abs() > state.normalRightY.abs() && state.normalRightX != 0) 
+    if (state.normalRightX.abs() > state.normalRightY.abs() && state.normalRightX != 0)
       ArmCommand(swivel: MotorCommand(moveRadians: state.normalRightX * settings.swivel)),
-    if (state.normalRightY.abs() > state.normalRightX.abs() && state.normalRightY != 0) 
+    if (state.normalRightY.abs() > state.normalRightX.abs() && state.normalRightY != 0)
       ArmCommand(shoulder: MotorCommand(moveRadians: state.normalRightY * settings.shoulder)),
     if (state.normalLeftY != 0) ArmCommand(elbow: MotorCommand(moveRadians: state.normalLeftY * settings.elbow)),
-    // The bumpers should be pseudo-IK: Move the shoulder and elbow in sync. 
+    // The bumpers should be pseudo-IK: Move the shoulder and elbow in sync.
     if (state.normalShoulder != 0) ArmCommand(
       shoulder: MotorCommand(moveRadians: state.normalShoulder * settings.shoulder * -1),
       elbow: MotorCommand(moveRadians: state.normalShoulder * settings.elbow),
@@ -52,7 +52,7 @@ class ArmControls extends RoverControls {
 		// Gripper
 		if (state.normalDpadY != 0) GripperCommand(lift: MotorCommand(moveRadians: state.normalDpadY * settings.lift)),
 		if (state.normalDpadX != 0) GripperCommand(rotate: MotorCommand(moveRadians: state.normalDpadX * settings.rotate)),
-		if (state.normalTrigger != 0) GripperCommand(pinch: MotorCommand(moveRadians: state.normalTrigger * settings.pinch)),
+		if (state.normalTriggers != 0) GripperCommand(pinch: MotorCommand(moveRadians: state.normalTriggers * settings.pinch)),
 
 		// Custom actions
 		if (state.buttonA && !isAPressed) () { isAPressed = true; return GripperCommand(open: true); }(),
