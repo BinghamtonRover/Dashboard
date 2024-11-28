@@ -129,9 +129,11 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 
     if (data.hasDestination() && data.destination.toGridBlock == roverCoordinates) {
       return AutonomyCell.destination;
-    } else if (markers.any((e) => e.toGridBlock == roverCoordinates)) {
+    } else if (data.obstacles.map((e) => e.toGridBlock).contains(roverCoordinates)) {
+      return AutonomyCell.obstacle;
+    } else if (markers.map((e) => e.toGridBlock).contains(roverCoordinates)) {
       return AutonomyCell.marker;
-    } else if (data.path.map((e) => e.toGridBlock).contains(roverCoordinates.toGridBlock)) {
+    } else if (data.path.map((e) => e.toGridBlock).contains(roverCoordinates)) {
       return AutonomyCell.path;
     }
 
