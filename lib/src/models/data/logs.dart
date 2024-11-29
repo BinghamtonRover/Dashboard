@@ -70,7 +70,7 @@ class LogsModel extends Model {
   };
 
   /// Sends a log message to be shown in the footer.
-  void handleLog(BurtLog log) {
+  void handleLog(BurtLog log, {bool display = true}) {
     // Save to disk and memory
     saveToFileBuffer.add(log);
     logsForDevice(log.device)?.addWithLimit(log);
@@ -79,12 +79,12 @@ class LogsModel extends Model {
     notifyListeners();
 
     // Show important messages to the footer.
-    if (log.device != Device.DASHBOARD) { // Prevents showing dashboard messages that have already been shown
+    if (display) { // Prevents showing dashboard messages that have already been shown
       switch (log.level) {
         case BurtLogLevel.critical: models.home.setMessage(severity: Severity.critical, text: log.title, permanent: true, logMessage: false);
         case BurtLogLevel.warning: models.home.setMessage(severity: Severity.warning, text: log.title, logMessage: false);
         case BurtLogLevel.error: models.home.setMessage(severity: Severity.error, text: log.title, logMessage: false);
-        case BurtLogLevel.info: // Info messages from other devices are not important enough to show here
+        case BurtLogLevel.info: models.home.setMessage(severity: Severity.info, text: "${log.device.humanName}: ${log.title}", logMessage: false);
         case BurtLogLevel.debug:
         case BurtLogLevel.trace:
         case BurtLogLevel.BURT_LOG_LEVEL_UNDEFINED:

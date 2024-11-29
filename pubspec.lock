@@ -45,11 +45,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: ceeb9602a332d612bd9392d2b865403eea76b465
+      ref: "2.1.0"
+      resolved-ref: "61c1952afe2210099ccde59220356db647dc79ae"
       url: "https://github.com/BinghamtonRover/Networking.git"
     source: git
-    version: "2.0.0"
+    version: "2.1.0"
   characters:
     dependency: transitive
     description:
@@ -203,10 +203,11 @@ packages:
   flutter_resizable_container:
     dependency: "direct main"
     description:
-      name: flutter_resizable_container
-      sha256: "5b15c79c6cc338ed79640c706bb5176baa3333d92fd3627ad279aa3e25d2f0e7"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: set-children-public
+      resolved-ref: cf2f237653a48389a99081dbb5086c1acce03f7f
+      url: "https://github.com/Levi-Lesches/flutter_resizable_container"
+    source: git
     version: "3.0.0"
   flutter_sdl_gamepad:
     dependency: "direct main"

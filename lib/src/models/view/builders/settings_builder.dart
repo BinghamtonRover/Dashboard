@@ -1,3 +1,4 @@
+import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -11,9 +12,9 @@ class SocketBuilder extends ValueBuilder<SocketInfo> {
 	final NumberBuilder<int> port;
 
 	/// Creates a view model to modify the given [SocketInfo].
-	SocketBuilder(SocketInfo initial) : 
+	SocketBuilder(SocketInfo initial) :
 		address = AddressBuilder(initial.address),
-		port = NumberBuilder<int>(initial.port) 
+		port = NumberBuilder<int>(initial.port)
 	{
 		address.addListener(notifyListeners);
 		port.addListener(notifyListeners);
@@ -38,7 +39,7 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 	final SocketBuilder autonomySocket;
 
 	/// The view model representing the [SocketInfo] for the tank.
-	/// 
+	///
 	/// Since the tank runs multiple programs, the port is discarded and only the address is used.
 	final SocketBuilder tankSocket;
 
@@ -147,14 +148,14 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings>{
 	bool useIK;
 
 	/// Modifies the given [ArmSettings].
-	ArmSettingsBuilder(ArmSettings initial) : 
-		swivel = NumberBuilder(initial.swivel),	
-		shoulder = NumberBuilder(initial.shoulder),		
-		elbow = NumberBuilder(initial.elbow),		
-		lift = NumberBuilder(initial.lift),		
-		rotate = NumberBuilder(initial.rotate),		
-		pinch = NumberBuilder(initial.pinch),		
-		ik = NumberBuilder(initial.ikIncrement),		
+	ArmSettingsBuilder(ArmSettings initial) :
+		swivel = NumberBuilder(initial.swivel),
+		shoulder = NumberBuilder(initial.shoulder),
+		elbow = NumberBuilder(initial.elbow),
+		lift = NumberBuilder(initial.lift),
+		rotate = NumberBuilder(initial.rotate),
+		pinch = NumberBuilder(initial.pinch),
+		ik = NumberBuilder(initial.ikIncrement),
 		useIK = initial.useIK
 	{
 		swivel.addListener(notifyListeners);
@@ -203,7 +204,7 @@ class ScienceSettingsBuilder extends ValueBuilder<ScienceSettings> {
 	NumberBuilder<int> numSamples;
 
 	/// Modifies the given [ScienceSettings].
-	ScienceSettingsBuilder(ScienceSettings initial) : 
+	ScienceSettingsBuilder(ScienceSettings initial) :
 		numSamples = NumberBuilder(initial.numSamples),
 		scrollableGraphs = initial.scrollableGraphs;
 
@@ -245,12 +246,15 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
 
   /// Whether to use version checking. See [DashboardSettings.versionChecking].
   bool versionChecking;
-  
-  ///Builder for the presets.
+
+  /// Builder for the presets.
   List<ViewPreset> preset;
 
+  /// The default preset to load on startup
+  String? defaultPreset;
+
 	/// Modifies the given [DashboardSettings].
-  DashboardSettingsBuilder(DashboardSettings initial) : 
+  DashboardSettingsBuilder(DashboardSettings initial) :
 		fps = NumberBuilder(initial.maxFps),
 		blockSize = NumberBuilder(initial.mapBlockSize),
     splitMode = initial.splitMode,
@@ -258,7 +262,8 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     preferTankControls = initial.preferTankControls,
     versionChecking = initial.versionChecking,
     themeMode = initial.themeMode,
-    preset = initial.presets;
+    preset = initial.presets,
+    defaultPreset = initial.defaultPreset;
 
   @override
   bool get isValid => fps.isValid && blockSize.isValid;
@@ -273,16 +278,10 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     preferTankControls: preferTankControls,
     versionChecking: versionChecking,
     presets: preset,
+    defaultPreset: defaultPreset,
   );
 
-  /// Updates the [splitMode] when a new one is selected.
-  void updateSplitMode(SplitMode? mode) {
-    if (mode == null) return;
-    splitMode = mode;
-    notifyListeners();
-  }
-
-  /// Updates the [themeMode]. 
+  /// Updates the [themeMode].
   void updateThemeMode(ThemeMode? input) {
     if (input == null) return;
     themeMode = input;
@@ -326,7 +325,7 @@ class EasterEggsSettingsBuilder extends ValueBuilder<EasterEggsSettings> {
   bool badApple;
 
 	/// Fills in the fields with the given [initial] settings.
-	EasterEggsSettingsBuilder(EasterEggsSettings initial) : 
+	EasterEggsSettingsBuilder(EasterEggsSettings initial) :
     badApple = initial.badApple,
     enableClippy = initial.enableClippy,
     segaSound = initial.segaSound,
@@ -392,7 +391,7 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	bool isLoading = false;
 
 	/// Modifies the user's settings.
-	SettingsBuilder() : 
+	SettingsBuilder() :
 		network = NetworkSettingsBuilder(models.settings.network),
     baseStation = BaseStationSettingsBuilder(models.settings.baseStation),
 		arm = ArmSettingsBuilder(models.settings.arm),
@@ -409,8 +408,8 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	}
 
 	@override
-	bool get isValid => network.isValid 
-		&& arm.isValid 
+	bool get isValid => network.isValid
+		&& arm.isValid
 		&& science.isValid
     && dashboard.isValid
     && easterEggs.isValid;
@@ -433,8 +432,14 @@ class SettingsBuilder extends ValueBuilder<Settings> {
       // Need an if to avoid resetting throttle when trying to set throttle
       models.rover.setDefaultControls();
     }
+    final resetSockets = !(const DeepCollectionEquality().equals(
+      models.settings.network.toJson(),
+      value.network.toJson(),
+    ));
 		await models.settings.update(value);
-		await models.sockets.reset();
+    if (resetSockets) {
+      await models.sockets.reset();
+    }
 		models.video.reset();
 		isLoading = false;
 		notifyListeners();

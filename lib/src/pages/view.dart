@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
+import "package:rover_dashboard/src/pages/controller.dart";
 import "package:rover_dashboard/src/pages/base_station.dart";
 import "package:rover_dashboard/widgets.dart";
 
@@ -122,6 +123,11 @@ class DashboardView {
       builder: (context, index) => RocksPage(index: index),
     ),
     DashboardView(
+      name: Routes.controllers,
+      iconFunc: () => Icon(Icons.sports_esports, color: Colors.black.withOpacity(0.5)),
+      builder: (context, index) => ControllersPage(index: index),
+    ),
+    DashboardView(
       name: Routes.baseStation,
       builder: (context, index) => BaseStationPage(index: index),
       iconFunc: () => Icon(Icons.cell_tower, color: Colors.black.withOpacity(0.5)),
@@ -139,10 +145,9 @@ class DashboardView {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Convoluted way to get all horizontal space filled
           Row(children: [const Spacer(), ViewsSelector(index: index)]),
           const Spacer(),
-          const Text("Drag in or choose a view"),
+          const Text("Drag in or choose a view", textAlign: TextAlign.center),
           const Spacer(),
         ],
       ),

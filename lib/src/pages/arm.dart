@@ -304,7 +304,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
           elevation: 16,
           color: context.colorScheme.surfaceContainerHighest,
           child: CustomPaint(
-            painter: ArmPainterTop(swivelAngle: model.arm.base.angle),
+            painter: ArmPainterTop(swivelAngle: model.arm.base.currentAngle),
           ),
         ),
       ),
