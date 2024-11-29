@@ -3,7 +3,7 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/src/models/view/builders/antenna_command.dart";
 import "package:rover_dashboard/widgets.dart";
 
-/// A widget to edit an [AntennaCommand]
+/// A widget to edit an [BaseStationCommand]
 class AntennaCommandEditor extends ReusableReactiveWidget<AntennaCommandBuilder> {
   /// Const constructor for antenna command editor
   const AntennaCommandEditor(super.model);

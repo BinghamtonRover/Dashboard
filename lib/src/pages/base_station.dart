@@ -140,7 +140,7 @@ class _BaseStationPainter extends CustomPainter {
     final center = Offset(size.width, size.height) / 2;
 
     final roverPosition = center +
-        Offset(cos(targetAngle! + pi / 2), sin(targetAngle! + pi / 2)) * radius;
+        Offset(cos(delta.angle - pi / 2), sin(delta.angle - pi / 2)) * radius;
 
     canvas.drawCircle(
       roverPosition,
@@ -151,8 +151,8 @@ class _BaseStationPainter extends CustomPainter {
     final antennaPosition = center +
         Offset(cos(antennaAngle - pi / 2), sin(antennaAngle - pi / 2)) * radius;
 
-    final minTolerance = targetAngle! - (angleTolerance / 2) * pi / 180;
-    final maxTolerance = targetAngle! + (angleTolerance / 2) * pi / 180;
+    final minTolerance = targetAngle! + (angleTolerance / 2) * pi / 180;
+    final maxTolerance = targetAngle! - (angleTolerance / 2) * pi / 180;
 
     final inRange = _wrapAngle(antennaAngle - minTolerance) <= 0 &&
         _wrapAngle(antennaAngle - maxTolerance) >= 0;
@@ -170,7 +170,7 @@ class _BaseStationPainter extends CustomPainter {
       canvas: canvas,
       p1: center,
       p2: center +
-          Offset(cos(minTolerance + pi / 2), sin(minTolerance + pi / 2)) *
+          Offset(cos(minTolerance - pi / 2), sin(minTolerance - pi / 2)) *
               radius *
               1.1,
       dashWidth: 5,
@@ -182,7 +182,7 @@ class _BaseStationPainter extends CustomPainter {
       canvas: canvas,
       p1: center,
       p2: center +
-          Offset(cos(maxTolerance + pi / 2), sin(maxTolerance + pi / 2)) *
+          Offset(cos(maxTolerance - pi / 2), sin(maxTolerance - pi / 2)) *
               radius *
               1.1,
       dashWidth: 5,
