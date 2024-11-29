@@ -44,7 +44,7 @@ class RoverMetrics extends Model {
     DriveCommand().messageName: drive,
     ArmCommand().messageName: arm,
     GripperCommand().messageName: gripper,
-    AntennaCommand().messageName: baseStation,
+    BaseStationCommand().messageName: baseStation,
   };
 
 	@override

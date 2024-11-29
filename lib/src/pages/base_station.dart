@@ -74,7 +74,7 @@ class _AntennaDisplay extends StatelessWidget {
               alignment: Alignment.center,
               children: [
                 Transform.rotate(
-                  angle: model.data.angle,
+                  angle: model.data.antenna.swivel.currentAngle,
                   child: Icon(
                     Icons.settings_input_antenna,
                     size: constraints.maxWidth / 10,
@@ -88,10 +88,10 @@ class _AntennaDisplay extends StatelessWidget {
                   painter: _BaseStationPainter(
                     roverCoordinates: model.roverPosition,
                     stationCoordinates: model.stationPosition,
-                    antennaAngle: model.data.angle,
+                    antennaAngle: model.data.antenna.swivel.currentAngle,
                     angleTolerance: models.settings.baseStation.angleTolerance,
-                    targetAngle: (model.data.hasTargetAngle())
-                        ? model.data.targetAngle
+                    targetAngle: (model.data.antenna.swivel.hasTargetAngle())
+                        ? model.data.antenna.swivel.targetAngle
                         : null,
                   ),
                 ),

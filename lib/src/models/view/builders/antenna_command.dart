@@ -3,8 +3,8 @@
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
-/// A [ValueBuilder] to modify and send an [AntennaCommand]
-class AntennaCommandBuilder extends ValueBuilder<AntennaCommand> {
+/// A [ValueBuilder] to modify and send an [BaseStationCommand]
+class AntennaCommandBuilder extends ValueBuilder<BaseStationCommand> {
   /// The type of control for the antenna
   AntennaControlMode mode = AntennaControlMode.TRACK_ROVER;
 
@@ -36,9 +36,9 @@ class AntennaCommandBuilder extends ValueBuilder<AntennaCommand> {
   GpsBuilder baseStationCoordinatesOverride = GpsBuilder();
 
   /// The latest handshake received by the base station
-  AntennaCommand? _handshake;
+  BaseStationCommand? _handshake;
 
-  StreamSubscription<AntennaCommand>? _handshakeSubscription;
+  StreamSubscription<BaseStationCommand>? _handshakeSubscription;
 
   /// Constructor for the view model
   AntennaCommandBuilder() {
@@ -48,8 +48,8 @@ class AntennaCommandBuilder extends ValueBuilder<AntennaCommand> {
   /// Initializes the view model
   void init() {
     _handshakeSubscription = models.messages.stream.onMessage(
-      name: AntennaCommand().messageName,
-      constructor: AntennaCommand.fromBuffer,
+      name: BaseStationCommand().messageName,
+      constructor: BaseStationCommand.fromBuffer,
       callback: (command) => _handshake = command,
     );
   }
@@ -71,13 +71,12 @@ class AntennaCommandBuilder extends ValueBuilder<AntennaCommand> {
           baseStationCoordinatesOverride.isValid);
 
   @override
-  AntennaCommand get value => AntennaCommand(
+  BaseStationCommand get value => BaseStationCommand(
         version: Version(major: 1),
         mode: mode,
-        angleTolerance: models.settings.baseStation.angleTolerance,
-        roverCoordinatesOverride:
+        roverCoordinatesOverrideOverride:
             overrideRoverCoordinates ? roverCoordinatesOverride.value : null,
-        baseStationCoordinates: overrideBaseStationCoordinates
+        baseStationCoordinatesOverride: overrideBaseStationCoordinates
             ? baseStationCoordinatesOverride.value
             : null,
       );
@@ -107,7 +106,10 @@ class AntennaCommandBuilder extends ValueBuilder<AntennaCommand> {
   Future<void> stop() async {
     _handshake = null;
     models.home.setMessage(severity: Severity.info, text: "Stopping antenna");
-    final command = AntennaCommand(mode: AntennaControlMode.STOP_ANTENNA);
+    final command = BaseStationCommand(
+      mode: AntennaControlMode.MANUAL_CONTROL,
+      manualCommand: AntennaFirmwareCommand(stop: true),
+    );
     for (var i = 0; i < 3; i++) {
       models.sockets.baseStation.sendMessage(command);
     }

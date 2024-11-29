@@ -22,12 +22,12 @@ class BaseStationModel with ChangeNotifier {
       );
 
   /// The antenna data received from the rover
-  AntennaData data = AntennaData();
+  BaseStationData data = BaseStationData();
 
   /// View model to control the command editor
   AntennaCommandBuilder commandBuilder = AntennaCommandBuilder();
 
-  StreamSubscription<AntennaData>? _dataSubscription;
+  StreamSubscription<BaseStationData>? _dataSubscription;
 
   /// Constructor for base station model
   BaseStationModel() {
@@ -38,8 +38,8 @@ class BaseStationModel with ChangeNotifier {
   Future<void> init() async {
     await Future<void>.delayed(const Duration(seconds: 1));
     _dataSubscription = models.messages.stream.onMessage(
-      name: AntennaData().messageName,
-      constructor: AntennaData.fromBuffer,
+      name: BaseStationData().messageName,
+      constructor: BaseStationData.fromBuffer,
       callback: onNewData,
     );
     models.rover.metrics.position.addListener(notifyListeners);
@@ -55,7 +55,7 @@ class BaseStationModel with ChangeNotifier {
   }
 
   /// A handler to call when new data arrives. Updates [data] and the UI.
-  void onNewData(AntennaData value) {
+  void onNewData(BaseStationData value) {
     data = value;
     services.files.logData(value);
     notifyListeners();
