@@ -44,8 +44,8 @@ class ControllersPage extends ReactiveWidget<ControllersViewModel> {
   @override
   Widget build(BuildContext context, ControllersViewModel model) => Column(
     children: [
-      const SizedBox(height: 16),
-      Row(
+      PageHeader(
+        pageIndex: index,
         children: [
           const Spacer(),
           const Text("Controller: "),
@@ -74,7 +74,6 @@ class ControllersPage extends ReactiveWidget<ControllersViewModel> {
             child: const Text("Vibrate"),
           ),
           const Spacer(),
-          ViewsSelector(index: index),
         ],
       ),
       Expanded(
