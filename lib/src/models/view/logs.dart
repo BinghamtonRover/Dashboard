@@ -135,6 +135,7 @@ class LogsViewModel with ChangeNotifier {
 
   /// Listens for incoming logs.
   LogsViewModel() {
+    options.addListener(notifyListeners);
     scrollController = ScrollController(
       onAttach: _listenForScroll,
       onDetach: _stopListeningForScroll,
@@ -146,6 +147,8 @@ class LogsViewModel with ChangeNotifier {
 
   @override
   void dispose() {
+    options.removeListener(notifyListeners);
+    options.dispose();
     models.logs.removeListener(onNewLog);
     super.dispose();
   }

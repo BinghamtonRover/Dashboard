@@ -45,6 +45,9 @@ class Routes {
 
   /// The name of the logs page.
   static const String logs = "Logs";
+  
+  /// The name of the controllers page
+  static const String controllers = "Controllers";
 
   /// The name of the rocks page.
   static const String rocks = "Rocks";

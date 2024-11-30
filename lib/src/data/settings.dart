@@ -212,7 +212,7 @@ extension ThemeModeUtils on ThemeMode {
 /// Settings related to the dashboard itself, not the rover.
 class DashboardSettings {
   /// How the Dashboard should split when only two views are present.
-  final SplitMode splitMode;
+  SplitMode splitMode;
 
   /// The precision of the GPS grid.
   ///
@@ -247,9 +247,11 @@ class DashboardSettings {
   /// A list of ViewPresets
   final List<ViewPreset> presets;
 
+  /// The default preset to load on startup
+  String? defaultPreset;
+
   /// A const constructor.
-  const DashboardSettings({
-    required this.presets,
+  DashboardSettings({
     required this.splitMode,
     required this.mapBlockSize,
     required this.maxFps,
@@ -257,6 +259,8 @@ class DashboardSettings {
     required this.splitCameras,
     required this.preferTankControls,
     required this.versionChecking,
+    required this.presets,
+    required this.defaultPreset,
   });
 
   /// Parses settings from JSON.
@@ -265,6 +269,7 @@ class DashboardSettings {
       for (final presetJson in json?["presets"] ?? [])
         ViewPreset.fromJson(presetJson),
     ],
+    defaultPreset = json?["defaultPreset"],
     splitMode = SplitMode.values[json?["splitMode"] ?? SplitMode.horizontal.index],
     mapBlockSize = json?["mapBlockSize"] ?? 1.0,
     maxFps = (json?["maxFps"] ?? 60) as int,
@@ -275,7 +280,6 @@ class DashboardSettings {
 
   /// Serializes these settings to JSON.
   Json toJson() => {
-    "presets" : presets,
     "splitMode": splitMode.index,
     "mapBlockSize": mapBlockSize,
     "maxFps": maxFps,
@@ -283,6 +287,8 @@ class DashboardSettings {
     "splitCameras": splitCameras,
     "preferTankControls": preferTankControls,
     "versionChecking": versionChecking,
+    "presets": presets,
+    "defaultPreset": defaultPreset,
   };
 }
 

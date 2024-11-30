@@ -11,7 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
   burt_network:
-    git: https://github.com/BinghamtonRover/Networking.git
+    git:
+      url: https://github.com/BinghamtonRover/Networking.git
+      ref: 2.1.0
   file_picker: ^8.0.0+1
   fl_chart: ^0.69.0
   flutter_libserialport: ^0.4.0
@@ -27,6 +29,10 @@ dependencies:
 dependency_overrides:
   flutter_libserialport:
     git: https://github.com/snabble/flutter_libserialport.git
+  flutter_resizable_container:
+    git:
+      url: https://github.com/Levi-Lesches/flutter_resizable_container
+      ref: set-children-public
 
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
