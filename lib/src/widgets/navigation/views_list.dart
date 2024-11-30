@@ -187,18 +187,18 @@ class ViewsSelector extends StatelessWidget {
     onSelected: (view) => models.views.replaceView(index, view),
     itemBuilder: (_) => [
       const PopupMenuItem(enabled: false, child: Text("Cameras")),
-      for (final view in DashboardView.cameraViews) _buildItem(view),
+      for (final view in DashboardView.cameraViews) _buildItem(context, view),
       const PopupMenuDivider(),
       const PopupMenuItem(enabled: false, child: Text("Controls")),
-      for (final view in DashboardView.uiViews) _buildItem(view),
+      for (final view in DashboardView.uiViews) _buildItem(context, view),
     ],
   );
 
-  PopupMenuItem<DashboardView> _buildItem(DashboardView view) => PopupMenuItem(
+  PopupMenuItem<DashboardView> _buildItem(BuildContext context, DashboardView view, {Widget? dragIcon}) => PopupMenuItem(
     value: view,
     child: Row(
       children: [
-        view.icon,
+        dragIcon ?? view.iconFunc(context),
         const SizedBox(width: 8),
         Text(view.name),
       ],

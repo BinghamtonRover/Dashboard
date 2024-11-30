@@ -120,7 +120,7 @@ class DashboardView {
     ),
     DashboardView(
       name: Routes.controllers,
-      iconFunc: () => Icon(Icons.sports_esports, color: Colors.black.withOpacity(0.5)),
+      iconFunc: (context) => Icon(Icons.sports_esports, color: context.colorScheme.onSurface.withOpacity(0.5)),
       builder: (context, index) => ControllersPage(index: index),
     ),
   ];
