@@ -95,7 +95,7 @@ class RockModel with ChangeNotifier {
 }
 
 /// Contains data and knowledge about a specific rock type.
-class Rock{
+class Rock {
   /// The name of the rock.
   final String name;
 
@@ -124,14 +124,14 @@ class RocksPage extends ReactiveWidget<RockModel> {
   Widget build(BuildContext context, RockModel model) => ListView(
     shrinkWrap: true,
     children: [
-      Row(
+      PageHeader(
+        pageIndex: index,
         children: [
           Text(
             "Rocks & Minerals",
             style: context.textTheme.headlineMedium,
           ),
           const Spacer(),
-          ViewsSelector(index: index),
         ],
       ),
       Padding(
