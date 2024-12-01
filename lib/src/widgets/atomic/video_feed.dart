@@ -175,7 +175,12 @@ class VideoFeedState extends State<VideoFeed> {
             details: data.details,
           ),
         ),
-        Expanded(child: RawImage(image: imageLoader.image, fit: BoxFit.contain)),
+        Expanded(
+          child: InteractiveViewer(
+            minScale: 1,
+            child: RawImage(image: imageLoader.image, fit: BoxFit.contain),
+          ),
+        ),
       ],
     )
     : Center(child: Text(errorMessage, textAlign: TextAlign.center));
@@ -199,7 +204,7 @@ class VideoFeedState extends State<VideoFeed> {
             if (data.hasFrame())
               IconButton(
                 icon: const Icon(Icons.add_a_photo),
-                onPressed: () => models.video.saveFrame(widget.name),
+                onPressed: () => models.video.saveFrame(data.id, data.details),
               ),
             IconButton(
               icon: const Icon(Icons.settings),
