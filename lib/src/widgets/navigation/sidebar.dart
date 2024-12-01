@@ -45,18 +45,19 @@ class Sidebar extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 4),
-                      ControlsDisplay(
+                      GamepadsControlsDisplay(
                         controller: models.rover.controller1,
                         gamepadNum: 1,
                       ),
-                      ControlsDisplay(
+                      GamepadsControlsDisplay(
                         controller: models.rover.controller2,
                         gamepadNum: 2,
                       ),
-                      ControlsDisplay(
+                      GamepadsControlsDisplay(
                         controller: models.rover.controller3,
                         gamepadNum: 3,
                       ),
+                      KeyboardControlsDisplay(),
                     ],
                   ),
                   Column(
@@ -121,19 +122,22 @@ extension SeverityUtil on Severity {
       };
 }
 
-/// Displays controls for the given [Controller].
-class ControlsDisplay extends ReusableReactiveWidget<Controller> {
-  /// The number gamepad being used.
-  final int gamepadNum;
+/// Shows a list of controls for an input.
+class ControlsDisplayBase extends StatelessWidget {
+  /// The controls and the buttons mapped to them.
+  final Map<String, String> controls;
 
-  /// A const constructor for this widget.
-  const ControlsDisplay({
-    required Controller controller,
-    required this.gamepadNum,
-  }) : super(controller);
+  /// The name of these controls.
+  final String name;
+
+  /// A widget to show a list of control.
+  const ControlsDisplayBase({
+    required this.controls,
+    required this.name,
+  });
 
   @override
-  Widget build(BuildContext context, Controller model) => ExpansionTile(
+  Widget build(BuildContext context) => ExpansionTile(
     expandedCrossAxisAlignment: CrossAxisAlignment.start,
     expandedAlignment: Alignment.centerLeft,
     childrenPadding: const EdgeInsets.symmetric(
@@ -141,12 +145,12 @@ class ControlsDisplay extends ReusableReactiveWidget<Controller> {
       vertical: 8,
     ),
     title: Text(
-      model.controls.mode.name,
+      name,
       style: Theme.of(context).textTheme.titleLarge,
       textAlign: TextAlign.start,
     ),
     children: [
-      for (final entry in model.controls.buttonMapping.entries) ...[
+      for (final entry in controls.entries) ...[
         Text(entry.key, style: Theme.of(context).textTheme.labelLarge),
         Text(
           "  ${entry.value}",
@@ -155,6 +159,37 @@ class ControlsDisplay extends ReusableReactiveWidget<Controller> {
       ],
     ],
   );
+}
+
+/// Displays controls for the given [Controller].
+class GamepadsControlsDisplay extends ReusableReactiveWidget<Controller> {
+  /// The number gamepad being used.
+  final int gamepadNum;
+
+  /// A const constructor for this widget.
+  const GamepadsControlsDisplay({
+    required Controller controller,
+    required this.gamepadNum,
+  }) : super(controller);
+
+  @override
+  Widget build(BuildContext context, Controller model) => ControlsDisplayBase(
+    name: "$gamepadNum. ${model.controls.mode.name}",
+    controls: model.controls.buttonMapping,
+  );
+}
+
+/// Displays controls for the [KeyboardController].
+///
+/// This needs to be reactive since the [KeyboardController.buttonMapping] will change
+/// depending on whether it is enabled.
+class KeyboardControlsDisplay extends ReusableReactiveWidget<KeyboardController> {
+  /// Starts listening to the [KeyboardController].
+  KeyboardControlsDisplay() : super(models.rover.keyboardController);
+
+  @override
+  Widget build(BuildContext context, KeyboardController model) =>
+    ControlsDisplayBase(controls: model.buttonMapping, name: "Keyboard controls");
 }
 
 /// A dropdown to select more or less views.

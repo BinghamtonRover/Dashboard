@@ -250,6 +250,9 @@ class DashboardSettings {
   /// The default preset to load on startup
   String? defaultPreset;
 
+  /// Whether the user should be able to drive via the keyboard.
+  final bool enableKeyboardShortcuts;
+
   /// A const constructor.
   DashboardSettings({
     required this.splitMode,
@@ -261,6 +264,7 @@ class DashboardSettings {
     required this.versionChecking,
     required this.presets,
     required this.defaultPreset,
+    required this.enableKeyboardShortcuts,
   });
 
   /// Parses settings from JSON.
@@ -276,6 +280,7 @@ class DashboardSettings {
     splitCameras = json?["splitCameras"] ?? false,
     preferTankControls = json?["preferTankControls"] ?? false,
     versionChecking = json?["versionChecking"] ?? true,
+    enableKeyboardShortcuts = json?["enableKeyboardShortcuts"] ?? false,
     themeMode = ThemeMode.values.byName(json?["theme"] ?? ThemeMode.system.name);
 
   /// Serializes these settings to JSON.
@@ -289,6 +294,7 @@ class DashboardSettings {
     "versionChecking": versionChecking,
     "presets": presets,
     "defaultPreset": defaultPreset,
+    "enableKeyboardShortcuts": enableKeyboardShortcuts,
   };
 }
 

@@ -53,8 +53,5 @@ class FooterViewModel with ChangeNotifier {
   String get connectionSummary => models.sockets.connectionSummary;
 
   /// Resets the network sockets.
-  Future<void> resetNetwork() async {
-    await models.sockets.reset();
-    models.home.setMessage(severity: Severity.info, text: "Network reset");
-  }
+  Future<void> resetNetwork() => models.sockets.reset();
 }

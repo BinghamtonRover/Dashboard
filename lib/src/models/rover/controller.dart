@@ -72,6 +72,7 @@ class Controller extends Model {
     controls = RoverControls.forMode(mode);
     gamepad.pulse();
     notifyListeners();
+    models.rover.controllerModes.update();
   }
 
   /// Connects the [gamepad] to the user's device.
@@ -83,6 +84,7 @@ class Controller extends Model {
       models.home.setMessage(severity: Severity.error, text: "No gamepad connected");
     }
     notifyListeners();
+    models.rover.controllerModes.update();
   }
 
   /// Same as [setMode], but uses [OperatingMode.index] instead.

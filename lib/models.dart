@@ -35,6 +35,7 @@ export "src/models/data/views.dart";
 // Rover models
 export "src/models/rover/controller.dart";
 export "src/models/rover/controls/controls.dart";
+export "src/models/rover/keyboard_controller.dart";
 export "src/models/rover/metrics.dart";
 export "src/models/rover/rover.dart";
 
