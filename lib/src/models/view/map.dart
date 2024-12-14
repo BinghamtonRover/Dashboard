@@ -76,7 +76,6 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
   /// Initializes the view model.
   Future<void> init() async {
 		recenterRover();
-    await Future<void>.delayed(const Duration(seconds: 1));
 		_subscription = models.messages.stream.onMessage<AutonomyData>(
 			name: AutonomyData().messageName,
 			constructor: AutonomyData.fromBuffer,
@@ -104,7 +103,7 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
       for (int longitude = 0; longitude < gridSize; longitude++) (
         coordinates: (
           lat: (latitude.toDouble() - offset.y) * precisionMeters,
-          long: (-longitude.toDouble() + offset.x) * precisionMeters
+          long: (longitude.toDouble() + offset.x) * precisionMeters
         ).toGps(),
         cellType: AutonomyCell.empty
       ),
@@ -182,7 +181,7 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 		// - rover.latitude => (gridSize - 1) / 2
 		// Then, everything else should be offset by that
     final (:lat, :long) = gps.inMeters;
-    final x = (-long / precisionMeters).round() + offset.x;
+    final x = (long / precisionMeters).round() - offset.x;
     final y = (lat / precisionMeters).round() + offset.y;
 		if (x < 0 || x >= gridSize) return;
 		if (y < 0 || y >= gridSize) return;
@@ -204,7 +203,7 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
     final position = roverPosition;
 		final midpoint = ((gridSize - 1) / 2).floor();
     final (:lat, :long) = position.inMeters;
-    final offsetX = midpoint + (long / precisionMeters).round();
+    final offsetX = -midpoint + (long / precisionMeters).round();
     final offsetY = midpoint - (lat / precisionMeters).round();
 		offset = GridOffset(offsetX, offsetY);
 		notifyListeners();
