@@ -1,5 +1,6 @@
 
 import "package:flutter/material.dart";
+import "package:rover_dashboard/data.dart";
 
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
@@ -14,6 +15,27 @@ class MapPageHeader extends StatelessWidget {
 
   /// Const constructor for the map page header
   const MapPageHeader({required this.index, required this.model, super.key});
+
+  /// The icon for the status of RTK
+  Widget rtkStateIcon(BuildContext context) {
+    final rtkMode = model.roverPosition.rtkMode;
+
+    final icon = switch (rtkMode) {
+      RTKMode.RTK_FIXED => Icons.signal_wifi_4_bar,
+      RTKMode.RTK_FLOAT => Icons.network_wifi_2_bar,
+      _ => Icons.signal_wifi_off_outlined,
+    };
+
+    return Tooltip(
+      message: models.rover.metrics.position.getRTKString(rtkMode),
+      waitDuration: const Duration(milliseconds: 500),
+      child: Icon(
+        icon,
+        color: context.colorScheme.onSurface,
+        size: 28,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) => Container(
@@ -34,6 +56,13 @@ class MapPageHeader extends StatelessWidget {
           onPressed: model.isPlayingBadApple
             ? model.stopBadApple
             : model.startBadApple,
+        ),
+        const SizedBox(width: 5),
+        Row(
+          children: [
+            const Text("RTK Status: "),
+            rtkStateIcon(context),
+          ],
         ),
         const Spacer(),
         ViewsSelector(index: index),
