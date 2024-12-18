@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   flutter_libserialport
+  just_audio_windows
   url_launcher_windows
 )
 
