@@ -1,6 +1,7 @@
 import "dart:math";
 
 import "package:flutter/material.dart";
+import "package:geekyants_flutter_gauges/geekyants_flutter_gauges.dart";
 
 import "package:rover_dashboard/src/data/protobuf.dart";
 import "package:rover_dashboard/src/models/view/arm.dart";
@@ -76,13 +77,13 @@ class ArmPainterSide extends CustomPainter {
   double toAbsolute(double relative) => relative;
 
   /// The relative length of the shoulder-elbow segment.
-  static const shoulderLength = 530/530;
+  static const shoulderLength = 530.0 / 530;
 
   /// The relative length of the elbow-wrist segment.
-  static const elbowLength = 440/530;
+  static const elbowLength = 440.0 / 530;
 
   /// The relative length of the gripper.
-  static const gripperLength = 310/530;
+  static const gripperLength = 310.0 / 530;
 
   /// The total relative length of the arm.
   static const totalArmLength = shoulderLength + elbowLength;
@@ -168,7 +169,7 @@ class ArmPainterSide extends CustomPainter {
     return (
       shoulder: shoulder,
       elbow: elbow,
-      lift: -1 * (shoulder + elbow) + pi,
+      lift: -1 * (shoulder + elbow) - model.endEffectorAngle - pi,
     );
   }
 
@@ -257,32 +258,103 @@ class ArmPage extends ReactiveWidget<ArmModel> {
           const SizedBox(width: 8),
         ],
       ),
-      const SizedBox(height: 10),
-      const Text(
-        "Side View (click for IK)",
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Colors.blue,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1,
-        ),
-      ),
       Expanded(
-        child: Card(
-          margin: const EdgeInsets.all(16),
-          elevation: 16,
-          child: MouseRegion(
-            onHover: model.onHover,
-            onExit: model.cancelIK,
-            cursor: SystemMouseCursors.precise,
-            child: GestureDetector(
-              onTap: model.sendIK,
-              child: CustomPaint(
-                painter: ArmPainterSide(model, context.colorScheme.onSurface),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: Column(
+                children: [
+                  const Text(
+                    "Side View (click for IK)",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Flexible(
+                    child: Card(
+                      margin: const EdgeInsets.all(16),
+                      elevation: 16,
+                      child: CustomPaint(
+                        painter: ArmPainterSide(model, context.colorScheme.onSurface),
+                        child: MouseRegion(
+                          onHover: model.onHover,
+                          onExit: model.cancelIK,
+                          cursor: SystemMouseCursors.precise,
+                          child: GestureDetector(
+                            onTap: model.sendIK,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
+            Expanded(
+              child: Column(
+                children: [
+                  const SizedBox(height: 5),
+                  Text(
+                    "IK End Effector Angle",
+                    style: context.textTheme.bodyLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                  Flexible(
+                    child: Card(
+                      margin: const EdgeInsets.all(8),
+                      elevation: 16,
+                      child: IntrinsicWidth(
+                        child: Column(
+                          children: [
+                            Flexible(
+                              child: RadialGauge(
+                                xCenterCoordinate: 0.3,
+                                track: RadialTrack(
+                                  start: -ArmModel.maxEndEffectorRadians,
+                                  end: ArmModel.maxEndEffectorRadians,
+                                  startAngle: 180 - ArmModel.maxEndEffectorAngle,
+                                  endAngle: 180 + ArmModel.maxEndEffectorAngle,
+                                  color: context.colorScheme.onSurface,
+                                  hideLabels: true,
+                                  trackLabelFormater: (_) => "",
+                                  trackStyle: const TrackStyle(
+                                    showPrimaryRulers: false,
+                                    showSecondaryRulers: false,
+                                    showLabel: false,
+                                  ),
+                                  thickness: 3.5,
+                                ),
+                                needlePointer: [
+                                  NeedlePointer(
+                                    value: model.endEffectorAngle,
+                                    needleWidth: 5,
+                                    needleStyle: NeedleStyle.flatNeedle,
+                                    tailRadius: 0.1,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Slider(
+                              min: -ArmModel.maxEndEffectorAngle,
+                              max: ArmModel.maxEndEffectorAngle,
+                              value: model.endEffectorAngle * (180 / pi),
+                              onChanged: (value) => model.endEffectorAngle = value * (pi / 180),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
       const SizedBox(height: 8),
@@ -301,7 +373,6 @@ class ArmPage extends ReactiveWidget<ArmModel> {
         child: Card(
           margin: const EdgeInsets.all(16),
           elevation: 16,
-          color: context.colorScheme.surfaceContainer,
           child: CustomPaint(
             painter: ArmPainterTop(swivelAngle: model.arm.base.currentAngle),
           ),
