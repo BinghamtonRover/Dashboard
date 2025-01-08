@@ -46,15 +46,46 @@ class CameraDetailsEditor extends ReactiveWidget<CameraDetailsBuilder> {
               items: CameraDetailsBuilder.okStatuses,
             ),
           ),
-          NumberEditor(
-            name: "Resolution height",
-            model: model.resolutionHeight,
-            titleFlex: 2,
+          Row(
+            children: [
+              Flexible(
+                child: NumberEditor(
+                  name: "Capture Width",
+                  model: model.captureWidth,
+                  width: 5,
+                  titleFlex: 3,
+                ),
+              ),
+              Flexible(
+                child: NumberEditor(
+                  name: "Capture Height",
+                  model: model.captureHeight,
+                  width: 5,
+                  titleFlex: 3,
+                ),
+              ),
+          
+            ],
           ),
-          NumberEditor(
-            name: "Resolution width",
-            model: model.resolutionWidth,
-            titleFlex: 2,
+          Row(
+            children: [
+              Flexible(
+                child: NumberEditor(
+                  name: "Stream Width",
+                  model: model.streamWidth,
+                  width: 5,
+                  titleFlex: 3,
+                ),
+              ),
+              Flexible(
+                child: NumberEditor(
+                  name: "Stream Height",
+                  model: model.streamHeight,
+                  width: 5,
+                  titleFlex: 3,
+                ),
+              ),
+            ],
           ),
           NumberEditor(
             name: "Quality (0-100)",
