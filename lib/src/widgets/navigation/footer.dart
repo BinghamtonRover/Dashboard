@@ -255,7 +255,7 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
   Widget build(BuildContext context, HomeModel model) => SizedBox(
     height: 48,
     child: InkWell(
-      onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (context) => LogsPage())),
+      onTap: showLogs ? () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (context) => LogsPage())) : null,
       child: Card(
         shadowColor: Colors.transparent,
         color: getColor(model.message?.severity),
