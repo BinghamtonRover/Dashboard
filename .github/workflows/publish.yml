@@ -75,6 +75,39 @@ jobs:
           path: build/windows/x64/runner/Release/dashboard.msix
   # # End of build_windows
 
+  build_windows_installer:
+    name: Build Windows Installer
+    runs-on: windows-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          cache-key: "flutter-windows" # we don't need *the* most recent build
+      
+      - name: Build windows
+        run: |
+          flutter pub get
+          flutter build windows
+      
+      - name: Copy vcruntime dlls
+        run: ./.github/CopyRuntime.ps1 -OutputPath build/windows/x64/runner/Release
+
+      - name: Create innosetup installer
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
+        with:
+          path: installer_setup_script.iss
+          options: /O+
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_setup_win
+          path: build/windows/x64/runner/installer/rover-dashboard-setup.exe
+
   build_macos:
     name: Build MacOS DMG
     runs-on: macos-latest
