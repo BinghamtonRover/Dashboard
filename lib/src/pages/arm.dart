@@ -188,7 +188,7 @@ class ArmPainterSide extends CustomPainter {
     ];
 
     final firstCirclePaint = Paint()
-      ..color = lineColors[0].withOpacity(opacity)
+      ..color = lineColors[0].withValues(alpha: opacity)
       ..style = PaintingStyle.fill;
 
     canvas.drawCircle(points[0], screen / 40, firstCirclePaint);
@@ -196,7 +196,7 @@ class ArmPainterSide extends CustomPainter {
     // Draw lines based off joint position
     for (var i = 0; i < points.length - 1; i++) {
       final paint = Paint()
-        ..color = lineColors[i].withOpacity(opacity)
+        ..color = lineColors[i].withValues(alpha: opacity)
         ..strokeWidth = screen / 50;
       canvas.drawLine(points[i], points[i + 1], paint);
     }
@@ -204,7 +204,7 @@ class ArmPainterSide extends CustomPainter {
     // Draw circles on each joint
     for (var i = 0; i < points.length - 1; i++) {
       final circlePaint = Paint()
-        ..color = lineColors[i].withOpacity(opacity)
+        ..color = lineColors[i].withValues(alpha: opacity)
         ..style = PaintingStyle.fill;
       canvas.drawCircle(points[i + 1], screen / 50, circlePaint);
     }
