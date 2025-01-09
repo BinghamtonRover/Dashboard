@@ -3,8 +3,6 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/src/models/rover/controls/slew_rate_limiter.dart";
 
-import "controls.dart";
-
 /// The skid-steer drive controls.
 class DriveControls extends RoverControls {
   /// The rate limit for the drive input
