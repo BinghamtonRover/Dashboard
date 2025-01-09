@@ -1,3 +1,4 @@
+import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -394,8 +395,14 @@ class SettingsBuilder extends ValueBuilder<Settings> {
       // Need an if to avoid resetting throttle when trying to set throttle
       models.rover.setDefaultControls();
     }
+    final resetSockets = !(const DeepCollectionEquality().equals(
+      models.settings.network.toJson(),
+      value.network.toJson(),
+    ));
 		await models.settings.update(value);
-		await models.sockets.reset();
+    if (resetSockets) {
+      await models.sockets.reset();
+    }
 		models.video.reset();
 		isLoading = false;
 		notifyListeners();
