@@ -146,6 +146,12 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                 onChanged: model.dashboard.updateTank,
               ),
               SwitchListTile(
+                title: const Text("Enable keyboard controls"),
+                subtitle: const Text("Allows basic controls through the keyboard"),
+                value: model.dashboard.enableKeyboardShortcuts,
+                onChanged: model.dashboard.updateKeyboardShortcuts,
+              ),
+              SwitchListTile(
                 title: const Text("Require version checking"),
                 subtitle: const Text("Default to version checking on"),
                 value: model.dashboard.versionChecking,

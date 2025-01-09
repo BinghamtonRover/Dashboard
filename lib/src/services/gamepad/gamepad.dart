@@ -1,7 +1,6 @@
-import "package:rover_dashboard/src/services/gamepad/mock.dart";
-
 import "state.dart";
 import "sdl.dart";
+import "mock.dart";
 
 import "../service.dart";
 

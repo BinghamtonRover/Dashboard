@@ -205,6 +205,9 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   /// The default preset to load on startup
   String? defaultPreset;
 
+  /// Whether to drive using the keyboard.
+  bool enableKeyboardShortcuts;
+
 	/// Modifies the given [DashboardSettings].
   DashboardSettingsBuilder(DashboardSettings initial) :
 		fps = NumberBuilder(initial.maxFps),
@@ -215,6 +218,7 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     versionChecking = initial.versionChecking,
     themeMode = initial.themeMode,
     preset = initial.presets,
+    enableKeyboardShortcuts = initial.enableKeyboardShortcuts,
     defaultPreset = initial.defaultPreset;
 
   @override
@@ -231,6 +235,7 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     versionChecking: versionChecking,
     presets: preset,
     defaultPreset: defaultPreset,
+    enableKeyboardShortcuts: enableKeyboardShortcuts,
   );
 
   /// Updates the [themeMode].
@@ -258,6 +263,12 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   void updateVersionChecking(bool? input){ // ignore: avoid_positional_boolean_parameters
     if (input == null) return;
     versionChecking = input;
+    notifyListeners();
+  }
+
+  /// Updates [enableKeyboardShortcuts].
+  void updateKeyboardShortcuts(bool input) {  // ignore: avoid_positional_boolean_parameters
+    enableKeyboardShortcuts = input;
     notifyListeners();
   }
 }

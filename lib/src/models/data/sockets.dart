@@ -104,13 +104,36 @@ class Sockets extends Model {
   ///
   /// When working with localhost, even UDP sockets can throw errors when the remote is unreachable.
   /// Resetting the sockets will bypass these errors.
-  Future<void> reset() async {
+  Future<void> reset({bool shouldLog = true}) async {
     for (final socket in sockets) {
       await socket.dispose();
       await socket.init();
     }
     // Sockets lose their destination when disposed, so we restore it.
     await updateSockets();
+    if (shouldLog) {
+      models.home.setMessage(severity: Severity.info, text: "Network reset");
+    }
+  }
+
+  /// Toggles the network connection type between rover and localhost.
+  void toggleRover() {
+    final newRoverType = switch(rover) {
+      RoverType.localhost => RoverType.rover,
+      RoverType.rover => RoverType.localhost,
+      RoverType.tank => RoverType.rover,
+    };
+    setRover(newRoverType);
+  }
+
+  /// Toggles the network connection type between tank and localhost.
+  void toggleTank() {
+    final newRoverType = switch(rover) {
+      RoverType.localhost => RoverType.tank,
+      RoverType.rover => RoverType.tank,
+      RoverType.tank => RoverType.localhost,
+    };
+    setRover(newRoverType);
   }
 
   /// Change which rover is being used.
@@ -118,7 +141,7 @@ class Sockets extends Model {
     if (value == null) return;
     rover = value;
     models.home.setMessage(severity: Severity.info, text: "Using: ${rover.name}");
-    await reset();
+    await reset(shouldLog: false);
     notifyListeners();
   }
 }
