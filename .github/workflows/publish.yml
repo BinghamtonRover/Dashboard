@@ -45,7 +45,7 @@ jobs:
 
   build_windows:
     name: Build Windows MSIX
-    runs-on: windows-latest
+    runs-on: windows-2025
     env:
       windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
     steps:
