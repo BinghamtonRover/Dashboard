@@ -57,9 +57,6 @@ jobs:
           echo "${{ env.windows_certificate }}" > windows_certificate_decoded.txt
           openssl enc -base64 -d -in windows_certificate_decoded.txt -out windows_certificate.pfx
 
-      - name: Install Windows Game Development Kit (GDK) for SDL
-        uses: libsdl-org/SDL/.github/actions/setup-gdk-desktop@main
-
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
