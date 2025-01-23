@@ -15,6 +15,6 @@ class PresetBuilder extends ValueBuilder<void> {
   @override
   void get value { /* Use [save] instead */ }
 
-  /// Calls [models.views.saveAsPreset] in views.dart
+  /// Calls `models.views.saveAsPreset` in views.dart
   void save() => models.views.saveAsPreset(nameController.text);
 }

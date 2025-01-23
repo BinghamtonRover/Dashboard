@@ -20,7 +20,7 @@ class DashboardSocket extends BurtSocket {
   /// Notifier for when the socket connects or disconnects
   final ValueNotifier<bool> connectionStatus = ValueNotifier(false);
 
-  /// Number of times to check heart beat per seconds based on [settings.network.connectionTimeout].
+  /// Number of times to check heart beat per seconds based on `models.settings.network.connectionTimeout`.
   double get frequency => models.settings.network.connectionTimeout;
 
   /// Listens for incoming messages on a UDP socket and sends heartbeats to the [device].
