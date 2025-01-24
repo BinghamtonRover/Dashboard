@@ -118,20 +118,12 @@ class VideoModel extends Model {
 	/// A timer to update the FPS counter.
 	late final Timer fpsTimer;
 
-	/// The latest handshake received by the rover.
-	VideoCommand? _handshake;
-
 	@override
 	Future<void> init() async {
 		models.messages.stream.onMessage<VideoData>(
 			name: VideoData().messageName,
 			constructor: VideoData.fromBuffer,
 			callback: handleData,
-		);
-		models.messages.stream.onMessage<VideoCommand>(
-			name: VideoCommand().messageName,
-			constructor: VideoCommand.fromBuffer,
-			callback: (command) => _handshake = command,
 		);
 		fpsTimer = Timer.periodic(const Duration(seconds: 1), updateFps);
 		reset();
@@ -221,12 +213,17 @@ class VideoModel extends Model {
 
 	/// Updates settings for the given camera.
 	Future<void> updateCamera(String id, CameraDetails details, {bool verify = true}) async {
-		_handshake = null;
 		final command = VideoCommand(id: id, details: details);
-		models.sockets.video.sendMessage(command);
-    if (!verify) return;
-		await Future<void>.delayed(const Duration(seconds: 2));
-		if (_handshake == null) throw RequestNotAccepted();
+    if (!verify) {
+      models.sockets.video.sendMessage(command);
+    } else {
+      final successful = await models.sockets.video.tryHandshake(
+        message: command,
+        timeout: const Duration(seconds: 2),
+        constructor: VideoCommand.fromBuffer,
+      );
+      if (!successful) throw RequestNotAccepted();
+    }
 	}
 
 	/// Enables or disables the given camera.
@@ -238,12 +235,14 @@ class VideoModel extends Model {
 		if (enable && details.status != CameraStatus.CAMERA_DISABLED) return;
 		if (!enable && details.status == CameraStatus.CAMERA_DISCONNECTED) return;
 
-		_handshake = null;
 		details.status = enable ? CameraStatus.CAMERA_ENABLED : CameraStatus.CAMERA_DISABLED;
 		final command = VideoCommand(id: feeds[name]!.id, details: details);
-		models.sockets.video.sendMessage(command);
-		await Future<void>.delayed(const Duration(seconds: 2));
-		if (_handshake == null) {
+    final successsful = await models.sockets.video.tryHandshake(
+      message: command,
+      timeout: const Duration(seconds: 2),
+      constructor: VideoCommand.fromBuffer,
+    );
+		if (!successsful) {
 			models.home.setMessage(
 				severity: Severity.warning,
 				text: "Could not ${enable ? 'enable' : 'disable'} the ${name.humanName} camera",
