@@ -65,7 +65,7 @@ class DashboardView {
     /// An icon to indicate the status of the given camera.
   static Widget getCameraStatus(CameraName name) {
     if (!models.sockets.video.isConnected) {
-      return Icon(Icons.signal_wifi_off, color: Colors.black.withOpacity(0.5));
+      return Icon(Icons.signal_wifi_off, color: Colors.black.withValues(alpha: 0.5));
     }
     final status = models.video.feeds[name]!.details.status;
     const size = 12.0;
@@ -94,37 +94,37 @@ class DashboardView {
   static final List<DashboardView> uiViews = [
     DashboardView(
       name: Routes.science,
-      iconFunc: () => Icon(Icons.science, color: Colors.black.withOpacity(0.5)),
+      iconFunc: () => Icon(Icons.science, color: Colors.black.withValues(alpha: 0.5)),
       builder: (context, index) => SciencePage(index: index),
     ),
     DashboardView(
       name: Routes.autonomy,
-      iconFunc: () => Icon(Icons.map, color: Colors.black.withOpacity(0.5)),
+      iconFunc: () => Icon(Icons.map, color: Colors.black.withValues(alpha: 0.5)),
       builder: (context, index) => MapPage(index: index),
     ),
     DashboardView(
       name: Routes.electrical,
-      iconFunc: () => Icon(Icons.bolt, color: Colors.black.withOpacity(0.5)),
+      iconFunc: () => Icon(Icons.bolt, color: Colors.black.withValues(alpha: 0.5)),
       builder: (context, index) => ElectricalPage(index: index),
     ),
     DashboardView(
       name: Routes.arm,
-      iconFunc: () => Icon(Icons.precision_manufacturing_outlined, color: Colors.black.withOpacity(0.5)),
+      iconFunc: () => Icon(Icons.precision_manufacturing_outlined, color: Colors.black.withValues(alpha: 0.5)),
       builder: (context, index) => ArmPage(index: index),
     ),
     DashboardView(
       name: Routes.drive,
-      iconFunc: () => Icon(Icons.drive_eta, color: Colors.black.withOpacity(0.5)),
+      iconFunc: () => Icon(Icons.drive_eta, color: Colors.black.withValues(alpha: 0.5)),
       builder: (context, index) => DrivePage(index: index),
     ),
     DashboardView(
       name: Routes.rocks,
-      iconFunc: () => Icon(Icons.landslide, color: Colors.black.withOpacity(0.5)),
+      iconFunc: () => Icon(Icons.landslide, color: Colors.black.withValues(alpha: 0.5)),
       builder: (context, index) => RocksPage(index: index),
     ),
     DashboardView(
       name: Routes.controllers,
-      iconFunc: () => Icon(Icons.sports_esports, color: Colors.black.withOpacity(0.5)),
+      iconFunc: () => Icon(Icons.sports_esports, color: Colors.black.withValues(alpha: 0.5)),
       builder: (context, index) => ControllersPage(index: index),
     ),
     DashboardView(
