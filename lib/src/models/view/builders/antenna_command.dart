@@ -117,8 +117,7 @@ class AntennaCommandBuilder extends ValueBuilder<BaseStationCommand> {
     if (_handshake != null) {
       models.home.setMessage(severity: Severity.info, text: "Antenna Stopped");
     } else {
-      models.home
-          .setMessage(severity: Severity.error, text: "Command not received");
+      models.home.setMessage(severity: Severity.error, text: "Command not received");
     }
   }
 }
