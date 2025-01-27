@@ -8,11 +8,25 @@ class BaseStationMetrics extends Metrics<BaseStationData> {
   @override
   String get name => "Base Station";
 
+  String _controlModeName(AntennaControlMode mode) => switch(mode) {
+    AntennaControlMode.ANTENNA_CONTROL_MODE_UNDEFINED => "Unknown",
+    AntennaControlMode.TRACK_ROVER => "Track Rover",
+    AntennaControlMode.MANUAL_CONTROL => "Manual",
+    _ => "Unknown",
+  };
+
   @override
   List<MetricLine> get allMetrics => [
+    MetricLine("Control Mode: ${_controlModeName(data.mode)}"),
     MetricLine("Antenna:"),
-    MetricLine("  Angle: ${data.antenna.swivel.currentAngle.toStringAsFixed(3)}"),
-    MetricLine("  Target Angle: ${data.antenna.swivel.targetAngle.toStringAsFixed(3)}"),
+    MetricLine(
+      "  Is Moving: ${data.antenna.swivel.isMoving.displayName}",
+      severity: data.antenna.swivel.isMoving.toBool() ? Severity.info : null,
+    ),
+		MetricLine("  Direction: ${data.antenna.swivel.direction.humanName}"),
+		MetricLine("  Steps: ${data.antenna.swivel.currentStep} --> ${data.antenna.swivel.targetStep}"),
+		MetricLine("  Angle: ${data.antenna.swivel.currentAngle.toDegrees() % 360}°"),
+		MetricLine("  Target Angle: ${data.antenna.swivel.targetAngle.toDegrees() % 360}°"),    
   ];
 
   @override

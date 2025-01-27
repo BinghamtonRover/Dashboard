@@ -3,7 +3,6 @@
 import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/services.dart";
 import "package:rover_dashboard/src/models/view/builders/antenna_command.dart";
 
 /// A view model for the mars page to render a diagram of the antenna position and alignment.
@@ -35,8 +34,7 @@ class BaseStationModel with ChangeNotifier {
   }
 
   /// Initializes the view model
-  Future<void> init() async {
-    await Future<void>.delayed(const Duration(seconds: 1));
+  void init() {
     _dataSubscription = models.messages.stream.onMessage(
       name: BaseStationData().messageName,
       constructor: BaseStationData.fromBuffer,
@@ -57,7 +55,6 @@ class BaseStationModel with ChangeNotifier {
   /// A handler to call when new data arrives. Updates [data] and the UI.
   void onNewData(BaseStationData value) {
     data = value;
-    services.files.logData(value);
     notifyListeners();
   }
 }

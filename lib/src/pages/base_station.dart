@@ -130,8 +130,7 @@ class _BaseStationPainter extends CustomPainter {
   }
 
   void drawRover(Canvas canvas, Size size) {
-    // print(_wrapAngle(antennaAngle) * 180 / pi);
-    final delta = stationCoordinates - roverCoordinates;
+    final delta = roverCoordinates - stationCoordinates;
     targetAngle ??= delta.angle;
 
     final roverPaint = Paint()..color = Colors.blue;
