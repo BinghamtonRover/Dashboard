@@ -35,86 +35,59 @@ class AntennaCommandBuilder extends ValueBuilder<BaseStationCommand> {
   /// The View Model for the coordinates of the base station
   GpsBuilder baseStationCoordinatesOverride = GpsBuilder();
 
-  /// The latest handshake received by the base station
-  BaseStationCommand? _handshake;
-
-  StreamSubscription<BaseStationCommand>? _handshakeSubscription;
-
-  /// Constructor for the view model
-  AntennaCommandBuilder() {
-    init();
-  }
-
-  /// Initializes the view model
-  void init() {
-    _handshakeSubscription = models.messages.stream.onMessage(
-      name: BaseStationCommand().messageName,
-      constructor: BaseStationCommand.fromBuffer,
-      callback: (command) => _handshake = command,
-    );
-  }
-
   @override
-  void dispose() {
-    _handshakeSubscription?.cancel();
-    super.dispose();
-  }
-
-  @override
-  List<ValueBuilder<dynamic>> get otherBuilders =>
-      [roverCoordinatesOverride, baseStationCoordinatesOverride];
+  List<ValueBuilder<dynamic>> get otherBuilders => [roverCoordinatesOverride, baseStationCoordinatesOverride];
 
   @override
   bool get isValid =>
       (!overrideRoverCoordinates || roverCoordinatesOverride.isValid) &&
-      (!overrideBaseStationCoordinates ||
-          baseStationCoordinatesOverride.isValid);
+      (!overrideBaseStationCoordinates || baseStationCoordinatesOverride.isValid);
 
   @override
   BaseStationCommand get value => BaseStationCommand(
-        version: Version(major: 1),
-        mode: mode,
-        roverCoordinatesOverrideOverride:
-            overrideRoverCoordinates ? roverCoordinatesOverride.value : null,
-        baseStationCoordinatesOverride: overrideBaseStationCoordinates
-            ? baseStationCoordinatesOverride.value
-            : null,
-      );
+      version: Version(major: 1),
+      mode: mode,
+      roverCoordinatesOverrideOverride: overrideRoverCoordinates
+        ? roverCoordinatesOverride.value : null,
+      baseStationCoordinatesOverride: overrideBaseStationCoordinates
+          ? baseStationCoordinatesOverride.value : null,
+    );
 
   /// Sends the command to the base station socket
   Future<void> sendCommand() async {
     if (!isValid) {
       return;
     }
-    _handshake = null;
-    models.sockets.baseStation.sendMessage(value);
     models.home.setMessage(
       severity: Severity.info,
       text: "Submitting antenna command...",
     );
-    await Future<void>.delayed(const Duration(seconds: 1));
-    if (_handshake != null) {
+    if (await models.sockets.baseStation.tryHandshake(
+      message: value,
+      timeout: const Duration(seconds: 1),
+      constructor: BaseStationCommand.fromBuffer,
+    )) {
       models.home.setMessage(severity: Severity.info, text: "Command received");
     } else {
-      models.home
-          .setMessage(severity: Severity.error, text: "Command not received");
+      models.home.setMessage(severity: Severity.error, text: "Command not received");
     }
     notifyListeners();
   }
 
   /// Sends a command to stop the antenna
   Future<void> stop() async {
-    _handshake = null;
     models.home.setMessage(severity: Severity.info, text: "Stopping antenna");
     final command = BaseStationCommand(
       mode: AntennaControlMode.MANUAL_CONTROL,
       manualCommand: AntennaFirmwareCommand(stop: true),
     );
-    for (var i = 0; i < 3; i++) {
-      models.sockets.baseStation.sendMessage(command);
-    }
-    await Future<void>.delayed(const Duration(seconds: 1));
-    if (_handshake != null) {
+    models.sockets.baseStation.sendMessage(command);
+    models.sockets.baseStation.sendMessage(command);
+    if (await models.sockets.baseStation.tryHandshake(
+      message: command,
+      timeout: const Duration(seconds: 1),
+      constructor: BaseStationCommand.fromBuffer,
+    )) {
       models.home.setMessage(severity: Severity.info, text: "Antenna Stopped");
     } else {
       models.home.setMessage(severity: Severity.error, text: "Command not received");
