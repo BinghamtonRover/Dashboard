@@ -51,14 +51,6 @@ dev_dependencies:
 
 # Generates icons for the given platforms
 #   Run: flutter pub run icons_launcher:create
-icons_launcher:
-  image_path: "assets/logo.png"
-  platforms:
-    android:
-      enable: true
-    windows:
-      enable: true
-
 flutter_launcher_icons:
   image_path: "assets/logo.png"
   android: true
@@ -66,7 +58,7 @@ flutter_launcher_icons:
     generate: true
 
 # Builds a Windows .msix App Installer file for the Dashboard.
-#   Command: dart run msix:create
+#   Command: dart run flutter_launcher_icons:generate
 msix_config:
   msix_version: 2024.10.28.16
   display_name: Dashboard
