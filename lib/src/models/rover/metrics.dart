@@ -75,8 +75,8 @@ class RoverMetrics extends Model {
 		);
     drive.addListener(vitals.notify);
     models.messages.stream.onMessage(
-      name: DetectionResult().messageName,
-      constructor: DetectionResult.fromBuffer,
+      name: VisionResult().messageName,
+      constructor: VisionResult.fromBuffer,
       callback: vision.update,
     );
     // versionTimer = Timer.periodic(versionInterval, _sendVersions);
