@@ -5,6 +5,7 @@ import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/src/widgets/atomic/video_settings.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A helper class to load and manage resources used by a [ui.Image].
@@ -16,9 +17,17 @@ import "package:rover_dashboard/widgets.dart";
 ///
 /// It is safe to call [load] or [dispose] multiple times, and calling [load]
 /// will automatically call [dispose] on the existing resources.
-class ImageLoader {
-	/// The `dart:ui` instance of the current frame.
-	ui.Image? image;
+class ImageLoader extends ChangeNotifier {
+	ui.Image? _image;
+
+  /// The `dart:ui` instance of the current frame.
+  ui.Image? get image => _image;
+
+  /// The `dart:ui` instance of the current frame.
+  set image(ui.Image? value) {
+    _image = value;
+    notifyListeners();
+  }
 
 	/// The codec used by [image].
 	ui.Codec? codec;
@@ -40,204 +49,70 @@ class ImageLoader {
 	}
 
 	/// Disposes all the resources associated with the current frame.
+  @override
 	void dispose() {
 		codec?.dispose();
 		image?.dispose();
 		image = null;
+    super.dispose();
 	}
+
+  @override
+  void notifyListeners() {
+    // prevent notifying listeners after the loader is no longer in use
+    if (hasListeners) {
+      super.notifyListeners();
+    }
+  }
 }
 
 /// Displays frames of a video feed.
 class VideoFeed extends StatefulWidget {
-	/// The feed to show in this widget.
-	final CameraName name;
-
-  /// The index of this view.
+  /// The index of this view
   final int index;
 
-	/// Displays a video feed for the given camera.
-	const VideoFeed({required this.name, required this.index});
+  /// The video feed for the viewer
+  final VideoFeedModel videoFeed;
 
-	@override
-	VideoFeedState createState() => VideoFeedState();
-}
-
-/// Class that defines a slider for camera controls
-class SliderSettings extends StatelessWidget {
-  /// Name of the slider
-  final String label;
-
-  /// Value corresponding to the slider
-  final double value;
-
-  /// Value to change the position of the slider
-  final ValueChanged<double> onChanged;
-
-  /// The min value on this slider.
-  final double min;
-
-  /// The max value on this slider.
-  final double max;
-
-  /// Constructor for SliderSettings
-  const SliderSettings({
-    required this.label,
-    required this.value,
-    required this.onChanged,
-    this.min = 0,
-    this.max = 100,
-  });
+  /// Const constructor for 
+  const VideoFeed({required this.index, required this.videoFeed, super.key});
 
   @override
-  Widget build(BuildContext context) => Column(
-    children: <Widget>[
-      Text("$label: ${value.floor()}"),
-      Slider(
-        value: value,
-        onChanged: onChanged,
-        max: max,
-        min: min,
-      ),
-    ],
-  );
+  State<VideoFeed> createState() => _VideoFeedState();
 }
 
 /// The logic for updating a [VideoFeed].
 /// 
-/// This widget listens to [VideoModel.frameUpdater] to sync its framerate with other [VideoFeed]s.
-/// On every update, this widget grabs the frame from [VideoData.frame], decodes it, renders it,
-/// then replaces the old frame. The key is that all the image processing logic is done off-screen
-/// while the old frame remains on-screen. When the frame is processed, it quickly replaces the old
-/// frame. That way, the user sees one continuous video instead of a flickering image.
-class VideoFeedState extends State<VideoFeed> {
-	/// The data being streamed.
-	late VideoData data;
+/// This widget listens to [VideoFeedModel] to sync its framerate with other [VideoFeed]s.
+/// On every update, this widget grabs the frame from [VideoFeedModel.frameNotifier], decodes it,
+/// renders it, then replaces the old frame. The key is that all the image processing logic is
+/// done off-screen while the old frame remains on-screen. When the frame is processed, it quickly
+/// replaces the old frame. That way, the user sees one continuous video instead of a flickering
+/// image.
+class _VideoFeedState extends State<VideoFeed> {
+  VideoFeedModel get videoFeed => widget.videoFeed;
 
 	/// A helper class responsible for managing and loading an image.
 	final imageLoader = ImageLoader();
 
-	/// Checks if the current slider for video camera is open
-	bool isOpened = false;
-
-	/// Value for zoom
-	double zoom = 0;
-
-	/// Value for pan
-	double pan = 0;
-
-	/// Value for focus
-	double focus = 0;
-
-	/// Value for brightness
-	double brightness = 0;
-
-	@override
-	void initState() {
-		super.initState();
-		data = models.video.feeds[widget.name]!;
-		models.video.addListener(updateImage);
-	}
-
-	@override
-	void dispose() {
-		models.video.removeListener(updateImage);
-		imageLoader.dispose();
-		super.dispose();
-	}
-
-	/// Grabs the new frame, renders it, and replaces the old frame.
-	Future<void> updateImage() async {
-		data = models.video.feeds[widget.name]!;
-		if (data.details.status != CameraStatus.CAMERA_ENABLED) {
-		setState(() => imageLoader.image = null);
-		}
-		setState(() {});
-		if (!data.hasFrame() || imageLoader.isLoading) return;
-		await imageLoader.load(data.frame);
-		if (mounted) setState(() {});
-	}
-
-  /// Whether there is a frame ready to display.
-  bool get isReady => models.sockets.video.isConnected
-    && imageLoader.hasImage
-    && data.details.status == CameraStatus.CAMERA_ENABLED;
-
-  /// Builds the inside of the video feed. Either a video frame or an error message.
-  Widget buildChild(BuildContext context) => isReady
-    ? Row(
-      children: [
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          height: double.infinity,
-          width: isOpened ? 200 : 0,
-          child: VideoSettingsWidget(
-            id: data.id,
-            details: data.details,
-          ),
-        ),
-        Expanded(
-          child: InteractiveViewer(
-            minScale: 1,
-            child: RawImage(image: imageLoader.image, fit: BoxFit.contain),
-          ),
-        ),
-      ],
-    )
-    : Center(child: Text(errorMessage, textAlign: TextAlign.center));
-
-  @override
-  Widget build(BuildContext context) => Container(
-    color: context.colorScheme.brightness == Brightness.light
-      ? Colors.blueGrey
-      : Colors.blueGrey[700],
-    child: Column(
-      children: [
-        Row(
-          children: [
-            IconButton(
-              onPressed: toggleSettings,
-              icon: const Icon(Icons.tune),
-            ),
-            Text(data.details.name.humanName),
-            const Spacer(),
-            Text("${models.video.networkFps[data.details.name]!} FPS"),
-            if (data.hasFrame()) ...[
-              const SizedBox(width: 5),
-              IconButton(
-                tooltip: "Save current frame (lower quality)",
-                icon: const Icon(Icons.add_a_photo),
-                onPressed: () => models.video.saveFrame(data.details.name),
-              ),
-              const SizedBox(width: 5),
-              IconButton(
-                tooltip: "Take onboard screenshot (high quality)",
-                onPressed: () => models.video.takeOnboardScreenshot(data.id, data.details),
-                icon: const Icon(Icons.add_photo_alternate),
-              ),
-            ],
-            const SizedBox(width: 5),
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () async => showDialog(
-                context: context,
-                builder: (_) => CameraDetailsEditor(data),
-              ),
-            ),
-            ViewsSelector(index: widget.index),
-          ],
-        ),
-        Expanded(child: buildChild(context)),
-      ],
-    ),
+  late final VideoFeedSettings settings = VideoFeedSettings(
+    zoom: videoFeed.details.zoom.toDouble(),
+    pan: videoFeed.details.pan.toDouble(),
+    tilt: videoFeed.details.tilt.toDouble(),
+    focus: videoFeed.details.focus.toDouble(),
+    autofocus: videoFeed.details.autofocus,
   );
 
-  /// Opens or closes the settings panel.
-  void toggleSettings() => setState(() => isOpened = !isOpened);
+  /// Whether there is a frame ready to display
+  bool get isReady =>
+      models.sockets.video.isConnected &&
+      imageLoader.hasImage &&
+      videoFeed.details.status == CameraStatus.CAMERA_ENABLED;
 
-  /// Displays an error message describing why `image == null`.
+  /// The error status of the camera
   String get errorMessage {
     if (!models.sockets.video.isConnected) return "The video program is not connected";
-    switch (data.details.status) {
+    switch (videoFeed.details.status) {
       case CameraStatus.CAMERA_LOADING:
         return "Camera is loading...";
       case CameraStatus.CAMERA_STATUS_UNDEFINED:
@@ -251,9 +126,9 @@ class VideoFeedState extends State<VideoFeed> {
       case CameraStatus.FRAME_TOO_LARGE:
         return "Camera is reading too much detail\nReduce the quality or resolution";
       case CameraStatus.CAMERA_HAS_NO_NAME:
-        return "Camera has no name\nChange lib/constants.py on the video Pi";
+        return "Camera has no name\nChange lib/src/utils/constants.dart on the video Pi";
       case CameraStatus.CAMERA_ENABLED:
-        if (data.hasFrame()) {
+        if (videoFeed.hasFrame) {
           return "Loading feed...";
         } else {
           return "Starting camera...";
@@ -261,108 +136,126 @@ class VideoFeedState extends State<VideoFeed> {
     }
     return "Unknown error";
   }
-}
-
-/// A widget to edit camera settings.
-class VideoSettingsWidget extends StatefulWidget {
-  /// The details being sent to the camera.
-  final CameraDetails details;
-  /// The ID of the camera being edited.
-  final String id;
-  /// Creates the video settings widget.
-  const VideoSettingsWidget({
-    required this.details, 
-    required this.id,
-  });
 
   @override
-  VideoSettingsState createState() => VideoSettingsState();
-}
+  void initState() {
+    videoFeed.frameNotifier.addListener(onImageUpdate);
+    models.sockets.video.connectionStatus.addListener(onVideoConnectionChanged);
+    super.initState();
+  }
 
-/// A state for [VideoSettingsWidget].
-class VideoSettingsState extends State<VideoSettingsWidget> {
-  /// The zoom level. Camera-specific.
-  double zoom = 100;
-  /// The pan level, when zoomed in.
-  double pan = 0;
-  /// The tilt level, when zoomed in.
-  double tilt = 0;
-  /// The focus level, if autofocus is disabled.
-  double focus = 0;
-  /// Whether the camera should autofocus.
-  bool autofocus = true;
+  @override
+  void dispose() {
+    videoFeed.frameNotifier.removeListener(onImageUpdate);
+    models.sockets.video.connectionStatus.removeListener(onVideoConnectionChanged);
 
-	@override
-	Widget build(BuildContext context) => ListView(
-    children: [
-			SliderSettings(
-				label: "Zoom",
-				value: zoom,
-				min: 100,
-				max: 800,
-				onChanged: (val) async {
-					setState(() => zoom = val);
-					await models.video.updateCamera(
-            verify: false,
-            widget.id,
-            CameraDetails(name: widget.details.name, zoom: val.round()),
-					);
-				},
-      ),
-			SliderSettings(
-				label: "Pan",
-				value: pan,
-				min: -180,
-				max: 180,
-				onChanged: (val) async {
-					setState(() => pan = val);
-					await models.video.updateCamera(
-            verify: false,
-					widget.id,
-					CameraDetails(name: widget.details.name, pan: val.round()),
-					);
-				},
-      ),
-			SliderSettings(
-				label: "Tilt",
-				value: tilt,
-				min: -180,
-				max: 180,
-				onChanged: (val) async {
-					setState(() => tilt = val);
-					await models.video.updateCamera(
-            verify: false,
-					widget.id,
-					CameraDetails(name: widget.details.name, tilt: val.round()),
-					);
-				},
-      ),
-			SliderSettings(
-				label: "Focus",
-				value: focus,
-				max: 255,
-				onChanged: (val) async {
-					setState(() => focus = val);
-					await models.video.updateCamera(
-            verify: false,
-					widget.id,
-					CameraDetails(name: widget.details.name, focus: val.round()),
-					);
-				},
-      ),
-			// Need to debug bool conversion to 1.0 and 2.0
-			SwitchListTile(
-        title: const Text("Autofocus"),
-				value: autofocus,
-				onChanged: (bool value) async {
-					setState(() => autofocus = value);
-					await models.video.updateCamera(
-            verify: false,
-            widget.id,
-            CameraDetails(name: widget.details.name, autofocus: autofocus),
-          );
-        },
-      ),
-    ],
+    imageLoader.dispose();
+    settings.dispose();
+    super.dispose();
+  }
+
+  void onVideoConnectionChanged() => setState(() {});
+
+  Future<void> onImageUpdate() async {
+    final frame = videoFeed.frameNotifier.value;
+    if (videoFeed.details.status != CameraStatus.CAMERA_ENABLED) {
+      imageLoader.image = null;
+    }
+    if (frame == null || frame.isEmpty || imageLoader.isLoading) {
+      return;
+    }
+    await imageLoader.load(frame);
+  }
+
+  Widget _buildChild(BuildContext context) => isReady
+    ? Row(
+        children: [
+          ListenableBuilder(
+            listenable: settings,
+            builder: (context, _) => AnimatedContainer(
+              curve: Curves.easeInOut,
+              duration: const Duration(milliseconds: 250),
+              height: double.infinity,
+              width: settings.isOpened ? 200 : 0,
+              child: VideoSettingsWidget(
+                settings,
+                id: videoFeed.id,
+                details: videoFeed.details,
+              ),
+            ),
+          ),
+          Expanded(
+            child: InteractiveViewer(
+              child: RawImage(
+                image: imageLoader.image,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+        ],
+      )
+    : Center(child: Text(errorMessage, textAlign: TextAlign.center));
+
+  @override
+  Widget build(BuildContext context) => Container(
+    color: context.colorScheme.brightness == Brightness.light
+        ? Colors.blueGrey
+        : Colors.blueGrey[700],
+    child: Column(
+      children: [
+        ValueListenableBuilder(
+          valueListenable: widget.videoFeed.hasFrameStatus,
+          builder: (context, hasFrame, __) => Row(
+            children: [
+              IconButton(
+                onPressed: () => settings.isOpened = !settings.isOpened,
+                icon: const Icon(Icons.tune),
+              ),
+              Text(videoFeed.cameraName.humanName),
+              const Spacer(),
+              ValueListenableBuilder(
+                valueListenable: widget.videoFeed.framesPerSecond,
+                builder: (context, fps, _) => Text("$fps FPS"),
+              ),
+              if (hasFrame) ...[
+                const SizedBox(width: 5),
+                IconButton(
+                  tooltip: "Save current frame (lower quality)",
+                  icon: const Icon(Icons.add_a_photo),
+                  onPressed: () => models.video.saveFrame(videoFeed.cameraName),
+                ),
+                const SizedBox(width: 5),
+                IconButton(
+                  tooltip: "Take onboard screenshot (high quality)",
+                  onPressed: () => models.video.takeOnboardScreenshot(
+                    widget.videoFeed.id,
+                    videoFeed.details,
+                  ),
+                  icon: const Icon(Icons.add_photo_alternate),
+                ),
+              ],
+              const SizedBox(width: 5),
+              IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: () async => showDialog(
+                  context: context,
+                  builder: (_) => CameraDetailsEditor(
+                    details: videoFeed.details,
+                    id: videoFeed.id,
+                  ),
+                ),
+              ),
+              ViewsSelector(index: widget.index),
+            ],
+          ),
+        ),
+        Expanded(
+          child: ListenableBuilder(
+            listenable: imageLoader,
+            builder: (context, _) => _buildChild(context),
+          ),
+        ),
+      ],
+    ),
   );
 }
