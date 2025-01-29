@@ -1,5 +1,6 @@
 import "package:collection/collection.dart";
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/services.dart";
 
 /// Metrics about the vision of the rover's cameras
 /// 
@@ -52,12 +53,14 @@ class VisionMetrics extends Metrics<VisionResult> {
   // This has to be overriden since otherwise it will keep appending targets to the list
   @override
   void update(VisionResult value) {
+    if (!checkVersion(value)) return;    
     cameraDetections.removeWhere((result) => result.name == value.name);
     if (value.objects.isNotEmpty) {
       cameraDetections.add(value.deepCopy());
       cameraDetections.sort();
     }
-    super.update(value);
+		services.files.logData(value);
+		notifyListeners();
   }
   
   @override
