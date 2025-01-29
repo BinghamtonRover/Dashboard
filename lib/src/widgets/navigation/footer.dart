@@ -209,7 +209,7 @@ class SerialButton extends ReusableReactiveWidget<SerialModel> {
   Widget build(BuildContext context, SerialModel model) => PopupMenuButton(
     icon: Icon(
       Icons.usb,
-      color: model.hasDevice ? Colors.green : context.colorScheme.onSecondary,
+      color: model.hasDevice ? Colors.green : Colors.black,
     ),
     tooltip: "Select device",
     onSelected: model.toggle,
