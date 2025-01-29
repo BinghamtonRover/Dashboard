@@ -27,8 +27,8 @@ class VideoSettingsWidget extends ReusableReactiveWidget<VideoFeedSettings> {
             value: model.zoom,
             min: 100,
             max: 800,
-            onChanged: (val) async {
-              model.zoom = val;
+            onChanged: (val) => model.zoom = val,
+            onChangeEnd: (val) async {
               await models.video.updateCamera(
                 verify: false,
                 id,
@@ -41,8 +41,8 @@ class VideoSettingsWidget extends ReusableReactiveWidget<VideoFeedSettings> {
             value: model.pan,
             min: -180,
             max: 180,
-            onChanged: (val) async {
-              model.pan = val;
+            onChanged: (val) => model.pan = val,
+            onChangeEnd: (val) async {
               await models.video.updateCamera(
                 verify: false,
                 id,
@@ -55,8 +55,8 @@ class VideoSettingsWidget extends ReusableReactiveWidget<VideoFeedSettings> {
             value: model.tilt,
             min: -180,
             max: 180,
-            onChanged: (val) async {
-              model.tilt = val;
+            onChanged: (val) => model.tilt = val,
+            onChangeEnd: (val) async {
               await models.video.updateCamera(
                 verify: false,
                 id,
@@ -68,8 +68,8 @@ class VideoSettingsWidget extends ReusableReactiveWidget<VideoFeedSettings> {
             label: "Focus",
             value: model.focus,
             max: 255,
-            onChanged: (val) async {
-              model.focus = val;
+            onChanged: (val) => model.focus = val,
+            onChangeEnd: (val) async {
               await models.video.updateCamera(
                 verify: false,
                 id,
@@ -107,6 +107,9 @@ class SliderSettings extends StatelessWidget {
   /// Value to change the position of the slider
   final ValueChanged<double> onChanged;
 
+  /// Callback for when the slider is done being dragged
+  final ValueChanged<double>? onChangeEnd;
+
   /// The min value on this slider.
   final double min;
 
@@ -118,6 +121,7 @@ class SliderSettings extends StatelessWidget {
     required this.label,
     required this.value,
     required this.onChanged,
+    this.onChangeEnd,
     this.min = 0,
     this.max = 100,
   });
@@ -129,6 +133,7 @@ class SliderSettings extends StatelessWidget {
       Slider(
         value: value,
         onChanged: onChanged,
+        onChangeEnd: onChangeEnd,
         max: max,
         min: min,
       ),
