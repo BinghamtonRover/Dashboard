@@ -201,11 +201,21 @@ class VideoFeedState extends State<VideoFeed> {
             Text(data.details.name.humanName),
             const Spacer(),
             Text("${models.video.networkFps[data.details.name]!} FPS"),
-            if (data.hasFrame())
+            if (data.hasFrame()) ...[
+              const SizedBox(width: 5),
               IconButton(
+                tooltip: "Save current frame (lower quality)",
                 icon: const Icon(Icons.add_a_photo),
-                onPressed: () => models.video.saveFrame(data.id, data.details),
+                onPressed: () => models.video.saveFrame(data.details.name),
               ),
+              const SizedBox(width: 5),
+              IconButton(
+                tooltip: "Take onboard screenshot (high quality)",
+                onPressed: () => models.video.takeOnboardScreenshot(data.id, data.details),
+                icon: const Icon(Icons.add_photo_alternate),
+              ),
+            ],
+            const SizedBox(width: 5),
             IconButton(
               icon: const Icon(Icons.settings),
               onPressed: () async => showDialog(

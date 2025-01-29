@@ -2,6 +2,7 @@ import "dart:async";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/services.dart";
 
 /// A data model to stream video from the rover.
 class VideoModel extends Model {
@@ -106,10 +107,37 @@ class VideoModel extends Model {
 		}
 	}
 
-	/// Takes a screenshot of the current frame.
-	void saveFrame(String id, CameraDetails details) {
+  /// Sends a command to the video program to take a screenshot
+  /// onboard the video program
+  /// 
+  /// This will result in a much higher quality image, but will
+  /// take much longer to capture, and will pause the video feed
+  /// for several seconds
+  Future<void> takeOnboardScreenshot(String id, CameraDetails details) async {
     final command = VideoCommand(id: id, details: details, takeSnapshot: true);
-    models.sockets.video.sendMessage(command);
+    if (await models.sockets.video.tryHandshake(
+      message: command,
+      timeout: const Duration(seconds: 1),
+      constructor: VideoCommand.fromBuffer,
+    )) {
+      models.home.setMessage(
+        severity: Severity.info,
+        text: "Screenshot request received, video stream may pause",
+      );
+    } else {
+      models.home.setMessage(
+        severity: Severity.error,
+        text: "Screenshot command not received",
+      );
+    }
+  }
+
+	/// Takes a screenshot of the current frame.
+	Future<void> saveFrame(CameraName name) async {
+	final cachedFrame = feeds[name]?.frame;
+		if (cachedFrame == null) throw ArgumentError.notNull("Feed for $name");
+		await services.files.writeImage(cachedFrame, name.humanName);
+		models.home.setMessage(severity: Severity.info, text: "Screenshot saved");
 	}
 
 	/// Updates settings for the given camera.
