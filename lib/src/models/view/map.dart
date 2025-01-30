@@ -168,9 +168,6 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 		return result;
 	}
 
-	/// Converts a decimal GPS coordinate to an index representing the block in the grid.
-	int gpsToBlock(double value) => (value / models.settings.dashboard.mapBlockSize).round();
-
 	/// Calculates a new position for [gps] based on [offset] and adds it to the [grid].
 	///
 	/// This function filters out any coordinates that shouldn't be shown based on [gridSize].
