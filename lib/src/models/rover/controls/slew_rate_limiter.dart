@@ -26,10 +26,8 @@ class SlewRateLimiter {
   /// Filters the input to the max rate of change
   double calculate(double input) {
     final currentTime = DateTime.now();
-    final elapsedSeconds = (currentTime.microsecondsSinceEpoch / 1e6) -
-        (_previousTime.microsecondsSinceEpoch / 1e6);
-    _previousValue += (input - _previousValue)
-        .clamp(-rate * elapsedSeconds, rate * elapsedSeconds);
+    final elapsedSeconds = currentTime.difference(_previousTime).inMicroseconds / 1e6;
+    _previousValue += (input - _previousValue).clamp(-rate * elapsedSeconds, rate * elapsedSeconds);
     _previousTime = currentTime;
     return _previousValue;
   }
