@@ -24,7 +24,7 @@ class DashboardSocket extends BurtSocket {
   double get frequency => models.settings.network.connectionTimeout;
 
   /// Listens for incoming messages on a UDP socket and sends heartbeats to the [device].
-  DashboardSocket({required super.device}) : super(port: null, quiet: true);
+  DashboardSocket({required super.device}) : super(port: null, quiet: true, keepDestination: true);
 
   @override
   Duration get heartbeatInterval => Duration(milliseconds: 1000 ~/ frequency);
