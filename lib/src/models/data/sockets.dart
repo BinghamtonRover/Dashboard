@@ -72,6 +72,16 @@ class Sockets extends Model {
       });
       await socket.init();
 		}
+    data.messages.onMessage(
+      name: UpdateSetting().messageName,
+      constructor: UpdateSetting.fromBuffer,
+      callback: (setting) {
+        if (!setting.hasStatus()) return;
+
+        models.rover.settings.settings.status = setting.status;
+        models.rover.status.value = setting.status;
+      },
+    );
 		final level = Logger.level;
 		Logger.level = LogLevel.warning;
 		await updateSockets();
