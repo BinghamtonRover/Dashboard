@@ -27,7 +27,7 @@ class MapLegend extends StatelessWidget {
             feedback: Container(
               width: 24,
               height: 24,
-              color: Colors.green.withOpacity(0.75),
+              color: Colors.green.withValues(alpha: 0.75),
             ),
             child: Column(
               children: [
@@ -44,7 +44,7 @@ class MapLegend extends StatelessWidget {
             feedback: Container(
               width: 24,
               height: 24,
-              color: Colors.black.withOpacity(0.75),
+              color: Colors.black.withValues(alpha: 0.75),
             ),
             child: Column(
               children: [
@@ -68,7 +68,7 @@ class MapLegend extends StatelessWidget {
             feedback: Container(
               width: 24,
               height: 24,
-              color: Colors.red.withOpacity(0.75),
+              color: Colors.red.withValues(alpha: 0.75),
             ),
             child: Column(
               children: [
