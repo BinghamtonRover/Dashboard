@@ -10,7 +10,7 @@
 ///  library should import any other library.
 library data;
 
-export "package:burt_network/generated.dart";
+export "package:burt_network/protobuf.dart";
 
 export "src/data/metrics/arm.dart";
 export "src/data/metrics/drive.dart";
