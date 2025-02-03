@@ -34,26 +34,33 @@ class BaseStationPage extends ReactiveWidget<BaseStationModel> {
   @override
   Widget build(BuildContext context, BaseStationModel model) => Column(
         children: [
-          Row(
+          PageHeader(
+            pageIndex: index,
             children: [
               const SizedBox(width: 8),
               Text("Base Station", style: context.textTheme.headlineMedium),
               const Spacer(),
-              ViewsSelector(index: index),
             ],
           ),
           Flexible(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _AntennaDisplay(model: model),
-                Flexible(
-                  child: Card(
-                    elevation: 15,
-                    child: AntennaCommandEditor(model.commandBuilder),
-                  ),
+            child: LayoutBuilder(
+              builder: (context, constraints) => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Flexible(
+                      flex: 3,
+                      child: _AntennaDisplay(model: model),
+                    ),
+                    if (constraints.maxWidth > 780)
+                      Flexible(
+                        flex: 2,
+                        child: Card(
+                          elevation: 15,
+                          child: AntennaCommandEditor(model.commandBuilder),
+                        ),
+                      ),
+                  ],
                 ),
-              ],
             ),
           ),
         ],
@@ -88,6 +95,7 @@ class _AntennaDisplay extends StatelessWidget {
                   painter: _BaseStationPainter(
                     roverCoordinates: model.roverPosition,
                     stationCoordinates: model.stationPosition,
+                    outlineColor: context.colorScheme.onSurface,
                     antennaAngle: model.data.antenna.swivel.currentAngle,
                     angleTolerance: models.settings.baseStation.angleTolerance,
                     targetAngle: (model.data.antenna.swivel.hasTargetAngle())
@@ -105,6 +113,7 @@ class _AntennaDisplay extends StatelessWidget {
 class _BaseStationPainter extends CustomPainter {
   final GpsCoordinates roverCoordinates;
   final GpsCoordinates stationCoordinates;
+  final Color outlineColor;
   final double antennaAngle;
   final double angleTolerance;
   double? targetAngle;
@@ -112,6 +121,7 @@ class _BaseStationPainter extends CustomPainter {
   _BaseStationPainter({
     required this.roverCoordinates,
     required this.stationCoordinates,
+    required this.outlineColor,
     required this.antennaAngle,
     required this.angleTolerance,
     this.targetAngle,
@@ -123,7 +133,7 @@ class _BaseStationPainter extends CustomPainter {
       Offset(size.width, size.height) / 2,
       size.width / 2 * 0.9,
       Paint()
-        ..color = Colors.black
+        ..color = outlineColor
         ..style = PaintingStyle.stroke,
     );
     drawRover(canvas, size);
