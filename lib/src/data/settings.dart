@@ -242,7 +242,7 @@ class DashboardSettings {
   final bool preferTankControls;
 
   /// The maximum rate of change to apply to the drive joystick inputs
-  final double slewRateLimit;
+  final double driveRateLimit;
 
   /// The maximum rate of change to apply to the drive throttle
   final double throttleRateLimit;
@@ -264,7 +264,7 @@ class DashboardSettings {
     required this.themeMode,
     required this.splitCameras,
     required this.preferTankControls,
-    required this.slewRateLimit,
+    required this.driveRateLimit,
     required this.throttleRateLimit,
     required this.versionChecking,
     required this.presets,
@@ -283,7 +283,7 @@ class DashboardSettings {
     maxFps = (json?["maxFps"] ?? 60) as int,
     splitCameras = json?["splitCameras"] ?? false,
     preferTankControls = json?["preferTankControls"] ?? false,
-    slewRateLimit = json?["slewRateLimit"] ?? 1.50,
+    driveRateLimit = json?["driveRateLimit"] ?? 1.50,
     throttleRateLimit = json?["throttleRateLimit"] ?? 0.50,
     versionChecking = json?["versionChecking"] ?? true,
     themeMode = ThemeMode.values.byName(json?["theme"] ?? ThemeMode.system.name);
@@ -296,7 +296,7 @@ class DashboardSettings {
     "theme": themeMode.name,
     "splitCameras": splitCameras,
     "preferTankControls": preferTankControls,
-    "slewRateLimit": slewRateLimit,
+    "driveRateLimit": driveRateLimit,
     "throttleRateLimit": throttleRateLimit,
     "versionChecking": versionChecking,
     "presets": presets,

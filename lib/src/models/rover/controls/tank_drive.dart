@@ -34,8 +34,8 @@ class DriveControls extends RoverControls {
 
   @override
   void updateState(GamepadState state) {
-    leftLimiter.rate = models.settings.dashboard.slewRateLimit;
-    rightLimiter.rate = models.settings.dashboard.slewRateLimit;
+    leftLimiter.rate = models.settings.dashboard.driveRateLimit;
+    rightLimiter.rate = models.settings.dashboard.driveRateLimit;
     throttleLimiter.rate = models.settings.dashboard.throttleRateLimit;
     if (!leftShoulderFlag && state.leftShoulder) throttle -= 0.1;
     leftShoulderFlag = state.leftShoulder;

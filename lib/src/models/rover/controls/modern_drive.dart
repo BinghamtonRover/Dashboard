@@ -15,10 +15,10 @@ class ModernDriveControls extends RoverControls {
   static const cameraSwivelIncrement = -1;
 
   /// The [SlewRateLimiter] for the left wheel speeds
-  SlewRateLimiter leftLimiter = SlewRateLimiter(rate: models.settings.dashboard.slewRateLimit);
+  SlewRateLimiter leftLimiter = SlewRateLimiter(rate: models.settings.dashboard.driveRateLimit);
 
   /// The [SlewRateLimiter] for the right wheel speeds
-  SlewRateLimiter rightLimiter = SlewRateLimiter(rate: models.settings.dashboard.slewRateLimit);
+  SlewRateLimiter rightLimiter = SlewRateLimiter(rate: models.settings.dashboard.driveRateLimit);
 
   /// The [SlewRateLimiter] for the throttle input
   SlewRateLimiter throttleLimiter = SlewRateLimiter(rate: models.settings.dashboard.throttleRateLimit);
@@ -137,8 +137,8 @@ class ModernDriveControls extends RoverControls {
 
   @override
   void updateState(GamepadState state) {
-    leftLimiter.rate = models.settings.dashboard.slewRateLimit;
-    rightLimiter.rate = models.settings.dashboard.slewRateLimit;
+    leftLimiter.rate = models.settings.dashboard.driveRateLimit;
+    rightLimiter.rate = models.settings.dashboard.driveRateLimit;
     throttleLimiter.rate = models.settings.dashboard.throttleRateLimit;
 
     updateThrottle(state);
