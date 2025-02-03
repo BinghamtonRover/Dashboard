@@ -1,5 +1,5 @@
 import "dart:math";
-import "package:burt_network/generated.dart";
+import "package:burt_network/protobuf.dart";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/models.dart";
