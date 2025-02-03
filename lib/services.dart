@@ -16,6 +16,7 @@ library services;
 import "src/services/files.dart";
 import "src/services/gamepad/service.dart";
 import "src/services/service.dart";
+import "src/services/shortcuts.dart";
 
 export "src/services/socket.dart";
 export "src/services/files.dart";
@@ -39,6 +40,9 @@ class Services extends Service {
 	/// A service that reads and writes to device files.
 	final files = FilesService();
 
+  /// A service that listens to dashboard shortcuts
+  final shortcuts = ShortcutsService();
+
 	/// The first error that occurred during startup.
 	String? error;
 
@@ -46,12 +50,14 @@ class Services extends Service {
 	Future<void> init() async {
 		await gamepad.init();
 		await files.init();
+    await shortcuts.init();
 	}
 
 	@override
 	Future<void> dispose() async {
 		await gamepad.dispose();
 		await files.dispose();
+    await shortcuts.dispose();
 	}
 }
 
