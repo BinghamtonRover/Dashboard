@@ -28,8 +28,6 @@ class RoverControlDashboard extends ReusableReactiveWidget<SettingsModel> {
     theme: ThemeData(
       colorScheme: ColorScheme.fromSeed(
         seedColor: binghamtonGreen,
-        primary: binghamtonGreen,
-        secondary: binghamtonGreen,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: binghamtonGreen,
@@ -40,9 +38,7 @@ class RoverControlDashboard extends ReusableReactiveWidget<SettingsModel> {
       colorScheme: ColorScheme.fromSeed(
         brightness: Brightness.dark,
         seedColor: binghamtonGreen,
-        primary: binghamtonGreen,
-        secondary: binghamtonGreen,
-        surface: Colors.grey[850],
+        surface: const Color.fromRGBO(40, 40, 40, 1),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: binghamtonGreen,

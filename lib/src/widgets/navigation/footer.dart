@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "package:burt_network/serial.dart";
+import "package:rover_dashboard/app.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -16,7 +17,7 @@ class Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ColoredBox(
-    color: Theme.of(context).colorScheme.secondary,
+    color: binghamtonGreen,
     child: Wrap(
       alignment: WrapAlignment.spaceBetween,
       children: [
