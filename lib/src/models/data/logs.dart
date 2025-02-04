@@ -121,6 +121,7 @@ class LogsModel extends Model {
     videoLogs.clear();
     autonomyLogs.clear();
     dashboardLogs.clear();
+    deviceSeverity.clear();
     models.home.clear(clearErrors: true);
     notifyListeners();
   }
