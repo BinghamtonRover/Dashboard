@@ -78,8 +78,13 @@ class Sockets extends Model {
       callback: (setting) {
         if (!setting.hasStatus()) return;
 
-        models.rover.settings.settings.status = setting.status;
-        models.rover.status.value = setting.status;
+        final status = setting.status;
+        if (status == RoverStatus.RESTART || status == RoverStatus.POWER_OFF) {
+          return;
+        }
+
+        models.rover.settings.settings.status = status;
+        models.rover.status.value = status;
       },
     );
 		final level = Logger.level;
