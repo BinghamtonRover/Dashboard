@@ -73,6 +73,7 @@ class AntennaCommandEditor extends ReusableReactiveWidget<AntennaCommandBuilder>
                     label: const Text("Stop Antenna"),
                     icon: const Icon(Icons.warning),
                     style: const ButtonStyle(
+                      iconColor: WidgetStatePropertyAll(Colors.white),
                       foregroundColor: WidgetStatePropertyAll(Colors.white),
                       backgroundColor: WidgetStatePropertyAll(Colors.red),
                     ),
