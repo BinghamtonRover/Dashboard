@@ -31,7 +31,12 @@ enum OperatingMode {
 	/// Arm mode.
 	/// 
 	/// Focus on helping the user manipulate the arm.
-	arm("Arm");
+	arm("Arm"),
+
+  /// Base Station mode.
+  /// 
+  /// Focus on manually manipulating the base station antenna
+  baseStation("Base Station");
 
 	/// The name of this mode.
 	/// 
