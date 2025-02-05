@@ -39,7 +39,7 @@ class GamepadButton extends ReusableReactiveWidget<Controller> {
             alignment: Alignment.topCenter,
             children: [
               const SizedBox(height: 32),
-              Icon(Icons.sports_esports, color: context.colorScheme.onSurface), 
+              const Icon(Icons.sports_esports), 
               Positioned(
                 bottom: 0,
                 right: 8,
@@ -54,9 +54,9 @@ class GamepadButton extends ReusableReactiveWidget<Controller> {
               ),
             ],
           ),
-          color: isDisabled(status) ? Colors.grey : model.isConnected
-            ? getColor(model.gamepad.batteryLevel)
-            : Colors.black,
+          color: isDisabled(status) || !model.isConnected
+              ? context.colorScheme.onSurface
+              : getColor(model.gamepad.batteryLevel),
           constraints: const BoxConstraints(maxWidth: 36),
           onPressed: model.connect,
         ),
