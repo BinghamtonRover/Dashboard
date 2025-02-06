@@ -15,6 +15,7 @@ String getCommandName(Device device) => switch (device) {
 	Device.GRIPPER => "GripperCommand",
 	Device.SCIENCE => "ScienceCommand",
 	Device.DRIVE => "DriveCommand",
+  Device.ANTENNA => "AntennaFirmwareCommand",
 	_ => "Unknown",
 };
 
@@ -24,6 +25,7 @@ String getDataName(Device device) => switch (device) {
 	Device.GRIPPER => "GripperData",
 	Device.SCIENCE => "ScienceData",
 	Device.DRIVE => "DriveData",
+  Device.ANTENNA => "AntennaFirmwareData",
 	_ => "Unknown",
 };
 

@@ -60,6 +60,7 @@ class SerialModel extends Model {
     for (final device in devices.values) {
       final thisDeviceAccepts = getCommandName(device.device);
       if (message.messageName != thisDeviceAccepts) return;
+      // print("Sending ${message.messageName} message to ${device.port}");
     	device.sendMessage(message);
     }
   }

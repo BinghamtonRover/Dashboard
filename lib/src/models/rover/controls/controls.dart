@@ -7,6 +7,7 @@ import "tank_drive.dart";
 import "none.dart";
 import "science.dart";
 import "modern_drive.dart";
+import "antenna.dart";
 
 export "arm.dart";
 export "camera.dart";
@@ -14,12 +15,13 @@ export "tank_drive.dart";
 export "none.dart";
 export "science.dart";
 export "modern_drive.dart";
+export "antenna.dart";
 
 /// How often to check the gamepad for new button presses.
 const gamepadDelay = Duration(milliseconds: 5);
 
 /// A class that controls one subsystem based on the gamepad state.
-/// 
+///
 /// To use this class, subclass it and implement [parseInputs]. Be sure to add your class to the
 /// [RoverControls.forMode] constructor so it can be used within the UI.
 abstract class RoverControls {
@@ -34,6 +36,7 @@ abstract class RoverControls {
     OperatingMode.none => NoControls(),
     OperatingMode.cameras => CameraControls(),
     OperatingMode.modernDrive => ModernDriveControls(),
+    OperatingMode.antenna => AntennaControls(),
 	};
 
 	/// The [OperatingMode] for these controls.
@@ -46,12 +49,12 @@ abstract class RoverControls {
 	Iterable<Message> parseInputs(GamepadState state);
 
 	/// A list of commands that disables the subsystem.
-	/// 
+	///
 	/// For example, after driving this should set the speed to 0.
 	Iterable<Message> get onDispose;
 
-	/// A human-readable explanation of what the controls are. 
-	/// 
+	/// A human-readable explanation of what the controls are.
+	///
 	/// Keys are the actions, values are the buttons that trigger them.
 	Map<String, String> get buttonMapping;
 }
