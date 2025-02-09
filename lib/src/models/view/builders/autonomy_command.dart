@@ -9,6 +9,9 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 	/// The type of task the rover should complete.
 	AutonomyTask task = AutonomyTask.GPS_ONLY;
 
+  /// The Aruco ID to search for
+  final NumberBuilder<int> arucoID = NumberBuilder<int>(0, min: 0, max: 255);
+
 	/// The view model to edit the [AutonomyCommand.destination].
 	final gps = GpsBuilder();
 
@@ -22,7 +25,7 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 	AutonomyCommandBuilder() { init(); }
 
   @override
-  List<ChangeNotifier> get otherBuilders => [models.rover.status];
+  List<ChangeNotifier> get otherBuilders => [gps, arucoID, models.rover.status];
 
   StreamSubscription<AutonomyCommand>? _subscription;
 
@@ -43,11 +46,12 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 	}
 
 	@override
-	bool get isValid => gps.isValid;
+	bool get isValid => gps.isValid && (task == AutonomyTask.GPS_ONLY || arucoID.isValid);
 
 	@override
 	AutonomyCommand get value => AutonomyCommand(
 		destination: gps.value,
+    arucoId: arucoID.value,
 		task: task,
 	);
 
