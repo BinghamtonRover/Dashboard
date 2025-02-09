@@ -134,6 +134,13 @@ class BaseStationSettings {
     "altitude": altitude,
     "angleTolerance": angleTolerance,
   };
+
+  /// The GPS coordinates of the base station
+  GpsCoordinates get gpsCoordinates => GpsCoordinates(
+    latitude: latitude,
+    longitude: longitude,
+    altitude: altitude,
+  );
 }
 
 /// Settings related to network configuration.
