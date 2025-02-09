@@ -5,28 +5,28 @@ import "package:rover_dashboard/services.dart";
 /// Metrics about the vision of the rover's cameras
 /// 
 /// This includes data such as aruco tags, and object detections
-class VisionMetrics extends Metrics<VisionResult> {
+class VisionMetrics extends Metrics<VideoData> {
   /// A cache of detection results from different cameras
   /// 
   /// This allows several packets of data to come in from different cameras
   /// and not have them be overwriting each other
-  final List<VisionResult> cameraDetections = [];
+  final List<VideoData> cameraDetections = [];
   /// Const constructor for vision metrics
-  VisionMetrics() : super(VisionResult());
+  VisionMetrics() : super(VideoData());
   
   @override
   List<MetricLine> get allMetrics => [
     if (cameraDetections.isEmpty)
       MetricLine("No Aruco Visible"),
     for (final detection in cameraDetections) ...[
-      ...detection.objects
+      ...detection.detectedObjects
           .sorted((a, b) => b.relativeSize.compareTo(a.relativeSize))
           .expandIndexed((index, target) sync* {
         if (index != 0) {
           yield MetricLine("--");
         }
         yield MetricLine("Aruco #${target.arucoTagId}:");
-        yield MetricLine("  Camera: ${detection.name.humanName}");
+        yield MetricLine("  Camera: ${detection.details.name.humanName}");
         yield MetricLine("  Center: (${target.centerX}, ${target.centerY})");
         yield MetricLine("  Yaw: ${target.yaw.toStringAsFixed(2)}°");
         yield MetricLine("  Pitch: ${target.pitch.toStringAsFixed(2)}°");
@@ -52,10 +52,11 @@ class VisionMetrics extends Metrics<VisionResult> {
 
   // This has to be overriden since otherwise it will keep appending targets to the list
   @override
-  void update(VisionResult value) {
+  void update(VideoData value) {
+    if (value.hasFrame()) return;
     if (!checkVersion(value)) return;    
-    cameraDetections.removeWhere((result) => result.name == value.name);
-    if (value.objects.isNotEmpty) {
+    cameraDetections.removeWhere((result) => result.details.name == value.details.name);
+    if (value.detectedObjects.isNotEmpty) {
       cameraDetections.add(value.deepCopy());
       cameraDetections.sort();
     }
@@ -64,11 +65,11 @@ class VisionMetrics extends Metrics<VisionResult> {
   }
   
   @override
-  Version parseVersion(VisionResult message) => message.version;
+  Version parseVersion(VideoData message) => message.version;
 
   @override
-  Version get supportedVersion => Version(major: 1, minor: 0);
+  Version get supportedVersion => Version(major: 1, minor: 2);
   
   @override
-  Message get versionCommand => VisionResult(version: Version(major: 1, minor: 0));
+  Message get versionCommand => VideoData(version: Version(major: 1, minor: 2));
 }
