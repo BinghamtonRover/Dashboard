@@ -176,6 +176,13 @@ class MiniHomeToggleOptions extends ReusableReactiveWidget<Sockets> {
               ),
             ],
           ),
+          OutlinedButton.icon(
+            icon: const Icon(Icons.wifi),
+            label: const Text("Reset"),
+            onPressed: () async {
+              await models.sockets.reset();
+            },
+          ),
         ],
       );
 }
