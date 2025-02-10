@@ -90,40 +90,42 @@ class MiniHomeVoltage extends ReusableReactiveWidget<DriveMetrics> {
   }
 
   @override
-  Widget build(BuildContext context, DriveMetrics model) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 150,
-            height: 150,
-            child: FittedBox(
-              fit: BoxFit.fill,
-              child: Icon(
-                getBatteryIcon(model.batteryPercentage),
+  Widget build(BuildContext context, DriveMetrics model) => FittedBox(
+    child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 150,
+              height: 150,
+              child: FittedBox(
+                fit: BoxFit.fill,
+                child: Icon(
+                  getBatteryIcon(model.batteryPercentage),
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 5),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "${model.batteryVoltage.toStringAsFixed(2)} V",
-                style: context.textTheme.displaySmall,
-              ),
-              Text(
-                "${model.data.batteryCurrent.toStringAsFixed(2)} A",
-                style: context.textTheme.displaySmall,
-              ),
-              Text(
-                "${model.data.batteryTemperature.toStringAsFixed(2)} °C",
-                style: context.textTheme.displaySmall,
-              ),
-            ],
-          ),
-        ],
-      );
+            const SizedBox(width: 5),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${model.batteryVoltage.toStringAsFixed(2)} V",
+                  style: context.textTheme.displaySmall,
+                ),
+                Text(
+                  "${model.data.batteryCurrent.toStringAsFixed(2)} A",
+                  style: context.textTheme.displaySmall,
+                ),
+                Text(
+                  "${model.data.batteryTemperature.toStringAsFixed(2)} °C",
+                  style: context.textTheme.displaySmall,
+                ),
+              ],
+            ),
+          ],
+        ),
+  );
 }
 
 /// Toggle options that appear at the bottom of the home page
