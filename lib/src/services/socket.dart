@@ -88,6 +88,7 @@ class DashboardSocket extends BurtSocket {
   /// over the network, regardless of the destination
   void disable() {
     isEnabled = false;
+    _heartbeats = 0;
     connectionStrength.value = 0;
     connectionStatus.value = false;
   }
