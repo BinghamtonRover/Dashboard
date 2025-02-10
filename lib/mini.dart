@@ -41,7 +41,7 @@ class MiniViewModel with ChangeNotifier {
     await services.init();
     await models.init();
     await models.sockets.setRover(RoverType.localhost);
-    await models.sockets.disable();
+    models.sockets.disable();
 
     models.settings.addListener(notifyListeners);
 

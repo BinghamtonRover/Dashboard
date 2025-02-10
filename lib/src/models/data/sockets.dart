@@ -22,9 +22,6 @@ class Sockets extends Model {
   /// The rover-like system currently in use.
   RoverType rover = RoverType.rover;
 
-  /// Whether or not the sockets are currently enabled
-  bool isEnabled = true;
-
   /// The [InternetAddress] to use instead of the address on the rover.
   InternetAddress? get addressOverride => switch (rover) {
     RoverType.rover => null,
@@ -41,6 +38,9 @@ class Sockets extends Model {
     return result.toString().trim();
   }
 
+  /// Whether any socket in [sockets] is enabled
+  bool get isEnabled => sockets.any((socket) => socket.isEnabled);
+
   /// Returns the corresponding [DashboardSocket] for the [device]
   ///
   /// Returns null if no device is passed or there is no corresponding socket
@@ -53,13 +53,15 @@ class Sockets extends Model {
 
 	@override
 	Future<void> init() async {
-    isEnabled = true;
 		for (final socket in sockets) {
 			socket.connectionStatus.addListener(() => socket.connectionStatus.value
         ? onConnect(socket.device)
         : onDisconnect(socket.device),
       );
-      socket.messages.listen(models.messages.addMessage);
+      socket.messages.listen((message) {
+        if (!socket.isEnabled) return;
+        models.messages.addMessage(message);
+      });
       await socket.init();
 		}
 		final level = Logger.level;
@@ -69,11 +71,18 @@ class Sockets extends Model {
     notifyListeners();
 	}
 
+  /// Enables all sockets without restarting them
+  void enable() {
+    for (final socket in sockets) {
+      socket.enable();
+    }
+    notifyListeners();
+  }
+
   /// Disconnects from all sockets without restarting them
-  Future<void> disable() async {
-    isEnabled = false;
+  void disable() {
 		for (final socket in sockets) {
-			await socket.dispose();
+			socket.disable();
 		}
     notifyListeners();
   }

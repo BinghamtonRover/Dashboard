@@ -151,9 +151,9 @@ class MiniHomeToggleOptions extends ReusableReactiveWidget<Sockets> {
                   }
 
                   if (!enabled) {
-                    await model.disable();
+                    model.disable();
                   } else {
-                    await model.init();
+                    model.enable();
                   }
                 },
               ),
@@ -200,7 +200,7 @@ class MiniHomeSystemStatus extends ReusableReactiveWidget<LogsViewModel> {
       _ => null,
     };
 
-    if (device == null || socket == null || !socket.isConnected || !models.sockets.isEnabled) {
+    if (device == null || socket == null || !socket.isConnected || !socket.isEnabled) {
       iconColor = Colors.black;
     }
 

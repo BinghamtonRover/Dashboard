@@ -38,6 +38,9 @@ class DashboardSocket extends BurtSocket {
   /// Whether [checkHeartbeats] is still running.
   bool _isChecking = false;
 
+  /// Whether the socket should be sending data over UDP
+  bool isEnabled = true;
+
   /// Whether this socket has a stable connection to the [device].
   @override
   bool get isConnected => connectionStrength.value > 0;
@@ -50,7 +53,7 @@ class DashboardSocket extends BurtSocket {
 
   @override
   Future<void> checkHeartbeats() async {
-    if (_isChecking) return;
+    if (_isChecking || !isEnabled) return;
     // 1. Clear state and send a heartbeat
     _isChecking = true;
     _heartbeats = 0;
@@ -71,8 +74,20 @@ class DashboardSocket extends BurtSocket {
   }
 
   @override
-  Future<void> dispose() async {
-    await super.dispose();
+  void send(List<int> data, {SocketInfo? destination}) {
+    if (!isEnabled) return;
+    super.send(data, destination: destination);
+  }
+
+  /// Enables the socket, which will allow messages to be sent over UDP
+  void enable() {
+    isEnabled = true;
+  }
+
+  /// Disables the socket, which will block any data from being sent
+  /// over the network, regardless of the destination
+  void disable() {
+    isEnabled = false;
     connectionStrength.value = 0;
     connectionStatus.value = false;
   }

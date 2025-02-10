@@ -383,7 +383,7 @@ class SettingsBuilder extends ValueBuilder<Settings> {
       value.network.toJson(),
     ));
 		await models.settings.update(value);
-    if (resetSockets && models.sockets.isEnabled) {
+    if (resetSockets) {
       await models.sockets.reset();
     }
 		models.video.reset();
