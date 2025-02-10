@@ -1,3 +1,4 @@
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
 import "package:burt_network/serial.dart";
@@ -6,6 +7,52 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
+import 'package:flutter/material.dart';
+
+class ButtonExpander extends StatefulWidget {
+  const ButtonExpander({Key? key}) : super(key: key);
+
+  @override
+  _ButtonExpanderState createState() => _ButtonExpanderState();
+}
+
+class _ButtonExpanderState extends State<ButtonExpander>
+{
+    void _showMenu(BuildContext context, Offset position)
+    {
+       final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+        showMenu(
+          context: context,
+          position: RelativeRect.fromRect(
+            Rect.fromPoints(position, position),
+            Offset.zero & overlay.size,
+          ),
+        items: [
+          for (final controller in models.rover.controllers)
+            PopupMenuItem(
+              value: controller.index,
+              child: GamepadButton(controller),
+            ),
+        ],   
+       );
+    }
+    @override
+    Widget build(BuildContext context)
+    {
+      return IconButton(
+        icon: Icon(Icons.sports_esports_rounded),
+        onPressed: () async {
+          final RenderBox button = context.findRenderObject() as RenderBox;
+          final Offset position = button.localToGlobal(button.size.center(Offset.zero));
+          _showMenu(context, position);
+        },
+        tooltip: 'Select Controller',
+      );
+    }
+} 
+
+
+
 
 /// The footer, responsible for showing vitals and logs.
 class Footer extends StatelessWidget {
@@ -23,13 +70,10 @@ class Footer extends StatelessWidget {
         MessageDisplay(showLogs: showLogs),
         Wrap(  // Groups these elements together even when wrapping
           children: [
-            GamepadButton(models.rover.controller1),
-            const SizedBox(width: 8),
-            GamepadButton(models.rover.controller2),
-            const SizedBox(width: 8),
-            GamepadButton(models.rover.controller3),
+            ButtonExpander(),
+            const SizedBox(width: 2),
             SerialButton(),
-            const SizedBox(width: 4),
+            const SizedBox(width: 2),
             const StatusIcons(),
           ],
         ),
@@ -286,3 +330,4 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
     ),
   );
 }
+
