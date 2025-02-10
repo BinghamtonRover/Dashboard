@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:rover_dashboard/app.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
@@ -150,9 +151,6 @@ class MiniHomeToggleOptions extends ReusableReactiveWidget<Sockets> {
                   }
 
                   if (!enabled) {
-                    for (final socket in model.sockets) {
-                      await socket.dispose();
-                    }
                     await model.disable();
                   } else {
                     await model.init();
@@ -202,7 +200,7 @@ class MiniHomeSystemStatus extends ReusableReactiveWidget<LogsViewModel> {
       _ => null,
     };
 
-    if (device == null || socket == null || !socket.isConnected) {
+    if (device == null || socket == null || !socket.isConnected || !models.sockets.isEnabled) {
       iconColor = Colors.black;
     }
 
@@ -237,13 +235,22 @@ class MiniHomeSystemStatus extends ReusableReactiveWidget<LogsViewModel> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        statusIcon(device),
+                        ListenableBuilder(
+                          listenable: models.sockets.socketForDevice(device)!.connectionStatus,
+                          builder: (context, _) => statusIcon(device),
+                        ),
                         TextButton.icon(
-                          icon: const Icon(Icons.restart_alt),
+                          icon: const Icon(
+                            Icons.restart_alt,
+                            color: binghamtonGreen,
+                          ),
                           onPressed: () {
                             model.options.resetDevice(device);
                           },
-                          label: const Text("Restart Device"),
+                          label: const Text(
+                            "Restart Device",
+                            style: TextStyle(color: binghamtonGreen),
+                          ),
                         ),
                       ],
                     ),

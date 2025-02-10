@@ -166,7 +166,7 @@ class MiniFooter extends ReusableReactiveWidget<MiniViewModel> {
 
   @override
   Widget build(BuildContext context, MiniViewModel model) => ColoredBox(
-        color: context.colorScheme.secondary,
+        color: binghamtonGreen,
         child: Row(
           children: [
             MessageDisplay(showLogs: false),
@@ -194,19 +194,23 @@ class MiniDashboard extends ReactiveWidget<MiniViewModel> {
         debugShowCheckedModeBanner: false,
         themeMode: models.isReady ? models.settings.dashboard.themeMode : ThemeMode.system,
         theme: ThemeData(
-          colorScheme: const ColorScheme.light(
-            primary: binghamtonGreen,
-            secondary: binghamtonGreen,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: binghamtonGreen,
           ),
           appBarTheme: const AppBarTheme(
             backgroundColor: binghamtonGreen,
             foregroundColor: Colors.white,
           ),
         ),
-        darkTheme: ThemeData.from(
-          colorScheme: const ColorScheme.dark(
-            primary: binghamtonGreen,
-            secondary: binghamtonGreen,
+        darkTheme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            brightness: Brightness.dark,
+            seedColor: binghamtonGreen,
+            surface: const Color.fromRGBO(25, 25, 25, 1),
+          ),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: binghamtonGreen,
+            foregroundColor: Colors.white,
           ),
         ),
         home: MiniHomePage(model: model),
@@ -223,16 +227,17 @@ const networkErrors = {1234, 1231};
 void main() async {
   runZonedGuarded(() => runApp(const MiniDashboard()), (error, stack) async {
     if (error is SocketException && networkErrors.contains(error.osError!.errorCode)) {
-      models.home.setMessage(severity: Severity.critical, text: "Network error, restart by clicking the network icon");
+      models.home.setMessage(severity: Severity.critical, text: "Network error, restart by toggling dashboard enabled switch");
     } else {
       models.home.setMessage(severity: Severity.critical, text: "Dashboard error. See the logs", logMessage: false);
       models.logs.handleLog(
         BurtLog(
           level: BurtLogLevel.critical,
-          title: "Dashboard Error. Click for details",
+          title: "Dashboard Error",
           body: "$error\n$stack",
           device: Device.DASHBOARD,
         ),
+        display: false,
       );
       Error.throwWithStackTrace(error, stack);
     }

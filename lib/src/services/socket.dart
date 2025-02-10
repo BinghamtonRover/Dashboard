@@ -70,6 +70,13 @@ class DashboardSocket extends BurtSocket {
     _isChecking = false;
   }
 
+  @override
+  Future<void> dispose() async {
+    await super.dispose();
+    connectionStrength.value = 0;
+    connectionStatus.value = false;
+  }
+
   /// How much each successful/missed handshake is worth, as a percent.
   double get connectionIncrement => 1 / frequency;
 
