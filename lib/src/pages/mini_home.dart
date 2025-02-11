@@ -147,13 +147,14 @@ class MiniHomeToggleOptions extends ReusableReactiveWidget<Sockets> {
                 value: model.isEnabled,
                 onChanged: (enabled) async {
                   if (enabled) {
-                    if (model.rover != RoverType.localhost) {
-                      await model.setRover(RoverType.localhost);
+                    if (model.rover != RoverType.rover) {
+                      await model.setRover(RoverType.rover);
                     }
                   }
 
                   if (!enabled) {
                     model.disable();
+                    await model.reset();
                   } else {
                     model.enable();
                   }
@@ -182,7 +183,7 @@ class MiniHomeToggleOptions extends ReusableReactiveWidget<Sockets> {
             icon: const Icon(Icons.wifi),
             label: const Text("Reset"),
             onPressed: () async {
-              await models.sockets.reset();
+              await model.reset();
             },
           ),
         ],

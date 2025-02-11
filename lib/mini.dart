@@ -40,7 +40,7 @@ class MiniViewModel with ChangeNotifier {
   Future<void> init() async {
     await services.init();
     await models.init();
-    await models.sockets.setRover(RoverType.localhost);
+    await models.sockets.setRover(RoverType.rover);
     models.sockets.disable();
 
     models.settings.addListener(notifyListeners);
