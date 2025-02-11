@@ -29,6 +29,7 @@ class Routes {
 	/// The name of the home page.
 	static const String home = "home";
 
+  /// The name of the lidar page. 
   static const String lidar = "lidar";
 
 	/// The name of the science analysis page.

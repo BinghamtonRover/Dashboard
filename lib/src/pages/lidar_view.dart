@@ -14,21 +14,25 @@ class LidarView extends ReactiveWidget<LidarModel> {
   LidarModel createModel() => LidarModel();
 
   // hardcode for now
-  double scale = 1.5;
-  Offset offset = Offset.zero;
+  final double scale = 1.5;
+  final Offset offset = Offset.zero;
 
   @override
-  Widget build(BuildContext context, LidarModel model) => Container(
-    child: CustomPaint(
+  Widget build(BuildContext context, LidarModel model) {
+    print("building");
+    model.addFakeData();
+    print(model.pointCloud?.cartesian.length);
+    return CustomPaint(
       size: Size.infinite,
       painter: LidarViewPainter(
         scale: scale,
         offset: offset,
         fov: 271,
-        lidarPointCloud: model.pointCloud
+        lidarPointCloud: model.pointCloud,
       ),
-    ),
+      willChange: true,
   );
+  }
 }
 
 class LidarViewPainter extends CustomPainter {
@@ -50,7 +54,7 @@ class LidarViewPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white
+      ..color = Colors.black
       ..strokeWidth = 3.0
       ..style = PaintingStyle.fill;
 

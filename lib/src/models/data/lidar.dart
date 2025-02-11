@@ -1,4 +1,4 @@
-
+import "dart:math";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -17,9 +17,22 @@ class LidarModel extends Model {
 		);
 	}
 
-  void handleData(LidarPointCloud pointCloud) {
-    this.pointCloud = pointCloud;
+  void handleData(LidarPointCloud newPointCloud) {
+    pointCloud = newPointCloud;
     print("GOT dATA");
+    notifyListeners();
+  }
+
+  void addFakeData(){
+    pointCloud = LidarPointCloud(
+      cartesian: [
+        for (int i = 0; i < 100; i++)
+          LidarCartesianPoint(
+            x: Random().nextDouble() * 2,
+            y: Random().nextDouble() * 2,
+          )
+      ]
+    );
     notifyListeners();
   }
 }
