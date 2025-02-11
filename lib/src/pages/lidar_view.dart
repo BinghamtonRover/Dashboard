@@ -1,9 +1,8 @@
 import "dart:math";
 import "dart:ui";
 
-import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
-import "package:rover_dashboard/src/models/data/lidar.dart";
+import "package:rover_dashboard/src/models/view/lidar.dart";
 import "package:rover_dashboard/widgets.dart";
 import "package:burt_network/burt_network.dart";
 
@@ -18,21 +17,16 @@ class LidarView extends ReactiveWidget<LidarModel> {
   final Offset offset = Offset.zero;
 
   @override
-  Widget build(BuildContext context, LidarModel model) {
-    print("building");
-    model.addFakeData();
-    print(model.pointCloud?.cartesian.length);
-    return CustomPaint(
+  Widget build(BuildContext context, LidarModel model) =>CustomPaint(
       size: Size.infinite,
       painter: LidarViewPainter(
         scale: scale,
         offset: offset,
         fov: 271,
-        lidarPointCloud: model.pointCloud,
+        coordinates: model.coordinates,
       ),
       willChange: true,
   );
-  }
 }
 
 class LidarViewPainter extends CustomPainter {
@@ -41,13 +35,13 @@ class LidarViewPainter extends CustomPainter {
   final double scale;
   final double fov;
   final double domain;
-  final LidarPointCloud? lidarPointCloud;
+  final List<LidarCartesianPoint>? coordinates;
 
-  LidarViewPainter({
+  const LidarViewPainter({
     required this.offset, 
     required this.scale, 
     required this.fov,
-    required this.lidarPointCloud
+    required this.coordinates
   }) : 
     domain = scale * 2;
 
@@ -65,7 +59,7 @@ class LidarViewPainter extends CustomPainter {
       ..color = Colors.white
       ..strokeWidth = 1.0;
 
-    final List<LidarCartesianPoint> points = lidarPointCloud == null ? List<LidarCartesianPoint>.empty() : lidarPointCloud!.cartesian; 
+    final List<LidarCartesianPoint> points = coordinates == null ? List<LidarCartesianPoint>.empty() : coordinates!; 
 
     final List<Offset> offsets = points
     .map((p) => Offset(
