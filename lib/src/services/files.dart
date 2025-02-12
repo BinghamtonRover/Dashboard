@@ -100,8 +100,8 @@ class FilesService extends Service {
   Future<void> writeImage(List<int> image, String cameraName) async {
     final dir = await Directory("${screenshotsDir.path}/$cameraName").create(recursive: true);
     final files = dir.listSync();
-    final number = files.isEmpty ? 1 : (int.parse(files.last.filename) + 1);
-    await File("${dir.path}/$number.jpg").writeAsBytes(image);
+    final number = files.where((file) => file.filename.startsWith("screenshot_")).length;
+    await File("${dir.path}/screenshot_$number.jpg").writeAsBytes(image);
   }
 
   /// Saves all the data in [batchedLogs] to a file by calling [logAllData].
