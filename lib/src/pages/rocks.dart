@@ -8,7 +8,7 @@ class RockModel with ChangeNotifier {
     const Rock(
       "Shale",
       "assets/Rocks_Minerals_Images/Shale.jpg",
-      "Has to be a carbonate-rich enviroment to cause dark coloring",
+      "Has to be a carbonate-rich environment to cause dark coloring",
     ),
     const Rock(
       "Mudstone",
@@ -18,7 +18,7 @@ class RockModel with ChangeNotifier {
      const Rock(
       "Limestone",
       "assets/Rocks_Minerals_Images/Limestone.jpg",
-      "Off white-gray, shallow marine enviroments, could contain fossils, chalky \n   \u2022 oolite, Chalk, Dense Limestone, Crystalline Limestone, Coquina, Micrite, Tavertine",
+      "Off white-gray, shallow marine environments, could contain fossils, chalky \n   \u2022 oolite, Chalk, Dense Limestone, Crystalline Limestone, Coquina, Micrite, Tavertine",
     ),
     const Rock(
       "Dolomites/Dolostones",
@@ -48,7 +48,7 @@ class RockModel with ChangeNotifier {
     const Rock(
       "Carbonates",
       "assets/Rocks_Minerals_Images/Carbonate.jpg",
-      "Precipitate from water \n   \u2022 Fizzies when hydrochloric acid is placed on it",
+      "Precipitate from water \n   \u2022 Fizzles when hydrochloric acid is placed on it",
     ),
     const Rock(
       "Hematite",
@@ -92,10 +92,16 @@ class RockModel with ChangeNotifier {
 
   /// Filters the [rocks] by the [query] and saves it to [filteredRocks].
   void search(String input) => notifyListeners();
+
+  /// Clears the search query.
+  void clear() {
+    controller.clear();
+    search("");
+  }
 }
 
 /// Contains data and knowledge about a specific rock type.
-class Rock{
+class Rock {
   /// The name of the rock.
   final String name;
 
@@ -121,30 +127,42 @@ class RocksPage extends ReactiveWidget<RockModel> {
   const RocksPage({required this.index});
 
   @override
-  Widget build(BuildContext context, RockModel model) => ListView(
-    shrinkWrap: true,
+  Widget build(BuildContext context, RockModel model) => Column(
     children: [
-      Row(
+      PageHeader(
+        pageIndex: index,
         children: [
-          Text(
-            "Rocks & Minerals",
-            style: context.textTheme.headlineMedium,
+          Padding(
+            padding: const EdgeInsets.all(4),
+            child: Text(
+              "Rocks & Minerals",
+              style: context.textTheme.headlineMedium,
+            ),
           ),
           const Spacer(),
-          ViewsSelector(index: index),
         ],
       ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        child: SearchBar(
-          hintText: "Search for a rock or characteristic",
-          hintStyle: WidgetStatePropertyAll(context.textTheme.bodyMedium),
-          controller: model.controller,
-          onChanged: model.search,
+      Expanded(
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          children: [
+            SearchBar(
+              hintText: "Search for a rock or characteristic",
+              hintStyle: WidgetStatePropertyAll(context.textTheme.bodyMedium),
+              controller: model.controller,
+              onChanged: model.search,
+              backgroundColor: WidgetStatePropertyAll(context.colorScheme.surfaceBright),
+              trailing: [
+                IconButton(onPressed: model.clear, icon: const Icon(Icons.clear)),
+              ],
+            ),
+            const SizedBox(height: 12),
+            for (final rock in model.filteredRocks)
+              RockWidget(rock),
+          ],
         ),
       ),
-      for (final rock in model.filteredRocks)
-        RockWidget(rock),
     ],
   );
 }
@@ -157,42 +175,28 @@ class RockWidget extends StatelessWidget {
   const RockWidget(this.rock);
 
   @override
-  Widget build(BuildContext context) => Row(
-    children: <Widget>[
-      Expanded(
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-                color: const Color.fromARGB(255, 212, 218, 228),),
-          ),
-          padding: const EdgeInsets.all(40),
-          child: Text(rock.name),
-        ),
+  Widget build(BuildContext context) => Container(
+    decoration: BoxDecoration(
+      border: Border.all(
+        color: context.colorScheme.onSurface,
       ),
-      Expanded(
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-                color: const Color.fromARGB(255, 212, 218, 228),),
-            image:  DecorationImage(
-              image: AssetImage(rock.image),
-              fit: BoxFit.contain,
-            ),
-          ),
-          padding: const EdgeInsets.all(50),
+    ),
+    child: Row(
+      children: <Widget>[
+        Expanded(
+          child: Text(rock.name, textAlign: TextAlign.center,),
         ),
-      ),
-      Expanded(
-        flex: 3,
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-                color: const Color.fromARGB(255, 212, 218, 228),),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Image.asset(rock.image),
           ),
-          padding: const EdgeInsets.all(40),
+        ),
+        Expanded(
+          flex: 3,
           child: Text(rock.description),
         ),
-      ),
-    ],
+      ],
+    ),
   );
 }
