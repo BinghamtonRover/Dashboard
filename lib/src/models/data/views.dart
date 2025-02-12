@@ -88,7 +88,10 @@ class ViewsModel extends Model with PresetsModel {
     // Wait for all views to reset so as not to cause overflow issues
     await nextFrame();
     setNumViews(preset.views.length);
+    notifyListeners();
     // Wait 3 frames for flutter_resizable container to load
+    await nextFrame();
+    await nextFrame();
     await nextFrame();
     await nextFrame();
     await nextFrame();
