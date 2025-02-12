@@ -38,10 +38,10 @@ class MapPageHeader extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-    color: context.colorScheme.surface,
+  Widget build(BuildContext context) => SizedBox(
     height: 50,
-    child: Row(
+    child: PageHeader(
+      pageIndex: index,
       children: [
         const SizedBox(width: 8),
         Text("Map", style: context.textTheme.headlineMedium),
@@ -65,7 +65,7 @@ class MapPageHeader extends StatelessWidget {
           ],
         ),
         const Spacer(),
-        ViewsSelector(index: index),
+        // ViewsSelector(index: index),
       ],
     ),
   );
