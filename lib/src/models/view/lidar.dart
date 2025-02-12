@@ -7,15 +7,15 @@ import "package:burt_network/burt_network.dart";
 
 /// A view model for the Lidar page
 /// 
-/// Streams incoming [LidarPointCloud] messages from video to display them on the dashboard
-class LidarModel with ChangeNotifier {
+/// Streams incoming [LidarPointCloud] messages from video to update the corresponding view
+class LidarViewModel with ChangeNotifier {
   /// The last received coordinates from the incoming lidar data
   List<LidarCartesianPoint>? coordinates;
 
   StreamSubscription<LidarPointCloud>? _subscription;
 
   /// Const constructor for the lidar model
-  LidarModel() {
+  LidarViewModel() {
     init();
   }
 

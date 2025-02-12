@@ -16,7 +16,6 @@ import "package:flutter/material.dart";
 import "package:rover_dashboard/app.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/src/pages/lidar_view.dart";
 
 /// Network errors that can be fixed by a simple reset.
 const networkErrors = {1234, 1231};
