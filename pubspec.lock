@@ -45,11 +45,11 @@ packages:
     dependency: "direct main"
     description:
       path: burt_network
-      ref: maxLidar
-      resolved-ref: "28139281a418eff2bf5701f84b726a2642f43632"
+      ref: "2.6.0"
+      resolved-ref: "32acc98da1ddef53591adb1e9c226a994a25f779"
       url: "https://github.com/BinghamtonRover/Rover-Code.git"
     source: git
-    version: "2.4.0"
+    version: "2.6.0"
   characters:
     dependency: transitive
     description:
