@@ -1,4 +1,5 @@
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/models.dart";
 
 /// Metrics about the rover's position and orientation.
 /// 
@@ -10,15 +11,8 @@ class PositionMetrics extends Metrics<RoverPosition> {
 	@override
 	String get name => "Position";
 
-	/// A helper for [baseStation].
-	GpsCoordinates? _baseStation;
-
 	/// The position of the base station. Setting this value updates the UI.
-	GpsCoordinates get baseStation => _baseStation ?? data.gps;
-	set baseStation(GpsCoordinates value) { 
-		_baseStation = value;
-		notifyListeners();
-	}
+	GpsCoordinates get baseStation => models.settings.baseStation.gpsCoordinates;
 
   /// Gets the severity of the rover's orientation for both pitch and roll.
   Severity? getRotationSeverity(double orientation) {

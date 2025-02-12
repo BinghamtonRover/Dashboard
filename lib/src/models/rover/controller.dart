@@ -96,7 +96,11 @@ class Controller extends Model {
     final messages = controls.parseInputs(state);
     for (final message in messages) {
       // print(message.toProto3Json());
-      models.messages.sendMessage(message);
+      if (message.messageName != BaseStationCommand().messageName) {
+        models.messages.sendMessage(message);
+      } else {
+        models.sockets.baseStation.sendMessage(message);
+      }
     }
     notifyListeners();
   }
