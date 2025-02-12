@@ -4,7 +4,9 @@ import "package:rover_dashboard/models.dart";
 /// Metrics about the vitals of the rover.
 class VitalsMetrics extends Metrics {
   /// A const constructor.
-  VitalsMetrics() : super(DriveData());
+  VitalsMetrics() : super(DriveData()) {
+    models.rover.metrics.drive.addListener(notifyListeners);
+  }
 
   @override
   Version parseVersion(Message message) => Version(major: 0, minor: 0);

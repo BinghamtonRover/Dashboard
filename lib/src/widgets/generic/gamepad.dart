@@ -34,24 +34,34 @@ class GamepadButton extends ReusableReactiveWidget<Controller> {
       mainAxisSize: MainAxisSize.min,
       children: [
         IconButton(
+          padding: const EdgeInsets.all(4),
           icon: Stack(
+            alignment: Alignment.topCenter,
             children: [
-              const Icon(Icons.sports_esports),
+              const SizedBox(height: 32),
+              const Icon(Icons.sports_esports), 
               Positioned(
-                bottom: -2,
-                right: -2,
-                child: Text("${model.index + 1}", style: const TextStyle(fontSize: 12, color: Colors.white)),
+                bottom: 0,
+                right: 8,
+                child: Text(
+                  "${model.index + 1}",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: context.colorScheme.onSurface,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
-          color: isDisabled(status) ? Colors.grey : model.isConnected
-            ? getColor(model.gamepad.batteryLevel)
-            : Colors.black,
+          color: isDisabled(status) || !model.isConnected
+              ? context.colorScheme.onSurface
+              : getColor(model.gamepad.batteryLevel),
           constraints: const BoxConstraints(maxWidth: 36),
           onPressed: model.connect,
         ),
+        const SizedBox(width: 2.5),
         DropdownButton<OperatingMode>(
-          iconEnabledColor: Colors.black,
           value: model.mode,
           onChanged: isDisabled(status) ? null : model.setMode,
           dropdownColor: context.colorScheme.secondary,
