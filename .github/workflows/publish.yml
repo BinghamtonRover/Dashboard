@@ -45,7 +45,7 @@ jobs:
 
   build_windows:
     name: Build Windows MSIX
-    runs-on: windows-latest
+    runs-on: windows-2025
     env:
       windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
     steps:
@@ -62,6 +62,10 @@ jobs:
         with:
           cache: true
           cache-key: "flutter-windows"  # we don't need *the* most recent build
+          channel: stable
+
+      - name: Flutter Doctor
+        run: flutter doctor
 
       - name: Build MSIX
         run: |
