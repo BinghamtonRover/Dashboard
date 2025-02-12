@@ -132,7 +132,7 @@ class DashboardView {
     DashboardView(
       name: Routes.baseStation,
       builder: (context, index) => BaseStationPage(index: index),
-      iconFunc: () => Icon(Icons.cell_tower, color: Colors.black.withValues(alpha: 0.5)),
+      iconFunc: (context) => Icon(Icons.cell_tower, color: context.colorScheme.onSurface.withValues(alpha: 0.5)),
     ),
   ];
 

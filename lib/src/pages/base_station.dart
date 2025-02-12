@@ -34,12 +34,12 @@ class BaseStationPage extends ReactiveWidget<BaseStationModel> {
   @override
   Widget build(BuildContext context, BaseStationModel model) => Column(
         children: [
-          Row(
+          PageHeader(
+            pageIndex: index,
             children: [
               const SizedBox(width: 8),
               Text("Base Station", style: context.textTheme.headlineMedium),
               const Spacer(),
-              ViewsSelector(index: index),
             ],
           ),
           Flexible(
