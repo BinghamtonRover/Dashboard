@@ -6,12 +6,10 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
-/// A widget to show the options for the logs page.
-///
-/// This is separate from the logs display so that the menu doesn't flicker when new logs arrive.
-class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
-  /// Listens to the view model without disposing it.
-  const LogsOptions(super.model) : super();
+/// A widget to show the statuses of the different devices, along with options to ping the device or open an SSH connection
+class DeviceStatuses extends ReusableReactiveWidget<LogsViewModel> {
+  /// Constructor for device statuses, initializing the model
+  const DeviceStatuses(super.model);
 
   /// Returns the appropriate status icon for the log messages received from [device]
   Color? getStatusColor(Device device) {
@@ -41,43 +39,56 @@ class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
   static const _devices = [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY];
 
   @override
-  Widget build(BuildContext context, LogsOptionsViewModel model) => Column(
+  Widget build(BuildContext context, LogsViewModel model) => Row(
+    mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          for (final device in _devices) SizedBox(
-            width: 250,
-            child: Card(
-              child: Column(
-                children: [
-                  ListTile(
-                    onTap: () => model.resetDevice(device),
-                    leading: const Icon(Icons.restart_alt),
-                    title: Text("Reset ${device.humanName}"),
-                    subtitle: const Text("The device will reboot"),
+      for (final device in _devices)
+        SizedBox(
+          width: 250,
+          child: Card(
+            child: Column(
+              children: [
+                ListTile(
+                  onTap: () => model.resetDevice(device),
+                  leading: const Icon(Icons.restart_alt),
+                  title: Text("Reset ${device.humanName}"),
+                  subtitle: const Text("The device will reboot"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Icon(Icons.circle, color: getStatusColor(device)),
+                      NetworkStatusIcon(
+                        device: device,
+                        tooltip: "Ping Device",
+                        onPressed: Platform.isWindows
+                            ? () => model.ping(device)
+                            : null,
+                      ),
+                      sshButton(device) ?? Container(),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Icon(Icons.circle, color: getStatusColor(device)),
-                        NetworkStatusIcon(
-                          device: device,
-                          tooltip: "Ping Device",
-                          onPressed: Platform.isWindows ? () => model.ping(device) : null,
-                        ),
-                        sshButton(device) ?? Container(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+    ],
+  );
+}
+
+/// A widget to show the options for the logs page.
+///
+/// This is separate from the logs display so that the menu doesn't flicker when new logs arrive.
+class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
+  /// Listens to the view model without disposing it.
+  const LogsOptions(super.model) : super();
+
+  @override
+  Widget build(BuildContext context, LogsOptionsViewModel model) => Column(
+    children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -210,6 +221,8 @@ class LogsState extends State<LogsPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     body: Column(children: [
+      const SizedBox(height: 12),
+      DeviceStatuses(model),
       const SizedBox(height: 12),
       LogsOptions(model.options),
       const Divider(),
