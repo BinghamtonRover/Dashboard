@@ -1,10 +1,11 @@
 import "dart:math";
 import "dart:ui";
+import "dart:ui" as ui;
 
 import "package:flutter/material.dart";
-import "package:rover_dashboard/src/models/view/lidar.dart";
+import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
-import "package:burt_network/burt_network.dart";
+import "package:burt_network/protobuf.dart";
 
 /// A page displaying data from the Lidar
 ///
@@ -23,19 +24,16 @@ class LidarView extends ReactiveWidget<LidarViewModel> {
   @override
   Widget build(BuildContext context, LidarViewModel model) => Column(
     children: [
-      Material(
-        elevation: 5,
-        child: Padding(
-          padding: const EdgeInsets.all(4),
-          child: Row(
-            children: [
-              const SizedBox(width: 8),
-              Text("Lidar", style: context.textTheme.headlineMedium),
-              const Spacer(),
-              ViewsSelector(index: index),
-              const SizedBox(width: 8),
-            ],
-          ),
+      Padding(
+        padding: const EdgeInsets.all(4),
+        child: Row(
+          children: [
+            const SizedBox(width: 8),
+            Text("Lidar", style: context.textTheme.headlineMedium),
+            const Spacer(),
+            ViewsSelector(index: index),
+            const SizedBox(width: 8),
+          ],
         ),
       ),
       const SizedBox(height: 10),
@@ -43,14 +41,16 @@ class LidarView extends ReactiveWidget<LidarViewModel> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             final minSide = min(constraints.maxWidth, constraints.maxHeight);
-            return SizedBox(
-              width: minSide,
-              height: minSide,
-              child: CustomPaint(
-                willChange: true,
-                painter: LidarViewPainter(
-                  coordinates: model.coordinates,
-                  pointColor: context.colorScheme.onSurface,
+            return Center(
+              child: SizedBox(
+                width: minSide,
+                height: minSide,
+                child: CustomPaint(
+                  willChange: true,
+                  painter: LidarViewPainter(
+                    coordinates: model.coordinates,
+                    pointColor: context.colorScheme.onSurface,
+                  ),
                 ),
               ),
             );
@@ -134,7 +134,23 @@ class LidarViewPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final pixelsPerMeter = (2 / maxRange) * size.width / 4;
 
+    /// Create the labels "1 meter" and "2 meters".
+    final height = (size.height / 20).clamp(10, 18).toDouble();
+    final style = ParagraphStyle(fontSize: height, textAlign: TextAlign.start, fontWeight: FontWeight.bold);
+    final textStyle = ui.TextStyle(color: pointColor);
+    final par1Builder = ParagraphBuilder(style)
+      ..pushStyle(textStyle)
+      ..addText("1 meter");
+    final par2Builder = ParagraphBuilder(style)
+      ..pushStyle(textStyle)
+      ..addText("2 meters");
+    const constraints = ParagraphConstraints(width: double.infinity);
+    final par1 = par1Builder.build()..layout(constraints);
+    final par2 = par2Builder.build()..layout(constraints);
+
     // Draw circles to indicate 1 and 2 meters away from the rover.
+    canvas.drawParagraph(par1, center - Offset(par1.maxIntrinsicWidth / 2, pixelsPerMeter - 5));
+    canvas.drawParagraph(par2, center - Offset(par2.maxIntrinsicWidth / 2, 2 * pixelsPerMeter - 5));
     canvas.drawCircle(center, pixelsPerMeter, circlePaint);
     canvas.drawCircle(center, 2 * pixelsPerMeter, circlePaint);
 
