@@ -192,12 +192,16 @@ class DrivePage extends ReactiveWidget<PositionModel> {
 	Widget build(BuildContext context, PositionModel model) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      Row(children: [  // The header at the top
-        const SizedBox(width: 8),
-        Text("Drive", style: context.textTheme.headlineMedium),
-        const Spacer(),
-        ViewsSelector(index: index),
-      ],),
+      PageHeader(
+        pageIndex: index,
+        children: [
+          // The header at the top
+          const SizedBox(width: 8),
+          Text("Drive", style: context.textTheme.headlineMedium),
+          const Spacer(),
+        ],
+      ),
+      const SizedBox(height: 4),
       Expanded(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

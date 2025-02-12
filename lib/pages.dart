@@ -17,6 +17,7 @@ export "src/pages/settings.dart";
 export "src/pages/splash.dart";
 export "src/pages/electrical.dart";
 export "src/pages/view.dart";
+export "src/pages/lidar.dart";
 
 /// The names of all the pages available in the app.
 ///
@@ -27,6 +28,9 @@ class Routes {
 
 	/// The name of the home page.
 	static const String home = "home";
+
+  /// The name of the lidar page.
+  static const String lidar = "Lidar";
 
 	/// The name of the science analysis page.
 	static const String science = "Science Analysis";
@@ -45,7 +49,7 @@ class Routes {
 
   /// The name of the logs page.
   static const String logs = "Logs";
-  
+
   /// The name of the controllers page
   static const String controllers = "Controllers";
 

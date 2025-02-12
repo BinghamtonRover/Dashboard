@@ -31,6 +31,7 @@ export "src/models/data/settings.dart";
 export "src/models/data/sockets.dart";
 export "src/models/data/video.dart";
 export "src/models/data/views.dart";
+export "src/models/view/lidar.dart";
 
 // Rover models
 export "src/models/rover/controller.dart";
