@@ -165,33 +165,35 @@ class SciencePage extends ReactiveWidget<ScienceModel> {
 
 	@override
 	Widget build(BuildContext context, ScienceModel model) => Column(children: [
-    Row(children: [  // The header at the top
-      const SizedBox(width: 8),
-      Text("Science Analysis", style: context.textTheme.headlineMedium), 
-      const SizedBox(width: 12),
-      if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
-      const Spacer(),
-      DropdownButton(
-        value: model.sample,
-        onChanged: model.updateSample,
-        items: [
-          for (int i = 0; i < model.numSamples; i++) DropdownMenuItem(
-            value: i,
-            child: Text("Sample ${i + 1}"),
-          ),
-        ],
-      ),
-      if (model.isListening) IconButton(
-        icon: const Icon(Icons.upload_file),
-        onPressed: model.loadFile,
-        tooltip: "Load file",
-      ) else IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: model.clear,
-        tooltip: "Clear",
-      ),
-      ViewsSelector(index: index),
-    ],),
+    PageHeader(
+      pageIndex: index, 
+      children: [  // The header at the top
+        const SizedBox(width: 8),
+        Text("Science Analysis", style: context.textTheme.headlineMedium), 
+        const SizedBox(width: 12),
+        if (model.isLoading) const SizedBox(height: 20, width: 20, child: CircularProgressIndicator()),
+        const Spacer(),
+        DropdownButton(
+          value: model.sample,
+          onChanged: model.updateSample,
+          items: [
+            for (int i = 0; i < model.numSamples; i++) DropdownMenuItem(
+              value: i,
+              child: Text("Sample ${i + 1}"),
+            ),
+          ],
+        ),
+        if (model.isListening) IconButton(
+          icon: const Icon(Icons.upload_file),
+          onPressed: model.loadFile,
+          tooltip: "Load file",
+        ) else IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: model.clear,
+          tooltip: "Clear",
+        ),
+      ],
+    ),
     Expanded(child: ListView(  // The main content of the page
       padding: const EdgeInsets.symmetric(horizontal: 4),
       children: [
