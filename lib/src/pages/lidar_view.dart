@@ -7,7 +7,7 @@ import "package:rover_dashboard/widgets.dart";
 import "package:burt_network/burt_network.dart";
 
 /// A page displaying data from the Lidar
-/// 
+///
 /// Listens to changes from a [LidarViewModel], and displays the cartesian coordinates
 /// in a grid representing each point's location relative to the Lidar sensor.
 class LidarView extends ReactiveWidget<LidarViewModel> {
@@ -30,7 +30,7 @@ class LidarView extends ReactiveWidget<LidarViewModel> {
           child: Row(
             children: [
               const SizedBox(width: 8),
-              Text("Lidar", style: context.textTheme.headlineMedium), 
+              Text("Lidar", style: context.textTheme.headlineMedium),
               const Spacer(),
               ViewsSelector(index: index),
               const SizedBox(width: 8),
@@ -43,17 +43,14 @@ class LidarView extends ReactiveWidget<LidarViewModel> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             final minSide = min(constraints.maxWidth, constraints.maxHeight);
-            return FittedBox(
-              child: SizedBox(
-                width: minSide,
-                height: minSide,
-                child: CustomPaint(
-                    size: Size(minSide, minSide),
-                    painter: LidarViewPainter(
-                      coordinates: model.coordinates,
-                      pointColor: context.colorScheme.onSurface,
-                    ),
-                    willChange: true,
+            return SizedBox(
+              width: minSide,
+              height: minSide,
+              child: CustomPaint(
+                willChange: true,
+                painter: LidarViewPainter(
+                  coordinates: model.coordinates,
+                  pointColor: context.colorScheme.onSurface,
                 ),
               ),
             );
@@ -65,60 +62,67 @@ class LidarView extends ReactiveWidget<LidarViewModel> {
 }
 
 /// A custom painter for the Lidar view
-/// 
+///
 /// Draws the points and bounding area indicators
 class LidarViewPainter extends CustomPainter {
   /// The maximum view range of the lidar
   static const double maxRange = 2;
+
   /// List of all the lidar points to draw
   final List<LidarCartesianPoint>? coordinates;
+
   /// The color to draw the points and box in
   final Color pointColor;
 
   /// Const constructor for LidarViewPainter
-  /// 
+  ///
   /// Initializes the required coordinates and point color fields
-  const LidarViewPainter({
+  LidarViewPainter({
     required this.coordinates,
     required this.pointColor,
   });
 
+  /// The paint to use on the individually plotted points.
+  late final pointPaint = Paint()
+    ..color = pointColor
+    ..strokeWidth = 3.0
+    ..style = PaintingStyle.fill;
+
+  /// The paint to use in the area that the lidar cannot see.
+  final hiddenPaint = Paint()
+    ..color = Colors.grey
+    ..style = PaintingStyle.fill;
+
+  /// The paint to use on the axis.
+  final axisPaint = Paint()
+    ..color = Colors.red
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 0.5;
+
+  /// The paint to use on the surrounding circle.
+  final circlePaint = Paint()
+    ..color = Colors.red
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1.0;
+
+  /// The paint to use on the border around the lidar view.
+  late final boxBorder = Paint()
+    ..color = pointColor
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1.0;
+
   @override
   void paint(Canvas canvas, Size size) {
-    final pointPaint = Paint()
-      ..color = pointColor
-      ..strokeWidth = 3.0
-      ..style = PaintingStyle.fill;
-
-    final hiddenPaint = Paint()
-      ..color = Colors.grey
-      ..style = PaintingStyle.fill;
-
-    final axisPaint = Paint()
-      ..color = Colors.red
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.5;
-
-    final circlePaint = Paint()
-      ..color = Colors.red
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0;
-
-    final boxBorder = Paint()
-      ..color = pointColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0;
-
-    final vertices = Vertices(
+    final hiddenArea = Vertices(
       VertexMode.triangles,
-      <Offset>[
+      [
         Offset(0, size.height), // Vertex 1
         Offset(size.width, size.height), // Vertex 2
         Offset(size.width / 2, size.height / 2), // Vertex 3
       ],
     );
 
-    final points = coordinates ?? []; 
+    final points = coordinates ?? [];
     final pointsToPlot = [
       for (final point in points)
         Offset(
@@ -128,26 +132,23 @@ class LidarViewPainter extends CustomPainter {
     ];
 
     final center = Offset(size.width / 2, size.height / 2);
-
     final pixelsPerMeter = (2 / maxRange) * size.width / 4;
 
-    // 2 meter circle
+    // Draw circles to indicate 1 and 2 meters away from the rover.
+    canvas.drawCircle(center, pixelsPerMeter, circlePaint);
     canvas.drawCircle(center, 2 * pixelsPerMeter, circlePaint);
 
-    // 1 meter circle
-    canvas.drawCircle(center, pixelsPerMeter, circlePaint);
+    // Draw the hidden area
+    canvas.drawVertices(hiddenArea, BlendMode.src, hiddenPaint);
 
-    // Draw the black out points
-    canvas.drawVertices(vertices, BlendMode.src, hiddenPaint);
-
-    // Draw x axis
+    // Draw the X-axis
     canvas.drawLine(
-      Offset(0, size.height / 2),  
-      Offset(size.width, size.height / 2),     
+      Offset(0, size.height / 2),
+      Offset(size.width, size.height / 2),
       axisPaint,
     );
 
-    // Draw y axis
+    // Draw the Y-axis
     canvas.drawLine(
       Offset(size.width / 2, 0),
       Offset(size.width / 2, size.height / 2),
@@ -163,6 +164,6 @@ class LidarViewPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(LidarViewPainter oldDelegate) =>
-      coordinates != oldDelegate.coordinates ||
-      pointColor != oldDelegate.pointColor;
+    coordinates != oldDelegate.coordinates ||
+    pointColor != oldDelegate.pointColor;
 }
