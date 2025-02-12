@@ -17,8 +17,6 @@ const binghamtonGreen = Color(0xff005943);
 /// An accent color for [binghamtonGreen].
 const secondaryColor = Color(0xff404F48);
 
-// final typography = Typography.material2021(black: Typography.blackMountainView.
-
 /// The main class for the app.
 class RoverControlDashboard extends ReusableReactiveWidget<SettingsModel> {
   /// Creates the main app.
