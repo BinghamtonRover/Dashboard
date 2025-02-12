@@ -127,34 +127,42 @@ class RocksPage extends ReactiveWidget<RockModel> {
   const RocksPage({required this.index});
 
   @override
-  Widget build(BuildContext context, RockModel model) => ListView(
-    shrinkWrap: true,
+  Widget build(BuildContext context, RockModel model) => Column(
     children: [
       PageHeader(
         pageIndex: index,
         children: [
-          Text(
-            "Rocks & Minerals",
-            style: context.textTheme.headlineMedium,
+          Padding(
+            padding: const EdgeInsets.all(4),
+            child: Text(
+              "Rocks & Minerals",
+              style: context.textTheme.headlineMedium,
+            ),
           ),
           const Spacer(),
         ],
       ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        child: SearchBar(
-          hintText: "Search for a rock or characteristic",
-          hintStyle: WidgetStatePropertyAll(context.textTheme.bodyMedium),
-          controller: model.controller,
-          onChanged: model.search,
-          backgroundColor: WidgetStatePropertyAll(context.colorScheme.surfaceBright),
-          trailing: [
-            IconButton(onPressed: model.clear, icon: const Icon(Icons.clear)),
+      Expanded(
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          children: [
+            SearchBar(
+              hintText: "Search for a rock or characteristic",
+              hintStyle: WidgetStatePropertyAll(context.textTheme.bodyMedium),
+              controller: model.controller,
+              onChanged: model.search,
+              backgroundColor: WidgetStatePropertyAll(context.colorScheme.surfaceBright),
+              trailing: [
+                IconButton(onPressed: model.clear, icon: const Icon(Icons.clear)),
+              ],
+            ),
+            const SizedBox(height: 12),
+            for (final rock in model.filteredRocks)
+              RockWidget(rock),
           ],
         ),
       ),
-      for (final rock in model.filteredRocks)
-        RockWidget(rock),
     ],
   );
 }

@@ -8,8 +8,8 @@ class PageHeader extends StatelessWidget {
 
   /// The contents of the header to display left of the views selector dropdown
   final List<Widget> children;
-  
-  /// The padding bewteen the header contents and its border, defaults to 4
+
+  /// The padding between the header contents and its border, defaults to 4
   final double innerPadding;
 
   /// Const constructor for page header, requiring the index, and children
