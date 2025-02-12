@@ -54,14 +54,16 @@ class GamepadButton extends ReusableReactiveWidget<Controller> {
           iconEnabledColor: Colors.black,
           value: model.mode,
           onChanged: isDisabled(status) ? null : model.setMode,
-          dropdownColor: context.colorScheme.surface,
+          dropdownColor: context.colorScheme.secondary,
+          style: const TextStyle(color: Colors.white),
           items: [
             for (final mode in OperatingMode.values) DropdownMenuItem(
               value: mode,
-              child: Text(mode.name, style: TextStyle(color: context.colorScheme.onSurface)),
+              child: Text(mode.name),
             ),
           ],
         ),
+
       ],
     ),
   );
