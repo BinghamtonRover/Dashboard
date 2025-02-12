@@ -107,6 +107,11 @@ class DashboardView {
       builder: (context, index) => ElectricalPage(index: index),
     ),
     DashboardView(
+      name: Routes.lidar,
+      iconFunc: () => Icon(Icons.radar, color: Colors.black.withValues(alpha: 0.5)),
+      builder: (context, index) => LidarView(index: index),
+    ),
+    DashboardView(
       name: Routes.arm,
       iconFunc: () => Icon(Icons.precision_manufacturing_outlined, color: Colors.black.withValues(alpha: 0.5)),
       builder: (context, index) => ArmPage(index: index),

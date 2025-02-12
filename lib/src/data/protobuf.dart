@@ -136,6 +136,9 @@ extension DeviceUtils on Device {
 			case Device.DRIVE: return "Drive";
 			case Device.BASE_STATION: return "Base Station";
 			case Device.ANTENNA: return "Antenna";
+      case Device.RELAY: return "Relays";
+      case Device.VISION: return "Vision";
+      case Device.LIDAR: return "Lidar";
 		}
 		// Do not use default or else you'll lose exhaustiveness checking.
 		throw ArgumentError("Unrecognized device: $this");
