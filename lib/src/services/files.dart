@@ -28,12 +28,12 @@ class FilesService extends Service {
   /// This includes settings, data, images, and anything else the user or dashboard
   /// may want to keep between sessions. Categories of output, like screenshots,
   /// should get their own subdirectory.
-  late final Directory outputDir;
+  late Directory outputDir;
 
   /// The directory where all logging data is outputted
   ///
   /// This includes all the different operating modes with specified folders inside
-  late final Directory loggingDir;
+  late Directory loggingDir;
 
   /// The directory where screenshots are stored.
   ///
@@ -105,7 +105,7 @@ class FilesService extends Service {
   }
 
   /// Saves all the data in [batchedLogs] to a file by calling [logAllData].
-  late final Timer dataLogger;
+  late Timer dataLogger;
 
   /// Holds data to be logged by [logData] when [dataLogger] fires.
   ///

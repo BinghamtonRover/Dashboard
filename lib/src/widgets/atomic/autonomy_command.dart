@@ -80,6 +80,7 @@ class AutonomyCommandEditor extends StatelessWidget {
       ElevatedButton(
         style: const ButtonStyle(
           backgroundColor: WidgetStatePropertyAll(Colors.red),
+          foregroundColor: WidgetStatePropertyAll(Colors.white),
         ),
         onPressed: commandBuilder.abort,
         child: const Text("ABORT"),

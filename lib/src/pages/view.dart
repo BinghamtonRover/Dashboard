@@ -17,11 +17,8 @@ class DashboardView {
   /// The name of the view.
   final String name;
 
-  /// The icon used to represent the view.
-  Widget get icon => iconFunc();
-
   /// A function to dynamically compute the icon for the view.
-  Widget Function() iconFunc;
+  Widget Function(BuildContext context) iconFunc;
 
   /// A unique key to use while selecting this view.
   final CameraName? key;
@@ -56,15 +53,15 @@ class DashboardView {
         DashboardView(
           name: name.humanName,
           key: name,
-          iconFunc: () => getCameraStatus(name),
+          iconFunc: (context) => getCameraStatus(context, name),
           builder: (context, index) => VideoFeed(name: name, index: index),
         ),
   ];
 
-    /// An icon to indicate the status of the given camera.
-  static Widget getCameraStatus(CameraName name) {
+  /// An icon to indicate the status of the given camera.
+  static Widget getCameraStatus(BuildContext context, CameraName name) {
     if (!models.sockets.video.isConnected) {
-      return Icon(Icons.signal_wifi_off, color: Colors.black.withValues(alpha: 0.5));
+      return Icon(Icons.signal_wifi_off, color: context.colorScheme.onSurface.withValues(alpha: 0.5));
     }
     final status = models.video.feeds[name]!.details.status;
     const size = 12.0;
@@ -93,37 +90,42 @@ class DashboardView {
   static final List<DashboardView> uiViews = [
     DashboardView(
       name: Routes.science,
-      iconFunc: () => Icon(Icons.science, color: Colors.black.withValues(alpha: 0.5)),
+      iconFunc: (context) => Icon(Icons.science, color: context.colorScheme.onSurface.withValues(alpha: 0.5)),
       builder: (context, index) => SciencePage(index: index),
     ),
     DashboardView(
       name: Routes.autonomy,
-      iconFunc: () => Icon(Icons.map, color: Colors.black.withValues(alpha: 0.5)),
+      iconFunc: (context) => Icon(Icons.map, color: context.colorScheme.onSurface.withValues(alpha: 0.5)),
       builder: (context, index) => MapPage(index: index),
     ),
     DashboardView(
       name: Routes.electrical,
-      iconFunc: () => Icon(Icons.bolt, color: Colors.black.withValues(alpha: 0.5)),
+      iconFunc: (context) => Icon(Icons.bolt, color: context.colorScheme.onSurface.withValues(alpha: 0.5)),
       builder: (context, index) => ElectricalPage(index: index),
     ),
     DashboardView(
+      name: Routes.lidar,
+      iconFunc: (context) => Icon(Icons.radar, color: context.colorScheme.onSurface.withValues(alpha: 0.5)),
+      builder: (context, index) => LidarView(index: index),
+    ),
+    DashboardView(
       name: Routes.arm,
-      iconFunc: () => Icon(Icons.precision_manufacturing_outlined, color: Colors.black.withValues(alpha: 0.5)),
+      iconFunc: (context) => Icon(Icons.precision_manufacturing_outlined, color: context.colorScheme.onSurface.withValues(alpha: 0.5)),
       builder: (context, index) => ArmPage(index: index),
     ),
     DashboardView(
       name: Routes.drive,
-      iconFunc: () => Icon(Icons.drive_eta, color: Colors.black.withValues(alpha: 0.5)),
+      iconFunc: (context) => Icon(Icons.drive_eta, color: context.colorScheme.onSurface.withValues(alpha: 0.5)),
       builder: (context, index) => DrivePage(index: index),
     ),
     DashboardView(
       name: Routes.rocks,
-      iconFunc: () => Icon(Icons.landslide, color: Colors.black.withValues(alpha: 0.5)),
+      iconFunc: (context) => Icon(Icons.landslide, color: context.colorScheme.onSurface.withValues(alpha: 0.5)),
       builder: (context, index) => RocksPage(index: index),
     ),
     DashboardView(
       name: Routes.controllers,
-      iconFunc: () => Icon(Icons.sports_esports, color: Colors.black.withValues(alpha: 0.5)),
+      iconFunc: (context) => Icon(Icons.sports_esports, color: context.colorScheme.onSurface.withValues(alpha: 0.5)),
       builder: (context, index) => ControllersPage(index: index),
     ),
   ];
@@ -131,7 +133,7 @@ class DashboardView {
   /// A blank view.
   static final blank = DashboardView(
     name: Routes.blank,
-    iconFunc: () => const Icon(Icons.delete),
+    iconFunc: (context) => const Icon(Icons.delete),
     builder: (context, index) => ColoredBox(
       color: context.colorScheme.brightness == Brightness.light
         ? Colors.blueGrey

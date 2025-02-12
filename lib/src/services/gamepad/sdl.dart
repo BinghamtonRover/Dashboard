@@ -5,7 +5,7 @@ import "state.dart";
 import "gamepad.dart";
 
 /// Whether `package:sdl_gamepad` has been tested on this platform.
-bool get isSdlSupported => Platform.isWindows || Platform.isLinux;
+bool get isSdlSupported => Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 
 /// Initializes the SDL libraries.
 void initSdl() {

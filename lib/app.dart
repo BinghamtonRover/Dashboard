@@ -1,9 +1,9 @@
-/// Defines any global app configuration. 
-/// 
+/// Defines any global app configuration.
+///
 /// Usually this page is reserved for theming, navigation, and startup logic.
-/// 
-/// This library is the final touch that ties the app together, so it may depend on any other 
-/// library (except for main.dart).  
+///
+/// This library is the final touch that ties the app together, so it may depend on any other
+/// library (except for main.dart).
 library app;
 
 import "package:flutter/material.dart";
@@ -14,7 +14,10 @@ import "package:rover_dashboard/widgets.dart";
 /// The classic Binghamton green.
 const binghamtonGreen = Color(0xff005943);
 
-/// The main class for the app. 
+/// An accent color for [binghamtonGreen].
+const secondaryColor = Color(0xff404F48);
+
+/// The main class for the app.
 class RoverControlDashboard extends ReusableReactiveWidget<SettingsModel> {
   /// Creates the main app.
   RoverControlDashboard() : super(models.settings);
@@ -26,20 +29,32 @@ class RoverControlDashboard extends ReusableReactiveWidget<SettingsModel> {
     debugShowCheckedModeBanner: false,
     themeMode: models.isReady ? model.dashboard.themeMode : ThemeMode.system,
     theme: ThemeData(
-      useMaterial3: false,
-      colorScheme: const ColorScheme.light(
-        primary: binghamtonGreen,
-        secondary: binghamtonGreen,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: binghamtonGreen,
+        secondary: secondaryColor,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: binghamtonGreen,
         foregroundColor: Colors.white,
       ),
+      dropdownMenuTheme: const DropdownMenuThemeData(
+        textStyle: TextStyle(fontWeight: FontWeight.normal),
+      ),
     ),
-    darkTheme: ThemeData.from(
-      colorScheme: const ColorScheme.dark(
-        primary: binghamtonGreen,
-        secondary: binghamtonGreen,
+    darkTheme: ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        brightness: Brightness.dark,
+        seedColor: binghamtonGreen,
+        surface: const Color.fromRGBO(40, 40, 40, 1),
+        secondary: secondaryColor,
+        onSecondary: Colors.white,
+      ),
+      dropdownMenuTheme: const DropdownMenuThemeData(
+        textStyle: TextStyle(fontWeight: FontWeight.normal),
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: binghamtonGreen,
+        foregroundColor: Colors.white,
       ),
     ),
     routes: {
