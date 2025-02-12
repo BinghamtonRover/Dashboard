@@ -68,6 +68,8 @@ class LidarView extends ReactiveWidget<LidarViewModel> {
 /// 
 /// Draws the points and bounding area indicators
 class LidarViewPainter extends CustomPainter {
+  /// The maximum view range of the lidar
+  static const double maxRange = 2;
   /// List of all the lidar points to draw
   final List<LidarCartesianPoint>? coordinates;
   /// The color to draw the points and box in
@@ -95,6 +97,11 @@ class LidarViewPainter extends CustomPainter {
     final axisPaint = Paint()
       ..color = Colors.red
       ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.5;
+
+    final circlePaint = Paint()
+      ..color = Colors.red
+      ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
     final boxBorder = Paint()
@@ -115,16 +122,20 @@ class LidarViewPainter extends CustomPainter {
     final pointsToPlot = [
       for (final point in points)
         Offset(
-          (-point.y + 2) * size.width / 4,
-          (-point.x + 2) * size.height / 4,
+          (-point.y + maxRange) * size.width / (maxRange * 2),
+          (-point.x + maxRange) * size.height / (maxRange * 2),
         ),
     ];
 
+    final center = Offset(size.width / 2, size.height / 2);
+
+    final pixelsPerMeter = (2 / maxRange) * size.width / 4;
+
     // 2 meter circle
-    canvas.drawCircle(Offset(size.width / 2, size.height / 2), size.width / 2, axisPaint);
+    canvas.drawCircle(center, 2 * pixelsPerMeter, circlePaint);
 
     // 1 meter circle
-    canvas.drawCircle(Offset(size.width / 2, size.height / 2), size.width / 4, axisPaint);
+    canvas.drawCircle(center, pixelsPerMeter, circlePaint);
 
     // Draw the black out points
     canvas.drawVertices(vertices, BlendMode.src, hiddenPaint);
