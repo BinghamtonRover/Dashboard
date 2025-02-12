@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "package:burt_network/serial.dart";
+import "package:rover_dashboard/app.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -16,7 +17,7 @@ class Footer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ColoredBox(
-    color: Theme.of(context).colorScheme.secondary,
+    color: binghamtonGreen,
     child: Wrap(
       alignment: WrapAlignment.spaceBetween,
       children: [
@@ -209,7 +210,7 @@ class SerialButton extends ReusableReactiveWidget<SerialModel> {
   Widget build(BuildContext context, SerialModel model) => PopupMenuButton(
     icon: Icon(
       Icons.usb,
-      color: model.hasDevice ? Colors.green : context.colorScheme.onSecondary,
+      color: model.hasDevice ? Colors.green : Colors.black,
     ),
     tooltip: "Select device",
     onSelected: model.toggle,
@@ -255,7 +256,7 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
   Widget build(BuildContext context, HomeModel model) => SizedBox(
     height: 48,
     child: InkWell(
-      onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (context) => LogsPage())),
+      onTap: showLogs ? () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (context) => LogsPage())) : null,
       child: Card(
         shadowColor: Colors.transparent,
         color: getColor(model.message?.severity),

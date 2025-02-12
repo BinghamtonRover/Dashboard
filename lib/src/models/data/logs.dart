@@ -43,6 +43,9 @@ class LogsModel extends Model {
   /// The most recent [maxLogCount] of messages from the dashboard
   final ListQueue<BurtLog> dashboardLogs = ListQueue();
 
+  /// Contains the highest severity that each device emitted.
+  final Map<Device, BurtLogLevel> deviceSeverity = {};
+
   /// The logs received since the last flush to disk. See [saveToFileInterval].
   List<BurtLog> saveToFileBuffer = [];
 
@@ -71,6 +74,11 @@ class LogsModel extends Model {
 
   /// Sends a log message to be shown in the footer.
   void handleLog(BurtLog log, {bool display = true}) {
+    // Update device severity
+    final oldSeverity = deviceSeverity[log.device];
+    if (oldSeverity == null || log.level.isMoreSevereThan(oldSeverity)) {
+      deviceSeverity[log.device] = log.level;
+    }
     // Save to disk and memory
     saveToFileBuffer.add(log);
     logsForDevice(log.device)?.addWithLimit(log);
@@ -113,6 +121,7 @@ class LogsModel extends Model {
     videoLogs.clear();
     autonomyLogs.clear();
     dashboardLogs.clear();
+    deviceSeverity.clear();
     models.home.clear(clearErrors: true);
     notifyListeners();
   }

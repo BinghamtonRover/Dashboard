@@ -34,7 +34,7 @@ class ViewsList extends ReactiveWidget<ViewsSidebarModel> {
   /// A const constructor
   const ViewsList();
 
-  Widget _buildDraggable(DashboardView view, {Widget? dragIcon}) => Draggable<DashboardView>(
+  Widget _buildDraggable(BuildContext context, DashboardView view, {Widget? dragIcon}) => Draggable<DashboardView>(
     data: view,
     affinity: Axis.horizontal,
     dragAnchorStrategy: (draggable, context, position) =>
@@ -44,13 +44,13 @@ class ViewsList extends ReactiveWidget<ViewsSidebarModel> {
       height: draggingIconSize,
       child: FittedBox(
         fit: BoxFit.fill,
-        child: dragIcon ?? view.icon,
+        child: dragIcon ?? view.iconFunc(context),
       ),
     ),
     child: ListTile(
       mouseCursor: SystemMouseCursors.move,
       title: Text(view.name),
-      leading: view.icon,
+      leading: view.iconFunc(context),
     ),
   );
 
@@ -132,16 +132,16 @@ class ViewsList extends ReactiveWidget<ViewsSidebarModel> {
         title: const Text("Cameras"),
         children: [
           for (final view in DashboardView.cameraViews)
-            _buildDraggable(view, dragIcon: const Icon(Icons.camera_alt)),
+            _buildDraggable(context, view, dragIcon: const Icon(Icons.camera_alt)),
         ],
       ),
       ExpansionTile(
         title: const Text("Controls"),
         children: [
-          for (final view in DashboardView.uiViews) _buildDraggable(view),
+          for (final view in DashboardView.uiViews) _buildDraggable(context, view),
         ],
       ),
-      _buildDraggable(DashboardView.blank),
+      _buildDraggable(context, DashboardView.blank),
     ],
   );
 
@@ -187,18 +187,18 @@ class ViewsSelector extends StatelessWidget {
     onSelected: (view) => models.views.replaceView(index, view),
     itemBuilder: (_) => [
       const PopupMenuItem(enabled: false, child: Text("Cameras")),
-      for (final view in DashboardView.cameraViews) _buildItem(view),
+      for (final view in DashboardView.cameraViews) _buildItem(context, view),
       const PopupMenuDivider(),
       const PopupMenuItem(enabled: false, child: Text("Controls")),
-      for (final view in DashboardView.uiViews) _buildItem(view),
+      for (final view in DashboardView.uiViews) _buildItem(context, view),
     ],
   );
 
-  PopupMenuItem<DashboardView> _buildItem(DashboardView view) => PopupMenuItem(
+  PopupMenuItem<DashboardView> _buildItem(BuildContext context, DashboardView view, {Widget? dragIcon}) => PopupMenuItem(
     value: view,
     child: Row(
       children: [
-        view.icon,
+        dragIcon ?? view.iconFunc(context),
         const SizedBox(width: 8),
         Text(view.name),
       ],
