@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:rover_dashboard/app.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -54,7 +55,7 @@ class GamepadButton extends ReusableReactiveWidget<Controller> {
           iconEnabledColor: Colors.black,
           value: model.mode,
           onChanged: isDisabled(status) ? null : model.setMode,
-          dropdownColor: context.colorScheme.secondary,
+          dropdownColor: darkSurface,
           style: const TextStyle(color: Colors.white),
           items: [
             for (final mode in OperatingMode.values) DropdownMenuItem(
