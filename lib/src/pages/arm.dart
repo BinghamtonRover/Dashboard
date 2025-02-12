@@ -230,7 +230,8 @@ class ArmPage extends ReactiveWidget<ArmModel> {
   Widget build(BuildContext context, ArmModel model) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      Row(  // The header at the top
+      PageHeader(  // The header at the top
+        pageIndex: index,
         children: [
           const SizedBox(width: 8),
           Text("Arm Graphs", style: context.textTheme.headlineMedium),
@@ -255,9 +256,9 @@ class ArmPage extends ReactiveWidget<ArmModel> {
               child: Icon(Icons.sync),
             ),
           const SizedBox(width: 8),
-          ViewsSelector(index: index),
         ],
       ),
+      const SizedBox(height: 10),
       Expanded(
         child: Row(
           children: [
@@ -280,7 +281,6 @@ class ArmPage extends ReactiveWidget<ArmModel> {
                     child: Card(
                       margin: const EdgeInsets.all(16),
                       elevation: 16,
-                      color: context.colorScheme.surfaceContainerHighest,
                       child: CustomPaint(
                         painter: ArmPainterSide(model, context.colorScheme.onSurface),
                         child: MouseRegion(
@@ -310,7 +310,6 @@ class ArmPage extends ReactiveWidget<ArmModel> {
                     child: Card(
                       margin: const EdgeInsets.all(8),
                       elevation: 16,
-                      color: context.colorScheme.surfaceContainerHighest,
                       child: IntrinsicWidth(
                         child: Column(
                           children: [
@@ -375,7 +374,6 @@ class ArmPage extends ReactiveWidget<ArmModel> {
         child: Card(
           margin: const EdgeInsets.all(16),
           elevation: 16,
-          color: context.colorScheme.surfaceContainerHighest,
           child: CustomPaint(
             painter: ArmPainterTop(swivelAngle: model.arm.base.currentAngle),
           ),

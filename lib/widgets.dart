@@ -28,6 +28,7 @@ export "src/widgets/generic/gamepad.dart";
 export "src/widgets/generic/mobile_controls.dart";
 export "src/widgets/generic/reactive_widget.dart";
 export "src/widgets/generic/timer.dart";
+export "src/widgets/generic/page_header.dart";
 
 export "src/widgets/navigation/footer.dart";
 export "src/widgets/navigation/sidebar.dart";

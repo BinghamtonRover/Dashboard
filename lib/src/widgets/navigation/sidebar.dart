@@ -150,7 +150,7 @@ class ControlsDisplay extends ReusableReactiveWidget<Controller> {
         Text(entry.key, style: Theme.of(context).textTheme.labelLarge),
         Text(
           "  ${entry.value}",
-          style: Theme.of(context).textTheme.titleMedium,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       ],
     ],
