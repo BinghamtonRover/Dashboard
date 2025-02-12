@@ -1,4 +1,5 @@
 import "dart:async";
+import "dart:math";
 import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 
@@ -9,6 +10,12 @@ import "package:rover_dashboard/models.dart";
 ///
 /// This view model gets its data from [RoverMetrics.arm] and [RoverMetrics.position].
 class ArmModel with ChangeNotifier {
+  /// The max angle of the end effector from the horizontal
+  static const double maxEndEffectorAngle = 60;
+
+  /// The max angle of the end effector from the horizontal in radians
+  static double get maxEndEffectorRadians => maxEndEffectorAngle * (pi / 180);
+
   /// The [Metrics] model for arm data.
   ArmData get arm => models.rover.metrics.arm.data;
 
@@ -21,15 +28,41 @@ class ArmModel with ChangeNotifier {
   /// The state that the user wants to set the laser to
   bool desiredLaserState = false;
 
+  /// The desired angle of the end effector for IK
+  double _endEffectorAngle = 0;
+
+  /// The desired angle of the end effector for IK
+  double get endEffectorAngle => _endEffectorAngle;
+
+  set endEffectorAngle(double value) {
+    _endEffectorAngle = value;
+    notifyListeners();
+  }
+
+  StreamSubscription<ArmData>? _armSubscription;
+  StreamSubscription<GripperData>? _gripperSubscription;
+
   /// Sets the initial laser state to the current laser state and starts a timer to refresh at 100 Hz.
   ArmModel() {
     desiredLaserState = gripper.laserState.toBool();
     timer = Timer.periodic(const Duration(milliseconds: 10), _update);
+    _armSubscription = models.messages.stream.onMessage(
+      name: ArmData().messageName,
+      constructor: ArmData.fromBuffer,
+      callback: (_) => notifyListeners(),
+    );
+    _gripperSubscription = models.messages.stream.onMessage(
+      name: GripperData().messageName,
+      constructor: GripperData.fromBuffer,
+      callback: (_) => notifyListeners(),
+    );
   }
 
   @override
   void dispose() {
     timer?.cancel();
+    _armSubscription?.cancel();
+    _gripperSubscription?.cancel();
     super.dispose();
   }
 
@@ -38,7 +71,6 @@ class ArmModel with ChangeNotifier {
       final command = GripperCommand(laserState: desiredLaserState ? BoolState.ON : BoolState.OFF);
       models.messages.sendMessage(command);
     }
-    notifyListeners();
   }
 
   /// Sets the laser on or off
@@ -46,6 +78,7 @@ class ArmModel with ChangeNotifier {
     desiredLaserState = laser;
     final command = GripperCommand(laserState: desiredLaserState ? BoolState.ON : BoolState.OFF);
     models.messages.sendMessage(command);
+    notifyListeners();
   }
 
   /// The angles of the arm.
