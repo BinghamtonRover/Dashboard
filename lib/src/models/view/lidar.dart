@@ -1,48 +1,44 @@
-import "dart:math";
+import "dart:async";
 
 import "package:flutter/foundation.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:burt_network/burt_network.dart";
 
+/// A view model for the Lidar page
+/// 
+/// Streams incoming [LidarPointCloud] messages from video to display them on the dashboard
 class LidarModel with ChangeNotifier {
+  /// The last received coordinates from the incoming lidar data
   List<LidarCartesianPoint>? coordinates;
 
-  @override
-  LidarModel() {
-		models.messages.stream.onMessage<LidarPointCloud>(
-			name: LidarPointCloud().messageName,
-			constructor: LidarPointCloud.fromBuffer,
-			callback: handleData,
-		);
-	}
+  StreamSubscription<LidarPointCloud>? _subscription;
 
-  void handleData(LidarPointCloud newPointCloud) {
-    coordinates = newPointCloud.cartesian;
-    double minx = 9999;
-    double maxx = -9999;
-    double miny = 9999;
-    double maxy = -9999;
-    for (LidarCartesianPoint point in coordinates!) {
-      minx = min(minx, point.x);
-      maxx = max(maxx, point.x);
-      miny = min(miny, point.y);
-      maxy = max(maxy, point.y);
-    }
-    print("minx: $minx, maxx: $maxx, miny: $miny, maxy: $maxy");
-    notifyListeners();
+  /// Const constructor for the lidar model
+  LidarModel() {
+    init();
   }
 
-  // void addFakeData(){
-  //   pointCloud = LidarPointCloud(
-  //     cartesian: [
-  //       for (int i = 0; i < 100; i++)
-  //         LidarCartesianPoint(
-  //           x: Random().nextDouble() * 2,
-  //           y: Random().nextDouble() * 2,
-  //         )
-  //     ]
-  //   );
-  //   notifyListeners();
-  // }
+  /// Initializes the lidar view mode.
+  void init() {
+    _subscription = models.messages.stream.onMessage<LidarPointCloud>(
+      name: LidarPointCloud().messageName,
+      constructor: LidarPointCloud.fromBuffer,
+      callback: handleData,
+    );
+  }
+
+  @override
+  void dispose() { 
+    _subscription?.cancel();
+    super.dispose();
+  }
+
+  /// Handles incoming lidar data
+  void handleData(LidarPointCloud newPointCloud) {
+    if (newPointCloud.cartesian.isNotEmpty) {
+      coordinates = newPointCloud.cartesian;
+      notifyListeners();
+    }
+  }
 }

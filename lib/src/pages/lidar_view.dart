@@ -7,104 +7,136 @@ import "package:rover_dashboard/widgets.dart";
 import "package:burt_network/burt_network.dart";
 
 class LidarView extends ReactiveWidget<LidarModel> {
-  LidarView({super.key});
+  /// The index of this view
+  final int index;
+
+  LidarView({required this.index, super.key});
 
   @override
   LidarModel createModel() => LidarModel();
 
-  // hardcode for now
-  final double scale = 1.5;
-  final Offset offset = Offset.zero;
-
   @override
-  Widget build(BuildContext context, LidarModel model) =>CustomPaint(
-      size: Size.infinite,
-      painter: LidarViewPainter(
-        scale: scale,
-        offset: offset,
-        fov: 271,
-        coordinates: model.coordinates,
+  Widget build(BuildContext context, LidarModel model) => Column(
+    children: [
+      Material(
+        elevation: 5,
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Row(
+            children: [
+              const SizedBox(width: 8),
+              Text("Lidar", style: context.textTheme.headlineMedium), 
+              const Spacer(),
+              ViewsSelector(index: index),
+              const SizedBox(width: 8),
+            ],
+          ),
+        ),
       ),
-      willChange: true,
+      const SizedBox(height: 10),
+      Flexible(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final minSide = min(constraints.maxWidth, constraints.maxHeight);
+            return FittedBox(
+              child: SizedBox(
+                width: minSide,
+                height: minSide,
+                child: CustomPaint(
+                    size: Size(minSide, minSide),
+                    painter: LidarViewPainter(
+                      coordinates: model.coordinates,
+                      pointColor: context.colorScheme.onSurface,
+                    ),
+                    willChange: true,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    ],
   );
 }
 
 class LidarViewPainter extends CustomPainter {
-  // Origin offset, origin (0,0) is at the center by default.
-  final Offset offset;
-  final double scale;
-  final double fov;
-  final double domain;
+  /// Origin offset, origin (0,0) is at the center by default.
   final List<LidarCartesianPoint>? coordinates;
+  /// The color to draw the points and box in
+  final Color pointColor;
 
   const LidarViewPainter({
-    required this.offset, 
-    required this.scale, 
-    required this.fov,
-    required this.coordinates
-  }) : 
-    domain = scale * 2;
+    required this.coordinates,
+    required this.pointColor,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.black
+      ..color = pointColor
       ..strokeWidth = 3.0
       ..style = PaintingStyle.fill;
 
-    canvas.translate(size.width / 2, size.height / 2);
-    canvas.translate(offset.dx, offset.dy);
+    final vertices = Vertices(
+      VertexMode.triangles,
+      <Offset>[
+        Offset(0, size.height), // Vertex 1
+        Offset(size.width, size.height), // Vertex 2
+        Offset(size.width / 2, size.height / 2), // Vertex 3
+      ],
+    );
+
+    final hiddenPaint = Paint()
+      ..color = Colors.grey
+      ..style = PaintingStyle.fill;
 
     final axisPaint = Paint()
-      ..color = Colors.white
+      ..color = Colors.red
+      ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
-    final List<LidarCartesianPoint> points = coordinates == null ? List<LidarCartesianPoint>.empty() : coordinates!; 
+    final boxBorder = Paint()
+      ..color = pointColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
 
-    final List<Offset> offsets = points
-    .map((p) => Offset(
-      // normalize to scale to cavnas
-      p.x * (size.width/2) / domain, 
-      p.y * (size.height / 2) / domain    
-    )).toList();
+    final points = coordinates ?? []; 
+    final pointsToPlot = [
+      for (final point in points)
+        Offset(
+          (-point.y + 2) * size.width / 4,
+          (-point.x + 2) * size.height / 4,
+        ),
+    ];
 
-    canvas.drawPoints(PointMode.points, offsets, paint);
+    // 2 meter circle
+    canvas.drawCircle(Offset(size.width / 2, size.height / 2), size.width / 2, axisPaint);
 
-    // axes
+    // 1 meter circle
+    canvas.drawCircle(Offset(size.width / 2, size.height / 2), size.width / 4, axisPaint);
+
+    // Draw the black out points
+    canvas.drawVertices(vertices, BlendMode.src, hiddenPaint);
+
+    // Plot the points
+    canvas.drawPoints(PointMode.points, pointsToPlot, paint);
+
+    // Draw x - axis
     canvas.drawLine(
-      Offset(-size.width / 2 - offset.dx, 0),
-      Offset(size.width / 2 - offset.dx, 0), 
+      Offset(0, size.height / 2),  
+      Offset(size.width, size.height / 2),     
       axisPaint,
     );
-    
+
+    // Draw y - axis
     canvas.drawLine(
-      Offset(0, -size.height / 2 - offset.dy),  
-      Offset(0, size.height / 2 - offset.dy),     
+      Offset(size.width / 2, 0),
+      Offset(size.width / 2, size.height / 2),
       axisPaint,
     );
 
-    final noFovAngle = (360 - fov) * pi / 180;
-    final noVisionPaint = Paint()
-      ..color = Colors.grey.withOpacity(0.6)  
-      ..style = PaintingStyle.fill; 
-
-    final r = size.width * 1.2;
-    final x1 = r * cos(-noFovAngle/2);
-    final y1 = r * sin(-noFovAngle/2);
-    final x2 = r * cos(noFovAngle/2);
-    final y2 = r * sin(noFovAngle/2);
-
-    final conePath = Path();
-  
-    conePath.moveTo(0, 0);
-    conePath.lineTo(x1, y1);   
-    conePath.lineTo(x2, y2);  
-    conePath.close();     
-  
-    canvas.save();  
-    canvas.rotate(pi/2); 
-    canvas.drawPath(conePath, noVisionPaint);
-    canvas.restore();
+    // Draw the border box
+    canvas.drawRect(Rect.fromPoints(Offset.zero, Offset(size.width, size.height)), boxBorder);
   }
 
   @override

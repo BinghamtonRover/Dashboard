@@ -30,7 +30,7 @@ class Routes {
 	static const String home = "home";
 
   /// The name of the lidar page. 
-  static const String lidar = "lidar";
+  static const String lidar = "Lidar";
 
 	/// The name of the science analysis page.
 	static const String science = "Science Analysis";

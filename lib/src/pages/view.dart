@@ -108,8 +108,8 @@ class DashboardView {
     ),
     DashboardView(
       name: Routes.lidar,
-      iconFunc: () => Icon(Icons.bolt, color: Colors.black.withValues(alpha: 0.5)),
-      builder: (context, index) => LidarView(),
+      iconFunc: () => Icon(Icons.radar, color: Colors.black.withValues(alpha: 0.5)),
+      builder: (context, index) => LidarView(index: index),
     ),
     DashboardView(
       name: Routes.arm,
