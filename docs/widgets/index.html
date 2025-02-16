@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="widgets library API docs, for the Dart programming language.">
+  <title>widgets library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">rover_dashboard</a></li>
+    <li class="self-crumb">widgets.dart</li>
+  </ol>
+  <div class="self-name">widgets</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar=""
+    data-below-sidebar="widgets&#47;widgets-library-sidebar.html">
+  
+    <div>
+      
+  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/BinghamtonRover/rover-control-dashboard/blob/main/lib/widgets.dart#L16"><span class="material-symbols-outlined">description</span></a></div>
+
+      <h1>
+        <span class="kind-library">widgets</span>
+        library 
+ 
+
+      </h1>
+    </div>
+
+    
+<section class="desc markdown">
+  <p>Contains complex or reusable widgets.</p>
+<p>If a widget is becoming too large or needs to be reused, separate it into its own file and put
+it here. Although "everything is a widget"™ in Flutter, this library is reserved for widgets
+that are contained to a small, logical section of the general UI. Groups of widgets spanning
+multiple loosely-related purposes should be considered "pages" and put in the pages library.</p>
+<p>This library is broken out into several directories:</p>
+<ul>
+<li>The <code>atomic</code> directory represent singular pieces of data, such as metric readouts.</li>
+<li>The <code>generic</code> directory contains random pieces of UI that are reused in many locations.</li>
+<li>The <code>navigation</code> directory is for global pieces of UI that handle navigation.</li>
+<li>The <code>utils</code> directory contains widgets or other frontend code used by other widgets.</li>
+<li>Other folders named after pages contain complex widgets used in that page.</li>
+</ul>
+<p>This library may depend on the data, services, and models library.</p>
+</section>
+
+
+    <section class="summary offset-anchor" id="classes">
+      <h2>Classes</h2>
+      <dl>
+          <dt id="AutonomyCommandEditor">
+  <span class="name "><a href="../widgets/AutonomyCommandEditor-class.html">AutonomyCommandEditor</a></span> 
+
+</dt>
+<dd>
+  A widget to edit an <a href="../data/AutonomyCommand-class.html">AutonomyCommand</a>.
+</dd>
+
+          <dt id="CameraDetailsEditor">
+  <span class="name "><a href="../widgets/CameraDetailsEditor-class.html">CameraDetailsEditor</a></span> 
+
+</dt>
+<dd>
+  A widget to modify <a href="../data/CameraDetails-class.html">CameraDetails</a> for a given camera, backed by a <a href="../models/CameraDetailsBuilder-class.html">CameraDetailsBuilder</a>.
+</dd>
+
+          <dt id="ColorEditor">
+  <span class="name "><a href="../widgets/ColorEditor-class.html">ColorEditor</a></span> 
+
+</dt>
+<dd>
+  A widget to edit a color, backed by <a href="../models/ColorBuilder-class.html">ColorBuilder</a>.
+</dd>
+
+          <dt id="ControlsDisplay">
+  <span class="name "><a href="../widgets/ControlsDisplay-class.html">ControlsDisplay</a></span> 
+
+</dt>
+<dd>
+  Displays controls for the given <a href="../models/Controller-class.html">Controller</a>.
+</dd>
+
+          <dt id="DropdownEditor">
+  <span class="name "><a href="../widgets/DropdownEditor-class.html">DropdownEditor</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
+
+</dt>
+<dd>
+  A widget to choose a single value from a dropdown.
+</dd>
+
+          <dt id="Footer">
+  <span class="name "><a href="../widgets/Footer-class.html">Footer</a></span> 
+
+</dt>
+<dd>
+  The footer, responsible for showing vitals and logs.
+</dd>
+
+          <dt id="GamepadButton">
+  <span class="name "><a href="../widgets/GamepadButton-class.html">GamepadButton</a></span> 
+
+</dt>
+<dd>
+  A widget to show the gamepad state and allow the user to switch its mode.
+</dd>
+
+          <dt id="GpsEditor">
+  <span class="name "><a href="../widgets/GpsEditor-class.html">GpsEditor</a></span> 
+
+</dt>
+<dd>
+  A widget to edit a GPS coordinate in degree/minute/seconds or decimal format.
+</dd>
+
+          <dt id="ImageLoader">
+  <span class="name "><a href="../widgets/ImageLoader-class.html">ImageLoader</a></span> 
+
+</dt>
+<dd>
+  A helper class to load and manage resources used by a <code>ui.Image</code>.
+</dd>
+
+          <dt id="MessageDisplay">
+  <span class="name "><a href="../widgets/MessageDisplay-class.html">MessageDisplay</a></span> 
+
+</dt>
+<dd>
+  Displays the latest <a href="../data/TaskbarMessage-class.html">TaskbarMessage</a> from <a href="../models/HomeModel/message.html">HomeModel.message</a>.
+</dd>
+
+          <dt id="MetricsList">
+  <span class="name "><a href="../widgets/MetricsList-class.html">MetricsList</a></span> 
+
+</dt>
+<dd>
+  Displays metrics of all sorts in a collapsible list.
+</dd>
+
+          <dt id="MobileControls">
+  <span class="name "><a href="../widgets/MobileControls-class.html">MobileControls</a></span> 
+
+</dt>
+<dd>
+  Drive controls for mobile devices where gamepads aren't feasible.
+</dd>
+
+          <dt id="MobileControlsModel">
+  <span class="name "><a href="../widgets/MobileControlsModel-class.html">MobileControlsModel</a></span> 
+
+</dt>
+<dd>
+  Drive controls for mobile devices where gamepads aren't feasible.
+</dd>
+
+          <dt id="NetworkStatusIcon">
+  <span class="name "><a href="../widgets/NetworkStatusIcon-class.html">NetworkStatusIcon</a></span> 
+
+</dt>
+<dd>
+  A network status icon for the given device.
+</dd>
+
+          <dt id="NumberEditor">
+  <span class="name "><a href="../widgets/NumberEditor-class.html">NumberEditor</a></span> 
+
+</dt>
+<dd>
+  A widget to edit a number, backed by <a href="../models/NumberBuilder-class.html">NumberBuilder</a>.
+</dd>
+
+          <dt id="PageHeader">
+  <span class="name "><a href="../widgets/PageHeader-class.html">PageHeader</a></span> 
+
+</dt>
+<dd>
+  A widget for teh header of a page
+</dd>
+
+          <dt id="PresetSave">
+  <span class="name "><a href="../widgets/PresetSave-class.html">PresetSave</a></span> 
+
+</dt>
+<dd>
+  A widget to save a preset backed by <a href="../models/PresetBuilder-class.html">PresetBuilder</a>.
+</dd>
+
+          <dt id="ReactiveWidget">
+  <span class="name "><a href="../widgets/ReactiveWidget-class.html">ReactiveWidget</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html">ChangeNotifier</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  A widget that listens to a <a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html">ChangeNotifier</a> and rebuilds when the model updates.
+</dd>
+
+          <dt id="ReactiveWidgetInterface">
+  <span class="name "><a href="../widgets/ReactiveWidgetInterface-class.html">ReactiveWidgetInterface</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html">ChangeNotifier</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  A widget that listens to a <a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html">ChangeNotifier</a> (called the view model) and updates when it does.
+</dd>
+
+          <dt id="ReactiveWidgetState">
+  <span class="name "><a href="../widgets/ReactiveWidgetState-class.html">ReactiveWidgetState</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html">ChangeNotifier</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  A state for <a href="../widgets/ReactiveWidget-class.html">ReactiveWidget</a> that manages the <a href="../widgets/ReactiveWidgetState/model.html">model</a>.
+</dd>
+
+          <dt id="ReusableReactiveWidget">
+  <span class="name "><a href="../widgets/ReusableReactiveWidget-class.html">ReusableReactiveWidget</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html">ChangeNotifier</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  A <a href="../widgets/ReactiveWidgetInterface-class.html">ReactiveWidgetInterface</a> that "borrows" a view model and does not dispose of it.
+</dd>
+
+          <dt id="ScienceCommandEditor">
+  <span class="name "><a href="../widgets/ScienceCommandEditor-class.html">ScienceCommandEditor</a></span> 
+
+</dt>
+<dd>
+  A widget to create and send a <a href="../data/ScienceCommand-class.html">ScienceCommand</a>.
+</dd>
+
+          <dt id="SerialButton">
+  <span class="name "><a href="../widgets/SerialButton-class.html">SerialButton</a></span> 
+
+</dt>
+<dd>
+  Allows the user to connect to the firmware directly, over Serial.
+</dd>
+
+          <dt id="Sidebar">
+  <span class="name "><a href="../widgets/Sidebar-class.html">Sidebar</a></span> 
+
+</dt>
+<dd>
+  A widget to display metrics and controls off to the side.
+</dd>
+
+          <dt id="SliderSettings">
+  <span class="name "><a href="../widgets/SliderSettings-class.html">SliderSettings</a></span> 
+
+</dt>
+<dd>
+  Class that defines a slider for camera controls
+</dd>
+
+          <dt id="SocketEditor">
+  <span class="name "><a href="../widgets/SocketEditor-class.html">SocketEditor</a></span> 
+
+</dt>
+<dd>
+  Creates a widget to edit a <a href="../data/SocketInfo-class.html">SocketInfo</a>, backed by <a href="../models/SocketBuilder-class.html">SocketBuilder</a>.
+</dd>
+
+          <dt id="StatusIcons">
+  <span class="name "><a href="../widgets/StatusIcons-class.html">StatusIcons</a></span> 
+
+</dt>
+<dd>
+  A few icons displaying the rover's current status.
+</dd>
+
+          <dt id="ThrottleEditor">
+  <span class="name "><a href="../widgets/ThrottleEditor-class.html">ThrottleEditor</a></span> 
+
+</dt>
+<dd>
+  An <a href="https://api.flutter.dev/flutter/material/AlertDialog-class.html">AlertDialog</a> to prompt the user for a throttle value and send it to the rover.
+</dd>
+
+          <dt id="TimerEditor">
+  <span class="name "><a href="../widgets/TimerEditor-class.html">TimerEditor</a></span> 
+
+</dt>
+<dd>
+  A widget to edit a color, backed by <a href="../models/TimerBuilder-class.html">TimerBuilder</a>.
+</dd>
+
+          <dt id="TimerWidget">
+  <span class="name "><a href="../widgets/TimerWidget-class.html">TimerWidget</a></span> 
+
+</dt>
+<dd>
+  A widget to view timer
+Can also stop and start timer
+</dd>
+
+          <dt id="VideoFeed">
+  <span class="name "><a href="../widgets/VideoFeed-class.html">VideoFeed</a></span> 
+
+</dt>
+<dd>
+  Displays frames of a video feed.
+</dd>
+
+          <dt id="VideoFeedState">
+  <span class="name "><a href="../widgets/VideoFeedState-class.html">VideoFeedState</a></span> 
+
+</dt>
+<dd>
+  The logic for updating a <a href="../widgets/VideoFeed-class.html">VideoFeed</a>.
+</dd>
+
+          <dt id="VideoSettingsState">
+  <span class="name "><a href="../widgets/VideoSettingsState-class.html">VideoSettingsState</a></span> 
+
+</dt>
+<dd>
+  A state for <a href="../widgets/VideoSettingsWidget-class.html">VideoSettingsWidget</a>.
+</dd>
+
+          <dt id="VideoSettingsWidget">
+  <span class="name "><a href="../widgets/VideoSettingsWidget-class.html">VideoSettingsWidget</a></span> 
+
+</dt>
+<dd>
+  A widget to edit camera settings.
+</dd>
+
+          <dt id="ViewsCounter">
+  <span class="name "><a href="../widgets/ViewsCounter-class.html">ViewsCounter</a></span> 
+
+</dt>
+<dd>
+  A dropdown to select more or less views.
+</dd>
+
+          <dt id="ViewsList">
+  <span class="name "><a href="../widgets/ViewsList-class.html">ViewsList</a></span> 
+
+</dt>
+<dd>
+  A list of views for the user to drag into their desired view area
+</dd>
+
+          <dt id="ViewsSelector">
+  <span class="name "><a href="../widgets/ViewsSelector-class.html">ViewsSelector</a></span> 
+
+</dt>
+<dd>
+  A button for the user to select a new view.
+</dd>
+
+          <dt id="ViewsSidebarModel">
+  <span class="name "><a href="../widgets/ViewsSidebarModel-class.html">ViewsSidebarModel</a></span> 
+
+</dt>
+<dd>
+  A simple model that just listens for changes in the network and settings.
+</dd>
+
+          <dt id="ViewsWidget">
+  <span class="name "><a href="../widgets/ViewsWidget-class.html">ViewsWidget</a></span> 
+
+</dt>
+<dd>
+  A widget to render all the views the user selected.
+</dd>
+
+      </dl>
+    </section>
+
+
+
+
+    <section class="summary offset-anchor" id="extensions">
+      <h2>Extensions</h2>
+      <dl>
+          <dt id="BuildContextUtils">
+  <span class="name "><a href="../widgets/BuildContextUtils.html">BuildContextUtils</a></span>
+  on <a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a>
+  
+
+</dt>
+<dd>
+  Convenience functions on <a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a>.
+</dd>
+
+          <dt id="SeverityUtil">
+  <span class="name "><a href="../widgets/SeverityUtil.html">SeverityUtil</a></span>
+  on <a href="../data/Severity.html">Severity</a>
+  
+
+</dt>
+<dd>
+  Extension for COlors on Severity
+</dd>
+
+      </dl>
+    </section>
+
+
+
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">rover_dashboard</a></li>
+    <li class="self-crumb">widgets.dart</li>
+</ol>
+
+    <h5><span class="package-name">rover_dashboard</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="../app/">app</a></li>
+      <li><a href="../data/">data</a></li>
+      <li><a href="../errors/">errors</a></li>
+      <li><a href="../main/">main</a></li>
+      <li><a href="../models/">models</a></li>
+      <li><a href="../pages/">pages</a></li>
+      <li><a href="../services/">services</a></li>
+      <li><a href="../widgets/">widgets</a></li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+    <h5>widgets library</h5>
+  </div><!--/sidebar-offcanvas-right-->
+</main>
+<footer>
+  <span class="no-break">
+    rover_dashboard
+      2025.2.12+20
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

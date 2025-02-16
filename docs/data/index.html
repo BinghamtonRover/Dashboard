@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="data library API docs, for the Dart programming language.">
+  <title>data library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">rover_dashboard</a></li>
+    <li class="self-crumb">data.dart</li>
+  </ol>
+  <div class="self-name">data</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar=""
+    data-below-sidebar="data&#47;data-library-sidebar.html">
+  
+    <div>
+      
+  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/BinghamtonRover/rover-control-dashboard/blob/main/lib/data.dart#L11"><span class="material-symbols-outlined">description</span></a></div>
+
+      <h1>
+        <span class="kind-library">data</span>
+        library 
+ 
+
+      </h1>
+    </div>
+
+    
+<section class="desc markdown">
+  <p>The data library.</p>
+<p>This library defines any data types needed by the rest of the app. While the data classes may
+have methods, the logic within should be simple, and any broad logic that changes state should
+happen in the models library.</p>
+<p>This library should be the bottom of the dependency graph, meaning that no file included in this
+library should import any other library.</p>
+</section>
+
+
+    <section class="summary offset-anchor" id="classes">
+      <h2>Classes</h2>
+      <dl>
+          <dt id="AntennaControlMode">
+  <span class="name "><a href="../data/AntennaControlMode-class.html">AntennaControlMode</a></span> 
+
+</dt>
+<dd>
+  / How the antenna is being controller.
+</dd>
+
+          <dt id="AntennaFirmwareCommand">
+  <span class="name "><a href="../data/AntennaFirmwareCommand-class.html">AntennaFirmwareCommand</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="AntennaFirmwareData">
+  <span class="name "><a href="../data/AntennaFirmwareData-class.html">AntennaFirmwareData</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ArmCommand">
+  <span class="name "><a href="../data/ArmCommand-class.html">ArmCommand</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ArmData">
+  <span class="name "><a href="../data/ArmData-class.html">ArmData</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="ArmMetrics">
+  <span class="name "><a href="../data/ArmMetrics-class.html">ArmMetrics</a></span> 
+
+</dt>
+<dd>
+  Metrics reported by the HREI subsystem about the arm. Does not include the gripper.
+</dd>
+
+          <dt id="ArmSettings">
+  <span class="name "><a href="../data/ArmSettings-class.html">ArmSettings</a></span> 
+
+</dt>
+<dd>
+  Settings relating to the arm.
+</dd>
+
+          <dt id="AutonomyCommand">
+  <span class="name "><a href="../data/AutonomyCommand-class.html">AutonomyCommand</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="AutonomyData">
+  <span class="name "><a href="../data/AutonomyData-class.html">AutonomyData</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="AutonomyState">
+  <span class="name "><a href="../data/AutonomyState-class.html">AutonomyState</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="AutonomyTask">
+  <span class="name "><a href="../data/AutonomyTask-class.html">AutonomyTask</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="BaseStationCommand">
+  <span class="name "><a href="../data/BaseStationCommand-class.html">BaseStationCommand</a></span> 
+
+</dt>
+<dd>
+  / Command to control the movement of the MARS antenna.
+/
+/ This command has two modes: manual operation or rover tracking.
+/ - When tracking the rover, any GPS signals received by the rover or the base station's internal
+/   GPS will cause it to re-calculate an orientation that ideally faces the rover. In this mode,
+/   manual commands are ignored.
+/ - When in manual mode, all GPS data is ignored and the motor is only moved when the Dashboard
+/   sends a command with a <a href="../data/BaseStationCommand/manualCommand.html">manualCommand</a> payload.
+/
+/ When tracking the rover, the Dashboard can override either the base station or rover's position
+/ for testing and debugging. When a new position override is received, the base station will:
+/ - calculate the antenna orientation as if the rover were at this position
+/ - send an <a href="../data/AntennaFirmwareCommand-class.html">AntennaFirmwareCommand</a> for this position
+/ - immediately set the <a href="../data/BaseStationCommand/mode.html">mode</a> to <a href="../data/AntennaControlMode/MANUAL_CONTROL-constant.html">AntennaControlMode.MANUAL_CONTROL</a> to hold the position
+</dd>
+
+          <dt id="BaseStationData">
+  <span class="name "><a href="../data/BaseStationData-class.html">BaseStationData</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="BoolState">
+  <span class="name "><a href="../data/BoolState-class.html">BoolState</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="BurtLog">
+  <span class="name "><a href="../data/BurtLog-class.html">BurtLog</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="BurtLogLevel">
+  <span class="name "><a href="../data/BurtLogLevel-class.html">BurtLogLevel</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="CameraDetails">
+  <span class="name "><a href="../data/CameraDetails-class.html">CameraDetails</a></span> 
+
+</dt>
+<dd>
+  / Details about a specific camera.
+</dd>
+
+          <dt id="CameraName">
+  <span class="name "><a href="../data/CameraName-class.html">CameraName</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="CameraStatus">
+  <span class="name "><a href="../data/CameraStatus-class.html">CameraStatus</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="CarouselCommand">
+  <span class="name "><a href="../data/CarouselCommand-class.html">CarouselCommand</a></span> 
+
+</dt>
+<dd>
+  / A command for the carousel and funnel to follow.
+</dd>
+
+          <dt id="Connect">
+  <span class="name "><a href="../data/Connect-class.html">Connect</a></span> 
+
+</dt>
+<dd>
+  Used for a simple handshake between devices.
+</dd>
+
+          <dt id="Coordinates">
+  <span class="name "><a href="../data/Coordinates-class.html">Coordinates</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="DashboardSettings">
+  <span class="name "><a href="../data/DashboardSettings-class.html">DashboardSettings</a></span> 
+
+</dt>
+<dd>
+  Settings related to the dashboard itself, not the rover.
+</dd>
+
+          <dt id="DetectedObject">
+  <span class="name "><a href="../data/DetectedObject-class.html">DetectedObject</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="DetectedObjectType">
+  <span class="name "><a href="../data/DetectedObjectType-class.html">DetectedObjectType</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="Device">
+  <span class="name "><a href="../data/Device-class.html">Device</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="Disconnect">
+  <span class="name "><a href="../data/Disconnect-class.html">Disconnect</a></span> 
+
+</dt>
+<dd>
+  Notifies the recipient that the sender will no longer be connected.
+</dd>
+
+          <dt id="DriveCommand">
+  <span class="name "><a href="../data/DriveCommand-class.html">DriveCommand</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="DriveData">
+  <span class="name "><a href="../data/DriveData-class.html">DriveData</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="DriveMetrics">
+  <span class="name "><a href="../data/DriveMetrics-class.html">DriveMetrics</a></span> 
+
+</dt>
+<dd>
+  Metrics reported by the drive subsystem.
+</dd>
+
+          <dt id="EasterEggsSettings">
+  <span class="name "><a href="../data/EasterEggsSettings-class.html">EasterEggsSettings</a></span> 
+
+</dt>
+<dd>
+  Settings relating to easter eggs.
+</dd>
+
+          <dt id="GpsCoordinates">
+  <span class="name "><a href="../data/GpsCoordinates-class.html">GpsCoordinates</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="GripperCommand">
+  <span class="name "><a href="../data/GripperCommand-class.html">GripperCommand</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="GripperData">
+  <span class="name "><a href="../data/GripperData-class.html">GripperData</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="GripperMetrics">
+  <span class="name "><a href="../data/GripperMetrics-class.html">GripperMetrics</a></span> 
+
+</dt>
+<dd>
+  Metrics about the gripper on the HREI subsystem.
+</dd>
+
+          <dt id="LidarCartesianPoint">
+  <span class="name "><a href="../data/LidarCartesianPoint-class.html">LidarCartesianPoint</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="LidarPointCloud">
+  <span class="name "><a href="../data/LidarPointCloud-class.html">LidarPointCloud</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="LidarPolarPoint">
+  <span class="name "><a href="../data/LidarPolarPoint-class.html">LidarPolarPoint</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="MetricLine">
+  <span class="name "><a href="../data/MetricLine-class.html">MetricLine</a></span> 
+
+</dt>
+<dd>
+  Class to construct a Metric
+</dd>
+
+          <dt id="Metrics">
+  <span class="name "><a href="../data/Metrics-class.html">Metrics</a><span class="signature">&lt;<wbr><span class="type-parameter">T extends <a href="../data/Message.html">Message</a></span>&gt;</span></span> 
+
+</dt>
+<dd>
+  A readout of metrics reported by one of the rover's subsystems.
+</dd>
+
+          <dt id="MotorCommand">
+  <span class="name "><a href="../data/MotorCommand-class.html">MotorCommand</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="MotorData">
+  <span class="name "><a href="../data/MotorData-class.html">MotorData</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="MotorDirection">
+  <span class="name "><a href="../data/MotorDirection-class.html">MotorDirection</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="NetworkSettings">
+  <span class="name "><a href="../data/NetworkSettings-class.html">NetworkSettings</a></span> 
+
+</dt>
+<dd>
+  Settings related to network configuration.
+</dd>
+
+          <dt id="Orientation">
+  <span class="name "><a href="../data/Orientation-class.html">Orientation</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="PnpResult">
+  <span class="name "><a href="../data/PnpResult-class.html">PnpResult</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="Pose3d">
+  <span class="name "><a href="../data/Pose3d-class.html">Pose3d</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="PositionMetrics">
+  <span class="name "><a href="../data/PositionMetrics-class.html">PositionMetrics</a></span> 
+
+</dt>
+<dd>
+  Metrics about the rover's position and orientation.
+</dd>
+
+          <dt id="ProtoColor">
+  <span class="name "><a href="../data/ProtoColor-class.html">ProtoColor</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="PumpState">
+  <span class="name "><a href="../data/PumpState-class.html">PumpState</a></span> 
+
+</dt>
+<dd>
+  / The state of a pump. If undefined: don't do anything. If fill: turn on, wait, then turn off.
+</dd>
+
+          <dt id="RelaysCommand">
+  <span class="name "><a href="../data/RelaysCommand-class.html">RelaysCommand</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="RelaysData">
+  <span class="name "><a href="../data/RelaysData-class.html">RelaysData</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="RoverPosition">
+  <span class="name "><a href="../data/RoverPosition-class.html">RoverPosition</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="RoverStatus">
+  <span class="name "><a href="../data/RoverStatus-class.html">RoverStatus</a></span> 
+
+</dt>
+<dd>
+  / Changes the way the rover listens to incoming commands.
+/
+/ - When IDLE, all subsystems will ignore all commands
+/ - When MANUAL, all subsystems will accept all commands
+/ - When AUTONOMOUS, the rover will ignore commands from the dashboard
+</dd>
+
+          <dt id="RTKMode">
+  <span class="name "><a href="../data/RTKMode-class.html">RTKMode</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="SampleData">
+  <span class="name "><a href="../data/SampleData-class.html">SampleData</a></span> 
+
+</dt>
+<dd>
+  Stores all the readings of one sensor for one sample.
+</dd>
+
+          <dt id="ScienceCommand">
+  <span class="name "><a href="../data/ScienceCommand-class.html">ScienceCommand</a></span> 
+
+</dt>
+<dd>
+  / A command to the science subsystem.
+</dd>
+
+          <dt id="ScienceData">
+  <span class="name "><a href="../data/ScienceData-class.html">ScienceData</a></span> 
+
+</dt>
+<dd>
+  / Data coming from the science subsystem.
+</dd>
+
+          <dt id="ScienceMetrics">
+  <span class="name "><a href="../data/ScienceMetrics-class.html">ScienceMetrics</a></span> 
+
+</dt>
+<dd>
+  Metrics reported by the science subsystem.
+</dd>
+
+          <dt id="ScienceSensor">
+  <span class="name "><a href="../data/ScienceSensor-class.html">ScienceSensor</a></span> 
+
+</dt>
+<dd>
+  A sensor in the science subsystem.
+</dd>
+
+          <dt id="ScienceSettings">
+  <span class="name "><a href="../data/ScienceSettings-class.html">ScienceSettings</a></span> 
+
+</dt>
+<dd>
+  Settings relating to science.
+</dd>
+
+          <dt id="ScienceState">
+  <span class="name "><a href="../data/ScienceState-class.html">ScienceState</a></span> 
+
+</dt>
+<dd>
+  / The state of the science subsystem. If not COLLECT_DATA, don't stream data at all.
+</dd>
+
+          <dt id="SensorReading">
+  <span class="name "><a href="../data/SensorReading-class.html">SensorReading</a></span> 
+
+</dt>
+<dd>
+  A sensor reading with a timestamp.
+</dd>
+
+          <dt id="ServoState">
+  <span class="name "><a href="../data/ServoState-class.html">ServoState</a></span> 
+
+</dt>
+<dd>
+  / The state of a servo. If undefined, don't open or close.
+</dd>
+
+          <dt id="Settings">
+  <span class="name "><a href="../data/Settings-class.html">Settings</a></span> 
+
+</dt>
+<dd>
+  Contains the settings for running the dashboard and the rover.
+</dd>
+
+          <dt id="SocketInfo">
+  <span class="name "><a href="../data/SocketInfo-class.html">SocketInfo</a></span> 
+
+</dt>
+<dd>
+  Information about a socket.
+</dd>
+
+          <dt id="SubsystemsCommand">
+  <span class="name "><a href="../data/SubsystemsCommand-class.html">SubsystemsCommand</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="TaskbarMessage">
+  <span class="name "><a href="../data/TaskbarMessage-class.html">TaskbarMessage</a></span> 
+
+</dt>
+<dd>
+  A message to show on the taskbar, with an associated severity.
+</dd>
+
+          <dt id="Timestamp">
+  <span class="name "><a href="../data/Timestamp-class.html">Timestamp</a></span> 
+
+</dt>
+<dd>
+  A Timestamp represents a point in time independent of any time zone or local
+calendar, encoded as a count of seconds and fractions of seconds at
+nanosecond resolution. The count is relative to an epoch at UTC midnight on
+January 1, 1970, in the proleptic Gregorian calendar which extends the
+Gregorian calendar backwards to year one.
+</dd>
+
+          <dt id="UpdateSetting">
+  <span class="name "><a href="../data/UpdateSetting-class.html">UpdateSetting</a></span> 
+
+</dt>
+<dd>
+  / Update a sensitive setting, such as the rover's status.
+/
+/ This message must be triggered manually and the recipient (usually the subsystems Pi)
+/ must respond with the exact same message to confirm its receipt.
+</dd>
+
+          <dt id="Version">
+  <span class="name "><a href="../data/Version-class.html">Version</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+          <dt id="VideoCommand">
+  <span class="name "><a href="../data/VideoCommand-class.html">VideoCommand</a></span> 
+
+</dt>
+<dd>
+  / Make changes to a camera feed.
+</dd>
+
+          <dt id="VideoData">
+  <span class="name "><a href="../data/VideoData-class.html">VideoData</a></span> 
+
+</dt>
+<dd>
+  / Reports data about a camera.
+</dd>
+
+          <dt id="ViewPreset">
+  <span class="name "><a href="../data/ViewPreset-class.html">ViewPreset</a></span> 
+
+</dt>
+<dd>
+  Preset for the dashboard.
+</dd>
+
+          <dt id="VitalsMetrics">
+  <span class="name "><a href="../data/VitalsMetrics-class.html">VitalsMetrics</a></span> 
+
+</dt>
+<dd>
+  Metrics about the vitals of the rover.
+</dd>
+
+          <dt id="WrappedMessage">
+  <span class="name "><a href="../data/WrappedMessage-class.html">WrappedMessage</a></span> 
+
+</dt>
+<dd>
+  
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="enums">
+      <h2>Enums</h2>
+      <dl>
+          <dt id="OperatingMode">
+  <span class="name "><a href="../data/OperatingMode.html">OperatingMode</a></span> 
+
+</dt>
+<dd>
+  A mode for operating the rover.
+</dd>
+
+          <dt id="RoverType">
+  <span class="name "><a href="../data/RoverType.html">RoverType</a></span> 
+
+</dt>
+<dd>
+  Which rover-like system to communicate with.
+</dd>
+
+          <dt id="ScienceResult">
+  <span class="name "><a href="../data/ScienceResult.html">ScienceResult</a></span> 
+
+</dt>
+<dd>
+  The result of a science test.
+</dd>
+
+          <dt id="Severity">
+  <span class="name "><a href="../data/Severity.html">Severity</a></span> 
+
+</dt>
+<dd>
+  The level of danger a message represents.
+</dd>
+
+          <dt id="SplitMode">
+  <span class="name "><a href="../data/SplitMode.html">SplitMode</a></span> 
+
+</dt>
+<dd>
+  Controls the way the Dashboard views split.
+</dd>
+
+      </dl>
+    </section>
+
+
+
+    <section class="summary offset-anchor" id="extensions">
+      <h2>Extensions</h2>
+      <dl>
+          <dt id="AutonomyStateUtils">
+  <span class="name "><a href="../data/AutonomyStateUtils.html">AutonomyStateUtils</a></span>
+  on <a href="../data/AutonomyState-class.html">AutonomyState</a>
+  
+
+</dt>
+<dd>
+  Utilities for <a href="../data/AutonomyState-class.html">AutonomyState</a>s.
+</dd>
+
+          <dt id="AutonomyTaskUtils">
+  <span class="name "><a href="../data/AutonomyTaskUtils.html">AutonomyTaskUtils</a></span>
+  on <a href="../data/AutonomyTask-class.html">AutonomyTask</a>
+  
+
+</dt>
+<dd>
+  Utilities for <a href="../data/AutonomyTask-class.html">AutonomyTask</a>s.
+</dd>
+
+          <dt id="BoolUtils">
+  <span class="name "><a href="../data/BoolUtils.html">BoolUtils</a></span>
+  on <a href="../data/BoolState-class.html">BoolState</a>
+  
+
+</dt>
+<dd>
+  Helpful methods on <a href="../data/BoolState-class.html">BoolState</a>s.
+</dd>
+
+          <dt id="CameraNameUtils">
+  <span class="name "><a href="../data/CameraNameUtils.html">CameraNameUtils</a></span>
+  on <a href="../data/CameraName-class.html">CameraName</a>
+  
+
+</dt>
+<dd>
+  Extensions for <a href="../data/CameraName-class.html">CameraName</a> values.
+</dd>
+
+          <dt id="CameraStatusUtils">
+  <span class="name "><a href="../data/CameraStatusUtils.html">CameraStatusUtils</a></span>
+  on <a href="../data/CameraStatus-class.html">CameraStatus</a>
+  
+
+</dt>
+<dd>
+  Extensions for <a href="../data/CameraStatus-class.html">CameraStatus</a> values.
+</dd>
+
+          <dt id="CoordinatesUtils">
+  <span class="name "><a href="../data/CoordinatesUtils.html">CoordinatesUtils</a></span>
+  on <a href="../data/Coordinates-class.html">Coordinates</a>
+  
+
+</dt>
+<dd>
+  Extensions for <a href="../data/Coordinates-class.html">Coordinates</a> messages.
+</dd>
+
+          <dt id="DateTimeTimestamp">
+  <span class="name "><a href="../data/DateTimeTimestamp.html">DateTimeTimestamp</a></span>
+  on DateTime
+  
+
+</dt>
+<dd>
+  Helpful extensions on <code>DateTime</code>s.
+</dd>
+
+          <dt id="DeviceUtils">
+  <span class="name "><a href="../data/DeviceUtils.html">DeviceUtils</a></span>
+  on <a href="../data/Device-class.html">Device</a>
+  
+
+</dt>
+<dd>
+  Extensions for <a href="../data/Device-class.html">Device</a> values.
+</dd>
+
+          <dt id="EnumUtils">
+  <span class="name "><a href="../data/EnumUtils.html">EnumUtils</a></span>
+  on List<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span>
+  
+
+</dt>
+<dd>
+  Helpful methods on lists of Protobuf enums.
+</dd>
+
+          <dt id="GeneratedMessageGenericExtensions">
+  <span class="name "><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessageGenericExtensions.html">GeneratedMessageGenericExtensions</a></span>
+  on T
+  
+
+</dt>
+<dd>
+  Extensions on <a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage-class.html">GeneratedMessage</a>s.
+</dd>
+
+          <dt id="GpsToMeters">
+  <span class="name "><a href="../data/GpsToMeters.html">GpsToMeters</a></span>
+  on <a href="../data/GpsCoordinates-class.html">GpsCoordinates</a>
+  
+
+</dt>
+<dd>
+  Helpful extension methods to convert <a href="../data/GpsCoordinates-class.html">GpsCoordinates</a> into meters
+</dd>
+
+          <dt id="GpsUtils">
+  <span class="name "><a href="../data/GpsUtils.html">GpsUtils</a></span>
+  on <a href="../data/GpsCoordinates-class.html">GpsCoordinates</a>
+  
+
+</dt>
+<dd>
+  Utilities for Gps Coordinates Data
+</dd>
+
+          <dt id="LimitedList">
+  <span class="name "><a href="../data/LimitedList.html">LimitedList</a></span>
+  on DoubleLinkedQueue<span class="signature">&lt;<wbr><span class="type-parameter">E</span>&gt;</span>
+  
+
+</dt>
+<dd>
+  A list that can manage its own length.
+</dd>
+
+          <dt id="LogFormat">
+  <span class="name "><a href="../data/LogFormat.html">LogFormat</a></span>
+  on <a href="../data/BurtLog-class.html">BurtLog</a>
+  
+
+</dt>
+<dd>
+  Formats <a href="../data/BurtLog-class.html">BurtLog</a> messages in plain-text. For the UI, use widgets.
+</dd>
+
+          <dt id="LogLevelUtils">
+  <span class="name "><a href="../data/LogLevelUtils.html">LogLevelUtils</a></span>
+  on <a href="../data/BurtLogLevel-class.html">BurtLogLevel</a>
+  
+
+</dt>
+<dd>
+  More human-friendly fields for <a href="../data/BurtLogLevel-class.html">BurtLogLevel</a>s.
+</dd>
+
+          <dt id="MapRecords">
+  <span class="name "><a href="../data/MapRecords.html">MapRecords</a></span>
+  on Map<span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span>
+  
+
+</dt>
+<dd>
+  Helpful extensions on maps.
+</dd>
+
+          <dt id="MessageUtils">
+  <span class="name "><a href="../data/MessageUtils.html">MessageUtils</a></span>
+  on <a href="../data/Message.html">Message</a>
+  
+
+</dt>
+<dd>
+  Defines a friendlier method for getting the name of a message.
+</dd>
+
+          <dt id="MetersToGps">
+  <span class="name "><a href="../data/MetersToGps.html">MetersToGps</a></span>
+  on (<span class="field">{<span class="type-annotation">num</span> <span class="field-name">lat</span>, </span><span class="field"><span class="type-annotation">num</span> <span class="field-name">long</span>}</span>)
+  
+
+</dt>
+<dd>
+  Extension to convert coordinates in meters into <a href="../data/GpsCoordinates-class.html">GpsCoordinates</a>.
+</dd>
+
+          <dt id="MotorDirectionUtils">
+  <span class="name "><a href="../data/MotorDirectionUtils.html">MotorDirectionUtils</a></span>
+  on <a href="../data/MotorDirection-class.html">MotorDirection</a>
+  
+
+</dt>
+<dd>
+  Utilities for <a href="../data/MotorDirection-class.html">MotorDirection</a>s.
+</dd>
+
+          <dt id="NullableStreamUtils">
+  <span class="name "><a href="../data/NullableStreamUtils.html">NullableStreamUtils</a></span>
+  on Stream<span class="signature">&lt;<wbr><span class="type-parameter">T?</span>&gt;</span>
+  
+
+</dt>
+<dd>
+  Helpful methods on streams of nullable values.
+</dd>
+
+          <dt id="NumUtils">
+  <span class="name "><a href="../data/NumUtils.html">NumUtils</a></span>
+  on double
+  
+
+</dt>
+<dd>
+  Helpful utils on doubles.
+</dd>
+
+          <dt id="RoverStatusHumanName">
+  <span class="name "><a href="../data/RoverStatusHumanName.html">RoverStatusHumanName</a></span>
+  on <a href="../data/RoverStatus-class.html">RoverStatus</a>
+  
+
+</dt>
+<dd>
+  Gets a user-friendly name for a <a href="../data/RoverStatus-class.html">RoverStatus</a>.
+</dd>
+
+          <dt id="ScienceStateUtils">
+  <span class="name "><a href="../data/ScienceStateUtils.html">ScienceStateUtils</a></span>
+  on <a href="../data/ScienceState-class.html">ScienceState</a>
+  
+
+</dt>
+<dd>
+  Utilities for <a href="../data/ScienceState-class.html">ScienceState</a>s.
+</dd>
+
+          <dt id="SettingsParser">
+  <span class="name "><a href="../data/SettingsParser.html">SettingsParser</a></span>
+  on <a href="../data/Json.html">Json</a>
+  
+
+</dt>
+<dd>
+  A collection of functions for parsing <a href="../data/Settings-class.html">Settings</a>.
+</dd>
+
+          <dt id="ThemeModeUtils">
+  <span class="name "><a href="../data/ThemeModeUtils.html">ThemeModeUtils</a></span>
+  on <a href="https://api.flutter.dev/flutter/material/ThemeMode.html">ThemeMode</a>
+  
+
+</dt>
+<dd>
+  Helpful methods on <a href="https://api.flutter.dev/flutter/material/ThemeMode.html">ThemeMode</a>s.
+</dd>
+
+          <dt id="TimestampUtils">
+  <span class="name "><a href="../data/TimestampUtils.html">TimestampUtils</a></span>
+  on <a href="../data/Timestamp-class.html">Timestamp</a>
+  
+
+</dt>
+<dd>
+  Utilities for <a href="../data/Timestamp-class.html">Timestamp</a>s.
+</dd>
+
+          <dt id="Unwrapper">
+  <span class="name "><a href="../data/Unwrapper.html">Unwrapper</a></span>
+  on <a href="../data/WrappedMessage-class.html">WrappedMessage</a>
+  
+
+</dt>
+<dd>
+  Decodes a wrapped Protobuf message.
+</dd>
+
+          <dt id="VersionUtils">
+  <span class="name "><a href="../data/VersionUtils.html">VersionUtils</a></span>
+  on <a href="../data/Version-class.html">Version</a>
+  
+
+</dt>
+<dd>
+  Helpful methods on <a href="../data/Version-class.html">Version</a>s.
+</dd>
+
+          <dt id="VideoDataUtils">
+  <span class="name "><a href="../data/VideoDataUtils.html">VideoDataUtils</a></span>
+  on <a href="../data/VideoData-class.html">VideoData</a>
+  
+
+</dt>
+<dd>
+  Extensions for <a href="../data/VideoData-class.html">VideoData</a>.
+</dd>
+
+          <dt id="WrappedMessageStream">
+  <span class="name "><a href="../models/WrappedMessageStream.html">WrappedMessageStream</a></span>
+  on Stream<span class="signature">&lt;<wbr><span class="type-parameter"><a href="../data/WrappedMessage-class.html">WrappedMessage</a></span>&gt;</span>
+  
+
+</dt>
+<dd>
+  Helpful methods on <code>Stream</code>s of <a href="../data/WrappedMessage-class.html">WrappedMessage</a>s.
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="constants">
+      <h2>Constants</h2>
+      <dl class="properties">
+          <dt id="co2" class="constant">
+    <span class="name "><a href="../data/co2-constant.html">co2</a></span>
+  <span class="signature">&#8594; const <a href="../data/ScienceSensor-class.html">ScienceSensor</a></span>
+  
+
+</dt>
+<dd>
+  The co2 sensor.
+  
+
+</dd>
+
+          <dt id="humidity" class="constant">
+    <span class="name "><a href="../data/humidity-constant.html">humidity</a></span>
+  <span class="signature">&#8594; const <a href="../data/ScienceSensor-class.html">ScienceSensor</a></span>
+  
+
+</dt>
+<dd>
+  The humidity sensor.
+  
+
+</dd>
+
+          <dt id="sensors" class="constant">
+    <span class="name "><a href="../data/sensors-constant.html">sensors</a></span>
+  <span class="signature">&#8594; const List<span class="signature">&lt;<wbr><span class="type-parameter"><a href="../data/ScienceSensor-class.html">ScienceSensor</a></span>&gt;</span></span>
+  
+
+</dt>
+<dd>
+  A list of all the sensors on the Science subsystem.
+  
+
+</dd>
+
+          <dt id="temperature" class="constant">
+    <span class="name "><a href="../data/temperature-constant.html">temperature</a></span>
+  <span class="signature">&#8594; const <a href="../data/ScienceSensor-class.html">ScienceSensor</a></span>
+  
+
+</dt>
+<dd>
+  The temperature sensor.
+  
+
+</dd>
+
+      </dl>
+    </section>
+
+
+    <section class="summary offset-anchor" id="functions">
+      <h2>Functions</h2>
+      <dl class="callables">
+          <dt id="co2Test" class="callable">
+  <span class="name"><a href="../data/co2Test.html">co2Test</a></span><span class="signature">(<wbr><span class="parameter" id="co2Test-param-data"><span class="type-annotation"><a href="../data/SampleData-class.html">SampleData</a></span> <span class="parameter-name">data</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../data/ScienceResult.html">ScienceResult</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  The test to determine the presence of life based on CO2 data.
+The max has to be greater than 10% greater than min for life to exist
+  
+
+</dd>
+
+          <dt id="deviceToDataName" class="callable">
+  <span class="name"><a href="../data/deviceToDataName.html">deviceToDataName</a></span><span class="signature">(<wbr><span class="parameter" id="deviceToDataName-param-device"><span class="type-annotation"><a href="../data/Device-class.html">Device</a></span> <span class="parameter-name">device</span></span>)
+    <span class="returntype parameter">&#8594; String?</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Returns the type of data message that would be emitted by this device.
+  
+
+</dd>
+
+          <dt id="getCommandName" class="callable">
+  <span class="name"><a href="../data/getCommandName.html">getCommandName</a></span><span class="signature">(<wbr><span class="parameter" id="getCommandName-param-device"><span class="type-annotation"><a href="../data/Device-class.html">Device</a></span> <span class="parameter-name">device</span></span>)
+    <span class="returntype parameter">&#8594; String</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Gets the name of the command message for the given device.
+  
+
+</dd>
+
+          <dt id="getDataName" class="callable">
+  <span class="name"><a href="../data/getDataName.html">getDataName</a></span><span class="signature">(<wbr><span class="parameter" id="getDataName-param-device"><span class="type-annotation"><a href="../data/Device-class.html">Device</a></span> <span class="parameter-name">device</span></span>)
+    <span class="returntype parameter">&#8594; String</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Gets the name of the data message for the given device.
+  
+
+</dd>
+
+          <dt id="humidityTest" class="callable">
+  <span class="name"><a href="../data/humidityTest.html">humidityTest</a></span><span class="signature">(<wbr><span class="parameter" id="humidityTest-param-data"><span class="type-annotation"><a href="../data/SampleData-class.html">SampleData</a></span> <span class="parameter-name">data</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../data/ScienceResult.html">ScienceResult</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  The test to determine the presence of life based on humidity data.
+  
+
+</dd>
+
+          <dt id="temperatureTest" class="callable">
+  <span class="name"><a href="../data/temperatureTest.html">temperatureTest</a></span><span class="signature">(<wbr><span class="parameter" id="temperatureTest-param-data"><span class="type-annotation"><a href="../data/SampleData-class.html">SampleData</a></span> <span class="parameter-name">data</span></span>)
+    <span class="returntype parameter">&#8594; <a href="../data/ScienceResult.html">ScienceResult</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  The test to determine the presence of life based on temperature data.
+  
+
+</dd>
+
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="typedefs">
+      <h2>Typedefs</h2>
+      <dl>
+          
+  <dt id="Json" class="">
+  <span class="name"><a href="../data/Json.html">Json</a></span>
+    = Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">dynamic</span>&gt;</span>
+  </span>
+  
+
+</dt>
+<dd>
+  JSON data as a map.
+  
+
+</dd>
+
+
+          
+  <dt id="Message" class="">
+  <span class="name"><a href="../data/Message.html">Message</a></span>
+    = <a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage-class.html">GeneratedMessage</a>
+  </span>
+  
+
+</dt>
+<dd>
+  A cleaner name for any message generated by Protobuf.
+  
+
+</dd>
+
+
+          
+  <dt id="MessageDecoder" class="callable">
+    <span class="name"><a href="../data/MessageDecoder.html">MessageDecoder</a></span>&lt;<wbr><span class="type-parameter">T extends <a href="../data/Message.html">Message</a></span>&gt;<span class="signature">
+      <span class="returntype parameter">= T Function<span class="signature">(<span class="parameter" id="param-data"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">int</span>&gt;</span></span> <span class="parameter-name">data</span></span>)</span></span>
+    </span>
+    
+
+  </dt>
+  <dd>
+    A function that decodes a Protobuf messages serialized form.
+    
+
+  </dd>
+
+          
+  <dt id="ScienceTest" class="callable">
+    <span class="name"><a href="../data/ScienceTest.html">ScienceTest</a></span><span class="signature">
+      <span class="returntype parameter">= <a href="../data/ScienceResult.html">ScienceResult</a> Function<span class="signature">(<span class="parameter" id="param-"><span class="type-annotation"><a href="../data/SampleData-class.html">SampleData</a></span></span>)</span></span>
+    </span>
+    
+
+  </dt>
+  <dd>
+    A function that determines the presence of life based on sensor data.
+    
+
+  </dd>
+
+      </dl>
+    </section>
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">rover_dashboard</a></li>
+    <li class="self-crumb">data.dart</li>
+</ol>
+
+    <h5><span class="package-name">rover_dashboard</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="../app/">app</a></li>
+      <li><a href="../data/">data</a></li>
+      <li><a href="../errors/">errors</a></li>
+      <li><a href="../main/">main</a></li>
+      <li><a href="../models/">models</a></li>
+      <li><a href="../pages/">pages</a></li>
+      <li><a href="../services/">services</a></li>
+      <li><a href="../widgets/">widgets</a></li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+    <h5>data library</h5>
+  </div><!--/sidebar-offcanvas-right-->
+</main>
+<footer>
+  <span class="no-break">
+    rover_dashboard
+      2025.2.12+20
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

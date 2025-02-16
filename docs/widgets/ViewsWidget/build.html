@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the build method from the ViewsWidget class, for the Dart programming language.">
+  <title>build method - ViewsWidget class - widgets library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">rover_dashboard</a></li>
+    <li><a href="../../widgets/">widgets.dart</a></li>
+    <li><a href="../../widgets/ViewsWidget-class.html">ViewsWidget</a></li>
+    <li class="self-crumb">build method</li>
+  </ol>
+  <div class="self-name">build</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="widgets&#47;ViewsWidget-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/BinghamtonRover/rover-control-dashboard/blob/main/lib/src/widgets/navigation/views.dart#L62"><span class="material-symbols-outlined">description</span></a></div>
+<h1><span class="kind-method">build</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+  <div>
+    <ol class="annotation-list">
+        <li>@override</li>
+    </ol>
+  </div>
+<span class="returntype"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span>
+<span class="name ">build</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="build-param-context"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a></span> <span class="parameter-name">context</span>, </span></li>
+<li><span class="parameter" id="build-param-model"><span class="type-annotation"><a href="../../models/ViewsModel-class.html">ViewsModel</a></span> <span class="parameter-name">model</span></span></li>
+</ol>)
+
+      <div class="features"><span class="feature">override</span></div>
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Builds the UI according to the state in <code>model</code>.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">@override
+Widget build(BuildContext context, ViewsModel model) =&gt; switch (model.views.length) {
+  1 =&gt; Column(
+    children: [
+      Expanded(child: model.children[0].child),
+    ],
+  ),
+  2 =&gt; ResizableContainer(
+    key: const ValueKey(1),
+    direction: switch (models.settings.dashboard.splitMode) {
+      SplitMode.horizontal =&gt; Axis.vertical,
+      SplitMode.vertical =&gt; Axis.horizontal,
+    },
+    divider: divider,
+    controller: switch (models.settings.dashboard.splitMode) {
+      SplitMode.horizontal =&gt; model.verticalController1,
+      SplitMode.vertical =&gt; model.horizontalController1,
+    },
+    children: model.children.sublist(0, 2),
+  ),
+  3 || 4 =&gt; ResizableContainer(
+    key: const ValueKey(2),
+    controller: model.verticalController1,
+    direction: Axis.vertical,
+    divider: divider,
+    children: [
+      nestChild(
+        controller: model.horizontalController1,
+        children: model.children.sublist(0, 2),
+        axis: Axis.horizontal,
+      ),
+      if (model.views.length == 3)
+        model.children[2]
+      else
+        nestChild(
+          controller: model.horizontalController2,
+          children: model.children.sublist(2, 4),
+          axis: Axis.horizontal,
+        ),
+    ],
+  ),
+  8 =&gt; Row(
+    children: [
+      Expanded(  &#47;&#47; left page
+        child: ResizableContainer(
+          key: const ValueKey(3),
+          controller: model.verticalController1,
+          direction: Axis.vertical,
+          divider: divider,
+          children: [
+            nestChild(  &#47;&#47; top row
+              controller: model.horizontalController1,
+              axis: Axis.horizontal,
+              children: model.children.sublist(0, 2),
+            ),
+            nestChild(  &#47;&#47; bottom row
+              controller: model.horizontalController2,
+              axis: Axis.horizontal,
+              children: model.children.sublist(2, 4),
+            ),
+          ],
+        ),
+      ),
+      const VerticalDivider(
+        width: 8,
+        color: Colors.black,
+        thickness: 8,
+      ),
+      Expanded(  &#47;&#47; right page
+        child: ResizableContainer(
+          key: const ValueKey(4),
+          controller: model.verticalController2,
+          direction: Axis.vertical,
+          divider: divider,
+          children: [
+            nestChild(  &#47;&#47; top row
+              controller: model.horizontalController3,
+              axis: Axis.horizontal,
+              children: model.children.sublist(4, 6),
+            ),
+            nestChild(  &#47;&#47; bottom row
+              controller: model.horizontalController4,
+              axis: Axis.horizontal,
+              children: model.children.sublist(6, 8),
+            ),
+          ],
+        ),
+      ),
+    ],
+  ),
+  _ =&gt; throw StateError(&quot;Too many views: ${model.views.length}&quot;),
+};</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">rover_dashboard</a></li>
+    <li><a href="../../widgets/">widgets</a></li>
+    <li><a href="../../widgets/ViewsWidget-class.html">ViewsWidget</a></li>
+    <li class="self-crumb">build method</li>
+</ol>
+
+    <h5>ViewsWidget class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    rover_dashboard
+      2025.2.12+20
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

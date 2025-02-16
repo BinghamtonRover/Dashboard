@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the build method from the MapPage class, for the Dart programming language.">
+  <title>build method - MapPage class - pages library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">rover_dashboard</a></li>
+    <li><a href="../../pages/">pages.dart</a></li>
+    <li><a href="../../pages/MapPage-class.html">MapPage</a></li>
+    <li class="self-crumb">build method</li>
+  </ol>
+  <div class="self-name">build</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="pages&#47;MapPage-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/BinghamtonRover/rover-control-dashboard/blob/main/lib/src/pages/map.dart#L49"><span class="material-symbols-outlined">description</span></a></div>
+<h1><span class="kind-method">build</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+  <div>
+    <ol class="annotation-list">
+        <li>@override</li>
+    </ol>
+  </div>
+<span class="returntype"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span>
+<span class="name ">build</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="build-param-context"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a></span> <span class="parameter-name">context</span>, </span></li>
+<li><span class="parameter" id="build-param-model"><span class="type-annotation"><a href="../../models/AutonomyModel-class.html">AutonomyModel</a></span> <span class="parameter-name">model</span></span></li>
+</ol>)
+
+      <div class="features"><span class="feature">override</span></div>
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Builds the UI according to the state in <code>model</code>.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">@override
+Widget build(BuildContext context, AutonomyModel model) =&gt; Stack(children: [
+    Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+      const SizedBox(height: 48),
+      for (final row in model.grid.reversed) Expanded(
+        child: Row(children: [
+          for (final cell in row) Expanded(
+            child: GestureDetector(
+              onTap: () =&gt; cell.$2 != AutonomyCell.marker ? () : model.updateMarker(cell.$1),
+              child: Container(
+                width: 24,
+                decoration: BoxDecoration(color: getColor(cell.$2), border: Border.all()),
+                child: cell.$2 != AutonomyCell.rover ? null : Container(
+                  color: Colors.blue,
+                  width: double.infinity,
+                  height: double.infinity,
+                  margin: const EdgeInsets.all(4),
+                  child: Transform.rotate(
+                    angle: -model.roverHeading * pi &#47; 180,
+                    child: const Icon(Icons.arrow_upward, size: 24),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],),
+      ),
+      const SizedBox(height: 4),
+      if (!model.isPlayingBadApple) Row(children: [  &#47;&#47; Legend
+        const SizedBox(width: 4),
+        Text(&quot;Legend:&quot;, style: context.textTheme.titleLarge),
+        const SizedBox(width: 8),
+        Container(width: 24, height: 24, color: Colors.blue),
+        const SizedBox(width: 4),
+        Text(&quot;Rover&quot;, style: context.textTheme.titleMedium),
+        const SizedBox(width: 24),
+        Container(width: 24, height: 24, color: Colors.green),
+        const SizedBox(width: 4),
+        Text(&quot;Destination&quot;, style: context.textTheme.titleMedium),
+        const SizedBox(width: 24),
+        Container(width: 24, height: 24, color: Colors.black),
+        const SizedBox(width: 4),
+        Text(&quot;Obstacle&quot;, style: context.textTheme.titleMedium),
+        const SizedBox(width: 24),
+        Container(width: 24, height: 24, color: Colors.blueGrey),
+        const SizedBox(width: 4),
+        Text(&quot;Path&quot;, style: context.textTheme.titleMedium),
+        const SizedBox(width: 24),
+        Container(width: 24, height: 24, color: Colors.red),
+        const SizedBox(width: 4),
+        Text(&quot;Marker&quot;, style: context.textTheme.titleMedium),
+        const Spacer(),
+        Text(&quot;Zoom: &quot;, style: context.textTheme.titleLarge),
+        Expanded(flex: 2, child: Slider(
+          value: model.gridSize.toDouble(),
+          min: 1,
+          max: 41,
+          divisions: 20,
+          label: &quot;${model.gridSize}x${model.gridSize}&quot;,
+          onChanged: (value) =&gt; model.zoom(value.toInt()),
+        ),),
+      ],),
+      if (!model.isPlayingBadApple) Row(children: [  &#47;&#47; Controls
+        const SizedBox(width: 4),
+        Text(&quot;Place marker: &quot;, style: context.textTheme.titleLarge),
+        const SizedBox(width: 8),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.add),
+          label: const Text(&quot;Add Marker&quot;),
+          onPressed: () =&gt; placeMarker(context, model),
+        ),
+        const SizedBox(width: 8),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.location_on),
+          label: const Text(&quot;Drop marker here&quot;),
+          onPressed: model.placeMarkerOnRover,
+        ),
+        const SizedBox(width: 8),
+        ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text(&quot;Clear all&quot;), onPressed: model.clearMarkers),
+        const Spacer(),
+      ],),
+      const SizedBox(height: 8),
+      AutonomyCommandEditor(model),
+      const VerticalDivider(),
+      const SizedBox(height: 4),
+    ],),
+    Container(
+      color: context.colorScheme.surface,
+      height: 50,
+      child: Row(children: [  &#47;&#47; The header at the top
+        const SizedBox(width: 8),
+        Text(&quot;Map&quot;, style: context.textTheme.headlineMedium),
+        if (models.settings.easterEggs.badApple) IconButton(
+          iconSize: 48,
+            icon: CircleAvatar(
+            backgroundImage: const AssetImage(&quot;assets&#47;bad_apple_thumbnail.webp&quot;),
+            child: model.isPlayingBadApple ? const Icon(Icons.block, color: Colors.red, size: 36) : null,
+          ),
+          onPressed: model.isPlayingBadApple ? model.stopBadApple : model.startBadApple,
+        ),
+        const Spacer(),
+        ViewsSelector(index: index),
+      ],),
+    ),
+  ],);</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">rover_dashboard</a></li>
+    <li><a href="../../pages/">pages</a></li>
+    <li><a href="../../pages/MapPage-class.html">MapPage</a></li>
+    <li class="self-crumb">build method</li>
+</ol>
+
+    <h5>MapPage class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    rover_dashboard
+      2025.2.12+20
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

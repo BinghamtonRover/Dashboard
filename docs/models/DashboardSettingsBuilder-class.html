@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the DashboardSettingsBuilder class from the models library, for the Dart programming language.">
+  <title>DashboardSettingsBuilder class - models library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">rover_dashboard</a></li>
+    <li><a href="../models/">models.dart</a></li>
+    <li class="self-crumb">DashboardSettingsBuilder class</li>
+  </ol>
+  <div class="self-name">DashboardSettingsBuilder</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="models&#47;models-library-sidebar.html"
+    data-below-sidebar="models&#47;DashboardSettingsBuilder-class-sidebar.html">
+    <div>
+  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/BinghamtonRover/rover-control-dashboard/blob/main/lib/src/models/view/builders/settings_builder.dart#L180"><span class="material-symbols-outlined">description</span></a></div>
+<h1><span class="kind-class">DashboardSettingsBuilder</span> class 
+ 
+</h1></div>
+
+    
+<section class="desc markdown">
+  <p>A <a href="../models/ValueBuilder-class.html">ValueBuilder</a> that modifies a <a href="../data/DashboardSettings-class.html">DashboardSettings</a>.</p>
+</section>
+
+
+    <section>
+      <dl class="dl-horizontal">
+        
+  <dt>Inheritance</dt>
+  <dd>
+    <ul class="gt-separated dark clazz-relationships">
+      <li>Object</li>
+        <li><a href="../models/ValueBuilder-class.html">ValueBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../data/DashboardSettings-class.html">DashboardSettings</a></span>&gt;</span></li>
+      <li>DashboardSettingsBuilder</li>
+    </ul>
+  </dd>
+
+        
+        
+
+
+        
+        
+
+
+      </dl>
+    </section>
+
+    
+  <section class="summary offset-anchor" id="constructors">
+    <h2>Constructors</h2>
+    <dl class="constructor-summary-list">
+        <dt id="DashboardSettingsBuilder" class="callable">
+          <span class="name"><a href="../models/DashboardSettingsBuilder/DashboardSettingsBuilder.html">DashboardSettingsBuilder</a></span><span class="signature">(<span class="parameter" id="-param-initial"><span class="type-annotation"><a href="../data/DashboardSettings-class.html">DashboardSettings</a></span> <span class="parameter-name">initial</span></span>)</span>
+        </dt>
+        <dd>
+          Modifies the given <a href="../data/DashboardSettings-class.html">DashboardSettings</a>.
+        </dd>
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-properties">
+    <h2>Properties</h2>
+    <dl class="properties">
+        <dt id="blockSize" class="property">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/blockSize.html">blockSize</a></span>
+  <span class="signature">&#8594; <a href="../models/NumberBuilder-class.html">NumberBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">double</span>&gt;</span></span>
+  
+
+</dt>
+<dd>
+  The precision of the GPS grid. See <a href="../data/DashboardSettings/mapBlockSize.html">DashboardSettings.mapBlockSize</a>.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="defaultPreset" class="property">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/defaultPreset.html">defaultPreset</a></span>
+  <span class="signature">&#8596; String?</span>
+  
+
+</dt>
+<dd>
+  The default preset to load on startup
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="fps" class="property">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/fps.html">fps</a></span>
+  <span class="signature">&#8594; <a href="../models/NumberBuilder-class.html">NumberBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">int</span>&gt;</span></span>
+  
+
+</dt>
+<dd>
+  The builder for the FPS count.
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="hashCode" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/Listenable/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; int</span>
+  
+
+</dt>
+<dd class="inherited">
+  The hash code for this object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="hasListeners" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/hasListeners.html">hasListeners</a></span>
+  <span class="signature">&#8594; bool</span>
+  
+
+</dt>
+<dd class="inherited">
+  Whether any listeners are currently registered.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="isValid" class="property">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/isValid.html">isValid</a></span>
+  <span class="signature">&#8594; bool</span>
+  
+
+</dt>
+<dd>
+  Whether the <a href="../models/DashboardSettingsBuilder/value.html">value</a> in the UI is valid.
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="otherBuilders" class="property inherited">
+  <span class="name"><a href="../models/ValueBuilder/otherBuilders.html">otherBuilders</a></span>
+  <span class="signature">&#8594; List<span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier-class.html">ChangeNotifier</a></span>&gt;</span></span>
+  
+
+</dt>
+<dd class="inherited">
+  Other builders to listen to.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="preferTankControls" class="property">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/preferTankControls.html">preferTankControls</a></span>
+  <span class="signature">&#8596; bool</span>
+  
+
+</dt>
+<dd>
+  Whether to default to tank controls. See <a href="../data/DashboardSettings/preferTankControls.html">DashboardSettings.preferTankControls</a>.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="preset" class="property">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/preset.html">preset</a></span>
+  <span class="signature">&#8596; List<span class="signature">&lt;<wbr><span class="type-parameter"><a href="../data/ViewPreset-class.html">ViewPreset</a></span>&gt;</span></span>
+  
+
+</dt>
+<dd>
+  Builder for the presets.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/Listenable/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; Type</span>
+  
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="splitCameras" class="property">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/splitCameras.html">splitCameras</a></span>
+  <span class="signature">&#8596; bool</span>
+  
+
+</dt>
+<dd>
+  Whether to split cameras into their own controls. See <a href="../data/DashboardSettings/splitCameras.html">DashboardSettings.splitCameras</a>.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="splitMode" class="property">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/splitMode.html">splitMode</a></span>
+  <span class="signature">&#8596; <a href="../data/SplitMode.html">SplitMode</a></span>
+  
+
+</dt>
+<dd>
+  How the Dashboard should split when only two views are present.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="themeMode" class="property">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/themeMode.html">themeMode</a></span>
+  <span class="signature">&#8596; <a href="https://api.flutter.dev/flutter/material/ThemeMode.html">ThemeMode</a></span>
+  
+
+</dt>
+<dd>
+  The theme of the Dashboard. See <a href="../data/DashboardSettings/themeMode.html">DashboardSettings.themeMode</a>.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="value" class="property">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/value.html">value</a></span>
+  <span class="signature">&#8594; <a href="../data/DashboardSettings-class.html">DashboardSettings</a></span>
+  
+
+</dt>
+<dd>
+  The value being updated in the UI.
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="versionChecking" class="property">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/versionChecking.html">versionChecking</a></span>
+  <span class="signature">&#8596; bool</span>
+  
+
+</dt>
+<dd>
+  Whether to use version checking. See <a href="../data/DashboardSettings/versionChecking.html">DashboardSettings.versionChecking</a>.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
+        <dt id="addListener" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/addListener.html">addListener</a></span><span class="signature">(<wbr><span class="parameter" id="addListener-param-listener"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/VoidCallback.html">VoidCallback</a></span> <span class="parameter-name">listener</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Register a closure to be called when the object changes.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="dispose" class="callable inherited">
+  <span class="name"><a href="../models/ValueBuilder/dispose.html">dispose</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Discards any resources used by the object. After this is called, the
+object is not in a usable state and should be discarded (calls to
+<a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/addListener.html">addListener</a> will throw after the object is disposed).
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/Listenable/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation">Invocation</span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a nonexistent method or property is accessed.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="notifyListeners" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/notifyListeners.html">notifyListeners</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Call all the registered listeners.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="removeListener" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/ChangeNotifier/removeListener.html">removeListener</a></span><span class="signature">(<wbr><span class="parameter" id="removeListener-param-listener"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/VoidCallback.html">VoidCallback</a></span> <span class="parameter-name">listener</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Remove a previously registered closure from the list of closures that are
+notified when the object changes.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toString" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/Listenable/toString.html">toString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; String</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  A string representation of this object.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="updateCameras" class="callable">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/updateCameras.html">updateCameras</a></span><span class="signature">(<wbr><span class="parameter" id="updateCameras-param-input"><span class="type-annotation">bool?</span> <span class="parameter-name">input</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Updates <a href="../models/DashboardSettingsBuilder/splitCameras.html">splitCameras</a>.
+  
+
+</dd>
+
+        <dt id="updateTank" class="callable">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/updateTank.html">updateTank</a></span><span class="signature">(<wbr><span class="parameter" id="updateTank-param-input"><span class="type-annotation">bool?</span> <span class="parameter-name">input</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Updates <a href="../models/DashboardSettingsBuilder/preferTankControls.html">preferTankControls</a>.
+  
+
+</dd>
+
+        <dt id="updateThemeMode" class="callable">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/updateThemeMode.html">updateThemeMode</a></span><span class="signature">(<wbr><span class="parameter" id="updateThemeMode-param-input"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/material/ThemeMode.html">ThemeMode</a>?</span> <span class="parameter-name">input</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Updates the <a href="../models/DashboardSettingsBuilder/themeMode.html">themeMode</a>.
+  
+
+</dd>
+
+        <dt id="updateVersionChecking" class="callable">
+  <span class="name"><a href="../models/DashboardSettingsBuilder/updateVersionChecking.html">updateVersionChecking</a></span><span class="signature">(<wbr><span class="parameter" id="updateVersionChecking-param-input"><span class="type-annotation">bool?</span> <span class="parameter-name">input</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  Updates <a href="../models/DashboardSettingsBuilder/versionChecking.html">versionChecking</a>.
+  
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+  <span class="name"><a href="https://api.flutter.dev/flutter/foundation/Listenable/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation">Object</span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  The equality operator.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+    
+    
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">rover_dashboard</a></li>
+    <li><a href="../models/">models</a></li>
+    <li class="self-crumb">DashboardSettingsBuilder class</li>
+</ol>
+
+    <h5>models library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    rover_dashboard
+      2025.2.12+20
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

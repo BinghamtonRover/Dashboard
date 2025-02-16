@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the FilesService class from the services library, for the Dart programming language.">
+  <title>FilesService class - services library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">rover_dashboard</a></li>
+    <li><a href="../services/">services.dart</a></li>
+    <li class="self-crumb">FilesService class</li>
+  </ol>
+  <div class="self-name">FilesService</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="services&#47;services-library-sidebar.html"
+    data-below-sidebar="services&#47;FilesService-class-sidebar.html">
+    <div>
+  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/BinghamtonRover/rover-control-dashboard/blob/main/lib/src/services/files.dart#L25"><span class="material-symbols-outlined">description</span></a></div>
+<h1><span class="kind-class">FilesService</span> class 
+ 
+</h1></div>
+
+    
+<section class="desc markdown">
+  <p>A service to read and write to the file system.</p>
+<p>The dashboard reads and writes to files in <a href="../services/FilesService/outputDir.html">outputDir</a>.</p>
+</section>
+
+
+
+    
+  <section class="summary offset-anchor" id="constructors">
+    <h2>Constructors</h2>
+    <dl class="constructor-summary-list">
+        <dt id="FilesService" class="callable">
+          <span class="name"><a href="../services/FilesService/FilesService.html">FilesService</a></span><span class="signature">()</span>
+        </dt>
+        <dd>
+          
+        </dd>
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-properties">
+    <h2>Properties</h2>
+    <dl class="properties">
+        <dt id="batchedLogs" class="property">
+  <span class="name"><a href="../services/FilesService/batchedLogs.html">batchedLogs</a></span>
+  <span class="signature">&#8596; Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">List<span class="signature">&lt;<wbr><span class="type-parameter"><a href="../data/WrappedMessage-class.html">WrappedMessage</a></span>&gt;</span></span>&gt;</span></span>
+  
+
+</dt>
+<dd>
+  Holds data to be logged by <a href="../services/FilesService/logData.html">logData</a> when <a href="../services/FilesService/dataLogger.html">dataLogger</a> fires.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="dataLogger" class="property">
+  <span class="name"><a href="../services/FilesService/dataLogger.html">dataLogger</a></span>
+  <span class="signature">&#8596; Timer</span>
+  
+
+</dt>
+<dd>
+  Saves all the data in <a href="../services/FilesService/batchedLogs.html">batchedLogs</a> to a file by calling <a href="../services/FilesService/logAllData.html">logAllData</a>.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="hashCode" class="property inherited">
+  <span class="name"><a href="../services/FilesService/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; int</span>
+  
+
+</dt>
+<dd class="inherited">
+  The hash code for this object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="jsonEncoder" class="property">
+  <span class="name"><a href="../services/FilesService/jsonEncoder.html">jsonEncoder</a></span>
+  <span class="signature">&#8594; JsonEncoder</span>
+  
+
+</dt>
+<dd>
+  The encoder to convert a Map&lt;&gt; to a json string with a nice indent
+  <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="loggingDir" class="property">
+  <span class="name"><a href="../services/FilesService/loggingDir.html">loggingDir</a></span>
+  <span class="signature">&#8596; Directory</span>
+  
+
+</dt>
+<dd>
+  The directory where all logging data is outputted
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="outputDir" class="property">
+  <span class="name"><a href="../services/FilesService/outputDir.html">outputDir</a></span>
+  <span class="signature">&#8596; Directory</span>
+  
+
+</dt>
+<dd>
+  The directory where the dashboard keeps its files.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="../services/FilesService/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; Type</span>
+  
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="screenshotsDir" class="property">
+  <span class="name"><a href="../services/FilesService/screenshotsDir.html">screenshotsDir</a></span>
+  <span class="signature">&#8594; Directory</span>
+  
+
+</dt>
+<dd>
+  The directory where screenshots are stored.
+  <div class="features"><span class="feature">no setter</span></div>
+
+</dd>
+
+        <dt id="settingsFile" class="property">
+  <span class="name"><a href="../services/FilesService/settingsFile.html">settingsFile</a></span>
+  <span class="signature">&#8594; File</span>
+  
+
+</dt>
+<dd>
+  The file containing the user's <a href="../data/Settings-class.html">Settings</a>, in JSON form.
+  <div class="features"><span class="feature">no setter</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
+        <dt id="dispose" class="callable">
+  <span class="name"><a href="../services/FilesService/dispose.html">dispose</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Cleans up any resources used by the service.
+  
+
+</dd>
+
+        <dt id="init" class="callable">
+  <span class="name"><a href="../services/FilesService/init.html">init</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Ensure that files and directories that are expected to be present actually
+exist on the system. If not, create them.
+  
+
+</dd>
+
+        <dt id="logAllData" class="callable">
+  <span class="name"><a href="../services/FilesService/logAllData.html">logAllData</a></span><span class="signature">(<wbr><span class="parameter" id="logAllData-param-timer"><span class="type-annotation">Timer</span> <span class="parameter-name">timer</span></span>)
+    <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Logs all the data saved in <a href="../services/FilesService/batchedLogs.html">batchedLogs</a> and resets it.
+  
+
+</dd>
+
+        <dt id="logData" class="callable">
+  <span class="name"><a href="../services/FilesService/logData.html">logData</a></span><span class="signature">(<wbr><span class="parameter" id="logData-param-message"><span class="type-annotation"><a href="../data/Message.html">Message</a></span> <span class="parameter-name">message</span></span>)
+    <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Outputs log data to the correct file based on message
+  
+
+</dd>
+
+        <dt id="logMessage" class="callable">
+  <span class="name"><a href="../services/FilesService/logMessage.html">logMessage</a></span><span class="signature">(<wbr><span class="parameter" id="logMessage-param-log"><span class="type-annotation"><a href="../data/BurtLog-class.html">BurtLog</a></span> <span class="parameter-name">log</span></span>)
+    <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Outputs a log to its device's respective log file.
+  
+
+</dd>
+
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="../services/FilesService/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation">Invocation</span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a nonexistent method or property is accessed.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="readLogs" class="callable">
+  <span class="name"><a href="../services/FilesService/readLogs.html">readLogs</a></span><span class="signature">(<wbr><span class="parameter" id="readLogs-param-file"><span class="type-annotation">File</span> <span class="parameter-name">file</span></span>)
+    <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">List<span class="signature">&lt;<wbr><span class="type-parameter"><a href="../data/WrappedMessage-class.html">WrappedMessage</a></span>&gt;</span></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Reads logs from the given file.
+  
+
+</dd>
+
+        <dt id="readSettings" class="callable">
+  <span class="name"><a href="../services/FilesService/readSettings.html">readSettings</a></span><span class="signature">(<wbr>{<span class="parameter" id="readSettings-param-retry"><span class="type-annotation">bool</span> <span class="parameter-name">retry</span> = <span class="default-value">true</span></span>})
+    <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter"><a href="../data/Settings-class.html">Settings</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Reads the user's settings from the <a href="../services/FilesService/settingsFile.html">settingsFile</a>.
+  
+
+</dd>
+
+        <dt id="toString" class="callable inherited">
+  <span class="name"><a href="../services/FilesService/toString.html">toString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; String</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  A string representation of this object.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="writeImage" class="callable">
+  <span class="name"><a href="../services/FilesService/writeImage.html">writeImage</a></span><span class="signature">(<wbr><span class="parameter" id="writeImage-param-image"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">int</span>&gt;</span></span> <span class="parameter-name">image</span>, </span><span class="parameter" id="writeImage-param-cameraName"><span class="type-annotation">String</span> <span class="parameter-name">cameraName</span></span>)
+    <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Saves the current frame in the feed to the camera's output directory.
+  
+
+</dd>
+
+        <dt id="writeSettings" class="callable">
+  <span class="name"><a href="../services/FilesService/writeSettings.html">writeSettings</a></span><span class="signature">(<wbr><span class="parameter" id="writeSettings-param-value"><span class="type-annotation"><a href="../data/Settings-class.html">Settings</a>?</span> <span class="parameter-name">value</span></span>)
+    <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Saves the <a href="../data/Settings-class.html">Settings</a> object to the <a href="../services/FilesService/settingsFile.html">settingsFile</a>, as JSON.
+  
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+  <span class="name"><a href="../services/FilesService/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation">Object</span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  The equality operator.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+    
+    
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">rover_dashboard</a></li>
+    <li><a href="../services/">services</a></li>
+    <li class="self-crumb">FilesService class</li>
+</ol>
+
+    <h5>services library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    rover_dashboard
+      2025.2.12+20
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

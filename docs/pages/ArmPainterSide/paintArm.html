@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the paintArm method from the ArmPainterSide class, for the Dart programming language.">
+  <title>paintArm method - ArmPainterSide class - pages library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">rover_dashboard</a></li>
+    <li><a href="../../pages/">pages.dart</a></li>
+    <li><a href="../../pages/ArmPainterSide-class.html">ArmPainterSide</a></li>
+    <li class="self-crumb">paintArm method</li>
+  </ol>
+  <div class="self-name">paintArm</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="pages&#47;ArmPainterSide-class-sidebar.html"
+    data-below-sidebar="">
+    <div>
+  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/BinghamtonRover/rover-control-dashboard/blob/main/lib/src/pages/arm.dart#L176"><span class="material-symbols-outlined">description</span></a></div>
+<h1><span class="kind-method">paintArm</span> method 
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<span class="returntype">void</span>
+<span class="name ">paintArm</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="paintArm-param-canvas"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/Canvas-class.html">Canvas</a></span> <span class="parameter-name">canvas</span>, </span></li>
+<li><span class="parameter" id="paintArm-param-size"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Size-class.html">Size</a></span> <span class="parameter-name">size</span>, </span></li>
+<li><span class="parameter" id="paintArm-param-coordinates"><span class="type-annotation">ArmCoordinates</span> <span class="parameter-name">coordinates</span>, {</span></li>
+<li><span class="parameter" id="paintArm-param-opacity"><span class="type-annotation">double</span> <span class="parameter-name">opacity</span> = <span class="default-value">1</span>, </span></li>
+</ol>})
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Paints the arm given its joint positions.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">void paintArm(Canvas canvas, Size size, ArmCoordinates coordinates, {double opacity = 1}) {
+  final points = [
+    coordinates.shoulder,
+    coordinates.elbow,
+    coordinates.wrist,
+    coordinates.fingers,
+  ];
+
+  final lineColors = [
+    Colors.red,
+    Colors.green,
+    Colors.blue,
+  ];
+
+  final firstCirclePaint = Paint()
+    ..color = lineColors[0].withValues(alpha: opacity)
+    ..style = PaintingStyle.fill;
+
+  canvas.drawCircle(points[0], screen &#47; 40, firstCirclePaint);
+
+  &#47;&#47; Draw lines based off joint position
+  for (var i = 0; i &lt; points.length - 1; i++) {
+    final paint = Paint()
+      ..color = lineColors[i].withValues(alpha: opacity)
+      ..strokeWidth = screen &#47; 50;
+    canvas.drawLine(points[i], points[i + 1], paint);
+  }
+
+  &#47;&#47; Draw circles on each joint
+  for (var i = 0; i &lt; points.length - 1; i++) {
+    final circlePaint = Paint()
+      ..color = lineColors[i].withValues(alpha: opacity)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(points[i + 1], screen &#47; 50, circlePaint);
+  }
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../../index.html">rover_dashboard</a></li>
+    <li><a href="../../pages/">pages</a></li>
+    <li><a href="../../pages/ArmPainterSide-class.html">ArmPainterSide</a></li>
+    <li class="self-crumb">paintArm method</li>
+</ol>
+
+    <h5>ArmPainterSide class</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+</div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    rover_dashboard
+      2025.2.12+20
+  </span>
+  
+</footer>
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

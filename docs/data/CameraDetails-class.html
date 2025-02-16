@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the CameraDetails class from the data library, for the Dart programming language.">
+  <title>CameraDetails class - data library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">rover_dashboard</a></li>
+    <li><a href="../data/">data.dart</a></li>
+    <li class="self-crumb">CameraDetails class</li>
+  </ol>
+  <div class="self-name">CameraDetails</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+<div
+    id="dartdoc-main-content"
+    class="main-content"
+    data-above-sidebar="data&#47;data-library-sidebar.html"
+    data-below-sidebar="data&#47;CameraDetails-class-sidebar.html">
+    <div>
+  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/BinghamtonRover/Dart-Networking/blob/main/lib/src/generated/video.pb.dart#L23"><span class="material-symbols-outlined">description</span></a></div>
+<h1><span class="kind-class">CameraDetails</span> class 
+ 
+</h1></div>
+
+    
+<section class="desc markdown">
+  <p>/ Details about a specific camera.</p>
+</section>
+
+
+    <section>
+      <dl class="dl-horizontal">
+        
+  <dt>Inheritance</dt>
+  <dd>
+    <ul class="gt-separated dark clazz-relationships">
+      <li>Object</li>
+        <li><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage-class.html">GeneratedMessage</a></li>
+      <li>CameraDetails</li>
+    </ul>
+  </dd>
+
+        
+        
+
+
+        
+  <dt>Available extensions</dt>
+  <dd><ul class="comma-separated clazz-relationships">
+      <li><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessageGenericExtensions.html">GeneratedMessageGenericExtensions</a></li>
+      <li><a href="../data/MessageUtils.html">MessageUtils</a></li>
+  </ul></dd>
+        
+
+
+      </dl>
+    </section>
+
+    
+  <section class="summary offset-anchor" id="constructors">
+    <h2>Constructors</h2>
+    <dl class="constructor-summary-list">
+        <dt id="CameraDetails" class="callable">
+          <span class="name"><a href="../data/CameraDetails/CameraDetails.html">CameraDetails</a></span><span class="signature">({<span class="parameter" id="-param-name"><span class="type-annotation"><a href="../data/CameraName-class.html">CameraName</a>?</span> <span class="parameter-name">name</span>, </span><span class="parameter" id="-param-resolutionWidth"><span class="type-annotation">int?</span> <span class="parameter-name">resolutionWidth</span>, </span><span class="parameter" id="-param-resolutionHeight"><span class="type-annotation">int?</span> <span class="parameter-name">resolutionHeight</span>, </span><span class="parameter" id="-param-quality"><span class="type-annotation">int?</span> <span class="parameter-name">quality</span>, </span><span class="parameter" id="-param-fps"><span class="type-annotation">int?</span> <span class="parameter-name">fps</span>, </span><span class="parameter" id="-param-status"><span class="type-annotation"><a href="../data/CameraStatus-class.html">CameraStatus</a>?</span> <span class="parameter-name">status</span>, </span><span class="parameter" id="-param-autofocus"><span class="type-annotation">bool?</span> <span class="parameter-name">autofocus</span>, </span><span class="parameter" id="-param-zoom"><span class="type-annotation">int?</span> <span class="parameter-name">zoom</span>, </span><span class="parameter" id="-param-pan"><span class="type-annotation">int?</span> <span class="parameter-name">pan</span>, </span><span class="parameter" id="-param-tilt"><span class="type-annotation">int?</span> <span class="parameter-name">tilt</span>, </span><span class="parameter" id="-param-focus"><span class="type-annotation">int?</span> <span class="parameter-name">focus</span>, </span><span class="parameter" id="-param-diagonalFov"><span class="type-annotation">double?</span> <span class="parameter-name">diagonalFov</span>, </span><span class="parameter" id="-param-horizontalFov"><span class="type-annotation">double?</span> <span class="parameter-name">horizontalFov</span>, </span><span class="parameter" id="-param-verticalFov"><span class="type-annotation">double?</span> <span class="parameter-name">verticalFov</span>, </span><span class="parameter" id="-param-streamWidth"><span class="type-annotation">int?</span> <span class="parameter-name">streamWidth</span>, </span><span class="parameter" id="-param-streamHeight"><span class="type-annotation">int?</span> <span class="parameter-name">streamHeight</span></span>})</span>
+        </dt>
+        <dd>
+          
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="CameraDetails.fromBuffer" class="callable">
+          <span class="name"><a href="../data/CameraDetails/CameraDetails.fromBuffer.html">CameraDetails.fromBuffer</a></span><span class="signature">(<span class="parameter" id="fromBuffer-param-i"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">int</span>&gt;</span></span> <span class="parameter-name">i</span>, [</span><span class="parameter" id="fromBuffer-param-r"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/ExtensionRegistry-class.html">ExtensionRegistry</a></span> <span class="parameter-name">r</span> = <span class="default-value">$pb.ExtensionRegistry.EMPTY</span></span>])</span>
+        </dt>
+        <dd>
+          
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+        <dt id="CameraDetails.fromJson" class="callable">
+          <span class="name"><a href="../data/CameraDetails/CameraDetails.fromJson.html">CameraDetails.fromJson</a></span><span class="signature">(<span class="parameter" id="fromJson-param-i"><span class="type-annotation">String</span> <span class="parameter-name">i</span>, [</span><span class="parameter" id="fromJson-param-r"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/ExtensionRegistry-class.html">ExtensionRegistry</a></span> <span class="parameter-name">r</span> = <span class="default-value">$pb.ExtensionRegistry.EMPTY</span></span>])</span>
+        </dt>
+        <dd>
+          
+            <div class="constructor-modifier features">factory</div>
+        </dd>
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-properties">
+    <h2>Properties</h2>
+    <dl class="properties">
+        <dt id="autofocus" class="property">
+  <span class="name"><a href="../data/CameraDetails/autofocus.html">autofocus</a></span>
+  <span class="signature">&#8596; bool</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="diagonalFov" class="property">
+  <span class="name"><a href="../data/CameraDetails/diagonalFov.html">diagonalFov</a></span>
+  <span class="signature">&#8596; double</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="eventPlugin" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/eventPlugin.html">eventPlugin</a></span>
+  <span class="signature">&#8594; <a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/EventPlugin-class.html">EventPlugin</a>?</span>
+  
+
+</dt>
+<dd class="inherited">
+  Subclasses can override this getter to be notified of changes
+to protobuf fields.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="focus" class="property">
+  <span class="name"><a href="../data/CameraDetails/focus.html">focus</a></span>
+  <span class="signature">&#8596; int</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="fps" class="property">
+  <span class="name"><a href="../data/CameraDetails/fps.html">fps</a></span>
+  <span class="signature">&#8596; int</span>
+  
+
+</dt>
+<dd>
+  / The amount of frames per second. Eg, 60 FPS or 24 FPS.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="hashCode" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/hashCode.html">hashCode</a></span>
+  <span class="signature">&#8594; int</span>
+  
+
+</dt>
+<dd class="inherited">
+  Calculates a hash code based on the contents of the protobuf.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="horizontalFov" class="property">
+  <span class="name"><a href="../data/CameraDetails/horizontalFov.html">horizontalFov</a></span>
+  <span class="signature">&#8596; double</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="info_" class="property">
+  <span class="name"><a href="../data/CameraDetails/info_.html">info_</a></span>
+  <span class="signature">&#8594; <a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/BuilderInfo-class.html">BuilderInfo</a></span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">no setter</span><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="isFrozen" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/isFrozen.html">isFrozen</a></span>
+  <span class="signature">&#8594; bool</span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns <code>true</code> if this message is marked read-only. Otherwise <code>false</code>.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="messageName" class="property">
+  <span class="name"><a href="../data/MessageUtils/messageName.html">messageName</a></span>
+  <span class="signature">&#8594; String</span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../data/Message.html">Message</a>,
+        provided by the <a href="../data/MessageUtils.html">MessageUtils</a> extension</span>
+      </p>
+  The name of the message as declared in the .proto file.
+  <div class="features"><span class="feature">no setter</span></div>
+
+</dd>
+
+        <dt id="name" class="property">
+  <span class="name"><a href="../data/CameraDetails/name.html">name</a></span>
+  <span class="signature">&#8596; <a href="../data/CameraName-class.html">CameraName</a></span>
+  
+
+</dt>
+<dd>
+  / The name of the camera.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="pan" class="property">
+  <span class="name"><a href="../data/CameraDetails/pan.html">pan</a></span>
+  <span class="signature">&#8596; int</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="quality" class="property">
+  <span class="name"><a href="../data/CameraDetails/quality.html">quality</a></span>
+  <span class="signature">&#8596; int</span>
+  
+
+</dt>
+<dd>
+  / The quality of the frame, as a percentage. Used for JPG compression.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="resolutionHeight" class="property">
+  <span class="name"><a href="../data/CameraDetails/resolutionHeight.html">resolutionHeight</a></span>
+  <span class="signature">&#8596; int</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="resolutionWidth" class="property">
+  <span class="name"><a href="../data/CameraDetails/resolutionWidth.html">resolutionWidth</a></span>
+  <span class="signature">&#8596; int</span>
+  
+
+</dt>
+<dd>
+  / The width and height of the image frame.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="runtimeType" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/runtimeType.html">runtimeType</a></span>
+  <span class="signature">&#8594; Type</span>
+  
+
+</dt>
+<dd class="inherited">
+  A representation of the runtime type of the object.
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="status" class="property">
+  <span class="name"><a href="../data/CameraDetails/status.html">status</a></span>
+  <span class="signature">&#8596; <a href="../data/CameraStatus-class.html">CameraStatus</a></span>
+  
+
+</dt>
+<dd>
+  / The status of this camera.
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="streamHeight" class="property">
+  <span class="name"><a href="../data/CameraDetails/streamHeight.html">streamHeight</a></span>
+  <span class="signature">&#8596; int</span>
+  
+
+</dt>
+<dd>
+  / The height of the image data streamed
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="streamWidth" class="property">
+  <span class="name"><a href="../data/CameraDetails/streamWidth.html">streamWidth</a></span>
+  <span class="signature">&#8596; int</span>
+  
+
+</dt>
+<dd>
+  / The width of the image data streamed
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="tilt" class="property">
+  <span class="name"><a href="../data/CameraDetails/tilt.html">tilt</a></span>
+  <span class="signature">&#8596; int</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="unknownFields" class="property inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/unknownFields.html">unknownFields</a></span>
+  <span class="signature">&#8594; <a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/UnknownFieldSet-class.html">UnknownFieldSet</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  
+  <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="verticalFov" class="property">
+  <span class="name"><a href="../data/CameraDetails/verticalFov.html">verticalFov</a></span>
+  <span class="signature">&#8596; double</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+        <dt id="zoom" class="property">
+  <span class="name"><a href="../data/CameraDetails/zoom.html">zoom</a></span>
+  <span class="signature">&#8596; int</span>
+  
+
+</dt>
+<dd>
+  
+  <div class="features"><span class="feature">getter/setter pair</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+
+    
+  <section
+      class="summary offset-anchor"
+      id="instance-methods">
+    <h2>Methods</h2>
+    <dl class="callables">
+        <dt id="addExtension" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/addExtension.html">addExtension</a></span><span class="signature">(<wbr><span class="parameter" id="addExtension-param-extension"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/Extension-class.html">Extension</a></span> <span class="parameter-name">extension</span>, </span><span class="parameter" id="addExtension-param-value"><span class="type-annotation">Object?</span> <span class="parameter-name">value</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Adds an extension field value to a repeated field.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="check" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/check.html">check</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="clear" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/clear.html">clear</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Clears all data that was set in this message.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="clearAutofocus" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearAutofocus.html">clearAutofocus</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearDiagonalFov" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearDiagonalFov.html">clearDiagonalFov</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearExtension" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/clearExtension.html">clearExtension</a></span><span class="signature">(<wbr><span class="parameter" id="clearExtension-param-extension"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/Extension-class.html">Extension</a></span> <span class="parameter-name">extension</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Clears an extension field and also removes the extension.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="clearField" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/clearField.html">clearField</a></span><span class="signature">(<wbr><span class="parameter" id="clearField-param-tagNumber"><span class="type-annotation">int</span> <span class="parameter-name">tagNumber</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Clears the contents of a given field.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="clearFocus" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearFocus.html">clearFocus</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearFps" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearFps.html">clearFps</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearHorizontalFov" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearHorizontalFov.html">clearHorizontalFov</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearName" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearName.html">clearName</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearPan" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearPan.html">clearPan</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearQuality" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearQuality.html">clearQuality</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearResolutionHeight" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearResolutionHeight.html">clearResolutionHeight</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearResolutionWidth" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearResolutionWidth.html">clearResolutionWidth</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearStatus" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearStatus.html">clearStatus</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearStreamHeight" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearStreamHeight.html">clearStreamHeight</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearStreamWidth" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearStreamWidth.html">clearStreamWidth</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearTilt" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearTilt.html">clearTilt</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearVerticalFov" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearVerticalFov.html">clearVerticalFov</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clearZoom" class="callable">
+  <span class="name"><a href="../data/CameraDetails/clearZoom.html">clearZoom</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="clone" class="callable">
+  <span class="name deprecated"><a class="deprecated" href="../data/CameraDetails/clone.html">clone</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../data/CameraDetails-class.html">CameraDetails</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Creates a deep copy of the fields in this message.
+(The generated code uses <a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/mergeFromMessage.html">mergeFromMessage</a>.)
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="copyWith" class="callable">
+  <span class="name deprecated"><a class="deprecated" href="../data/CameraDetails/copyWith.html">copyWith</a></span><span class="signature">(<wbr><span class="parameter" id="copyWith-param-updates"><span class="type-annotation">void</span> <span class="parameter-name">updates</span>(<span class="parameter" id="param-"><span class="type-annotation"><a href="../data/CameraDetails-class.html">CameraDetails</a></span></span>)</span>)
+    <span class="returntype parameter">&#8594; <a href="../data/CameraDetails-class.html">CameraDetails</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Apply <code>updates</code> to a copy of this message.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="createEmptyInstance" class="callable">
+  <span class="name"><a href="../data/CameraDetails/createEmptyInstance.html">createEmptyInstance</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../data/CameraDetails-class.html">CameraDetails</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  Creates an empty instance of the same message type as this.
+  <div class="features"><span class="feature">override</span></div>
+
+</dd>
+
+        <dt id="createMapField" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/createMapField.html">createMapField</a></span><span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="createMapField-param-tagNumber"><span class="type-annotation">int</span> <span class="parameter-name">tagNumber</span>, </span><span class="parameter" id="createMapField-param-fi"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/MapFieldInfo-class.html">MapFieldInfo</a><span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span></span> <span class="parameter-name">fi</span></span>)
+    <span class="returntype parameter">&#8594; Map<span class="signature">&lt;<wbr><span class="type-parameter">K</span>, <span class="type-parameter">V</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Creates a Map representing a map field.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="createRepeatedField" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/createRepeatedField.html">createRepeatedField</a></span><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span><span class="signature">(<wbr><span class="parameter" id="createRepeatedField-param-tagNumber"><span class="type-annotation">int</span> <span class="parameter-name">tagNumber</span>, </span><span class="parameter" id="createRepeatedField-param-fi"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/FieldInfo-class.html">FieldInfo</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> <span class="parameter-name">fi</span></span>)
+    <span class="returntype parameter">&#8594; List<span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Creates List implementing a mutable repeated field.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="deepCopy" class="callable">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessageGenericExtensions/deepCopy.html">deepCopy</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; T</span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on T,
+        provided by the <a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessageGenericExtensions.html">GeneratedMessageGenericExtensions</a> extension</span>
+      </p>
+  Returns a writable deep copy of this message.
+  
+
+</dd>
+
+        <dt id="extensionsAreInitialized" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/extensionsAreInitialized.html">extensionsAreInitialized</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="freeze" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/freeze.html">freeze</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage-class.html">GeneratedMessage</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Make this message read-only.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="getDefaultForField" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/getDefaultForField.html">getDefaultForField</a></span><span class="signature">(<wbr><span class="parameter" id="getDefaultForField-param-tagNumber"><span class="type-annotation">int</span> <span class="parameter-name">tagNumber</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns the default value for the given field.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="getExtension" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/getExtension.html">getExtension</a></span><span class="signature">(<wbr><span class="parameter" id="getExtension-param-extension"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/Extension-class.html">Extension</a></span> <span class="parameter-name">extension</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns the value of <code>extension</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="getField" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/getField.html">getField</a></span><span class="signature">(<wbr><span class="parameter" id="getField-param-tagNumber"><span class="type-annotation">int</span> <span class="parameter-name">tagNumber</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns the value of the field associated with <code>tagNumber</code>, or the
+default value if it is not set.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="getFieldOrNull" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/getFieldOrNull.html">getFieldOrNull</a></span><span class="signature">(<wbr><span class="parameter" id="getFieldOrNull-param-tagNumber"><span class="type-annotation">int</span> <span class="parameter-name">tagNumber</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns the value of a field, ignoring any defaults.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="getTagNumber" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/getTagNumber.html">getTagNumber</a></span><span class="signature">(<wbr><span class="parameter" id="getTagNumber-param-fieldName"><span class="type-annotation">String</span> <span class="parameter-name">fieldName</span></span>)
+    <span class="returntype parameter">&#8594; int?</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="hasAutofocus" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasAutofocus.html">hasAutofocus</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasDiagonalFov" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasDiagonalFov.html">hasDiagonalFov</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasExtension" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/hasExtension.html">hasExtension</a></span><span class="signature">(<wbr><span class="parameter" id="hasExtension-param-extension"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/Extension-class.html">Extension</a></span> <span class="parameter-name">extension</span></span>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns <code>true</code> if a value of <code>extension</code> is present.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="hasField" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/hasField.html">hasField</a></span><span class="signature">(<wbr><span class="parameter" id="hasField-param-tagNumber"><span class="type-annotation">int</span> <span class="parameter-name">tagNumber</span></span>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Whether this message has a field associated with <code>tagNumber</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="hasFocus" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasFocus.html">hasFocus</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasFps" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasFps.html">hasFps</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasHorizontalFov" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasHorizontalFov.html">hasHorizontalFov</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasName" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasName.html">hasName</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasPan" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasPan.html">hasPan</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasQuality" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasQuality.html">hasQuality</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasRequiredFields" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/hasRequiredFields.html">hasRequiredFields</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Whether the message has required fields.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="hasResolutionHeight" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasResolutionHeight.html">hasResolutionHeight</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasResolutionWidth" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasResolutionWidth.html">hasResolutionWidth</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasStatus" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasStatus.html">hasStatus</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasStreamHeight" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasStreamHeight.html">hasStreamHeight</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasStreamWidth" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasStreamWidth.html">hasStreamWidth</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasTilt" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasTilt.html">hasTilt</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasVerticalFov" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasVerticalFov.html">hasVerticalFov</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="hasZoom" class="callable">
+  <span class="name"><a href="../data/CameraDetails/hasZoom.html">hasZoom</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="isInitialized" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/isInitialized.html">isInitialized</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Whether all required fields in the message and embedded messages are set.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="mergeFromBuffer" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/mergeFromBuffer.html">mergeFromBuffer</a></span><span class="signature">(<wbr><span class="parameter" id="mergeFromBuffer-param-input"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">int</span>&gt;</span></span> <span class="parameter-name">input</span>, [</span><span class="parameter" id="mergeFromBuffer-param-extensionRegistry"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/ExtensionRegistry-class.html">ExtensionRegistry</a></span> <span class="parameter-name">extensionRegistry</span> = <span class="default-value">ExtensionRegistry.EMPTY</span></span>])
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Merges serialized protocol buffer data into this message.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="mergeFromCodedBufferReader" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/mergeFromCodedBufferReader.html">mergeFromCodedBufferReader</a></span><span class="signature">(<wbr><span class="parameter" id="mergeFromCodedBufferReader-param-input"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/CodedBufferReader-class.html">CodedBufferReader</a></span> <span class="parameter-name">input</span>, [</span><span class="parameter" id="mergeFromCodedBufferReader-param-extensionRegistry"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/ExtensionRegistry-class.html">ExtensionRegistry</a></span> <span class="parameter-name">extensionRegistry</span> = <span class="default-value">ExtensionRegistry.EMPTY</span></span>])
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="mergeFromJson" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/mergeFromJson.html">mergeFromJson</a></span><span class="signature">(<wbr><span class="parameter" id="mergeFromJson-param-data"><span class="type-annotation">String</span> <span class="parameter-name">data</span>, [</span><span class="parameter" id="mergeFromJson-param-extensionRegistry"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/ExtensionRegistry-class.html">ExtensionRegistry</a></span> <span class="parameter-name">extensionRegistry</span> = <span class="default-value">ExtensionRegistry.EMPTY</span></span>])
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Merges field values from <code>data</code>, a JSON object, encoded as described by
+<a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/writeToJson.html">GeneratedMessage.writeToJson</a>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="mergeFromJsonMap" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/mergeFromJsonMap.html">mergeFromJsonMap</a></span><span class="signature">(<wbr><span class="parameter" id="mergeFromJsonMap-param-json"><span class="type-annotation">Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">dynamic</span>&gt;</span></span> <span class="parameter-name">json</span>, [</span><span class="parameter" id="mergeFromJsonMap-param-extensionRegistry"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/ExtensionRegistry-class.html">ExtensionRegistry</a></span> <span class="parameter-name">extensionRegistry</span> = <span class="default-value">ExtensionRegistry.EMPTY</span></span>])
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Merges field values from a JSON object represented as a Dart map.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="mergeFromMessage" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/mergeFromMessage.html">mergeFromMessage</a></span><span class="signature">(<wbr><span class="parameter" id="mergeFromMessage-param-other"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage-class.html">GeneratedMessage</a></span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Merges the contents of the <code>other</code> into this message.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="mergeFromProto3Json" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/mergeFromProto3Json.html">mergeFromProto3Json</a></span><span class="signature">(<wbr><span class="parameter" id="mergeFromProto3Json-param-json"><span class="type-annotation">Object?</span> <span class="parameter-name">json</span>, {</span><span class="parameter" id="mergeFromProto3Json-param-typeRegistry"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/TypeRegistry-class.html">TypeRegistry</a></span> <span class="parameter-name">typeRegistry</span> = <span class="default-value">const TypeRegistry.empty()</span>, </span><span class="parameter" id="mergeFromProto3Json-param-ignoreUnknownFields"><span class="type-annotation">bool</span> <span class="parameter-name">ignoreUnknownFields</span> = <span class="default-value">false</span>, </span><span class="parameter" id="mergeFromProto3Json-param-supportNamesWithUnderscores"><span class="type-annotation">bool</span> <span class="parameter-name">supportNamesWithUnderscores</span> = <span class="default-value">true</span>, </span><span class="parameter" id="mergeFromProto3Json-param-permissiveEnums"><span class="type-annotation">bool</span> <span class="parameter-name">permissiveEnums</span> = <span class="default-value">false</span></span>})
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Merges field values from <code>json</code>, a JSON object using proto3 encoding.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="mergeUnknownFields" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/mergeUnknownFields.html">mergeUnknownFields</a></span><span class="signature">(<wbr><span class="parameter" id="mergeUnknownFields-param-unknownFieldSet"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/UnknownFieldSet-class.html">UnknownFieldSet</a></span> <span class="parameter-name">unknownFieldSet</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="noSuchMethod" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation">Invocation</span> <span class="parameter-name">invocation</span></span>)
+    <span class="returntype parameter">&#8594; dynamic</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Invoked when a nonexistent method or property is accessed.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="rebuild" class="callable">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessageGenericExtensions/rebuild.html">rebuild</a></span><span class="signature">(<wbr><span class="parameter" id="rebuild-param-updates"><span class="type-annotation">void</span> <span class="parameter-name">updates</span>(<span class="parameter" id="param-"><span class="type-annotation">T</span></span>)</span>)
+    <span class="returntype parameter">&#8594; T</span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on T,
+        provided by the <a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessageGenericExtensions.html">GeneratedMessageGenericExtensions</a> extension</span>
+      </p>
+  Apply <code>updates</code> to a copy of this message.
+  
+
+</dd>
+
+        <dt id="setExtension" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/setExtension.html">setExtension</a></span><span class="signature">(<wbr><span class="parameter" id="setExtension-param-extension"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/Extension-class.html">Extension</a></span> <span class="parameter-name">extension</span>, </span><span class="parameter" id="setExtension-param-value"><span class="type-annotation">Object</span> <span class="parameter-name">value</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Sets the value of a non-repeated extension field to <code>value</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="setField" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/setField.html">setField</a></span><span class="signature">(<wbr><span class="parameter" id="setField-param-tagNumber"><span class="type-annotation">int</span> <span class="parameter-name">tagNumber</span>, </span><span class="parameter" id="setField-param-value"><span class="type-annotation">Object</span> <span class="parameter-name">value</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Sets the value of a field by its <code>tagNumber</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toBuilder" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/toBuilder.html">toBuilder</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage-class.html">GeneratedMessage</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Creates a writable, shallow copy of this message.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toDebugString" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/toDebugString.html">toDebugString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; String</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns a String representation of this message.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toProto3Json" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/toProto3Json.html">toProto3Json</a></span><span class="signature">(<wbr>{<span class="parameter" id="toProto3Json-param-typeRegistry"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/TypeRegistry-class.html">TypeRegistry</a></span> <span class="parameter-name">typeRegistry</span> = <span class="default-value">const TypeRegistry.empty()</span></span>})
+    <span class="returntype parameter">&#8594; Object?</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns an Object representing Proto3 JSON serialization of <code>this</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="toString" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/toString.html">toString</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; String</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns a String representation of this message.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="wrap" class="callable">
+  <span class="name"><a href="../data/MessageUtils/wrap.html">wrap</a></span><span class="signature">(<wbr>[<span class="parameter" id="wrap-param-timestamp"><span class="type-annotation">DateTime?</span> <span class="parameter-name">timestamp</span></span>])
+    <span class="returntype parameter">&#8594; <a href="../data/WrappedMessage-class.html">WrappedMessage</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+      <p class="from-extension">
+        <span>Available on <a href="../data/Message.html">Message</a>,
+        provided by the <a href="../data/MessageUtils.html">MessageUtils</a> extension</span>
+      </p>
+  Returns a <a href="../data/WrappedMessage-class.html">WrappedMessage</a> representing this message with a timestamp
+  
+
+</dd>
+
+        <dt id="writeToBuffer" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/writeToBuffer.html">writeToBuffer</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://api.flutter.dev/flutter/services/Uint8List-class.html">Uint8List</a></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="writeToCodedBufferWriter" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/writeToCodedBufferWriter.html">writeToCodedBufferWriter</a></span><span class="signature">(<wbr><span class="parameter" id="writeToCodedBufferWriter-param-output"><span class="type-annotation"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/CodedBufferWriter-class.html">CodedBufferWriter</a></span> <span class="parameter-name">output</span></span>)
+    <span class="returntype parameter">&#8594; void</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="writeToJson" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/writeToJson.html">writeToJson</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; String</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns a JSON string that encodes this message.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="writeToJsonMap" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/writeToJsonMap.html">writeToJsonMap</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">dynamic</span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  Returns the JSON encoding of this message as a Dart <code>Map</code>.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+  <section
+      class="summary offset-anchor inherited"
+      id="operators">
+    <h2>Operators</h2>
+    <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+  <span class="name"><a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/GeneratedMessage/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation">Object</span> <span class="parameter-name">other</span></span>)
+    <span class="returntype parameter">&#8594; bool</span>
+  </span>
+  
+
+</dt>
+<dd class="inherited">
+  The equality operator.
+  <div class="features"><span class="feature">inherited</span></div>
+
+</dd>
+
+    </dl>
+  </section>
+    
+    
+  <section class="summary offset-anchor" id="static-methods">
+    <h2>Static Methods</h2>
+    <dl class="callables">
+        <dt id="create" class="callable">
+  <span class="name"><a href="../data/CameraDetails/create.html">create</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../data/CameraDetails-class.html">CameraDetails</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="createRepeated" class="callable">
+  <span class="name"><a href="../data/CameraDetails/createRepeated.html">createRepeated</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="https://pub.dev/documentation/protobuf/3.1.0/protobuf/PbList-class.html">PbList</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../data/CameraDetails-class.html">CameraDetails</a></span>&gt;</span></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+        <dt id="getDefault" class="callable">
+  <span class="name"><a href="../data/CameraDetails/getDefault.html">getDefault</a></span><span class="signature">(<wbr>)
+    <span class="returntype parameter">&#8594; <a href="../data/CameraDetails-class.html">CameraDetails</a></span>
+  </span>
+  
+
+</dt>
+<dd>
+  
+  
+
+</dd>
+
+    </dl>
+  </section>
+    
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">rover_dashboard</a></li>
+    <li><a href="../data/">data</a></li>
+    <li class="self-crumb">CameraDetails class</li>
+</ol>
+
+    <h5>data library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    rover_dashboard
+      2025.2.12+20
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
