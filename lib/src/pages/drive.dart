@@ -216,8 +216,8 @@ class DrivePage extends ReactiveWidget<PositionModel> {
                   ),
                 ),
                 Expanded(child: Transform.rotate(
-                  angle: model.position.roll * (pi/180),
-                  child: Image.asset("assets/rover_front.png"),
+		     angle: model.position.pitch * (pi/180),
+                     child: Image.asset("assets/rover_side.png", scale: 0.5),              
                 ),),
               ],),
             ),
@@ -231,8 +231,8 @@ class DrivePage extends ReactiveWidget<PositionModel> {
                   ),
                 ),
                 Expanded(child: Transform.rotate(
-                  angle: model.position.pitch * (pi/180),
-                  child: Image.asset("assets/rover_side.png", scale: 0.5),              
+                  angle: model.position.roll * (pi/180),
+                  child: Image.asset("assets/rover_front.png"),             
                 ),),
               ],),
             ),
