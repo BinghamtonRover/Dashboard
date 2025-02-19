@@ -29,6 +29,9 @@ class Routes {
 	/// The name of the home page.
 	static const String home = "home";
 
+  /// The name of the screensaver page
+  static const String screenSaver = "screen saver";
+
   /// The name of the lidar page.
   static const String lidar = "Lidar";
 

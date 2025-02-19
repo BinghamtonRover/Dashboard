@@ -27,9 +27,10 @@ class _MiniLogsState extends State<MiniLogs> {
   void initState() {
     // The footer has to be set in Timer.run since otherwise it will try to rebuild during build
     Timer.run(
-      () => widget.miniViewModel.footerWidget = (context) => Row(
-            children: getLogsActions(context, logsViewModel),
-          ),
+      () =>
+          widget.miniViewModel.footerWidget =
+              (context) =>
+                  Row(children: getLogsActions(context, logsViewModel)),
     );
     super.initState();
   }
@@ -42,11 +43,11 @@ class _MiniLogsState extends State<MiniLogs> {
 
   @override
   Widget build(BuildContext context) => Column(
-        children: [
-          const SizedBox(height: 12),
-          LogsOptions(logsViewModel.options),
-          const Divider(),
-          Expanded(child: LogsBody(logsViewModel)),
-        ],
-      );
+    children: [
+      const SizedBox(height: 12),
+      LogsOptions(logsViewModel.options),
+      const Divider(),
+      Expanded(child: LogsBody(logsViewModel)),
+    ],
+  );
 }
