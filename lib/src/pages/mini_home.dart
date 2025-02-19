@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:rover_dashboard/app.dart";
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/mini.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/widgets.dart";
 
@@ -9,8 +10,11 @@ import "package:rover_dashboard/widgets.dart";
 /// Displays voltage/current information, subsystem statuses, gamepad selection,
 /// and options to enable/disable the dashboard and rover
 class MiniHome extends StatelessWidget {
+  /// The mini view model for the dashboard
+  final MiniViewModel miniViewModel;
+
   /// Const constructor for the MiniHome
-  const MiniHome({super.key});
+  const MiniHome({required this.miniViewModel, super.key});
 
   @override
   Widget build(BuildContext context) => Row(
@@ -48,7 +52,7 @@ class MiniHome extends StatelessWidget {
           const SizedBox(width: 5),
           Expanded(
             flex: 2,
-            child: MiniHomeSystemStatus(LogsViewModel()),
+            child: MiniHomeSystemStatus(LogsViewModel(), miniViewModel),
           ),
         ],
       );
@@ -194,8 +198,11 @@ class MiniHomeToggleOptions extends ReusableReactiveWidget<Sockets> {
 ///
 /// Displays a color status indicator and a button to restart the system
 class MiniHomeSystemStatus extends ReusableReactiveWidget<LogsViewModel> {
+  /// The mini view model for the dashboard
+  final MiniViewModel miniViewModel;
+
   /// Const constructor for system status cards
-  const MiniHomeSystemStatus(super.model);
+  const MiniHomeSystemStatus(super.model, this.miniViewModel);
 
   /// Returns the appropriate status icon for the log messages received from [device]
   Widget statusIcon(Device? device) {
@@ -225,8 +232,11 @@ class MiniHomeSystemStatus extends ReusableReactiveWidget<LogsViewModel> {
             flex: 8,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: Image.asset(
-                context.colorScheme.brightness == Brightness.light ? "assets/logo-light.png" : "assets/logo-dark.png",
+              child: GestureDetector(
+                onTapUp: (_) => miniViewModel.showDashboard = false,
+                child: Image.asset(
+                  context.colorScheme.brightness == Brightness.light ? "assets/logo-light.png" : "assets/logo-dark.png",
+                ),
               ),
             ),
           ),

@@ -18,6 +18,7 @@ import "package:rover_dashboard/widgets.dart";
 /// footer, and initializes all necessary data, services, and other
 /// view models
 class MiniViewModel with ChangeNotifier {
+  bool _showDashboard = false;
   Widget Function(BuildContext context)? _footerWidget;
 
   /// Constructor for [MiniViewModel], calls [init] to setup mini dashboard
@@ -32,6 +33,14 @@ class MiniViewModel with ChangeNotifier {
 
   /// The builder for the footer widget
   Widget Function(BuildContext context)? get footerWidget => _footerWidget;
+
+  /// Whether or not to show the dashboard
+  bool get showDashboard => _showDashboard;
+
+  set showDashboard(bool value) {
+    _showDashboard = value;
+    notifyListeners();
+  }
 
   /// Initializes necessary systems and models for the Mini Dashboard
   ///
@@ -68,7 +77,7 @@ class MiniHomePage extends StatelessWidget {
   const MiniHomePage({required this.model});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => (model.showDashboard) ? Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text("Dashboard v${models.home.version ?? ''}"),
@@ -97,7 +106,7 @@ class MiniHomePage extends StatelessWidget {
               Expanded(
                 child: TabBarView(
                   children: [
-                    const MiniHome(),
+                    MiniHome(miniViewModel: model),
                     MiniMetrics(models.rover.metrics),
                     MiniLogs(miniViewModel: model),
                     ViewsWidget(),
@@ -108,7 +117,15 @@ class MiniHomePage extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: MiniFooter(model),
-      );
+        )
+      : GestureDetector(
+          onTapUp: (_) => model.showDashboard = true,
+          child: Image.asset(
+            context.colorScheme.brightness == Brightness.light
+                ? "assets/logo-light.png"
+                : "assets/logo-dark.png",
+          ),
+        );
 }
 
 /// Button to set the rover status to [RoverStatus.POWER_OFF], shutting off the rover
