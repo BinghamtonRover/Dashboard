@@ -233,7 +233,7 @@ class MiniHomeSystemStatus extends ReusableReactiveWidget<LogsViewModel> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: GestureDetector(
-                onTapUp: (_) => miniViewModel.showDashboard = false,
+                onDoubleTap: () => miniViewModel.showDashboard = false,
                 child: Image.asset(
                   context.colorScheme.brightness == Brightness.light ? "assets/logo-light.png" : "assets/logo-dark.png",
                 ),

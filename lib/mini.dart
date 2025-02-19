@@ -118,12 +118,16 @@ class MiniHomePage extends StatelessWidget {
         ),
         bottomNavigationBar: MiniFooter(model),
         )
-      : GestureDetector(
-          onTapUp: (_) => model.showDashboard = true,
-          child: Image.asset(
-            context.colorScheme.brightness == Brightness.light
-                ? "assets/logo-light.png"
-                : "assets/logo-dark.png",
+      : Scaffold(
+          body: Center(
+            child: GestureDetector(
+              onDoubleTap: () => model.showDashboard = true,
+              child: Image.asset(
+                context.colorScheme.brightness == Brightness.light
+                    ? "assets/logo-light.png"
+                    : "assets/logo-dark.png",
+              ),
+            ),
           ),
         );
 }
