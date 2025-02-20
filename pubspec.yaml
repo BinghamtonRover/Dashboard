@@ -27,6 +27,7 @@ dependencies:
   collection: ^1.18.0
   flutter_sdl_gamepad: ^1.0.0
   just_audio_windows: ^0.2.2
+  coordinate_converter: ^1.1.1
 
 dependency_overrides:
   flutter_sdl_gamepad:

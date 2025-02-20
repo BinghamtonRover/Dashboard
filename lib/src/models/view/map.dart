@@ -1,4 +1,5 @@
 import "dart:async";
+import "package:coordinate_converter/coordinate_converter.dart";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -39,10 +40,11 @@ class GridOffset {
 
 extension _GpsCoordinatesToBlock on GpsCoordinates {
   GpsCoordinates get toGridBlock {
-    final (:lat, :long) = inMeters;
+    // final (:lat, :long) = inMeters;
+    final utmCoordinates = asUtmCoordinates;
     return GpsCoordinates(
-      latitude: (lat / models.settings.dashboard.mapBlockSize).roundToDouble(),
-      longitude: (long / models.settings.dashboard.mapBlockSize).roundToDouble(),
+      latitude: (utmCoordinates.y / models.settings.dashboard.mapBlockSize).roundToDouble(),
+      longitude: (utmCoordinates.x / models.settings.dashboard.mapBlockSize).roundToDouble(),
     );
   }
 }
@@ -58,14 +60,18 @@ typedef AutonomyGrid = List<List<MapCellData>>;
 /// Shows a bird's-eye map of where the rover is, what's around it, where the goal is, and the path
 /// to get there. This class uses [AutonomyData] to keep track of the data as reported by the rover.
 /// The [grid] is a 2D map of width and height [gridSize] that keeps the [roverPosition] in the
-/// center (by keeping track of its [offset]) and filling the other cells with [AutonomyCell]s.
+/// center (by keeping track of its [centerPosition]) and filling the other cells with [AutonomyCell]s.
 ///
 class AutonomyModel with ChangeNotifier, BadAppleViewModel {
   @override
 	int gridSize = 11;
 
+	// GridOffset offset = const GridOffset(0, 0);
+
 	/// The offset to add to all other coordinates, based on [roverPosition]. See [recenterRover].
-	GridOffset offset = const GridOffset(0, 0);
+  UTMCoordinates centerPosition = UTMCoordinates.fromDD(
+    DDCoordinates(latitude: 0, longitude: 0),
+  );
 
 	/// Listens for incoming autonomy or position data.
 	AutonomyModel() { init(); }
@@ -98,12 +104,14 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 
 	/// An empty grid of size [gridSize].
   AutonomyGrid get empty => [
-    for (int latitude = 0; latitude < gridSize; latitude++) [
-      for (int longitude = 0; longitude < gridSize; longitude++) (
-        coordinates: (
-          lat: (latitude.toDouble() - offset.y) * precisionMeters,
-          long: (longitude.toDouble() + offset.x) * precisionMeters
-        ).toGps(),
+    for (int y = 0; y < gridSize; y++) [
+      for (int x = 0; x < gridSize; x++) (
+        coordinates: UTMCoordinates(
+          x: x.toDouble() * precisionMeters + centerPosition.x,
+          y: y.toDouble() * precisionMeters + centerPosition.y,
+          zoneNumber: centerPosition.zoneNumber,
+          isSouthernHemisphere: centerPosition.isSouthernHemisphere,
+        ).asGpsCoordinates,
         cellType: AutonomyCell.empty
       ),
     ],
@@ -167,7 +175,7 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 		return result;
 	}
 
-	/// Calculates a new position for [gps] based on [offset] and adds it to the [grid].
+	/// Calculates a new position for [gps] based on [centerPosition] and adds it to the [grid].
 	///
 	/// This function filters out any coordinates that shouldn't be shown based on [gridSize].
 	void markCell(AutonomyGrid grid, GpsCoordinates gps, AutonomyCell value) {
@@ -176,15 +184,18 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 		// - rover.longitude => (gridSize - 1) / 2
 		// - rover.latitude => (gridSize - 1) / 2
 		// Then, everything else should be offset by that
-    final (:lat, :long) = gps.inMeters;
-    final x = (long / precisionMeters).round() - offset.x;
-    final y = (lat / precisionMeters).round() + offset.y;
+    final utmCoordinates = gps.asUtmCoordinates;
+    final x = ((utmCoordinates.x - centerPosition.x) / precisionMeters).round();
+    final y = ((utmCoordinates.y - centerPosition.y) / precisionMeters).round();
+
+    // final x = (utmCoordinates.x / precisionMeters).round() - offset.x;
+    // final y = (utmCoordinates.y / precisionMeters).round() + offset.y;
 		if (x < 0 || x >= gridSize) return;
 		if (y < 0 || y >= gridSize) return;
 		grid[y][x] = (coordinates: gps, cellType: value);
 	}
 
-	/// Determines the new [offset] based on the current [roverPosition].
+	/// Determines the new [centerPosition] based on the current [roverPosition].
 	///
 	/// The autonomy grid is inherently unbounded, meaning we have to choose *somewhere* to bound the
 	/// grid. We chose to draw a grid of size [gridSize] with the rover in the center. This means we
@@ -197,11 +208,19 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 	void recenterRover() {
     // final position = isPlayingBadApple ? GpsCoordinates() : roverPosition;
     final position = roverPosition;
-		final midpoint = ((gridSize - 1) / 2).floor();
-    final (:lat, :long) = position.inMeters;
-    final offsetX = -midpoint + (long / precisionMeters).round();
-    final offsetY = midpoint - (lat / precisionMeters).round();
-		offset = GridOffset(offsetX, offsetY);
+		final midpoint = (gridSize - 1) / 2;
+    // final (:lat, :long) = position.inMeters;
+    final utmPosition = position.asUtmCoordinates;
+    centerPosition = utmPosition -
+      UTMCoordinates(
+        x: midpoint * precisionMeters,
+        y: midpoint * precisionMeters,
+        zoneNumber: utmPosition.zoneNumber,
+        isSouthernHemisphere: utmPosition.isSouthernHemisphere,
+      );
+    // final offsetX = -midpoint + (long / precisionMeters).round();
+    // final offsetY = midpoint - (lat / precisionMeters).round();
+		// offset = GridOffset(offsetX, offsetY);
 		notifyListeners();
 	}
 
