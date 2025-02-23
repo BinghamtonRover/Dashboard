@@ -41,7 +41,7 @@ class GridOffset {
 extension _GpsCoordinatesToBlock on GpsCoordinates {
   GpsCoordinates get toGridBlock {
     // final (:lat, :long) = inMeters;
-    final utmCoordinates = asUtmCoordinates;
+    final utmCoordinates = toUTM();
     return GpsCoordinates(
       latitude: (utmCoordinates.y / models.settings.dashboard.mapBlockSize).roundToDouble(),
       longitude: (utmCoordinates.x / models.settings.dashboard.mapBlockSize).roundToDouble(),
@@ -111,7 +111,7 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
           y: y.toDouble() * precisionMeters + centerPosition.y,
           zoneNumber: centerPosition.zoneNumber,
           isSouthernHemisphere: centerPosition.isSouthernHemisphere,
-        ).asGpsCoordinates,
+        ).toGps(),
         cellType: AutonomyCell.empty
       ),
     ],
@@ -184,7 +184,7 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 		// - rover.longitude => (gridSize - 1) / 2
 		// - rover.latitude => (gridSize - 1) / 2
 		// Then, everything else should be offset by that
-    final utmCoordinates = gps.asUtmCoordinates;
+    final utmCoordinates = gps.toUTM();
     final x = ((utmCoordinates.x - centerPosition.x) / precisionMeters).round();
     final y = ((utmCoordinates.y - centerPosition.y) / precisionMeters).round();
 
@@ -210,7 +210,7 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
     final position = roverPosition;
 		final midpoint = (gridSize - 1) / 2;
     // final (:lat, :long) = position.inMeters;
-    final utmPosition = position.asUtmCoordinates;
+    final utmPosition = position.toUTM();
     centerPosition = utmPosition -
       UTMCoordinates(
         x: midpoint * precisionMeters,
