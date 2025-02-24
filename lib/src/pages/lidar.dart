@@ -24,17 +24,13 @@ class LidarView extends ReactiveWidget<LidarViewModel> {
   @override
   Widget build(BuildContext context, LidarViewModel model) => Column(
     children: [
-      Padding(
-        padding: const EdgeInsets.all(4),
-        child: Row(
-          children: [
-            const SizedBox(width: 8),
-            Text("Lidar", style: context.textTheme.headlineMedium),
-            const Spacer(),
-            ViewsSelector(index: index),
-            const SizedBox(width: 8),
-          ],
-        ),
+      PageHeader(
+        pageIndex: index,
+        children: [
+          const SizedBox(width: 8),
+          Text("Lidar", style: context.textTheme.headlineMedium),
+          const Spacer(),
+        ],
       ),
       const SizedBox(height: 10),
       Flexible(
