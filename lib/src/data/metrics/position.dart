@@ -57,10 +57,10 @@ class PositionMetrics extends Metrics<RoverPosition> {
 	];
 
   /// The angle to orient the rover on a front view map
-  double get roll => data.orientation.x;
+  double get roll => data.orientation.y;
 
   /// The angle to orient the rover on a side view map
-  double get pitch => data.orientation.y;
+  double get pitch => data.orientation.x;
 
   /// The angle to orient the rover on the top-down map.
 	double get angle => data.orientation.z;
