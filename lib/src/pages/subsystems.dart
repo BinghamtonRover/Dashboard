@@ -18,16 +18,6 @@ class SubsystemsPage extends ReactiveWidget<SubsystemsViewModel> {
   @override
   SubsystemsViewModel createModel() => SubsystemsViewModel();
 
-  // if (model.subsystems.connectedDevices.isNotEmpty)
-  // SizedBox(
-  //   width: 250,
-  //   height: min(
-  //     constraints.maxHeight - 60,
-  //     model.subsystems.connectedDevices.length * 100,
-  //   ),
-  //   child: FirmwareStatuses(model: model),
-  // ),
-
   /// A widget to represent the connection status of a sensor
   Widget sensorConnectionStatus(String name, BoolState connectionStatus) {
     Widget text;
