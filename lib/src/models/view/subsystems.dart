@@ -30,9 +30,7 @@ class SubsystemsViewModel extends ChangeNotifier {
   StreamSubscription<RelaysData>? _relaysSubscription;
 
   /// The last subsystems data received through the network
-  SubsystemsData subsystems = SubsystemsData(
-    // connectedDevices: [Device.DRIVE, Device.ARM, Device.GRIPPER, Device.SCIENCE],
-  );
+  SubsystemsData subsystems = SubsystemsData();
 
   /// The current state of the relays as received from the network
   RelaysData relays = RelaysData();

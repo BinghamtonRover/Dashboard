@@ -18,6 +18,16 @@ class SubsystemsPage extends ReactiveWidget<SubsystemsViewModel> {
   @override
   SubsystemsViewModel createModel() => SubsystemsViewModel();
 
+  // if (model.subsystems.connectedDevices.isNotEmpty)
+  // SizedBox(
+  //   width: 250,
+  //   height: min(
+  //     constraints.maxHeight - 60,
+  //     model.subsystems.connectedDevices.length * 100,
+  //   ),
+  //   child: FirmwareStatuses(model: model),
+  // ),
+
   /// A widget to represent the connection status of a sensor
   Widget sensorConnectionStatus(String name, BoolState connectionStatus) {
     Widget text;
@@ -32,16 +42,17 @@ class SubsystemsPage extends ReactiveWidget<SubsystemsViewModel> {
       text = Text("$name Disconnected");
       icon = const Icon(Icons.close, color: Colors.red);
     }
-    return Row(children: [text, const SizedBox(width: 5), icon]);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [text, const SizedBox(width: 5), icon],
+    );
   }
 
   @override
-  Widget build(
-    BuildContext context,
-    SubsystemsViewModel model,
-  ) => LayoutBuilder(
+  Widget build(BuildContext context, SubsystemsViewModel model) => LayoutBuilder(
     builder:
         (context, constraints) => Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             PageHeader(
               pageIndex: index,
@@ -52,34 +63,63 @@ class SubsystemsPage extends ReactiveWidget<SubsystemsViewModel> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RelaysView(model: model),
-                SizedBox(
-                  width: 250,
-                  height: min(
-                    constraints.maxHeight - 110,
-                    model.subsystems.connectedDevices.length * 100,
+                Flexible(
+                  child: SizedBox(
+                    height: constraints.maxHeight - 48,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Card(
+                            elevation: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: RelaysView(model: model),
+                            ),
+                          ),
+                          Card(
+                            elevation: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Wrap(
+                                runSpacing: 5,
+                                alignment: WrapAlignment.center,
+                                spacing: 15,
+                                runAlignment: WrapAlignment.center,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: [
+                                  FilledButton(
+                                    onPressed: () => model.zeroImu(),
+                                    child: const Text("Zero IMU"),
+                                  ),
+                                  sensorConnectionStatus("GPS", model.subsystems.gpsConnected),
+                                  sensorConnectionStatus("IMU", model.subsystems.imuConnected),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  child: FirmwareStatuses(model: model),
                 ),
+                if (model.subsystems.connectedDevices.isNotEmpty) ...[
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    width: 225,
+                    height: min(
+                      constraints.maxHeight - 48,
+                      model.subsystems.connectedDevices.length * 100,
+                    ),
+                    child: FirmwareStatuses(model: model),
+                  ),
+                ],
               ],
             ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 15,
-              children: [
-                FilledButton(
-                  onPressed: () => model.zeroImu(),
-                  child: const Text("Zero IMU"),
-                ),
-                sensorConnectionStatus("GPS", model.subsystems.gpsConnected),
-                sensorConnectionStatus("IMU", model.subsystems.imuConnected),
-              ],
-            ),
-            const SizedBox(height: 8),
           ],
         ),
   );
@@ -163,8 +203,10 @@ class RelaysView extends StatelessWidget {
   Widget build(BuildContext context) => Column(
     children: [
       Text("Relays", style: context.textTheme.headlineSmall),
+      const SizedBox(height: 5),
       Row(
         spacing: 5,
+        mainAxisSize: MainAxisSize.min,
         children: [
           relaySwitch(
             context,
@@ -207,6 +249,7 @@ class RelaysView extends StatelessWidget {
       const SizedBox(height: 5),
       Row(
         spacing: 5,
+        mainAxisSize: MainAxisSize.min,
         children: [
           relaySwitch(
             context,
@@ -254,6 +297,7 @@ class RelaysView extends StatelessWidget {
       ),
       const SizedBox(height: 5),
       Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           FilledButton(
             style: FilledButton.styleFrom(
@@ -263,7 +307,7 @@ class RelaysView extends StatelessWidget {
             onPressed: model.turnAllOff,
             child: const Text("Turn All Off"),
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 10),
           FilledButton(
             style: FilledButton.styleFrom(
               backgroundColor: Colors.green,
