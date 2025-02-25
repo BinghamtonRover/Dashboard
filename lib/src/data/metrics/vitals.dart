@@ -15,9 +15,9 @@ class VitalsMetrics extends Metrics {
   /// The severity of the [DriveData.batteryVoltage] readings.
   Severity? get voltageSeverity {
     if (drive.batteryVoltage == 0) return null;
-    if (drive.batteryVoltage <= 25) {
+    if (drive.batteryVoltage <= 20) {
       return Severity.critical;
-    } else if (drive.batteryVoltage <= 26) {
+    } else if (drive.batteryVoltage <= 21.5) {
       return Severity.warning;
     } else {
       return null;
