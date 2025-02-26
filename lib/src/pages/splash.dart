@@ -122,19 +122,55 @@ class SplashPageState extends State<SplashPage>{
 					),
 				],
 			)
-			: Center(child: Column(  // Error
-				mainAxisAlignment: MainAxisAlignment.center,
-				children: [
-					const Spacer(flex: 2),
-					Text("Something went wrong", style: Theme.of(context).textTheme.displayLarge),
-					const Spacer(),
-					Text("The error occurred when trying to initialize $current", style: Theme.of(context).textTheme.headlineLarge),
-					const SizedBox(height: 24),
-					Text("Here is the exact error:", style: Theme.of(context).textTheme.titleLarge),
-					const SizedBox(height: 16),
-					Text(errorText!),
-					const Spacer(flex: 2),
-				],
-			),),
+      : Container(
+        padding: const EdgeInsets.only(left: 36, right: 36, bottom: 36),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        color: const Color.fromARGB(255, 0, 119, 214),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          // Error
+          children: [
+            Expanded(
+              child: FittedBox(
+                child: Text(":(", style: context.textTheme.displayLarge),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              "Your dashboard ran into a problem and could not start.\nThe error occurred while trying to initialize $current.",
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            const SizedBox(height: 24),
+            Flexible(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    "assets/error_code.png",
+                    colorBlendMode: BlendMode.screen,
+                    color: const Color.fromARGB(255, 0, 119, 214),
+                    width: 200,
+                    height: 200,
+                  ),
+                  const SizedBox(width: 24),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Here is the exact error:",
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(errorText!),
+                      const Spacer(flex: 2),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
 	);
 }
