@@ -16,8 +16,11 @@ class Sockets extends Model {
   /// A UDP socket for controlling autonomy.
   late final autonomy = DashboardSocket(device: Device.AUTONOMY);
 
+  /// A UDP socket for controlling the base station
+  late final baseStation = DashboardSocket(device: Device.BASE_STATION);
+
   /// A list of all the sockets this model manages.
-  List<DashboardSocket> get sockets => [data, video, autonomy];
+  List<DashboardSocket> get sockets => [data, video, autonomy, baseStation];
 
   /// The rover-like system currently in use.
   RoverType rover = RoverType.rover;
@@ -45,6 +48,7 @@ class Sockets extends Model {
     Device.SUBSYSTEMS => data,
     Device.VIDEO => video,
     Device.AUTONOMY => autonomy,
+    Device.BASE_STATION => baseStation,
     _ => null,
   };
 
@@ -98,6 +102,7 @@ class Sockets extends Model {
     data.destination = settings.subsystemsSocket.copyWith(address: addressOverride);
     video.destination = settings.videoSocket.copyWith(address: addressOverride);
     autonomy.destination = settings.autonomySocket.copyWith(address: addressOverride);
+    baseStation.destination = settings.baseSocket.copyWith(address: addressOverride);
   }
 
   /// Resets all the sockets.

@@ -2,6 +2,7 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 
 import "arm.dart";
+import "base_station.dart";
 import "camera.dart";
 import "tank_drive.dart";
 import "none.dart";
@@ -34,6 +35,7 @@ abstract class RoverControls {
     OperatingMode.none => NoControls(),
     OperatingMode.cameras => CameraControls(),
     OperatingMode.modernDrive => ModernDriveControls(),
+    OperatingMode.baseStation => BaseStationControls(),
 	};
 
 	/// The [OperatingMode] for these controls.
