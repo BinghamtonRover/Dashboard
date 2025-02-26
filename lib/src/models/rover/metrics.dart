@@ -32,7 +32,7 @@ class RoverMetrics extends Model {
 	///
 	/// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
 	/// when new data is received. As a getter, every time it is called it will use new data.
-	List<Metrics> get allMetrics => [vitals, position, drive, science, arm, relays, subsystems];
+	List<Metrics> get allMetrics => [vitals, position, drive, science, arm, subsystems, relays];
 
   /// Whether the given command is supported by the rover.
   bool isSupportedVersion(Message command) {
