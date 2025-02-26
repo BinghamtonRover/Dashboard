@@ -3,7 +3,6 @@ import "dart:async";
 import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/services.dart";
 
 /// View model for the Subsystems Page
 class SubsystemsViewModel extends ChangeNotifier {
@@ -26,14 +25,11 @@ class SubsystemsViewModel extends ChangeNotifier {
     _ => null,
   };
 
-  StreamSubscription<SubsystemsData>? _dataSubscription;
-  StreamSubscription<RelaysData>? _relaysSubscription;
-
   /// The last subsystems data received through the network
-  SubsystemsData subsystems = SubsystemsData();
+  SubsystemsData get subsystems => models.rover.metrics.subsystems.data;
 
   /// The current state of the relays as received from the network
-  RelaysData relays = RelaysData();
+  RelaysData get relays => models.rover.metrics.relays.data;
 
   /// The command for the desired state of the relays
   RelaysCommand desiredRelays = RelaysCommand();
@@ -45,29 +41,20 @@ class SubsystemsViewModel extends ChangeNotifier {
 
   /// Initializes the Subsystems View Model
   void init() {
-    _dataSubscription = models.messages.stream.onMessage(
-      name: SubsystemsData().messageName,
-      constructor: SubsystemsData.fromBuffer,
-      callback: onSubsystemsData,
-    );
-    _relaysSubscription = models.messages.stream.onMessage(
-      name: RelaysData().messageName,
-      constructor: RelaysData.fromBuffer,
-      callback: onRelaysData,
-    );
-
     for (final metrics in supportedMetrics) {
       metrics.addListener(notifyListeners);
     }
+    models.rover.metrics.subsystems.addListener(notifyListeners);
+    models.rover.metrics.relays.addListener(notifyListeners);
   }
 
   @override
   void dispose() {
-    _dataSubscription?.cancel();
-    _relaysSubscription?.cancel();
     for (final metrics in supportedMetrics) {
       metrics.removeListener(notifyListeners);
     }
+    models.rover.metrics.subsystems.removeListener(notifyListeners);
+    models.rover.metrics.relays.removeListener(notifyListeners);
     super.dispose();
   }
 
@@ -109,26 +96,6 @@ class SubsystemsViewModel extends ChangeNotifier {
         bypass: BoolState.ON,
       ),
     );
-  }
-
-  /// Handles an incoming [SubsystemsData]
-  void onSubsystemsData(SubsystemsData data) {
-    subsystems.mergeFromMessage(data);
-
-    subsystems.connectedDevices.clear();
-    subsystems.connectedDevices.addAll(data.connectedDevices);
-
-    services.files.logData(data);
-
-    notifyListeners();
-  }
-
-  /// Handles an incoming [RelaysData] message
-  void onRelaysData(RelaysData data) {
-    services.files.logData(data);
-    relays.mergeFromMessage(data);
-
-    notifyListeners();
   }
 
   /// Sends a command to zero the Rover's IMU

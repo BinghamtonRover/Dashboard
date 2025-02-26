@@ -1,6 +1,7 @@
 import "dart:async";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/src/data/metrics/subsystems.dart";
 
 /// A data model that listens for updated data and provides [Metrics] to the UI.
 class RoverMetrics extends Model {
@@ -21,6 +22,9 @@ class RoverMetrics extends Model {
 
   /// Vitals data from the rover.
   final vitals = VitalsMetrics();
+  
+  /// Subsystems status from the rover
+  final subsystems = SubsystemsMetrics();
 
   /// Relay data from the Rover
   final relays = RelayMetrics();
@@ -29,7 +33,7 @@ class RoverMetrics extends Model {
 	///
 	/// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
 	/// when new data is received. As a getter, every time it is called it will use new data.
-	List<Metrics> get allMetrics => [vitals, position, drive, science, arm, relays];
+	List<Metrics> get allMetrics => [vitals, position, drive, science, arm, relays, subsystems];
 
   /// Whether the given command is supported by the rover.
   bool isSupportedVersion(Message command) {
@@ -43,6 +47,7 @@ class RoverMetrics extends Model {
     DriveCommand().messageName: drive,
     ArmCommand().messageName: arm,
     GripperCommand().messageName: gripper,
+    SubsystemsCommand().messageName: subsystems,
   };
 
 	@override
@@ -76,6 +81,11 @@ class RoverMetrics extends Model {
       name: RelaysData().messageName,
       constructor: RelaysData.fromBuffer,
       callback: relays.update,
+    );
+    models.messages.stream.onMessage(
+      name: SubsystemsData().messageName,
+      constructor: SubsystemsData.fromBuffer,
+      callback: subsystems.update,
     );
     drive.addListener(vitals.notify);
     // versionTimer = Timer.periodic(versionInterval, _sendVersions);
