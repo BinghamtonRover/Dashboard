@@ -1,7 +1,6 @@
 import "dart:async";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
-import "package:rover_dashboard/src/data/metrics/antenna.dart";
 
 /// A data model that listens for updated data and provides [Metrics] to the UI.
 class RoverMetrics extends Model {
