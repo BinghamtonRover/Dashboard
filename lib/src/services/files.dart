@@ -135,12 +135,17 @@ class FilesService extends Service {
 
       lastWritten[name] ??= copy.last;
 
-      for (final wrapper in copy) {
-        final encoded = base64.encode(wrapper.writeToBuffer());
-        writeFutures.add(
-          file.writeAsString("$encoded\n", mode: FileMode.writeOnlyAppend),
-        );
-      }
+      writeFutures.add(
+        Future(() async {
+          for (final wrapper in copy) {
+            final encoded = base64.encode(wrapper.writeToBuffer());
+            await file.writeAsString(
+              "$encoded\n",
+              mode: FileMode.writeOnlyAppend,
+            );
+          }
+        }),
+      );
     }
     await Future.wait(writeFutures);
   }
