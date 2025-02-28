@@ -1,4 +1,5 @@
 import "package:rover_dashboard/data.dart";
+import "package:rover_dashboard/services.dart";
 
 /// Metrics reported by the science subsystem. 
 /// 
@@ -22,7 +23,9 @@ class ScienceMetrics extends Metrics<ScienceData> {
 	void update(ScienceData value){
     if (!checkVersion(value)) return;
 		if (value.state == ScienceState.STOP_COLLECTING) return;
-		super.update(value);
+		services.files.logData(value, includeDuplicate: true);
+		data.mergeFromMessage(value);
+		notifyListeners();
 	}
 
   @override 
