@@ -3,6 +3,7 @@ import "dart:convert";
 import "dart:io";
 import "dart:async";
 
+import "package:collection/collection.dart";
 import "package:flutter/foundation.dart";
 import "package:path_provider/path_provider.dart";
 
@@ -114,24 +115,60 @@ class FilesService extends Service {
   /// once to the same file(s) and overload the user's device.
   Map<String, List<WrappedMessage>> batchedLogs = {};
 
+  /// A cache of the last log message written for each message type written to a file
+  /// 
+  /// This is used by [logData] to avoid rewriting logs with duplicate data,
+  /// which reduces file size and improves performance
+  Map<String, WrappedMessage> lastWritten = {};
+
   /// Logs all the data saved in [batchedLogs] and resets it.
   Future<void> logAllData(Timer timer) async {
+    final writeFutures = <Future<void>>[];
     for (final name in batchedLogs.keys) {
-      final file = loggingDir / "$name.log";
       final data = batchedLogs[name]!;
+      if (data.isEmpty) {
+        continue;
+      }
+      final file = loggingDir / "$name.log";
       final copy = List<WrappedMessage>.from(data);
       data.clear();
+
+      lastWritten[name] ??= copy.last;
+
       for (final wrapper in copy) {
         final encoded = base64.encode(wrapper.writeToBuffer());
-        await file.writeAsString("$encoded\n", mode: FileMode.writeOnlyAppend);
+        writeFutures.add(
+          file.writeAsString("$encoded\n", mode: FileMode.writeOnlyAppend),
+        );
       }
     }
+    await Future.wait(writeFutures);
   }
 
   /// Outputs log data to the correct file based on message
-  Future<void> logData(Message message) async {
-    batchedLogs[message.messageName] ??= [];
-    batchedLogs[message.messageName]!.add(message.wrap());
+  ///
+  /// If [includeDuplicate] is set to false (default), then it will only write
+  /// the log to a file if it doesn't match the previously written log of the
+  /// message type
+  Future<void> logData(Message message, {bool includeDuplicate = false}) async {
+    final batch = batchedLogs[message.messageName] ??= [];
+    final lastLog = lastWritten[message.messageName];
+
+    final wrapped = message.wrap();
+
+    if (includeDuplicate) {
+      batch.add(wrapped);
+      return;
+    }
+
+    if (batch.isNotEmpty && batch.last.data.equals(wrapped.data)) {
+      return;
+    } else if (batch.lastOrNull == null &&
+        lastLog != null &&
+        lastLog.data.equals(wrapped.data)) {
+      return;
+    }
+    batch.add(wrapped);
   }
 
   /// Reads logs from the given file.
