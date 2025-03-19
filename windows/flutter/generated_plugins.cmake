@@ -4,7 +4,6 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   flutter_libserialport
-  gamepads_windows
   url_launcher_windows
 )
 

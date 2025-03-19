@@ -25,7 +25,6 @@ dependencies:
   just_audio: ^0.9.36
   collection: ^1.18.0
   flutter_sdl_gamepad: ^1.0.0
-  gamepads: ^0.1.4
 
 dependency_overrides:
   flutter_libserialport:
