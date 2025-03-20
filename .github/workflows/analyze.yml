@@ -13,17 +13,12 @@ jobs:
         working-directory: ./repo
 
     steps:
-      - name: Cache Flutter
-        id: cache-flutter
-        uses: actions/cache@v4
-        with:
-          path: flutter/
-          key: ${{ runner.os }}-flutter
-
       - name: Install Flutter
         if: steps.cache-flutter.outputs.cache-hit != 'true'
         uses: subosito/flutter-action@v2
         with:
+          cache: true
+          cache-key: flutter-linux
           channel: stable
 
       - uses: actions/checkout@v4
@@ -34,12 +29,6 @@ jobs:
       # Has to be after checkout since repo won't exist
       - name: Add Flutter to path
         run: echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
-
-      # - name: Generate Protobuf files
-      #   run: |
-      #     flutter clean
-      #     flutter pub get
-      #     dart run build_runner build
 
       - name: Analyze
         run: flutter analyze --dartdocs
