@@ -3,6 +3,7 @@
 echo Writing script
 
 echo Write-Host "Installing certificate..." > temp.ps1
+echo Rename-Item %cd%\dashboard_windows.msix %cd%\Dashboard.msix >> temp.ps1
 echo Rename-Item %cd%\Dashboard.msix %cd%\Dashboard.zip >> temp.ps1
 echo tar --strip-components=1 -zxvf %cd%\Dashboard.zip -C %cd% AppxMetadata/CodeIntegrity.cat >> temp.ps1
 echo Rename-Item %cd%\Dashboard.zip %cd%\Dashboard.msix >> temp.ps1
