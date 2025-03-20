@@ -14,34 +14,34 @@ on:
     tags: "*"
 
 jobs:
-  build_android:
-    name: Build Android APK
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
+  # build_android:
+  #   name: Build Android APK
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Clone repository
+  #       uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: "zulu"
-          java-version: '17'
+  #     - name: Setup Java
+  #       uses: actions/setup-java@v4
+  #       with:
+  #         distribution: "zulu"
+  #         java-version: '17'
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          cache: true
-          cache-key: "flutter-ubuntu"  # we don't need *the* most recent build
+  #     - name: Install Flutter
+  #       uses: subosito/flutter-action@v2
+  #       with:
+  #         cache: true
+  #         cache-key: "flutter-ubuntu"  # we don't need *the* most recent build
 
-      - name: Build APK
-        run: flutter build apk
+  #     - name: Build APK
+  #       run: flutter build apk
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: dashboard_android
-          path: build/app/outputs/apk/release/app-release.apk
-  # End of build_android
+  #     - name: Upload APK
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: dashboard_android
+  #         path: build/app/outputs/apk/release/app-release.apk
+  # # End of build_android
 
   build_windows:
     name: Build Windows MSIX
@@ -121,13 +121,14 @@ jobs:
   # End of build_windows
 
   generate_release:
-    needs: [build_android, build_windows, build_macos]
+    # needs: [build_android, build_windows, build_macos]
+    needs: [build_windows, build_macos]
     runs-on: ubuntu-latest
     steps:
-      - name: Download Android release
-        uses: actions/download-artifact@v4
-        with:
-          name: dashboard_android
+      # - name: Download Android release
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: dashboard_android
 
       - name: Download Windows release
         uses: actions/download-artifact@v4
@@ -147,14 +148,14 @@ jobs:
       - name: Organize files
         run: |
           ls -al
-          mv app-release.apk dashboard_android.apk
           mv dashboard.msix dashboard_windows.msix
+        # mv app-release.apk dashboard_android.apk
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dashboard_android.apk
+            # dashboard_android.apk
             dashboard_windows.msix
             dashboard_macos.dmg
             trust_windows.bat
