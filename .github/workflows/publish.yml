@@ -154,8 +154,8 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          # dashboard_android.apk
           files: |
-            # dashboard_android.apk
             dashboard_windows.msix
             dashboard_macos.dmg
             trust_windows.bat
