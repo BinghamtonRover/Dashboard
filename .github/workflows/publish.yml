@@ -77,7 +77,13 @@ jobs:
         with:
           name: dashboard_windows
           path: build/windows/x64/runner/Release/dashboard.msix
-  # # End of build_windows
+
+      - name: Upload MSIX
+        uses: actions/upload-artifact@v4
+        with:
+          name: trust_msix
+          path: windows/trust_windows.bat
+  # End of build_windows
 
   build_macos:
     name: Build MacOS DMG
@@ -128,6 +134,11 @@ jobs:
         with:
           name: dashboard_windows
 
+      - name: Download Windows trust script
+        uses: actions/download-artifact@v4
+        with:
+          name: trust_msix
+
       - name: Download MacOS release
         uses: actions/download-artifact@v4
         with:
@@ -146,6 +157,7 @@ jobs:
             dashboard_android.apk
             dashboard_windows.msix
             dashboard_macos.dmg
+            trust_windows.bat
           name: ${{ github.ref_name }}
           generate_release_notes: true
           fail_on_unmatched_files: true
