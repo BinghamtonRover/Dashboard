@@ -13,40 +13,40 @@ class ControllerMenu extends StatelessWidget {
   /// A const constructor.
   const ControllerMenu({super.key});
 
+  /// Toggles the pop-up menu.
+  void toggleMenu(MenuController controller) {
+    if (controller.isOpen) {
+      controller.close();
+    } else {
+      controller.open();
+    }
+  }
+
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: models.rover.controllersListener,
     builder: (_, __) => MenuAnchor(
+      alignmentOffset: const Offset(-48, 0),
       builder: (context, controller, child) => IconButton(
         icon: const Icon(Icons.sports_esports_rounded),
         color: models.rover.controllers.any((controller) => controller.isConnected)
           ? Colors.green : Colors.black,
-        onPressed: () {
-          if (controller.isOpen) {
-            controller.close();
-          } else {
-            controller.open();
-          }
-        },
+        onPressed: () => toggleMenu(controller),
       ),
       menuChildren: [
-        for (final controller in models.rover.controllers) SubmenuButton(
-          menuChildren: [
-            for (final mode in OperatingMode.values)
-              MenuItemButton(
-                onPressed: () => controller.setMode(mode),
-                closeOnActivate: false,
-                child: Text(mode.name),
-              ),
-          ],
-          child: Row(
-            children: [
-              GamepadButton(controller),
-              const SizedBox(width: 4),
-              Text(controller.mode.name),
+        for (final controller in models.rover.controllers)
+          SubmenuButton(
+            menuChildren: [
+              for (final mode in OperatingMode.values)
+                MenuItemButton(
+                  onPressed: () => controller.setMode(mode),
+                  closeOnActivate: false,
+                  child: Text(mode.name),
+                ),
             ],
+            leadingIcon: GamepadButton(controller),
+            child: Text(controller.mode.name),
           ),
-        ),
       ],
     ),
   );
@@ -63,18 +63,11 @@ class Footer extends StatelessWidget {
   Widget build(BuildContext context) => ColoredBox(
     color: binghamtonGreen,
     child: Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
       alignment: WrapAlignment.spaceBetween,
       children: [
         MessageDisplay(showLogs: showLogs),
-        Wrap(  // Groups these elements together even when wrapping
-          children: [
-            const ControllerMenu(),
-            const SizedBox(width: 2),
-            SerialButton(),
-            const SizedBox(width: 2),
-            const StatusIcons(),
-          ],
-        ),
+        const StatusIcons(),
       ],
     ),
   );
@@ -196,21 +189,19 @@ class StatusIcons extends ReactiveWidget<FooterViewModel> {
   Widget build(BuildContext context, FooterViewModel model) => Row(
     mainAxisSize: MainAxisSize.min,
     children: [
-      Tooltip(  // battery level
-        message: model.batteryMessage,
-        child: Icon(
+      const ControllerMenu(),
+      SerialButton(),
+      IconButton(
+        tooltip: model.batteryMessage,
+        onPressed: null,
+        icon: Icon(
           model.isConnected
             ? getBatteryIcon(model.batteryPercentage)
             : Icons.battery_unknown,
-          color: model.isConnected
+          color:  model.isConnected
             ? getColor(model.batteryPercentage)
             : Colors.black,
         ),
-      ),
-      NetworkStatusIcon(  // network icon
-        device: Device.SUBSYSTEMS,
-        tooltip: "${model.connectionSummary}\nClick to reset",
-        onPressed: model.resetNetwork,
       ),
       PopupMenuButton(  // rover mode
         tooltip: "Change mode",
@@ -224,6 +215,11 @@ class StatusIcons extends ReactiveWidget<FooterViewModel> {
             if (value != RoverStatus.DISCONNECTED)  // can't select this!
               PopupMenuItem(value: value, child: Text(value.humanName)),
         ],
+      ),
+      NetworkStatusIcon(  // network icon
+        device: Device.SUBSYSTEMS,
+        tooltip: "${model.connectionSummary}\nClick to reset",
+        onPressed: model.resetNetwork,
       ),
       IconButton(  // LED strip
         icon: Icon(
