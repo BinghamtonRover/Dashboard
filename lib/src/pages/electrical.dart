@@ -102,22 +102,32 @@ class ElectricalPage extends ReactiveWidget<ElectricalModel> {
 	Widget build(BuildContext context, ElectricalModel model) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      Row(children: [  // The header at the top
-        const SizedBox(width: 8),
-        Text("Electrical", style: context.textTheme.headlineMedium), 
-        const SizedBox(width: 12),
-        const Spacer(),
-        Text(model.axis ? "Horizontal" : "Vertical", style: context.textTheme.labelLarge),
-        const SizedBox(width: 12),
-        Switch(
-          value: model.axis,
-          onChanged: (bool value) => model.changeDirection(),
-        ),
-        const SizedBox(width: 8),
-        ElevatedButton.icon(icon: const Icon(Icons.clear), label: const Text("Clear all"), onPressed: model.clear),
-        const SizedBox(width: 8),
-        ViewsSelector(index: index),
-      ],),
+      PageHeader(
+        pageIndex: index,
+        children: [
+          // The header at the top
+          const SizedBox(width: 8),
+          Text("Electrical", style: context.textTheme.headlineMedium),
+          const SizedBox(width: 12),
+          const Spacer(),
+          Text(
+            model.axis ? "Horizontal" : "Vertical",
+            style: context.textTheme.labelLarge,
+          ),
+          const SizedBox(width: 12),
+          Switch(
+            value: model.axis,
+            onChanged: (bool value) => model.changeDirection(),
+          ),
+          const SizedBox(width: 8),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.clear),
+            label: const Text("Clear all"),
+            onPressed: model.clear,
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
       if (model.axis) Expanded(child:
         Row(children: [
           for (final graph in _getGraphs(model))
