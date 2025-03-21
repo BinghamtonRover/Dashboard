@@ -37,7 +37,7 @@ class GamepadButton extends ReusableReactiveWidget<Controller> {
           const Icon(Icons.sports_esports),
           Positioned(
             bottom: 0,
-            right: 4,
+            right: 8,
             child: Text(
               "${model.index + 1}",
               style: TextStyle(
@@ -52,7 +52,7 @@ class GamepadButton extends ReusableReactiveWidget<Controller> {
       color: isDisabled(status) || !model.isConnected
           ? context.colorScheme.onSurface
           : getColor(model.gamepad.batteryLevel),
-      constraints: const BoxConstraints(maxWidth: 36),
+      // constraints: const BoxConstraints(maxWidth: 36),
       onPressed: model.connect,
     ),
   );
