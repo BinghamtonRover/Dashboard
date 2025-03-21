@@ -52,7 +52,6 @@ class GamepadButton extends ReusableReactiveWidget<Controller> {
       color: isDisabled(status) || !model.isConnected
           ? context.colorScheme.onSurface
           : getColor(model.gamepad.batteryLevel),
-      // constraints: const BoxConstraints(maxWidth: 36),
       onPressed: model.connect,
     ),
   );
