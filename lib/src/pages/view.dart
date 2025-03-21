@@ -104,6 +104,15 @@ class DashboardView {
       builder: (context, index) => ElectricalPage(index: index),
     ),
     DashboardView(
+      name: Routes.subsystems,
+      iconFunc:
+          (context) => Icon(
+            Icons.electrical_services,
+            color: context.colorScheme.onSurface.withValues(alpha: 0.5),
+          ),
+      builder: (context, index) => SubsystemsPage(index: index),
+    ),
+    DashboardView(
       name: Routes.lidar,
       iconFunc: (context) => Icon(Icons.radar, color: context.colorScheme.onSurface.withValues(alpha: 0.5)),
       builder: (context, index) => LidarView(index: index),

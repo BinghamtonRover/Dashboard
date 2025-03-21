@@ -21,12 +21,18 @@ class RoverMetrics extends Model {
 
   /// Vitals data from the rover.
   final vitals = VitalsMetrics();
+  
+  /// Subsystems status from the rover
+  final subsystems = SubsystemsMetrics();
+
+  /// Relay data from the Rover
+  final relays = RelayMetrics();
 
 	/// A list of all the metrics to iterate over.
 	///
 	/// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
 	/// when new data is received. As a getter, every time it is called it will use new data.
-	List<Metrics> get allMetrics => [vitals, position, drive, science, arm, gripper];
+	List<Metrics> get allMetrics => [vitals, position, drive, science, arm, subsystems, relays];
 
   /// Whether the given command is supported by the rover.
   bool isSupportedVersion(Message command) {
@@ -40,6 +46,7 @@ class RoverMetrics extends Model {
     DriveCommand().messageName: drive,
     ArmCommand().messageName: arm,
     GripperCommand().messageName: gripper,
+    SubsystemsCommand().messageName: subsystems,
   };
 
 	@override
@@ -69,6 +76,16 @@ class RoverMetrics extends Model {
 			constructor: GripperData.fromBuffer,
 			callback: gripper.update,
 		);
+    models.messages.stream.onMessage(
+      name: RelaysData().messageName,
+      constructor: RelaysData.fromBuffer,
+      callback: relays.update,
+    );
+    models.messages.stream.onMessage(
+      name: SubsystemsData().messageName,
+      constructor: SubsystemsData.fromBuffer,
+      callback: subsystems.update,
+    );
     drive.addListener(vitals.notify);
     // versionTimer = Timer.periodic(versionInterval, _sendVersions);
 	}

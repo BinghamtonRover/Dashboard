@@ -51,10 +51,16 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
 
   /// Checks this message's version and checks for support.
   bool checkVersion(T data) {
+    final newVersion = parseVersion(data);
+    if (newVersion.hasMajor()) {
+      final refresh = version != newVersion;
+      version = newVersion;
+      if (refresh) {
+        notifyListeners();
+      }
+    }
     if (!models.settings.dashboard.versionChecking) return true;
     if (data is RoverPosition) return true;
-    final newVersion = parseVersion(data);
-    if (newVersion.hasMajor()) version = newVersion;
     if (!matchesVersion && newVersion.hasMajor()) {
       models.home.setMessage(severity: Severity.critical, text: "Received $name v${version.format()}, expected ^${supportedVersion.format()}", permanent: true);
     }
@@ -63,7 +69,7 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
 
 	/// Updates [data] with new data.
 	void update(T value) {
-    if (!checkVersion(value)) return;    
+    if (!checkVersion(value)) return;
 		services.files.logData(value);
 		data.mergeFromMessage(value);
 		notifyListeners();
