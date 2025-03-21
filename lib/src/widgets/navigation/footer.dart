@@ -7,9 +7,9 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
-///Controller Selector
+/// A widget that allows you to change the [OperatingMode] of any [Controller].
 class ControllerSelector extends ReusableReactiveWidget<Controller> {
-  ///Controller selector object
+  /// A const constructor.
   const ControllerSelector(super.model);
 
   @override
@@ -26,33 +26,29 @@ class ControllerSelector extends ReusableReactiveWidget<Controller> {
   );
 }
 
+/// A menu that shows [ControllerSelector]s to change the controller assignments.
+class ControllerMenu extends StatelessWidget {
+  /// A const constructor.
+  const ControllerMenu({super.key});
 
-///Button Expander Class
-class ButtonExpander extends StatelessWidget {
-  ///ButtonExpander widget
-  const ButtonExpander({super.key});
-  ///createstate
-    @override
-    Widget build(BuildContext context) => MenuAnchor(
-      builder: (context, controller, child) => IconButton(
-        icon: const Icon(Icons.sports_esports_rounded),
-        onPressed: () {
-            if (controller.isOpen) {
-              controller.close();
-            } else {
-              controller.open();
-            }
-        },
-      ),
-      menuChildren: [
-        for (final controller in models.rover.controllers)
-          ControllerSelector(controller),
-      ],
-    );
-} 
-
-
-
+  @override
+  Widget build(BuildContext context) => MenuAnchor(
+    builder: (context, controller, child) => IconButton(
+      icon: const Icon(Icons.sports_esports_rounded),
+      onPressed: () {
+        if (controller.isOpen) {
+          controller.close();
+        } else {
+          controller.open();
+        }
+      },
+    ),
+    menuChildren: [
+      for (final controller in models.rover.controllers)
+        ControllerSelector(controller),
+    ],
+  );
+}
 
 /// The footer, responsible for showing vitals and logs.
 class Footer extends StatelessWidget {
@@ -70,7 +66,7 @@ class Footer extends StatelessWidget {
         MessageDisplay(showLogs: showLogs),
         Wrap(  // Groups these elements together even when wrapping
           children: [
-            const ButtonExpander(),
+            const ControllerMenu(),
             const SizedBox(width: 2),
             SerialButton(),
             const SizedBox(width: 2),
