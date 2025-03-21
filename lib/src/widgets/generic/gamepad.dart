@@ -30,51 +30,30 @@ class GamepadButton extends ReusableReactiveWidget<Controller> {
 	@override
 	Widget build(BuildContext context, Controller model) => ValueListenableBuilder(
     valueListenable: models.rover.status,
-    builder: (context, status, _) => Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          padding: const EdgeInsets.all(4),
-          icon: Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              const SizedBox(height: 32),
-              const Icon(Icons.sports_esports), 
-              Positioned(
-                bottom: 0,
-                right: 8,
-                child: Text(
-                  "${model.index + 1}",
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: context.colorScheme.onSurface,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+    builder: (context, status, _) => IconButton(
+      icon: Stack(
+        children: [
+          const SizedBox(height: 32),
+          const Icon(Icons.sports_esports),
+          Positioned(
+            bottom: 0,
+            right: 4,
+            child: Text(
+              "${model.index + 1}",
+              style: TextStyle(
+                fontSize: 12,
+                color: context.colorScheme.onSurface,
+                fontWeight: FontWeight.bold,
               ),
-            ],
-          ),
-          color: isDisabled(status) || !model.isConnected
-              ? context.colorScheme.onSurface
-              : getColor(model.gamepad.batteryLevel),
-          constraints: const BoxConstraints(maxWidth: 36),
-          onPressed: model.connect,
-        ),
-        const SizedBox(width: 2.5),
-        DropdownButton<OperatingMode>(
-          value: model.mode,
-          onChanged: isDisabled(status) ? null : model.setMode,
-          dropdownColor: context.colorScheme.secondary,
-          style: const TextStyle(color: Colors.white),
-          items: [
-            for (final mode in OperatingMode.values) DropdownMenuItem(
-              value: mode,
-              child: Text(mode.name),
             ),
-          ],
-        ),
-
-      ],
+          ),
+        ],
+      ),
+      color: isDisabled(status) || !model.isConnected
+          ? context.colorScheme.onSurface
+          : getColor(model.gamepad.batteryLevel),
+      constraints: const BoxConstraints(maxWidth: 36),
+      onPressed: model.connect,
     ),
   );
 }
