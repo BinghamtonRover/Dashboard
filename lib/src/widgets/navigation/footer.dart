@@ -8,46 +8,47 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
-/// A widget that allows you to change the [OperatingMode] of any [Controller].
-class ControllerSelector extends ReusableReactiveWidget<Controller> {
-  /// A const constructor.
-  const ControllerSelector(super.model);
-
-  @override
-  Widget build(BuildContext context, Controller model) => SubmenuButton(
-    menuChildren: [
-      for (final mode in OperatingMode.values)
-        MenuItemButton(
-          onPressed: () => model.setMode(mode),
-          closeOnActivate: false,
-          child: Text(mode.name),
-        ),
-    ],
-    child: Text("${model.index + 1}: ${model.mode.name}"),
-  );
-}
-
-/// A menu that shows [ControllerSelector]s to change the controller assignments.
+/// A menu that allows the user to change the [Controller]s [OperatingMode]s.
 class ControllerMenu extends StatelessWidget {
   /// A const constructor.
   const ControllerMenu({super.key});
 
   @override
-  Widget build(BuildContext context) => MenuAnchor(
-    builder: (context, controller, child) => IconButton(
-      icon: const Icon(Icons.sports_esports_rounded),
-      onPressed: () {
-        if (controller.isOpen) {
-          controller.close();
-        } else {
-          controller.open();
-        }
-      },
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: models.rover.controllersListener,
+    builder: (_, __) => MenuAnchor(
+      builder: (context, controller, child) => IconButton(
+        icon: const Icon(Icons.sports_esports_rounded),
+        color: models.rover.controllers.any((controller) => controller.isConnected)
+          ? Colors.green : Colors.black,
+        onPressed: () {
+          if (controller.isOpen) {
+            controller.close();
+          } else {
+            controller.open();
+          }
+        },
+      ),
+      menuChildren: [
+        for (final controller in models.rover.controllers) SubmenuButton(
+          menuChildren: [
+            for (final mode in OperatingMode.values)
+              MenuItemButton(
+                onPressed: () => controller.setMode(mode),
+                closeOnActivate: false,
+                child: Text(mode.name),
+              ),
+          ],
+          child: Row(
+            children: [
+              GamepadButton(controller),
+              const SizedBox(width: 4),
+              Text(controller.mode.name),
+            ],
+          ),
+        ),
+      ],
     ),
-    menuChildren: [
-      for (final controller in models.rover.controllers)
-        ControllerSelector(controller),
-    ],
   );
 }
 
