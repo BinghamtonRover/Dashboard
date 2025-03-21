@@ -8,6 +8,50 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
+/// A menu that allows the user to change the [Controller]s [OperatingMode]s.
+class ControllerMenu extends StatelessWidget {
+  /// A const constructor.
+  const ControllerMenu({super.key});
+
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: models.rover.controllersListener,
+    builder: (_, __) => MenuAnchor(
+      builder: (context, controller, child) => IconButton(
+        icon: const Icon(Icons.sports_esports_rounded),
+        color: models.rover.controllers.any((controller) => controller.isConnected)
+          ? Colors.green : Colors.black,
+        onPressed: () {
+          if (controller.isOpen) {
+            controller.close();
+          } else {
+            controller.open();
+          }
+        },
+      ),
+      menuChildren: [
+        for (final controller in models.rover.controllers) SubmenuButton(
+          menuChildren: [
+            for (final mode in OperatingMode.values)
+              MenuItemButton(
+                onPressed: () => controller.setMode(mode),
+                closeOnActivate: false,
+                child: Text(mode.name),
+              ),
+          ],
+          child: Row(
+            children: [
+              GamepadButton(controller),
+              const SizedBox(width: 4),
+              Text(controller.mode.name),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 /// The footer, responsible for showing vitals and logs.
 class Footer extends StatelessWidget {
   /// Whether to show logs. Disable this when on the logs page.
@@ -24,13 +68,10 @@ class Footer extends StatelessWidget {
         MessageDisplay(showLogs: showLogs),
         Wrap(  // Groups these elements together even when wrapping
           children: [
-            GamepadButton(models.rover.controller1),
-            const SizedBox(width: 8),
-            GamepadButton(models.rover.controller2),
-            const SizedBox(width: 8),
-            GamepadButton(models.rover.controller3),
+            const ControllerMenu(),
+            const SizedBox(width: 2),
             SerialButton(),
-            const SizedBox(width: 4),
+            const SizedBox(width: 2),
             const StatusIcons(),
           ],
         ),

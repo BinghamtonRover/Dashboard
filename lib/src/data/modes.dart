@@ -16,7 +16,7 @@ enum OperatingMode {
   /// Modern drive controls.
   /// 
   /// Focus on driving intuitively with simple controls 
-  modernDrive("Modern Drive"),
+  modernDrive("Drive"),
 
 	/// Camera mode.
 	/// 
