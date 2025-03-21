@@ -10,8 +10,11 @@ import "package:rover_dashboard/widgets.dart";
 
 /// A menu that allows the user to change the [Controller]s [OperatingMode]s.
 class ControllerMenu extends StatelessWidget {
+  /// Color to display when no controllers are connected
+  final Color disconnectColor;
+
   /// A const constructor.
-  const ControllerMenu({super.key});
+  const ControllerMenu({super.key, this.disconnectColor = Colors.black});
 
   /// Toggles the pop-up menu.
   void toggleMenu(MenuController controller) {
@@ -25,12 +28,12 @@ class ControllerMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: models.rover.controllersListener,
-    builder: (_, __) => MenuAnchor(
+    builder: (context, _) => MenuAnchor(
       alignmentOffset: const Offset(-48, 0),
       builder: (context, controller, child) => IconButton(
         icon: const Icon(Icons.sports_esports_rounded),
         color: models.rover.controllers.any((controller) => controller.isConnected)
-          ? Colors.green : Colors.black,
+          ? Colors.green : disconnectColor,
         onPressed: () => toggleMenu(controller),
       ),
       menuChildren: [
