@@ -27,20 +27,7 @@ class MiniHome extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(
-              flex: 5,
               child: MiniHomeVoltage(models.rover.metrics.drive),
-            ),
-            const Divider(),
-            Expanded(
-              flex: 2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GamepadButton(models.rover.controller1),
-                  GamepadButton(models.rover.controller2),
-                  GamepadButton(models.rover.controller3),
-                ],
-              ),
             ),
             const Divider(),
             SizedBox(height: 75, child: MiniHomeToggleOptions(models.sockets)),
@@ -139,6 +126,17 @@ class MiniHomeToggleOptions extends ReusableReactiveWidget<Sockets> {
   Widget build(BuildContext context, Sockets model) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
+      Row(
+        children: [
+          const Text("Controls: "),
+          ListenableBuilder(
+            listenable: models.rover.controllersListener,
+            builder: (context, __) => ControllerMenu(
+              disconnectColor: context.colorScheme.onSurface,
+            ),
+          ),
+        ],
+      ),
       Row(
         children: [
           const Text("Dashboard Enabled"),
