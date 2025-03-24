@@ -1,6 +1,6 @@
 import "dart:io";
 
-import "package:burt_network/logging.dart";
+import "package:burt_network/burt_network.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
@@ -18,6 +18,9 @@ class Sockets extends Model {
 
   /// A UDP socket for controlling the base station
   late final baseStation = DashboardSocket(device: Device.BASE_STATION);
+
+  /// A UDP socket to handle [Timesync] messages from the rover
+  late final timesyncServer = TimesyncServer(port: 8020, quiet: true);
 
   /// A list of all the sockets this model manages.
   List<DashboardSocket> get sockets => [data, video, autonomy, baseStation];
@@ -55,10 +58,11 @@ class Sockets extends Model {
     _ => null,
   };
 
-	@override
-	Future<void> init() async {
-		for (final socket in sockets) {
-			socket.connectionStatus.addListener(() => socket.connectionStatus.value
+  @override
+  Future<void> init() async {
+    await timesyncServer.init();
+    for (final socket in sockets) {
+      socket.connectionStatus.addListener(() => socket.connectionStatus.value
         ? onConnect(socket.device)
         : onDisconnect(socket.device),
       );
@@ -93,6 +97,7 @@ class Sockets extends Model {
 
   @override
   Future<void> dispose() async {
+    await timesyncServer.dispose();
     for (final socket in sockets) {
       await socket.dispose();
     }
