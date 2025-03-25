@@ -8,7 +8,7 @@ import "package:rover_dashboard/services.dart";
 /// Coordinates all the sockets to point to the right [RoverType].
 class Sockets extends Model {
   /// A UDP socket for sending and receiving Protobuf data.
-  late final data = DashboardSocket(device: Device.SUBSYSTEMS);
+  late final data = DashboardSocket(device: Device.SUBSYSTEMS, sendTimesync: true);
 
   /// A UDP socket for receiving video.
   late final video = DashboardSocket(device: Device.VIDEO);
@@ -16,8 +16,8 @@ class Sockets extends Model {
   /// A UDP socket for controlling autonomy.
   late final autonomy = DashboardSocket(device: Device.AUTONOMY);
 
-  /// A UDP socket to handle [Timesync] messages from the rover
-  late final timesyncServer = TimesyncServer(port: 8020, quiet: true);
+  /// The timestamp to use for sending messages with all sockets
+  DateTime get timestamp => data.timestamp;
 
   /// A list of all the sockets this model manages.
   List<DashboardSocket> get sockets => [data, video, autonomy];
@@ -53,7 +53,6 @@ class Sockets extends Model {
 
   @override
   Future<void> init() async {
-    await timesyncServer.init();
     for (final socket in sockets) {
       socket.connectionStatus.addListener(() => socket.connectionStatus.value
         ? onConnect(socket.device)
@@ -70,7 +69,6 @@ class Sockets extends Model {
 
   @override
   Future<void> dispose() async {
-    await timesyncServer.dispose();
     for (final socket in sockets) {
       await socket.dispose();
     }
@@ -100,6 +98,10 @@ class Sockets extends Model {
   /// Set the right IP addresses for the rover or tank.
   Future<void> updateSockets() async {
     final settings = models.settings.network;
+    data.timesyncDestination = settings.subsystemsSocket.copyWith(
+      address: addressOverride,
+      port: data.timesyncDestination.port,
+    );
     data.destination = settings.subsystemsSocket.copyWith(address: addressOverride);
     video.destination = settings.videoSocket.copyWith(address: addressOverride);
     autonomy.destination = settings.autonomySocket.copyWith(address: addressOverride);
