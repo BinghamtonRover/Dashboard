@@ -1,6 +1,6 @@
 import "dart:io";
 
-import "package:burt_network/logging.dart";
+import "package:burt_network/burt_network.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
@@ -8,13 +8,20 @@ import "package:rover_dashboard/services.dart";
 /// Coordinates all the sockets to point to the right [RoverType].
 class Sockets extends Model {
   /// A UDP socket for sending and receiving Protobuf data.
-  late final data = DashboardSocket(device: Device.SUBSYSTEMS);
+  late final data = DashboardSocket(
+    device: Device.SUBSYSTEMS,
+    sendTimesync: true,
+    timesyncAddress: models.settings.network.timesyncSocket,
+  );
 
   /// A UDP socket for receiving video.
   late final video = DashboardSocket(device: Device.VIDEO);
 
   /// A UDP socket for controlling autonomy.
   late final autonomy = DashboardSocket(device: Device.AUTONOMY);
+
+  /// The timestamp to use for sending messages with all sockets
+  DateTime get timestamp => data.timestamp;
 
   /// A list of all the sockets this model manages.
   List<DashboardSocket> get sockets => [data, video, autonomy];
@@ -95,6 +102,9 @@ class Sockets extends Model {
   /// Set the right IP addresses for the rover or tank.
   Future<void> updateSockets() async {
     final settings = models.settings.network;
+    data.timesyncDestination = settings.timesyncSocket.copyWith(
+      address: addressOverride,
+    );
     data.destination = settings.subsystemsSocket.copyWith(address: addressOverride);
     video.destination = settings.videoSocket.copyWith(address: addressOverride);
     autonomy.destination = settings.autonomySocket.copyWith(address: addressOverride);
