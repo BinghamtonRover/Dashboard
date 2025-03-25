@@ -1,4 +1,5 @@
 import "dart:async";
+import "dart:io";
 
 import "package:burt_network/burt_network.dart";
 import "package:flutter/foundation.dart"; // <-- Used for ValueNotifier
@@ -16,15 +17,33 @@ import "package:rover_dashboard/models.dart";
 /// - Check [connectionStrength] or [isConnected] for the connection to the given [device].
 /// - To send a message, call [sendMessage].
 /// - Call [dispose] to close the socket.
-class DashboardSocket extends BurtSocket {
+class DashboardSocket extends BurtSocket with RoverTimesync {
   /// Notifier for when the socket connects or disconnects
   final ValueNotifier<bool> connectionStatus = ValueNotifier(false);
 
   /// Number of times to check heart beat per seconds based on `models.settings.network.connectionTimeout`.
   double get frequency => models.settings.network.connectionTimeout;
 
+  late final bool _sendTimesync;
+
+  @override
+  bool get shouldSendTimesync => _sendTimesync;
+
   /// Listens for incoming messages on a UDP socket and sends heartbeats to the [device].
-  DashboardSocket({required super.device}) : super(port: null, quiet: true, keepDestination: true);
+  DashboardSocket({
+    required super.device,
+    bool sendTimesync = false,
+    int timesyncPort = 8020,
+  }) : _sendTimesync = sendTimesync,
+       super(
+         port: null,
+         quiet: true,
+         keepDestination: true,
+         timesyncAddress: SocketInfo(
+           address: InternetAddress.anyIPv4,
+           port: timesyncPort,
+         ),
+       );
 
   @override
   Duration get heartbeatInterval => Duration(milliseconds: 1000 ~/ frequency);
@@ -72,6 +91,12 @@ class DashboardSocket extends BurtSocket {
     if (wasConnected && !isConnected) connectionStatus.value = false;
     _isChecking = false;
   }
+
+  @override
+  void sendMessage(Message message, {SocketInfo? destination}) => sendWrapper(
+    message.wrap(models.sockets.timestamp),
+    destination: destination,
+  );
 
   @override
   void send(List<int> data, {SocketInfo? destination}) {
