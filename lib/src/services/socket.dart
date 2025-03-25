@@ -1,5 +1,4 @@
 import "dart:async";
-import "dart:io";
 
 import "package:burt_network/burt_network.dart";
 import "package:flutter/foundation.dart"; // <-- Used for ValueNotifier
@@ -33,17 +32,9 @@ class DashboardSocket extends BurtSocket with RoverTimesync {
   DashboardSocket({
     required super.device,
     bool sendTimesync = false,
-    int timesyncPort = 8020,
+    super.timesyncAddress,
   }) : _sendTimesync = sendTimesync,
-       super(
-         port: null,
-         quiet: true,
-         keepDestination: true,
-         timesyncAddress: SocketInfo(
-           address: InternetAddress.anyIPv4,
-           port: timesyncPort,
-         ),
-       );
+       super(port: null, quiet: true, keepDestination: true);
 
   @override
   Duration get heartbeatInterval => Duration(milliseconds: 1000 ~/ frequency);

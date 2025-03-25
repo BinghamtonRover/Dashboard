@@ -61,6 +61,7 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               SocketEditor(name: "Video socket", model: model.network.videoSocket),
               SocketEditor(name: "Autonomy socket", model: model.network.autonomySocket),
               SocketEditor(name: "Base station socket", model: model.network.baseSocket),
+              SocketEditor(name: "Timesync destination", model: model.network.timesyncSocket),
               SocketEditor(name: "Tank IP address", model: model.network.tankSocket, editPort: false),
               NumberEditor(name: "Heartbeats per second", model: model.network.connectionTimeout),
               if (Platform.isWindows) ListTile(
