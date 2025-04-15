@@ -133,7 +133,7 @@ class FilesService extends Service {
       final copy = List<WrappedMessage>.from(data);
       data.clear();
 
-      lastWritten[name] ??= copy.last;
+      lastWritten[name] = copy.last;
 
       writeFutures.add(
         Future(() async {
@@ -166,11 +166,13 @@ class FilesService extends Service {
       return;
     }
 
+    // If the last queued log is the same data
     if (batch.isNotEmpty && batch.last.data.equals(wrapped.data)) {
       return;
     } else if (batch.lastOrNull == null &&
         lastLog != null &&
         lastLog.data.equals(wrapped.data)) {
+      // If the last written log has the same data
       return;
     }
     batch.add(wrapped);
