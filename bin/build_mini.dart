@@ -21,7 +21,7 @@ Future<void> installFlutterPiTool() async {
   });
   if (await process.exitCode != 0) {
     print("\nError: Could not install flutterpi_tool from Pub");
-    print(process.stderr.map((e) => String.fromCharCodes(e).trim()));
+    await process.stderr.forEach((e) => print(String.fromCharCodes(e).trim()));
     exit(1); // could not install flutterpi_tool
   }
 }
@@ -38,7 +38,7 @@ Future<void> buildMiniDashboard() async {
   });
   if (await process.exitCode != 0) {
     print("\nError: Could not build mini dashboard");
-    print(process.stderr.map((e) => String.fromCharCodes(e).trim()));
+    await process.stderr.forEach((e) => print(String.fromCharCodes(e).trim()));
     exit(2); // could not build
   }
 }
