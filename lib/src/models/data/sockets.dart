@@ -83,7 +83,6 @@ class Sockets extends Model {
           return;
         }
 
-        models.rover.settings.settings.status = status;
         models.rover.status.value = status;
       },
     );

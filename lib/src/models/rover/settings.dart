@@ -71,12 +71,10 @@ class RoverSettings extends Model {
     }
 
     if (value == RoverStatus.RESTART) {
-      settings.status = RoverStatus.IDLE;
       models.rover.status.value = RoverStatus.IDLE;
 
       models.home.setMessage(severity: Severity.info, text: "Restarting sockets");
     } else if (value != RoverStatus.POWER_OFF) {
-      settings.status = value;
       models.rover.status.value = value;
 
       models.home.setMessage(severity: Severity.info, text: "Set mode to ${value.humanName}");

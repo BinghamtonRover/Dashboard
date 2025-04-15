@@ -60,12 +60,14 @@ class Rover extends Model {
 
 		metrics.addListener(notifyListeners);
 		settings.addListener(notifyListeners);
+    status.addListener(_onStatusChange);
 	}
 
 	@override
 	void dispose() {
 		metrics.removeListener(notifyListeners);
 		settings.removeListener(notifyListeners);
+    status.removeListener(_onStatusChange);
 
 		metrics.dispose();
 		controller1.dispose();
@@ -74,4 +76,24 @@ class Rover extends Model {
 		settings.dispose();
 		super.dispose();
 	}
+
+  void _onStatusChange() {
+    // Don't update the "desired" status if it's powering
+    // off, restarting, or disconnected, otherwise the rover will be restarting
+    // every time the dashboard connects, or it will overwrite the desired status
+    // with "disconnected"
+    if (status.value != RoverStatus.RESTART &&
+        status.value != RoverStatus.POWER_OFF &&
+        status.value != RoverStatus.DISCONNECTED) {
+      settings.settings.status = status.value;
+    }
+    if (status.value == RoverStatus.IDLE ||
+        status.value == RoverStatus.AUTONOMOUS) {
+      for (final controller in controllers) {
+        controller.setMode(OperatingMode.none);
+      }
+    } else if (status.value == RoverStatus.MANUAL) {
+      setDefaultControls();
+    }
+  }
 }
