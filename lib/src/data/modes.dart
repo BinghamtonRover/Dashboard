@@ -31,7 +31,7 @@ enum OperatingMode {
   /// Base Station mode.
   /// 
   /// Focus on manually manipulating the base station antenna
-  baseStation("Base Station");
+  baseStation("Base Station"),
 
 	/// Camera mode.
 	///
