@@ -15,13 +15,19 @@ class ModernDriveControls extends RoverControls {
   static const cameraSwivelIncrement = -1;
 
   /// The [SlewRateLimiter] for the left wheel speeds
-  SlewRateLimiter leftLimiter = SlewRateLimiter(rate: models.settings.dashboard.driveRateLimit);
+  SlewRateLimiter leftLimiter = SlewRateLimiter(
+    rate: models.settings.dashboard.driveRateLimit,
+  );
 
   /// The [SlewRateLimiter] for the right wheel speeds
-  SlewRateLimiter rightLimiter = SlewRateLimiter(rate: models.settings.dashboard.driveRateLimit);
+  SlewRateLimiter rightLimiter = SlewRateLimiter(
+    rate: models.settings.dashboard.driveRateLimit,
+  );
 
   /// The [SlewRateLimiter] for the throttle input
-  SlewRateLimiter throttleLimiter = SlewRateLimiter(rate: models.settings.dashboard.throttleRateLimit);
+  SlewRateLimiter throttleLimiter = SlewRateLimiter(
+    rate: models.settings.dashboard.throttleRateLimit,
+  );
 
   /// The angle of the front tilt servo.
   double frontTilt = 90;
@@ -64,7 +70,7 @@ class ModernDriveControls extends RoverControls {
 
   /// Gets all commands for the wheels based on the gamepad state.
   List<DriveCommand> getWheelCommands(GamepadState state) {
-    final speed = state.normalTriggers;  // sum of both triggers, [-1, 1]
+    final speed = state.normalTriggers; // sum of both triggers, [-1, 1]
     if (speed == 0) {
       final left = state.normalLeftX;
       final right = state.normalLeftX;
@@ -85,18 +91,18 @@ class ModernDriveControls extends RoverControls {
 
   /// Gets all camera commands based on the gamepad state.
   List<DriveCommand> getCameraCommands(GamepadState state) => [
-        DriveCommand(frontSwivel: frontSwivel),
-        DriveCommand(frontTilt: frontTilt),
-        DriveCommand(rearSwivel: rearSwivel),
-        DriveCommand(rearTilt: rearTilt),
-      ];
+    DriveCommand(frontSwivel: frontSwivel),
+    DriveCommand(frontTilt: frontTilt),
+    DriveCommand(rearSwivel: rearSwivel),
+    DriveCommand(rearTilt: rearTilt),
+  ];
 
   @override
   List<Message> parseInputs(GamepadState state) => [
-        ...getWheelCommands(state),
-        if (!models.settings.dashboard.splitCameras)
-          ...getCameraCommands(state),
-      ];
+    ...getWheelCommands(state),
+    if (!models.settings.dashboard.splitCameras)
+      ...getCameraCommands(state),
+  ];
 
   /// Updates the throttle if either shoulder button is pressed.
   void updateThrottle(GamepadState state) {
@@ -147,19 +153,19 @@ class ModernDriveControls extends RoverControls {
 
   @override
   List<Message> get onDispose => [
-        DriveCommand(setThrottle: true, throttle: 0),
-        DriveCommand(setLeft: true, left: 0),
-        DriveCommand(setRight: true, right: 0),
-      ];
+    DriveCommand(setThrottle: true, throttle: 0),
+    DriveCommand(setLeft: true, left: 0),
+    DriveCommand(setRight: true, right: 0),
+  ];
 
   @override
   Map<String, String> get buttonMapping => {
-        "Forward": "Right trigger",
-        "Reverse / Brake": "Left trigger",
-        "Steering": "Left joystick (horizontal)",
-        "Decrease throttle": "Left bumper",
-        "Increase throttle": "Right bumper",
-        "Rear camera": "D-pad",
-        "Front camera": "Right joystick",
-      };
+    "Forward": "Right trigger",
+    "Reverse / Brake": "Left trigger",
+    "Steering": "Left joystick (horizontal)",
+    "Decrease throttle": "Left bumper",
+    "Increase throttle": "Right bumper",
+    "Rear camera": "D-pad",
+    "Front camera": "Right joystick",
+  };
 }
