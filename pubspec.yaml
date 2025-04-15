@@ -34,9 +34,6 @@ dependency_overrides:
     git:
       url: https://github.com/BinghamtonRover/flutter_sdl_gamepad.git
       ref: macos
-  # See: https://github.com/jpnurmi/flutter_libserialport/issues/108
-  flutter_libserialport:
-    git: https://github.com/snabble/flutter_libserialport.git
   # See: https://github.com/andyhorn/flutter_resizable_container/pull/61
   flutter_resizable_container:
     git:

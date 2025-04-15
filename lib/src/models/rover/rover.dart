@@ -43,6 +43,9 @@ class Rover extends Model {
 	/// Whether the rover is connected.
 	bool get isConnected => models.sockets.sockets.any((socket) => socket.isConnected);
 
+  /// A listener to listen to status changes in all the controllers.
+  Listenable get controllersListener => Listenable.merge(controllers);
+
 	/// The current status of the rover.
 	ValueNotifier<RoverStatus> status = ValueNotifier(RoverStatus.DISCONNECTED);
 
