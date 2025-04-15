@@ -7,7 +7,7 @@ import "package:rover_dashboard/models.dart";
 import "settings.dart";
 
 /// The model to control the entire rover.
-/// 
+///
 /// Find more specific functionality in this class's fields.
 class Rover extends Model {
 	/// Monitors metrics coming from the rover.
@@ -43,11 +43,14 @@ class Rover extends Model {
 	/// Whether the rover is connected.
 	bool get isConnected => models.sockets.data.isConnected;
 
+  /// A listener to listen to status changes in all the controllers.
+  Listenable get controllersListener => Listenable.merge(controllers);
+
 	/// The current status of the rover.
 	ValueNotifier<RoverStatus> status = ValueNotifier(RoverStatus.DISCONNECTED);
 
 	@override
-	Future<void> init() async { 
+	Future<void> init() async {
     setDefaultControls();
     await metrics.init();
 		await controller1.init();
