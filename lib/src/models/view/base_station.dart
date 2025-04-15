@@ -14,11 +14,7 @@ class BaseStationModel with ChangeNotifier {
   GpsCoordinates get roverPosition => models.rover.metrics.position.data.gps;
 
   /// The base station's position
-  GpsCoordinates get stationPosition => GpsCoordinates(
-        latitude: models.settings.baseStation.latitude,
-        longitude: models.settings.baseStation.longitude,
-        altitude: models.settings.baseStation.altitude,
-      );
+  GpsCoordinates get stationPosition => models.settings.baseStation.gpsCoordinates;
 
   /// The antenna data received from the rover
   BaseStationData data = BaseStationData();
