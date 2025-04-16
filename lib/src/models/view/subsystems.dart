@@ -45,7 +45,7 @@ class SubsystemsViewModel extends ChangeNotifier {
       metrics.addListener(notifyListeners);
     }
     models.rover.metrics.subsystems.addListener(notifyListeners);
-    models.rover.metrics.relays.addListener(notifyListeners);
+    models.rover.metrics.relays.addListener(onRelaysUpdate);
   }
 
   @override
@@ -54,7 +54,7 @@ class SubsystemsViewModel extends ChangeNotifier {
       metrics.removeListener(notifyListeners);
     }
     models.rover.metrics.subsystems.removeListener(notifyListeners);
-    models.rover.metrics.relays.removeListener(notifyListeners);
+    models.rover.metrics.relays.removeListener(onRelaysUpdate);
     super.dispose();
   }
 
@@ -62,6 +62,35 @@ class SubsystemsViewModel extends ChangeNotifier {
   void toggleRelay(RelaysCommand toggleCommand) {
     models.messages.sendMessage(toggleCommand);
     desiredRelays.mergeFromMessage(toggleCommand);
+
+    notifyListeners();
+  }
+
+  /// Callback for when a relays data message is received
+  void onRelaysUpdate() {
+    // If there isn't a desired state for any of the relays,
+    // set its desired state to whatever the current state is.
+    if (desiredRelays.arm == BoolState.BOOL_UNDEFINED) {
+      desiredRelays.arm = relays.arm;
+    }
+    if (desiredRelays.drive == BoolState.BOOL_UNDEFINED) {
+      desiredRelays.drive = relays.drive;
+    }
+    if (desiredRelays.science == BoolState.BOOL_UNDEFINED) {
+      desiredRelays.science = relays.science;
+    }
+    if (desiredRelays.frontLeftMotor == BoolState.BOOL_UNDEFINED) {
+      desiredRelays.frontLeftMotor = relays.frontLeftMotor;
+    }
+    if (desiredRelays.frontRightMotor == BoolState.BOOL_UNDEFINED) {
+      desiredRelays.frontRightMotor = relays.frontRightMotor;
+    }
+    if (desiredRelays.backLeftMotor == BoolState.BOOL_UNDEFINED) {
+      desiredRelays.backLeftMotor = relays.backLeftMotor;
+    }
+    if (desiredRelays.backRightMotor == BoolState.BOOL_UNDEFINED) {
+      desiredRelays.backRightMotor = relays.backRightMotor;
+    }
 
     notifyListeners();
   }

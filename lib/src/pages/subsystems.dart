@@ -179,10 +179,10 @@ class RelaysView extends StatelessWidget {
               message: "Unknown Relay State",
               child: Icon(Icons.question_mark),
             )
-          else if (desiredState != null)
+          else if (desired != null)
             desiredIcon(
-              relayState(model.relays),
-              desiredState(model.desiredRelays),
+              current,
+              desired,
             ),
         ],
       ),
