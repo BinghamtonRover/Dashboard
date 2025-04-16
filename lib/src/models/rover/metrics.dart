@@ -78,6 +78,11 @@ class RoverMetrics extends Model {
       constructor: BaseStationData.fromBuffer,
       callback: baseStation.update,
     );
+    models.messages.stream.onMessage(
+      name: AntennaFirmwareData().messageName,
+      constructor: AntennaFirmwareData.fromBuffer,
+      callback: baseStation.updateFromFirmware,
+    );
     drive.addListener(vitals.notify);
     // versionTimer = Timer.periodic(versionInterval, _sendVersions);
 	}

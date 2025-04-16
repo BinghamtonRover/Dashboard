@@ -1,5 +1,3 @@
-import "dart:math";
-
 import "package:burt_network/protobuf.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/src/data/modes.dart";
@@ -19,8 +17,7 @@ class BaseStationControls extends RoverControls {
       mode: AntennaControlMode.MANUAL_CONTROL,
       manualCommand: AntennaFirmwareCommand(
         swivel: MotorCommand(
-          // 2.5 degrees per second
-          moveRadians: (2.5 * (gamepadDelay.inMilliseconds / 1e3)) * pi / 180,
+          moveRadians: -state.normalRightX * 0.005,
         ),
       ),
       version: Version(major: 1),

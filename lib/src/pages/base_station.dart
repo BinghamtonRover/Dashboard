@@ -7,16 +7,6 @@ import "package:rover_dashboard/src/models/view/base_station.dart";
 import "package:rover_dashboard/src/widgets/atomic/antenna_command.dart";
 import "package:rover_dashboard/widgets.dart";
 
-extension _GpsBaseUtil on GpsCoordinates {
-  GpsCoordinates operator -(GpsCoordinates other) => GpsCoordinates(
-        latitude: latitude - other.latitude,
-        longitude: longitude - other.longitude,
-        altitude: altitude - other.altitude,
-      );
-
-  double get angle => atan2(longitude, latitude);
-}
-
 /// The UI for the base station
 ///
 /// Shows a diagram of where the antenna is pointing, where the rover is relative to it,
@@ -33,38 +23,36 @@ class BaseStationPage extends ReactiveWidget<BaseStationModel> {
 
   @override
   Widget build(BuildContext context, BaseStationModel model) => Column(
+    children: [
+      PageHeader(
+        pageIndex: index,
         children: [
-          PageHeader(
-            pageIndex: index,
-            children: [
-              const SizedBox(width: 8),
-              Text("Base Station", style: context.textTheme.headlineMedium),
-              const Spacer(),
-            ],
-          ),
-          Flexible(
-            child: LayoutBuilder(
-              builder: (context, constraints) => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Flexible(
-                      flex: 3,
-                      child: _AntennaDisplay(model: model),
-                    ),
-                    if (constraints.maxWidth > 780)
-                      Flexible(
-                        flex: 2,
-                        child: Card(
-                          elevation: 15,
-                          child: AntennaCommandEditor(model.commandBuilder),
-                        ),
-                      ),
-                  ],
-                ),
-            ),
-          ),
+          const SizedBox(width: 8),
+          Text("Base Station", style: context.textTheme.headlineMedium),
+          const Spacer(),
         ],
-      );
+      ),
+      Flexible(
+        child: LayoutBuilder(
+          builder:
+              (context, constraints) => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Flexible(flex: 3, child: _AntennaDisplay(model: model)),
+                  if (constraints.maxWidth > 780)
+                    Flexible(
+                      flex: 2,
+                      child: Card(
+                        elevation: 15,
+                        child: AntennaCommandEditor(model.commandBuilder),
+                      ),
+                    ),
+                ],
+              ),
+        ),
+      ),
+    ],
+  );
 }
 
 class _AntennaDisplay extends StatelessWidget {
@@ -73,15 +61,16 @@ class _AntennaDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AspectRatio(
-        aspectRatio: 1,
-        child: Card(
-          elevation: 15,
-          child: LayoutBuilder(
-            builder: (context, constraints) => Stack(
+    aspectRatio: 1,
+    child: Card(
+      elevation: 15,
+      child: LayoutBuilder(
+        builder:
+            (context, constraints) => Stack(
               alignment: Alignment.center,
               children: [
                 Transform.rotate(
-                  angle: model.data.antenna.swivel.currentAngle,
+                  angle: -model.data.antenna.swivel.currentAngle,
                   child: Icon(
                     Icons.settings_input_antenna,
                     size: constraints.maxWidth / 10,
@@ -98,16 +87,17 @@ class _AntennaDisplay extends StatelessWidget {
                     outlineColor: context.colorScheme.onSurface,
                     antennaAngle: model.data.antenna.swivel.currentAngle,
                     angleTolerance: models.settings.baseStation.angleTolerance,
-                    targetAngle: (model.data.antenna.swivel.hasTargetAngle())
-                        ? model.data.antenna.swivel.targetAngle
-                        : null,
+                    targetAngle:
+                        (model.data.antenna.swivel.hasTargetAngle())
+                            ? model.data.antenna.swivel.targetAngle
+                            : null,
                   ),
                 ),
               ],
             ),
-          ),
-        ),
-      );
+      ),
+    ),
+  );
 }
 
 class _BaseStationPainter extends CustomPainter {
@@ -140,45 +130,53 @@ class _BaseStationPainter extends CustomPainter {
   }
 
   void drawRover(Canvas canvas, Size size) {
-    final delta = roverCoordinates - stationCoordinates;
-    targetAngle ??= delta.angle;
+    // UI uses CW+, geometry uses CCW+
+    final uiAntennaAngle = -antennaAngle;
+    var uiTargetAngle = targetAngle != null ? -targetAngle! : null;
+
+    final delta = roverCoordinates.toUTM() - stationCoordinates.toUTM();
+    final deltaAngle = atan2(delta.y, delta.x);
+    uiTargetAngle ??= -deltaAngle;
 
     final roverPaint = Paint()..color = Colors.blue;
 
     final radius = (size.width / 2) * 0.9;
     final center = Offset(size.width, size.height) / 2;
 
-    final roverPosition = center +
-        Offset(cos(delta.angle - pi / 2), sin(delta.angle - pi / 2)) * radius;
+    final roverPosition =
+        center +
+        Offset(cos(deltaAngle - pi / 2), sin(deltaAngle - pi / 2)) * radius;
 
-    canvas.drawCircle(
-      roverPosition,
-      size.width / 50,
-      roverPaint,
-    );
+    canvas.drawCircle(roverPosition, size.width / 50, roverPaint);
 
-    final antennaPosition = center +
-        Offset(cos(antennaAngle - pi / 2), sin(antennaAngle - pi / 2)) * radius;
+    final antennaPosition =
+        center +
+        Offset(cos(uiAntennaAngle - pi / 2), sin(uiAntennaAngle - pi / 2)) *
+            radius;
 
-    final minTolerance = targetAngle! + (angleTolerance / 2) * pi / 180;
-    final maxTolerance = targetAngle! - (angleTolerance / 2) * pi / 180;
+    final minTolerance = uiTargetAngle - (angleTolerance / 2) * pi / 180;
+    final maxTolerance = uiTargetAngle + (angleTolerance / 2) * pi / 180;
 
-    final inRange = _wrapAngle(antennaAngle - minTolerance) <= 0 &&
-        _wrapAngle(antennaAngle - maxTolerance) >= 0;
+    final inRange =
+        _wrapAngle(uiAntennaAngle - minTolerance) >= 0 &&
+        _wrapAngle(uiAntennaAngle - maxTolerance) <= 0;
 
-    final antennaPaint = Paint()
-      ..color = inRange ? Colors.green : Colors.red
-      ..strokeWidth = 4;
-    final rangePaint = Paint()
-      ..color = Colors.green
-      ..strokeWidth = 2;
+    final antennaPaint =
+        Paint()
+          ..color = inRange ? Colors.green : Colors.red
+          ..strokeWidth = 4;
+    final rangePaint =
+        Paint()
+          ..color = Colors.green
+          ..strokeWidth = 2;
 
     canvas.drawLine(center, antennaPosition, antennaPaint);
 
     drawDashedLine(
       canvas: canvas,
       p1: center,
-      p2: center +
+      p2:
+          center +
           Offset(cos(minTolerance - pi / 2), sin(minTolerance - pi / 2)) *
               radius *
               1.1,
@@ -190,7 +188,8 @@ class _BaseStationPainter extends CustomPainter {
     drawDashedLine(
       canvas: canvas,
       p1: center,
-      p2: center +
+      p2:
+          center +
           Offset(cos(maxTolerance - pi / 2), sin(maxTolerance - pi / 2)) *
               radius *
               1.1,

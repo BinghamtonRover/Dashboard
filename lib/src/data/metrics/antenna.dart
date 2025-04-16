@@ -37,4 +37,8 @@ class BaseStationMetrics extends Metrics<BaseStationData> {
 
   @override
   Message get versionCommand => BaseStationCommand(version: supportedVersion);
+
+  /// Updates the base station metrics with only firmware data
+  void updateFromFirmware(AntennaFirmwareData firmwareData) =>
+      update(BaseStationData(antenna: firmwareData));
 }

@@ -1,4 +1,5 @@
 ﻿import "dart:async";
+import "dart:math";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -36,22 +37,29 @@ class AntennaCommandBuilder extends ValueBuilder<BaseStationCommand> {
   GpsBuilder baseStationCoordinatesOverride = GpsBuilder();
 
   @override
-  List<ValueBuilder<dynamic>> get otherBuilders => [roverCoordinatesOverride, baseStationCoordinatesOverride];
+  List<ValueBuilder<dynamic>> get otherBuilders => [
+    roverCoordinatesOverride,
+    baseStationCoordinatesOverride,
+  ];
 
   @override
   bool get isValid =>
       (!overrideRoverCoordinates || roverCoordinatesOverride.isValid) &&
-      (!overrideBaseStationCoordinates || baseStationCoordinatesOverride.isValid);
+      (!overrideBaseStationCoordinates ||
+          baseStationCoordinatesOverride.isValid);
 
   @override
   BaseStationCommand get value => BaseStationCommand(
-      version: Version(major: 1),
-      mode: mode,
-      roverCoordinatesOverrideOverride: overrideRoverCoordinates
-        ? roverCoordinatesOverride.value : null,
-      baseStationCoordinatesOverride: overrideBaseStationCoordinates
-          ? baseStationCoordinatesOverride.value : null,
-    );
+    version: models.rover.metrics.baseStation.supportedVersion,
+    mode: mode,
+    roverCoordinatesOverride:
+        overrideRoverCoordinates ? roverCoordinatesOverride.value : null,
+    baseStationCoordinates:
+        overrideBaseStationCoordinates
+            ? baseStationCoordinatesOverride.value
+            : models.settings.baseStation.gpsCoordinates,
+    angleTolerance: models.settings.baseStation.angleTolerance * pi / 180,
+  );
 
   /// Sends the command to the base station socket
   Future<void> sendCommand() async {
@@ -69,7 +77,10 @@ class AntennaCommandBuilder extends ValueBuilder<BaseStationCommand> {
     )) {
       models.home.setMessage(severity: Severity.info, text: "Command received");
     } else {
-      models.home.setMessage(severity: Severity.error, text: "Command not received");
+      models.home.setMessage(
+        severity: Severity.error,
+        text: "Command not received",
+      );
     }
     notifyListeners();
   }
@@ -90,7 +101,10 @@ class AntennaCommandBuilder extends ValueBuilder<BaseStationCommand> {
     )) {
       models.home.setMessage(severity: Severity.info, text: "Antenna Stopped");
     } else {
-      models.home.setMessage(severity: Severity.error, text: "Command not received");
+      models.home.setMessage(
+        severity: Severity.error,
+        text: "Command not received",
+      );
     }
   }
 }
