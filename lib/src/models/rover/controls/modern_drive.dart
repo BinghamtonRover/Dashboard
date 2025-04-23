@@ -15,19 +15,13 @@ class ModernDriveControls extends RoverControls {
   static const cameraSwivelIncrement = -1;
 
   /// The [SlewRateLimiter] for the left wheel speeds
-  late SlewRateLimiter leftLimiter = SlewRateLimiter(
-    rate: models.settings.dashboard.driveRateLimit,
-  );
+  SlewRateLimiter leftLimiter = SlewRateLimiter();
 
   /// The [SlewRateLimiter] for the right wheel speeds
-  late SlewRateLimiter rightLimiter = SlewRateLimiter(
-    rate: models.settings.dashboard.driveRateLimit,
-  );
+  SlewRateLimiter rightLimiter = SlewRateLimiter();
 
   /// The [SlewRateLimiter] for the throttle input
-  late SlewRateLimiter throttleLimiter = SlewRateLimiter(
-    rate: models.settings.dashboard.throttleRateLimit,
-  );
+  SlewRateLimiter throttleLimiter = SlewRateLimiter();
 
   /// The angle of the front tilt servo.
   double frontTilt = 90;

@@ -6,19 +6,13 @@ import "package:rover_dashboard/src/models/rover/controls/slew_rate_limiter.dart
 /// The skid-steer drive controls.
 class DriveControls extends RoverControls {
   /// The [SlewRateLimiter] for the left joystick input
-  late SlewRateLimiter leftLimiter = SlewRateLimiter(
-    rate: models.settings.dashboard.driveRateLimit,
-  );
+  SlewRateLimiter leftLimiter = SlewRateLimiter();
 
   /// The [SlewRateLimiter] for the right joystick input
-  late SlewRateLimiter rightLimiter = SlewRateLimiter(
-    rate: models.settings.dashboard.driveRateLimit,
-  );
+  SlewRateLimiter rightLimiter = SlewRateLimiter();
 
   /// The [SlewRateLimiter] for the throttle, prevents sudden jumps in speed
-  late SlewRateLimiter throttleLimiter = SlewRateLimiter(
-    rate: models.settings.dashboard.throttleRateLimit,
-  );
+  SlewRateLimiter throttleLimiter = SlewRateLimiter();
 
   /// Whether the left shoulder was pressed last tick.
   bool leftShoulderFlag = false;
@@ -37,6 +31,7 @@ class DriveControls extends RoverControls {
     leftLimiter.rate = models.settings.dashboard.driveRateLimit;
     rightLimiter.rate = models.settings.dashboard.driveRateLimit;
     throttleLimiter.rate = models.settings.dashboard.throttleRateLimit;
+
     if (!leftShoulderFlag && state.leftShoulder) throttle -= 0.1;
     leftShoulderFlag = state.leftShoulder;
     if (!rightShoulderFlag && state.rightShoulder) throttle += 0.1;
