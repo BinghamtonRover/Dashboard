@@ -40,7 +40,6 @@ class GridOffset {
 
 extension _GpsCoordinatesToBlock on GpsCoordinates {
   GpsCoordinates get toGridBlock {
-    // final (:lat, :long) = inMeters;
     final utmCoordinates = toUTM();
     return GpsCoordinates(
       latitude: (utmCoordinates.y / models.settings.dashboard.mapBlockSize).roundToDouble(),
@@ -65,8 +64,6 @@ typedef AutonomyGrid = List<List<MapCellData>>;
 class AutonomyModel with ChangeNotifier, BadAppleViewModel {
   @override
 	int gridSize = 11;
-
-	// GridOffset offset = const GridOffset(0, 0);
 
 	/// The offset to add to all other coordinates, based on [roverPosition]. See [recenterRover].
   UTMCoordinates centerPosition = UTMCoordinates.fromDD(
@@ -155,20 +152,21 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 	/// The grid of size [gridSize] with the rover in the center, ready to draw on the UI.
 	AutonomyGrid get grid {
 		final result = empty;
-		for (final obstacle in data.obstacles) {
-			markCell(result, obstacle, AutonomyCell.obstacle);
-		}
-    if (isPlayingBadApple) return result;
-    for (final path in data.path) {
-      if (!data.obstacles.contains(path)) {
-        markCell(result, path, AutonomyCell.path);
+    if (isPlayingBadApple) {
+      for (final obstacle in data.obstacles) {
+        markCell(result, obstacle, AutonomyCell.obstacle);
       }
+      return result;
+    }
+    for (final path in data.path) {
+      markCell(result, path, AutonomyCell.path);
     }
 		for (final marker in markers) {
-      if (!data.obstacles.contains(marker)) {
-        markCell(result, marker, AutonomyCell.marker);
-      }
+      markCell(result, marker, AutonomyCell.marker);
 		}
+    for (final obstacle in data.obstacles) {
+      markCell(result, obstacle, AutonomyCell.obstacle);
+    }
     // Marks the rover and destination -- these should be last
     if (data.hasDestination()) markCell(result, data.destination, AutonomyCell.destination);
 		markCell(result, roverPosition, AutonomyCell.rover);
@@ -188,8 +186,6 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
     final x = ((utmCoordinates.x - centerPosition.x) / precisionMeters).round();
     final y = ((utmCoordinates.y - centerPosition.y) / precisionMeters).round();
 
-    // final x = (utmCoordinates.x / precisionMeters).round() - offset.x;
-    // final y = (utmCoordinates.y / precisionMeters).round() + offset.y;
 		if (x < 0 || x >= gridSize) return;
 		if (y < 0 || y >= gridSize) return;
 		grid[y][x] = (coordinates: gps, cellType: value);
@@ -206,10 +202,8 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 	/// `(3, 2)` to get it there. That means we should also add `(3, 2)` to the obstacle's position
 	/// so it remains `(-1, -1)` away from the rover's new position, yielding `(4, 4)`.
 	void recenterRover() {
-    // final position = isPlayingBadApple ? GpsCoordinates() : roverPosition;
     final position = roverPosition;
 		final midpoint = (gridSize - 1) / 2;
-    // final (:lat, :long) = position.inMeters;
     final utmPosition = position.toUTM();
     centerPosition = utmPosition -
       UTMCoordinates(
@@ -218,9 +212,6 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
         zoneNumber: utmPosition.zoneNumber,
         isSouthernHemisphere: utmPosition.isSouthernHemisphere,
       );
-    // final offsetX = -midpoint + (long / precisionMeters).round();
-    // final offsetY = midpoint - (lat / precisionMeters).round();
-		// offset = GridOffset(offsetX, offsetY);
 		notifyListeners();
 	}
 
