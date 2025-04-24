@@ -1,0 +1,11 @@
+GUI:
+  - changed-files:
+    - any-glob-to-any-file: 'lib/**'
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file: ['pubspec.yaml', 'pubspec.lock']
+
+workflows:
+  - changed-files:
+    - any-glob-to-any-file: '.github/workflows/**'
