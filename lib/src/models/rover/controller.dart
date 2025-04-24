@@ -1,5 +1,6 @@
 import "dart:async";
 
+import "package:collection/collection.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
@@ -94,8 +95,18 @@ class Controller extends Model {
     if (!gamepad.isConnected || state == null) return;
     controls.updateState(state);
     final messages = controls.parseInputs(state);
+    final outputMessages = <Message>[];
     for (final message in messages) {
-      // print(message.toProto3Json());
+      final baseMessage = outputMessages.firstWhereOrNull(
+        (e) => e.messageName == message.messageName,
+      );
+      if (baseMessage == null) {
+        outputMessages.add(message);
+      } else {
+        baseMessage.mergeFromMessage(message);
+      }
+    }
+    for (final message in outputMessages) {
       if (message is! BaseStationCommand) {
         models.messages.sendMessage(message);
       } else {

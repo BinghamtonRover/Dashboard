@@ -20,6 +20,8 @@ export "src/data/metrics/metrics.dart";
 export "src/data/metrics/science.dart";
 export "src/data/metrics/vitals.dart";
 export "src/data/metrics/antenna.dart";
+export "src/data/metrics/relays.dart";
+export "src/data/metrics/subsystems.dart";
 
 export "src/data/modes.dart";
 export "src/data/protobuf.dart";

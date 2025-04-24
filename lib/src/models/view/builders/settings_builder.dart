@@ -244,6 +244,12 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   /// Whether to default to tank controls. See [DashboardSettings.preferTankControls].
   bool preferTankControls;
 
+  /// The maximum rate of change to apply to the drive joystick inputs. See [DashboardSettings.driveRateLimit]
+  NumberBuilder<double> driveRateLimit;
+
+  /// The maximum rate of change to apply to the drive throttle. See [DashboardSettings.throttleRateLimit]
+  NumberBuilder<double> throttleRateLimit;
+
   /// Whether to use version checking. See [DashboardSettings.versionChecking].
   bool versionChecking;
 
@@ -260,6 +266,8 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     splitMode = initial.splitMode,
     splitCameras = initial.splitCameras,
     preferTankControls = initial.preferTankControls,
+    driveRateLimit = NumberBuilder(initial.driveRateLimit),
+    throttleRateLimit = NumberBuilder(initial.throttleRateLimit),
     versionChecking = initial.versionChecking,
     themeMode = initial.themeMode,
     preset = initial.presets,
@@ -276,6 +284,8 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
     themeMode: themeMode,
     splitCameras: splitCameras,
     preferTankControls: preferTankControls,
+    driveRateLimit: driveRateLimit.value,
+    throttleRateLimit: throttleRateLimit.value,
     versionChecking: versionChecking,
     presets: preset,
     defaultPreset: defaultPreset,
@@ -299,6 +309,13 @@ class DashboardSettingsBuilder extends ValueBuilder<DashboardSettings> {
   void updateTank(bool? input) {  // ignore: avoid_positional_boolean_parameters
     if (input == null) return;
     preferTankControls = input;
+    notifyListeners();
+  }
+
+  /// Updates [driveRateLimit]
+  void updateSlewRateLimit(double? input) {
+    if (input == null) return;
+    driveRateLimit.value = input;
     notifyListeners();
   }
 

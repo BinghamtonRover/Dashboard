@@ -21,6 +21,12 @@ class RoverMetrics extends Model {
 
   /// Vitals data from the rover.
   final vitals = VitalsMetrics();
+  
+  /// Subsystems status from the rover
+  final subsystems = SubsystemsMetrics();
+
+  /// Relay data from the Rover
+  final relays = RelayMetrics();
 
   /// Data from the Base Station
   final baseStation = BaseStationMetrics();
@@ -29,7 +35,7 @@ class RoverMetrics extends Model {
 	///
 	/// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
 	/// when new data is received. As a getter, every time it is called it will use new data.
-	List<Metrics> get allMetrics => [vitals, position, drive, science, arm, gripper, baseStation];
+	List<Metrics> get allMetrics => [vitals, position, drive, science, arm, subsystems, relays, baseStation];
 
   /// Whether the given command is supported by the rover.
   bool isSupportedVersion(Message command) {
@@ -43,6 +49,7 @@ class RoverMetrics extends Model {
     DriveCommand().messageName: drive,
     ArmCommand().messageName: arm,
     GripperCommand().messageName: gripper,
+    SubsystemsCommand().messageName: subsystems,
     BaseStationCommand().messageName: baseStation,
   };
 
@@ -82,6 +89,16 @@ class RoverMetrics extends Model {
       name: AntennaFirmwareData().messageName,
       constructor: AntennaFirmwareData.fromBuffer,
       callback: baseStation.updateFromFirmware,
+    );
+    models.messages.stream.onMessage(
+      name: RelaysData().messageName,
+      constructor: RelaysData.fromBuffer,
+      callback: relays.update,
+    );
+    models.messages.stream.onMessage(
+      name: SubsystemsData().messageName,
+      constructor: SubsystemsData.fromBuffer,
+      callback: subsystems.update,
     );
     drive.addListener(vitals.notify);
     // versionTimer = Timer.periodic(versionInterval, _sendVersions);

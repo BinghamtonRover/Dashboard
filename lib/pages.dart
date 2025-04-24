@@ -18,6 +18,7 @@ export "src/pages/splash.dart";
 export "src/pages/electrical.dart";
 export "src/pages/view.dart";
 export "src/pages/lidar.dart";
+export "src/pages/subsystems.dart";
 
 /// The names of all the pages available in the app.
 ///
@@ -46,6 +47,9 @@ class Routes {
 
 	/// The name of the autonomy page.
 	static const String autonomy = "Map";
+
+  /// The name of the subsystems page
+  static const String subsystems = "Subsystems";
 
   /// The name of the logs page.
   static const String logs = "Logs";
