@@ -15,13 +15,13 @@ import "map/legend.dart";
 class MapPage extends ReactiveWidget<AutonomyModel> {
   /// Gets the color for a given [AutonomyCell].
   Color? getColor(AutonomyCell cell, AutonomyModel model) => switch (cell) {
-        AutonomyCell.destination => Colors.green,
-        AutonomyCell.obstacle => Colors.black,
-        AutonomyCell.path => Colors.blueGrey,
-        AutonomyCell.empty => Colors.white,
-        AutonomyCell.marker => Colors.red,
-        AutonomyCell.rover => getColor(model.roverCellType, model),
-      };
+    AutonomyCell.destination => Colors.green,
+    AutonomyCell.obstacle => Colors.black,
+    AutonomyCell.path => Colors.blueGrey,
+    AutonomyCell.empty => Colors.white,
+    AutonomyCell.marker => Colors.red,
+    AutonomyCell.rover => getColor(model.roverCellType, model),
+  };
 
   /// Places a marker at the given location and closes the dialog opened by [promptForMarker].
   void placeMarker(BuildContext context, AutonomyModel model, GpsCoordinates coordinates) {

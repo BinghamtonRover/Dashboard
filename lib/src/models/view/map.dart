@@ -10,18 +10,23 @@ import "bad_apple.dart";
 
 /// Represents the state of a cell on the autonomy map.
 enum AutonomyCell {
-	/// This is where the rover currently is.
-	rover,
-	/// This is where the rover is trying to go.
-	destination,
-	/// This cell has an obstacle the rover needs to avoid.
-	obstacle,
-	/// This cell is along the rover's path to its destination.
-	path,
-	/// This cell is traversable but otherwise not of interest.
-	empty,
-	/// THis cell was manually marked as a point of interest.
-	marker,
+  /// This is where the rover currently is.
+  rover,
+
+  /// This is where the rover is trying to go.
+  destination,
+
+  /// This cell has an obstacle the rover needs to avoid.
+  obstacle,
+
+  /// This cell is along the rover's path to its destination.
+  path,
+
+  /// This cell is traversable but otherwise not of interest.
+  empty,
+
+  /// THis cell was manually marked as a point of interest.
+  marker,
 }
 
 /// Like an [Offset] from Flutter, but using integers instead of doubles.
@@ -30,12 +35,14 @@ enum AutonomyCell {
 /// as a 2D list, the x and y coordinates must be integers to act as indexes. Use this class to
 /// keep the rover centered in the UI.
 class GridOffset {
-	/// The X offset.
-	final int x;
-	/// The Y offset.
-	final int y;
-	/// A const constructor.
-	const GridOffset(this.x, this.y);
+  /// The X offset.
+  final int x;
+
+  /// The Y offset.
+  final int y;
+
+  /// A const constructor.
+  const GridOffset(this.x, this.y);
 }
 
 extension _GpsCoordinatesToBlock on GpsCoordinates {
@@ -63,41 +70,43 @@ typedef AutonomyGrid = List<List<MapCellData>>;
 ///
 class AutonomyModel with ChangeNotifier, BadAppleViewModel {
   @override
-	int gridSize = 11;
+  int gridSize = 11;
 
-	/// The offset to add to all other coordinates, based on [roverPosition]. See [recenterRover].
+  /// The offset to add to all other coordinates, based on [roverPosition]. See [recenterRover].
   UTMCoordinates centerPosition = UTMCoordinates.fromDD(
     DDCoordinates(latitude: 0, longitude: 0),
   );
 
-	/// Listens for incoming autonomy or position data.
-	AutonomyModel() { init(); }
+  /// Listens for incoming autonomy or position data.
+  AutonomyModel() {
+    init();
+  }
 
   StreamSubscription<AutonomyData>? _subscription;
 
   /// Initializes the view model.
   Future<void> init() async {
-		recenterRover();
-		_subscription = models.messages.stream.onMessage<AutonomyData>(
-			name: AutonomyData().messageName,
-			constructor: AutonomyData.fromBuffer,
-			callback: onNewData,
-		);
-		models.rover.metrics.position.addListener(recenterRover);
+    recenterRover();
+    _subscription = models.messages.stream.onMessage<AutonomyData>(
+      name: AutonomyData().messageName,
+      constructor: AutonomyData.fromBuffer,
+      callback: onNewData,
+    );
+    models.rover.metrics.position.addListener(recenterRover);
     models.settings.addListener(notifyListeners);
-		// Force the initial update, even with no new data.
-		recenterRover();
-		onNewData(AutonomyData());
-	}
+    // Force the initial update, even with no new data.
+    recenterRover();
+    onNewData(AutonomyData());
+  }
 
-	@override
-	void dispose() {
+  @override
+  void dispose() {
     _subscription?.cancel();
-		models.settings.removeListener(notifyListeners);
-		models.rover.metrics.position.removeListener(recenterRover);
+    models.settings.removeListener(notifyListeners);
+    models.rover.metrics.position.removeListener(recenterRover);
     disposeBadApple();
-		super.dispose();
-	}
+    super.dispose();
+  }
 
 	/// An empty grid of size [gridSize].
   AutonomyGrid get empty => [
@@ -114,14 +123,14 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
     ],
   ];
 
-	/// A list of markers manually placed by the user. Useful for the Extreme Retrieval Mission.
-	List<GpsCoordinates> markers = [];
+  /// A list of markers manually placed by the user. Useful for the Extreme Retrieval Mission.
+  List<GpsCoordinates> markers = [];
 
-	/// The view model to edit the coordinate of the marker.
-	GpsBuilder markerBuilder = GpsBuilder();
+  /// The view model to edit the coordinate of the marker.
+  GpsBuilder markerBuilder = GpsBuilder();
 
-	/// The rover's current position.
-	GpsCoordinates get roverPosition => models.rover.metrics.position.data.gps;
+  /// The rover's current position.
+  GpsCoordinates get roverPosition => models.rover.metrics.position.data.gps;
 
   /// The precision of the grid
   double get precisionMeters => models.settings.dashboard.mapBlockSize;
@@ -146,12 +155,12 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
   /// The rover's heading
   double get roverHeading => models.rover.metrics.position.angle;
 
-	/// The autonomy data as received from the rover.
-	AutonomyData data = AutonomyData();
+  /// The autonomy data as received from the rover.
+  AutonomyData data = AutonomyData();
 
-	/// The grid of size [gridSize] with the rover in the center, ready to draw on the UI.
-	AutonomyGrid get grid {
-		final result = empty;
+  /// The grid of size [gridSize] with the rover in the center, ready to draw on the UI.
+  AutonomyGrid get grid {
+    final result = empty;
     if (isPlayingBadApple) {
       for (final obstacle in data.obstacles) {
         markCell(result, obstacle, AutonomyCell.obstacle);
@@ -161,80 +170,83 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
     for (final path in data.path) {
       markCell(result, path, AutonomyCell.path);
     }
-		for (final marker in markers) {
+    for (final marker in markers) {
       markCell(result, marker, AutonomyCell.marker);
-		}
+    }
     for (final obstacle in data.obstacles) {
       markCell(result, obstacle, AutonomyCell.obstacle);
     }
     // Marks the rover and destination -- these should be last
-    if (data.hasDestination()) markCell(result, data.destination, AutonomyCell.destination);
-		markCell(result, roverPosition, AutonomyCell.rover);
-		return result;
-	}
+    if (data.hasDestination()) {
+      markCell(result, data.destination, AutonomyCell.destination);
+    }
+    markCell(result, roverPosition, AutonomyCell.rover);
+    return result;
+  }
 
-	/// Calculates a new position for [gps] based on [centerPosition] and adds it to the [grid].
-	///
-	/// This function filters out any coordinates that shouldn't be shown based on [gridSize].
-	void markCell(AutonomyGrid grid, GpsCoordinates gps, AutonomyCell value) {
-		// Latitude is y-axis, longitude is x-axis
-		// The rover will occupy the center of the grid, so
-		// - rover.longitude => (gridSize - 1) / 2
-		// - rover.latitude => (gridSize - 1) / 2
-		// Then, everything else should be offset by that
+  /// Calculates a new position for [gps] based on [centerPosition] and adds it to the [grid].
+  ///
+  /// This function filters out any coordinates that shouldn't be shown based on [gridSize].
+  void markCell(AutonomyGrid grid, GpsCoordinates gps, AutonomyCell value) {
+    // Latitude is y-axis, longitude is x-axis
+    // The rover will occupy the center of the grid, so
+    // - rover.longitude => (gridSize - 1) / 2
+    // - rover.latitude => (gridSize - 1) / 2
+    // Then, everything else should be offset by that
     final utmCoordinates = gps.toUTM();
     final x = ((utmCoordinates.x - centerPosition.x) / precisionMeters).round();
     final y = ((utmCoordinates.y - centerPosition.y) / precisionMeters).round();
 
-		if (x < 0 || x >= gridSize) return;
-		if (y < 0 || y >= gridSize) return;
-		grid[y][x] = (coordinates: gps, cellType: value);
-	}
+    if (x < 0 || x >= gridSize) return;
+    if (y < 0 || y >= gridSize) return;
+    grid[y][x] = (coordinates: gps, cellType: value);
+  }
 
-	/// Determines the new [centerPosition] based on the current [roverPosition].
-	///
-	/// The autonomy grid is inherently unbounded, meaning we have to choose *somewhere* to bound the
-	/// grid. We chose to draw a grid of size [gridSize] with the rover in the center. This means we
-	/// need to add an offset to every other coordinates to draw it relative to the rover on-screen.
-	///
-	/// For example, say the rover is at `(2, 3)`, and there is an obstacle at `(1, 2)`, with a grid
-	/// size of `11`. The rover should be at the center, `(5, 5)`, so we need to add an offset of
-	/// `(3, 2)` to get it there. That means we should also add `(3, 2)` to the obstacle's position
-	/// so it remains `(-1, -1)` away from the rover's new position, yielding `(4, 4)`.
-	void recenterRover() {
+  /// Determines the new [centerPosition] based on the current [roverPosition].
+  ///
+  /// The autonomy grid is inherently unbounded, meaning we have to choose *somewhere* to bound the
+  /// grid. We chose to draw a grid of size [gridSize] with the rover in the center. This means we
+  /// need to add an offset to every other coordinates to draw it relative to the rover on-screen.
+  ///
+  /// For example, say the rover is at `(2, 3)`, and there is an obstacle at `(1, 2)`, with a grid
+  /// size of `11`. The rover should be at the center, `(5, 5)`, so we need to add an offset of
+  /// `(3, 2)` to get it there. That means we should also add `(3, 2)` to the obstacle's position
+  /// so it remains `(-1, -1)` away from the rover's new position, yielding `(4, 4)`.
+  void recenterRover() {
     final position = roverPosition;
-		final midpoint = (gridSize - 1) / 2;
+    final midpoint = (gridSize - 1) / 2;
     final utmPosition = position.toUTM();
-    centerPosition = utmPosition -
-      UTMCoordinates(
-        x: midpoint * precisionMeters,
-        y: midpoint * precisionMeters,
-        zoneNumber: utmPosition.zoneNumber,
-        isSouthernHemisphere: utmPosition.isSouthernHemisphere,
-      );
-		notifyListeners();
-	}
+    centerPosition =
+        utmPosition -
+        UTMCoordinates(
+          x: midpoint * precisionMeters,
+          y: midpoint * precisionMeters,
+          zoneNumber: utmPosition.zoneNumber,
+          isSouthernHemisphere: utmPosition.isSouthernHemisphere,
+        );
+    notifyListeners();
+  }
 
   @override
-	void zoom(int newSize) {
-		gridSize = newSize;
-		recenterRover();
-	}
+  void zoom(int newSize) {
+    gridSize = newSize;
+    recenterRover();
+  }
 
-	/// A handler to call when new data arrives. Updates [data] and the UI.
-	void onNewData(AutonomyData value) {
+  /// A handler to call when new data arrives. Updates [data] and the UI.
+  void onNewData(AutonomyData value) {
     if (!isPlayingBadApple) {
       data = value;
     }
-		services.files.logData(value);
-		notifyListeners();
-	}
+    services.files.logData(value);
+    notifyListeners();
+  }
 
-	/// Places the marker at [coordinates].
-	void placeMarker(GpsCoordinates coordinates) {
-		markers.add(coordinates.deepCopy());
-		notifyListeners();
-	}
+  /// Places the marker at [coordinates].
+  void placeMarker(GpsCoordinates coordinates) {
+    markers.add(coordinates.deepCopy());
+    notifyListeners();
+  }
 
   /// Places a marker at the rover's current position.
   void placeMarkerOnRover() {
@@ -244,20 +256,20 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
   }
 
   /// Removes a marker from [gps]
-	void removeMarker(GpsCoordinates gps) {
-		if (markers.remove(gps)) {
-		  notifyListeners();
+  void removeMarker(GpsCoordinates gps) {
+    if (markers.remove(gps)) {
+      notifyListeners();
     } else {
       models.home.setMessage(severity: Severity.info, text: "Marker not found");
     }
-	}
+  }
 
-	/// Deletes all the markers in [markers].
-	void clearMarkers() {
-		markers.clear();
-		markerBuilder.clear();
-		notifyListeners();
-	}
+  /// Deletes all the markers in [markers].
+  void clearMarkers() {
+    markers.clear();
+    markerBuilder.clear();
+    notifyListeners();
+  }
 
   /// Builder for autonomy commands
   final AutonomyCommandBuilder commandBuilder = AutonomyCommandBuilder();
@@ -280,7 +292,10 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
     switch (data) {
       case AutonomyCell.destination:
         if (models.rover.isConnected && RoverStatus.AUTONOMOUS != models.rover.status.value) {
-          models.home.setMessage(severity: Severity.error, text: "You must be in autonomy mode");
+          models.home.setMessage(
+            severity: Severity.error,
+            text: "You must be in autonomy mode",
+          );
           return;
         }
         final command = AutonomyCommand(
@@ -294,10 +309,14 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
       case AutonomyCell.obstacle:
         final obstacleData = AutonomyData(obstacles: [cell.coordinates]);
         models.sockets.autonomy.sendMessage(obstacleData);
-      case AutonomyCell.marker: toggleMarker(cell);
-      case AutonomyCell.rover: break;
-      case AutonomyCell.path: break;
-      case AutonomyCell.empty: break;
+      case AutonomyCell.marker:
+        toggleMarker(cell);
+      case AutonomyCell.rover:
+        break;
+      case AutonomyCell.path:
+        break;
+      case AutonomyCell.empty:
+        break;
     }
   }
 }
