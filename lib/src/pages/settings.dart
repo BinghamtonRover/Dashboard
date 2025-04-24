@@ -145,6 +145,16 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                 value: model.dashboard.preferTankControls,
                 onChanged: model.dashboard.updateTank,
               ),
+              NumberEditor(
+                name: "Drive Rate Limit",
+                subtitle: "The maximum acceleration of the drive (joystick input per second)",
+                model: model.dashboard.driveRateLimit,
+              ),
+              NumberEditor(
+                name: "Throttle Rate Limit",
+                subtitle: "The maximum acceleration of the drive throttle (input per second)",
+                model: model.dashboard.throttleRateLimit,
+              ),
               SwitchListTile(
                 title: const Text("Require version checking"),
                 subtitle: const Text("Default to version checking on"),
