@@ -68,7 +68,7 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
       ],
     ),
     2 => ResizableContainer(
-      key: const ValueKey(1),
+      key: ValueKey("1-${models.settings.dashboard.splitMode.name}"),
       direction: switch (models.settings.dashboard.splitMode) {
         SplitMode.horizontal => Axis.vertical,
         SplitMode.vertical => Axis.horizontal,

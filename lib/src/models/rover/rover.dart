@@ -41,7 +41,7 @@ class Rover extends Model {
   Iterable<Controller> get controllers => [controller1, controller2, controller3];
 
 	/// Whether the rover is connected.
-	bool get isConnected => models.sockets.data.isConnected;
+	bool get isConnected => models.sockets.sockets.any((socket) => socket.isConnected);
 
   /// A listener to listen to status changes in all the controllers.
   Listenable get controllersListener => Listenable.merge(controllers);
