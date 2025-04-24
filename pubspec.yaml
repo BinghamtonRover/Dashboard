@@ -14,7 +14,7 @@ dependencies:
     git:
       url: https://github.com/BinghamtonRover/Rover-Code.git
       path: burt_network
-      ref: 2.6.0
+      ref: 2.7.0
   file_picker: ^8.0.0+1
   fl_chart: ^0.69.0
   flutter_libserialport: ^0.4.0
@@ -23,18 +23,17 @@ dependencies:
   path_provider: ^2.0.14
   protobuf: ^3.0.0
   url_launcher: ^6.1.10
-  just_audio: ^0.9.36
+  just_audio: ^0.9.42
   collection: ^1.18.0
   flutter_sdl_gamepad: ^1.0.0
+  just_audio_windows: ^0.2.2
+  coordinate_converter: ^1.2.3
 
 dependency_overrides:
   flutter_sdl_gamepad:
     git:
       url: https://github.com/BinghamtonRover/flutter_sdl_gamepad.git
       ref: macos
-  # See: https://github.com/jpnurmi/flutter_libserialport/issues/108
-  flutter_libserialport:
-    git: https://github.com/snabble/flutter_libserialport.git
   # See: https://github.com/andyhorn/flutter_resizable_container/pull/61
   flutter_resizable_container:
     git:

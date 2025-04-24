@@ -130,7 +130,7 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               ),
               NumberEditor(
                 name: "Block size",
-                subtitle: "The precision of the GPS grid",
+                subtitle: "The precision of the GPS grid in meters",
                 model: model.dashboard.blockSize,
               ),
               SwitchListTile(
@@ -144,6 +144,16 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                 subtitle: const Text("Default to tank controls instead of modern drive controls"),
                 value: model.dashboard.preferTankControls,
                 onChanged: model.dashboard.updateTank,
+              ),
+              NumberEditor(
+                name: "Drive Rate Limit",
+                subtitle: "The maximum acceleration of the drive (joystick input per second)",
+                model: model.dashboard.driveRateLimit,
+              ),
+              NumberEditor(
+                name: "Throttle Rate Limit",
+                subtitle: "The maximum acceleration of the drive throttle (input per second)",
+                model: model.dashboard.throttleRateLimit,
               ),
               SwitchListTile(
                 title: const Text("Require version checking"),
