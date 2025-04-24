@@ -57,8 +57,8 @@ class GpsBuilder extends ValueBuilder<GpsCoordinates> {
 	GpsCoordinates get value => switch (type) {
 		GpsType.decimal => GpsCoordinates(longitude: longDecimal.value, latitude: latDecimal.value),
 		GpsType.degrees => GpsCoordinates(
-			longitude: longDegrees.value + (longMinutes.value / 60) + (longSeconds.value / 3600),
-			latitude: latDegrees.value + (latMinutes.value / 60) + (latSeconds.value / 3600),
+			longitude: longDegrees.value + (longMinutes.value / 60.0) + (longSeconds.value / 3600.0),
+			latitude: latDegrees.value + (latMinutes.value / 60.0) + (latSeconds.value / 3600.0),
 		),
 	};
 
