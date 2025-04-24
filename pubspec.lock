@@ -45,11 +45,11 @@ packages:
     dependency: "direct main"
     description:
       path: burt_network
-      ref: "2.6.0"
-      resolved-ref: "32acc98da1ddef53591adb1e9c226a994a25f779"
+      ref: "2.7.0"
+      resolved-ref: "99f077e14f2f010ead2e5a16b7f9fbffb379da55"
       url: "https://github.com/BinghamtonRover/Rover-Code.git"
     source: git
-    version: "2.6.0"
+    version: "2.7.0"
   characters:
     dependency: transitive
     description:
@@ -98,6 +98,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  coordinate_converter:
+    dependency: "direct main"
+    description:
+      name: coordinate_converter
+      sha256: ae14ad326551acbd6c384d717f508537340ed566a6e2412b7a908e8d3e7a1750
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.3"
   cross_file:
     dependency: transitive
     description:
@@ -299,6 +307,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.14"
+  just_audio_windows:
+    dependency: "direct main"
+    description:
+      name: just_audio_windows
+      sha256: b1ba5305d841c0e3883644e20fc11aaa23f28cfdd43ec20236d1e119a402ef29
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.2"
   leak_tracker:
     dependency: transitive
     description:
@@ -331,6 +347,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.0+1"
+  lists:
+    dependency: transitive
+    description:
+      name: lists
+      sha256: "4ca5c19ae4350de036a7e996cdd1ee39c93ac0a2b840f4915459b7d0a7d4ab27"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   logger:
     dependency: transitive
     description:
@@ -363,6 +387,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.16.0"
+  mgrs_dart:
+    dependency: transitive
+    description:
+      name: mgrs_dart
+      sha256: fb89ae62f05fa0bb90f70c31fc870bcbcfd516c843fb554452ab3396f78586f7
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   msix:
     dependency: "direct dev"
     description:
@@ -483,6 +515,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.1"
+  proj4dart:
+    dependency: transitive
+    description:
+      name: proj4dart
+      sha256: c8a659ac9b6864aa47c171e78d41bbe6f5e1d7bd790a5814249e6b68bc44324e
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   protobuf:
     dependency: "direct main"
     description:
@@ -592,6 +632,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  unicode:
+    dependency: transitive
+    description:
+      name: unicode
+      sha256: "0f69e46593d65245774d4f17125c6084d2c20b4e473a983f6e21b7d7762218f1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
   universal_io:
     dependency: transitive
     description:
@@ -712,6 +760,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.12.0"
+  wkt_parser:
+    dependency: transitive
+    description:
+      name: wkt_parser
+      sha256: "8a555fc60de3116c00aad67891bcab20f81a958e4219cc106e3c037aa3937f13"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   xdg_directories:
     dependency: transitive
     description:

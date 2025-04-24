@@ -17,6 +17,9 @@ const binghamtonGreen = Color(0xff005943);
 /// An accent color for [binghamtonGreen].
 const secondaryColor = Color(0xff404F48);
 
+/// The surface color for dark mode
+const darkSurface = Color.fromRGBO(40, 40, 40, 1);
+
 /// The main class for the app.
 class RoverControlDashboard extends ReusableReactiveWidget<SettingsModel> {
   /// Creates the main app.
@@ -45,7 +48,7 @@ class RoverControlDashboard extends ReusableReactiveWidget<SettingsModel> {
       colorScheme: ColorScheme.fromSeed(
         brightness: Brightness.dark,
         seedColor: binghamtonGreen,
-        surface: const Color.fromRGBO(40, 40, 40, 1),
+        surface: darkSurface,
         secondary: secondaryColor,
         onSecondary: Colors.white,
       ),
