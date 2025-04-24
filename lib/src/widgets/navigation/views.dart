@@ -22,7 +22,9 @@ class _ViewArea extends StatelessWidget {
   Widget build(BuildContext context) => DragTarget<DashboardView>(
     onWillAcceptWithDetails: (details) => details.data.name != model.views[index].name,
     onAcceptWithDetails: (details) => model.replaceView(index, details.data),
-    builder: (context, candidateData, rejectedData) => model.views[index].builder(context, index),
+    builder: (context, candidateData, rejectedData) => ClipRRect(
+      child: model.views[index].builder(context, index),
+    ),
   );
 }
 
@@ -66,7 +68,7 @@ class ViewsWidget extends ReusableReactiveWidget<ViewsModel> {
       ],
     ),
     2 => ResizableContainer(
-      key: const ValueKey(1),
+      key: ValueKey("1-${models.settings.dashboard.splitMode.name}"),
       direction: switch (models.settings.dashboard.splitMode) {
         SplitMode.horizontal => Axis.vertical,
         SplitMode.vertical => Axis.horizontal,
