@@ -1,6 +1,7 @@
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
+import "package:rover_dashboard/src/models/rover/controls/slew_rate_limiter.dart";
 
 /// Modern drive controls, similar to most racing video games.
 ///
@@ -12,6 +13,15 @@ class ModernDriveControls extends RoverControls {
 
   /// How far to swivel the cameras each tick.
   static const cameraSwivelIncrement = -1;
+
+  /// The [SlewRateLimiter] for the left wheel speeds
+  SlewRateLimiter leftLimiter = SlewRateLimiter();
+
+  /// The [SlewRateLimiter] for the right wheel speeds
+  SlewRateLimiter rightLimiter = SlewRateLimiter();
+
+  /// The [SlewRateLimiter] for the throttle input
+  SlewRateLimiter throttleLimiter = SlewRateLimiter();
 
   /// The angle of the front tilt servo.
   double frontTilt = 90;
@@ -30,6 +40,7 @@ class ModernDriveControls extends RoverControls {
 
   /// Whether the left shoulder was pressed last tick.
   bool leftShoulderFlag = false;
+
   /// Whether the right shoulder was pressed last tick.
   bool rightShoulderFlag = true;
 
@@ -39,33 +50,36 @@ class ModernDriveControls extends RoverControls {
   /// Gets the speeds of the wheels based on the speed and direction.
   (double, double) getWheelSpeeds(double speed, double direction) {
     const slope = 1 / 90;
-    if (direction < -45) {  // trying to turn too far left
+    if (direction < -45) {
+      // trying to turn too far left
       return (-1, 1);
-    } else if (direction >= -45 && direction < 45) {  // [-45, 45]
+    } else if (direction >= -45 && direction < 45) {
+      // [-45, 45]
       return (slope * direction + 0.5, slope * direction - 0.5);
-    } else {  // trying to turn too far right
+    } else {
+      // trying to turn too far right
       return (1, -1);
     }
   }
 
   /// Gets all commands for the wheels based on the gamepad state.
   List<DriveCommand> getWheelCommands(GamepadState state) {
-    final speed = state.normalTriggers;  // sum of both triggers, [-1, 1]
+    final speed = state.normalTriggers; // sum of both triggers, [-1, 1]
     if (speed == 0) {
       final left = state.normalLeftX;
       final right = state.normalLeftX;
       return [
-        DriveCommand(left: left / 2, setLeft: true),
-        DriveCommand(right: right / 2, setRight: true),
-        DriveCommand(throttle: throttle, setThrottle: true),
+        DriveCommand(left: leftLimiter.calculate(left / 2), setLeft: true),
+        DriveCommand(right: rightLimiter.calculate(right / 2), setRight: true),
+        DriveCommand(throttle: throttleLimiter.calculate(throttle), setThrottle: true),
       ];
     }
-    final direction = state.normalLeftX * 20;  // [-1, 1] --> [-45, 45]
+    final direction = state.normalLeftX * 20; // [-1, 1] --> [-45, 45]
     final (double left, double right) = getWheelSpeeds(speed, direction);
     return [
-      DriveCommand(left: speed * left, setLeft: true),
-      DriveCommand(right: speed * right, setRight: true),
-      DriveCommand(throttle: throttle, setThrottle: true),
+      DriveCommand(left: leftLimiter.calculate(speed * left), setLeft: true),
+      DriveCommand(right: rightLimiter.calculate(speed * right), setRight: true),
+      DriveCommand(throttle: throttleLimiter.calculate(throttle), setThrottle: true),
     ];
   }
 
@@ -123,6 +137,10 @@ class ModernDriveControls extends RoverControls {
 
   @override
   void updateState(GamepadState state) {
+    leftLimiter.rate = models.settings.dashboard.driveRateLimit;
+    rightLimiter.rate = models.settings.dashboard.driveRateLimit;
+    throttleLimiter.rate = models.settings.dashboard.throttleRateLimit;
+
     updateThrottle(state);
     updateCameras(state);
   }
@@ -130,8 +148,8 @@ class ModernDriveControls extends RoverControls {
   @override
   List<Message> get onDispose => [
     DriveCommand(setThrottle: true, throttle: 0),
-		DriveCommand(setLeft: true, left: 0),
-		DriveCommand(setRight: true, right: 0),
+    DriveCommand(setLeft: true, left: 0),
+    DriveCommand(setRight: true, right: 0),
   ];
 
   @override
