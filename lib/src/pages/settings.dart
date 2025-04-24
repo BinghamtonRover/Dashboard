@@ -130,7 +130,7 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               ),
               NumberEditor(
                 name: "Block size",
-                subtitle: "The precision of the GPS grid",
+                subtitle: "The precision of the GPS grid in meters",
                 model: model.dashboard.blockSize,
               ),
               SwitchListTile(

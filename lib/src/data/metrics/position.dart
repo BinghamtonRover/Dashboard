@@ -34,12 +34,21 @@ class PositionMetrics extends Metrics<RoverPosition> {
     }
   }
 
+  /// Gets the human friendly name of the RTK fix mode
+  String getRTKString(RTKMode mode) => switch(mode) {
+    RTKMode.RTK_FIXED => "Fixed",
+    RTKMode.RTK_FLOAT => "Float",
+    RTKMode.RTK_NONE => "None",
+    _ => "None",
+  };
+
 	@override
 	List<MetricLine> get allMetrics => [  
     MetricLine("GPS: "),
-    MetricLine("  Latitude: ${data.gps.latitude.toStringAsFixed(6)}°",),
-		MetricLine("  Longitude: ${data.gps.longitude.toStringAsFixed(6)}°",),
+    MetricLine("  Latitude: ${data.gps.latitude.toStringAsFixed(10)}°",),
+		MetricLine("  Longitude: ${data.gps.longitude.toStringAsFixed(10)}°",),
 		MetricLine("  Altitude: ${data.gps.altitude.toStringAsFixed(2)} m"),
+    MetricLine("  RTK Mode: ${getRTKString(data.gps.rtkMode)}"),
 		MetricLine("Orientation:",),
 		MetricLine("  X: ${data.orientation.x.toStringAsFixed(2)}°", severity: getRotationSeverity(data.orientation.x)),
 		MetricLine("  Y: ${data.orientation.y.toStringAsFixed(2)}°", severity: getRotationSeverity(data.orientation.y)),
