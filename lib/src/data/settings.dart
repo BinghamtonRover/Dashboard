@@ -241,6 +241,12 @@ class DashboardSettings {
   /// Tank controls offer more custom control, but modern drive controls are more intuitive.
   final bool preferTankControls;
 
+  /// The maximum rate of change to apply to the drive joystick inputs
+  final double driveRateLimit;
+
+  /// The maximum rate of change to apply to the drive throttle
+  final double throttleRateLimit;
+
   /// Whether to have version checking on protobuf messages.
   final bool versionChecking;
 
@@ -258,6 +264,8 @@ class DashboardSettings {
     required this.themeMode,
     required this.splitCameras,
     required this.preferTankControls,
+    required this.driveRateLimit,
+    required this.throttleRateLimit,
     required this.versionChecking,
     required this.presets,
     required this.defaultPreset,
@@ -275,6 +283,8 @@ class DashboardSettings {
     maxFps = (json?["maxFps"] ?? 60) as int,
     splitCameras = json?["splitCameras"] ?? false,
     preferTankControls = json?["preferTankControls"] ?? false,
+    driveRateLimit = json?["driveRateLimit"] ?? 1.50,
+    throttleRateLimit = json?["throttleRateLimit"] ?? 0.50,
     versionChecking = json?["versionChecking"] ?? true,
     themeMode = ThemeMode.values.byName(json?["theme"] ?? ThemeMode.system.name);
 
@@ -286,6 +296,8 @@ class DashboardSettings {
     "theme": themeMode.name,
     "splitCameras": splitCameras,
     "preferTankControls": preferTankControls,
+    "driveRateLimit": driveRateLimit,
+    "throttleRateLimit": throttleRateLimit,
     "versionChecking": versionChecking,
     "presets": presets,
     "defaultPreset": defaultPreset,
