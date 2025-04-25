@@ -10,6 +10,9 @@ class SettingsModel extends Model {
 	/// The user's network settings.
 	NetworkSettings get network => all.network;
 
+  /// The user's base station settings
+  BaseStationSettings get baseStation => all.baseStation;
+
 	/// The user's arm settings.
 	ArmSettings get arm => all.arm;
 
