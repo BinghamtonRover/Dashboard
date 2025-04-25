@@ -341,12 +341,16 @@ class EasterEggsSettingsBuilder extends ValueBuilder<EasterEggsSettings> {
   /// Whether to render Bad Apple in the Map page. See [EasterEggsSettings.badApple].
   bool badApple;
 
+  /// Whether to render the DVD logo animation in the mini-dashboard screensaver. See [EasterEggsSettings.dvdLogoAnimation]
+  bool dvdLogoAnimation;
+
 	/// Fills in the fields with the given [initial] settings.
 	EasterEggsSettingsBuilder(EasterEggsSettings initial) :
     badApple = initial.badApple,
     enableClippy = initial.enableClippy,
     segaSound = initial.segaSound,
-		segaIntro = initial.segaIntro;
+		segaIntro = initial.segaIntro,
+    dvdLogoAnimation = initial.dvdLogoAnimation;
 
 	@override
 	bool get isValid => true;
@@ -357,6 +361,7 @@ class EasterEggsSettingsBuilder extends ValueBuilder<EasterEggsSettings> {
     segaSound: segaSound,
     enableClippy: enableClippy,
     badApple: badApple,
+    dvdLogoAnimation: dvdLogoAnimation,
   );
 
 	/// Updates the value of [EasterEggsSettings.segaIntro].
@@ -380,6 +385,12 @@ class EasterEggsSettingsBuilder extends ValueBuilder<EasterEggsSettings> {
   /// Updates the value of [badApple].
   void updateBadApple(bool input) {  // ignore: avoid_positional_boolean_parameters
     badApple = input;
+    notifyListeners();
+  }
+
+  /// Updates the value of [dvdLogoAnimation].
+  void updateDvdLogoAnimation(bool input) {  // ignore: avoid_positional_boolean_parameters
+    dvdLogoAnimation = input;
     notifyListeners();
   }
 }

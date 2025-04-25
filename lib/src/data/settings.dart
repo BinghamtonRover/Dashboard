@@ -206,12 +206,18 @@ class NetworkSettings {
 class EasterEggsSettings {
   /// Whether to do a SEGA-like intro during boot.
   final bool segaIntro;
+
   /// Whether to say "Binghamton" in the SEGA style.
   final bool segaSound;
+
   /// Whether clippy should appear by log messages.
   final bool enableClippy;
+
   /// Whether to render Bad Apple in the Map page.
   final bool badApple;
+
+  /// Whether to display the bouncing DVD logo animation in the mini-dashboard screensaver
+  final bool dvdLogoAnimation;
 
   /// A const constructor.
   const EasterEggsSettings({
@@ -219,6 +225,7 @@ class EasterEggsSettings {
     required this.segaSound,
     required this.enableClippy,
     required this.badApple,
+    required this.dvdLogoAnimation,
   });
 
   /// Parses easter eggs settings from JSON.
@@ -226,7 +233,8 @@ class EasterEggsSettings {
     segaIntro = json?["segaIntro"] ?? true,
     segaSound = json?["segaSound"] ?? true,
     enableClippy = json?["enableClippy"] ?? true,
-    badApple = json?["badApple"] ?? true;
+    badApple = json?["badApple"] ?? true,
+    dvdLogoAnimation = json?["dvdLogoAnimation"] ?? true;
 
   /// Serializes these settings to JSON.
   Json toJson() => {
@@ -234,6 +242,7 @@ class EasterEggsSettings {
     "segaSound": segaSound,
     "enableClippy": enableClippy,
     "badApple": badApple,
+    "dvdLogoAnimation": dvdLogoAnimation,
   };
 }
 
