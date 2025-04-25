@@ -223,6 +223,13 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
                 value: model.easterEggs.badApple,
                 onChanged: model.easterEggs.updateBadApple,
               ),
+              SwitchListTile(
+                title: const Text(
+                  "DVD Logo Animation in Screensaver",
+                ),
+                value: model.easterEggs.dvdLogoAnimation,
+                onChanged: model.easterEggs.updateDvdLogoAnimation,
+              ),
             ],
           ),
           const Divider(),
