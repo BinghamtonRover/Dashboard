@@ -54,8 +54,15 @@ class DashboardView {
         DashboardView(
           name: name.humanName,
           key: name,
-          iconFunc: (context) => getCameraStatus(context, name),
-          builder: (context, index) => VideoFeed(name: name, index: index),
+          iconFunc: (context,) => ListenableBuilder(
+            listenable: models.video.feeds[name]!.status,
+            builder: (context, _) => getCameraStatus(context, name),
+          ),
+          builder: (context, index) => VideoFeed(
+            key: ValueKey(name),
+            index: index,
+            videoFeed: models.video.feeds[name]!,
+          ),
         ),
   ];
 

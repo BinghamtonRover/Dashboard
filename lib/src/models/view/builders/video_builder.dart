@@ -6,11 +6,17 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
 	/// Statuses the user can set the camera to.
 	static const okStatuses = [CameraStatus.CAMERA_ENABLED, CameraStatus.CAMERA_DISABLED];
 
-	/// The camera resolution's height. See [CameraDetails.resolutionHeight].
-	final NumberBuilder<int> resolutionHeight;
+	/// The camera resolution's capture width. See [CameraDetails.resolutionWidth].
+	final NumberBuilder<int> captureWidth;
 
-	/// The camera resolution's width. See [CameraDetails.resolutionWidth].
-	final NumberBuilder<int> resolutionWidth;
+	/// The camera resolution's capture height. See [CameraDetails.resolutionHeight].
+	final NumberBuilder<int> captureHeight;
+
+  /// The camera resolution's stream width. See [CameraDetails.streamWidth].
+	final NumberBuilder<int> streamWidth;
+
+  /// The camera resolution's stream height. See [CameraDetails.streamHeight].
+	final NumberBuilder<int> streamHeight;
 
 	/// The quality of the camera, as a percentage. See [CameraDetails.quality].
 	final NumberBuilder<int> quality;
@@ -39,32 +45,46 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
   bool autofocus = true;
 
 	@override
-	List<ValueBuilder<dynamic>> get otherBuilders => [resolutionHeight, resolutionWidth, quality, fps];
+  List<ValueBuilder<dynamic>> get otherBuilders => [
+      captureWidth,
+      captureHeight,
+      streamWidth,
+      streamHeight,
+      quality,
+      fps,
+    ];
 
 	/// Creates a [ValueBuilder] view model to change a [CameraDetails].
-	CameraDetailsBuilder(CameraDetails data) : 
-		resolutionHeight = NumberBuilder(data.resolutionHeight, min: 0, max: 300),
-		resolutionWidth = NumberBuilder(data.resolutionWidth, min: 0, max: 300),
+	CameraDetailsBuilder(CameraDetails data) :
+  	captureWidth = NumberBuilder(data.resolutionWidth, min: 0, max: 1920),
+		captureHeight = NumberBuilder(data.resolutionHeight, min: 0, max: 1080),
+    streamWidth = NumberBuilder(data.streamWidth, min: 0, max: 800),
+    streamHeight = NumberBuilder(data.streamHeight, min: 0, max: 600),
 		quality = NumberBuilder(data.quality, min: 0, max: 100),
 		fps = NumberBuilder(data.fps, min: 0, max: 60),
 		name = data.name,
 		status = CameraStatus.CAMERA_ENABLED,
     autofocus = data.autofocus;
 
-	@override
-	bool get isValid => resolutionHeight.isValid
-		&& resolutionWidth.isValid
-		&& quality.isValid
-		&& fps.isValid
-		&& okStatuses.contains(status);
+  @override
+  bool get isValid =>
+      captureWidth.isValid &&
+      captureHeight.isValid &&
+      streamWidth.isValid &&
+      streamHeight.isValid &&
+      quality.isValid &&
+      fps.isValid &&
+      okStatuses.contains(status);
 
 
   @override
 	CameraDetails get value => CameraDetails(
-		resolutionHeight: resolutionHeight.value, 
-		resolutionWidth: resolutionWidth.value, 
-		quality: quality.value, 
-		fps: fps.value, 
+		resolutionWidth: captureWidth.value,
+		resolutionHeight: captureHeight.value,
+    streamWidth: streamWidth.value,
+    streamHeight: streamHeight.value,
+		quality: quality.value,
+		fps: fps.value,
 		name: name,
 		status: status,
     focus: 0,

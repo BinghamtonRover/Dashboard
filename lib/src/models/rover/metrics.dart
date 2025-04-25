@@ -28,6 +28,9 @@ class RoverMetrics extends Model {
   /// Relay data from the Rover
   final relays = RelayMetrics();
 
+  /// Data from the rover's cameras
+  final vision = VisionMetrics();
+
   /// Data from the Base Station
   final baseStation = BaseStationMetrics();
 
@@ -35,7 +38,7 @@ class RoverMetrics extends Model {
 	///
 	/// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
 	/// when new data is received. As a getter, every time it is called it will use new data.
-	List<Metrics> get allMetrics => [vitals, position, drive, science, arm, subsystems, relays, baseStation];
+	List<Metrics> get allMetrics => [vitals, position, drive, science, arm, subsystems, relays, vision, baseStation];
 
   /// Whether the given command is supported by the rover.
   bool isSupportedVersion(Message command) {
@@ -81,16 +84,6 @@ class RoverMetrics extends Model {
 			callback: gripper.update,
 		);
     models.messages.stream.onMessage(
-      name: BaseStationData().messageName,
-      constructor: BaseStationData.fromBuffer,
-      callback: baseStation.update,
-    );
-    models.messages.stream.onMessage(
-      name: AntennaFirmwareData().messageName,
-      constructor: AntennaFirmwareData.fromBuffer,
-      callback: baseStation.updateFromFirmware,
-    );
-    models.messages.stream.onMessage(
       name: RelaysData().messageName,
       constructor: RelaysData.fromBuffer,
       callback: relays.update,
@@ -99,6 +92,21 @@ class RoverMetrics extends Model {
       name: SubsystemsData().messageName,
       constructor: SubsystemsData.fromBuffer,
       callback: subsystems.update,
+    );
+    models.messages.stream.onMessage(
+      name: VideoData().messageName,
+      constructor: VideoData.fromBuffer,
+      callback: vision.update,
+    );
+    models.messages.stream.onMessage(
+      name: BaseStationData().messageName,
+      constructor: BaseStationData.fromBuffer,
+      callback: baseStation.update,
+    );
+    models.messages.stream.onMessage(
+      name: AntennaFirmwareData().messageName,
+      constructor: AntennaFirmwareData.fromBuffer,
+      callback: baseStation.updateFromFirmware,
     );
     drive.addListener(vitals.notify);
     // versionTimer = Timer.periodic(versionInterval, _sendVersions);
