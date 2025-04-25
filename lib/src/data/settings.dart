@@ -76,12 +76,12 @@ class ArmSettings {
 
   /// Parses arm settings from a JSON map.
   ArmSettings.fromJson(Json? json) :
-    shoulder = json?["shoulder"] ?? 0.005,
-    elbow = json?["elbow"] ?? 0.005,
-    swivel = json?["swivel"] ?? 0.2,
-    pinch = json?["pinch"] ?? 0.002,
-    lift = json?["lift"] ?? 0.01,
-    rotate = json?["rotate"] ?? 0.01,
+    shoulder = json?["shoulder"] ?? 0.008,
+    elbow = json?["elbow"] ?? 0.008,
+    swivel = json?["swivel"] ?? 0.02,
+    pinch = json?["pinch"] ?? 0.006,
+    lift = json?["lift"] ?? 0.02,
+    rotate = json?["rotate"] ?? 0.1,
     useIK = json?["useIK"] ?? false,
     ikIncrement = json?["ikIncrement"] ?? 10;
 
