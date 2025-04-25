@@ -100,8 +100,8 @@ class LogsOptions extends ReusableReactiveWidget<LogsOptionsViewModel> {
                 Device.SUBSYSTEMS,
                 Device.VIDEO,
                 Device.AUTONOMY,
-                Device.DASHBOARD,
                 Device.BASE_STATION,
+                Device.DASHBOARD,
                 null,
               ])
                 DropdownMenuEntry(
