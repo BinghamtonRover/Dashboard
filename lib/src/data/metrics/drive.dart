@@ -28,9 +28,9 @@ class DriveMetrics extends Metrics<DriveData> {
   /// The severity for the electrical metrics.
   Severity? get electricalSeverity {
     if (data.batteryVoltage == 0) return null;
-    if (data.batteryVoltage <= 25) {
+    if (data.batteryVoltage <= 20) {
       return Severity.critical;
-    } else if (data.batteryVoltage <= 26) {
+    } else if (data.batteryVoltage <= 22) {
       return Severity.warning;
     } else {
       return null;
@@ -82,7 +82,7 @@ class DriveMetrics extends Metrics<DriveData> {
   double get batteryVoltage => data.batteryVoltage;
 
   /// The charge of the battery, as a percentage.
-  double get batteryPercentage => (batteryVoltage - 24) / 6;  // 24-30 as a percentage
+  double get batteryPercentage => (batteryVoltage - 19) / (24.5 - 19);  // 19-24.5 as a percentage
   
   @override
   Version get supportedVersion => Version(major: 1);

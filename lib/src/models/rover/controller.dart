@@ -107,7 +107,12 @@ class Controller extends Model {
       }
     }
     for (final message in outputMessages) {
-      models.messages.sendMessage(message);
+      if (message is! BaseStationCommand) {
+        models.messages.sendMessage(message);
+      } else {
+        models.serial.sendMessage(message.manualCommand);
+        models.sockets.baseStation.sendMessage(message);
+      }
     }
     notifyListeners();
   }

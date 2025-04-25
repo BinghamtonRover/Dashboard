@@ -28,6 +28,11 @@ enum OperatingMode {
 	/// Focus on helping the user manipulate the arm.
 	arm("Arm"),
 
+  /// Base Station mode.
+  /// 
+  /// Focus on manually manipulating the base station antenna
+  baseStation("Base Station"),
+
 	/// Camera mode.
 	///
 	/// The on-board cameras are on servo mounts. This mode controls those mounts.
