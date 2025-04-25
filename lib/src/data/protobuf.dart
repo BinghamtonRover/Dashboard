@@ -153,15 +153,22 @@ extension GpsUtils on GpsCoordinates {
   ///
   /// See https://en.wikipedia.org/wiki/Geographic_coordinate_system#Length_of_a_degree
   double distanceTo(GpsCoordinates other) {
-  	// Convert to distance in meters and use Pythagorean theorem
-  	final latitudeDistance = 111132.92 - 559.82*cos(2*latitude) + 1.175*cos(4*latitude) - 0.0023*cos(6*latitude);
-  	final longitudeDistance = 111412.84*cos(latitude) - 93.5*cos(3*latitude) + 0.118*cos(5*latitude);
-  	return pow(
-	    pow((latitude - other.latitude)*latitudeDistance, 2)
-		    + pow((longitude - other.longitude)*longitudeDistance, 2)
-	      + pow(altitude - other.altitude, 2),
-	    0.5,
-	  ).toDouble();
+    // Convert to distance in meters and use Pythagorean theorem
+    final latitudeDistance =
+        111132.92 -
+        559.82 * cos(2 * latitude * pi / 180) +
+        1.175 * cos(4 * latitude * pi / 180) -
+        0.0023 * cos(6 * latitude * pi / 180);
+    final longitudeDistance =
+        111412.84 * cos(latitude * pi / 180) -
+        93.5 * cos(3 * latitude * pi / 180) +
+        0.118 * cos(5 * latitude * pi / 180);
+
+    return sqrt(
+      pow((latitude - other.latitude) * latitudeDistance, 2) +
+          pow((longitude - other.longitude) * longitudeDistance, 2) +
+          pow(altitude - other.altitude, 2),
+    );
   }
 }
 
