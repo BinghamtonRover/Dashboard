@@ -2,29 +2,39 @@ import "dart:async";
 import "dart:math";
 
 import "package:flutter/material.dart";
+import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A screensaver for the mini dashboard
 ///
-/// Displays a large BURT logo that will dismiss itself when double tapped
-class MiniScreenSaver extends StatelessWidget {
+/// Displays a large BURT logo bouncing in the style of the DVD logo animation.
+class MiniScreenSaver extends ReusableReactiveWidget<SettingsModel> {
   /// Const constructor for mini screensaver
-  const MiniScreenSaver({super.key});
+  MiniScreenSaver() : super(models.settings);
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context, SettingsModel model) => Scaffold(
     backgroundColor:
         context.colorScheme.brightness == Brightness.dark ? Colors.black : null,
     body: Center(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onDoubleTap: () {
-          Navigator.of(context)
-            ..pop()
-            ..pushNamed(Routes.home);
-        },
-        child: const SizedBox.expand(child: BouncingRoverLogo()),
+        onDoubleTap:
+            () =>
+                Navigator.of(context)
+                  ..pop()
+                  ..pushNamed(Routes.home),
+        child: SizedBox.expand(
+          child:
+              models.isReady && !model.easterEggs.dvdLogoAnimation
+                  ? Image.asset(
+                    context.colorScheme.brightness == Brightness.light
+                        ? "assets/logo_dark.png"
+                        : "assets/logo_light.png",
+                  )
+                  : const BouncingRoverLogo(),
+        ),
       ),
     ),
   );
@@ -42,6 +52,8 @@ class BouncingRoverLogo extends StatefulWidget {
 class _BouncingRoverLogoState extends State<BouncingRoverLogo> {
   static const Duration updatePeriod = Duration(milliseconds: 74);
 
+  final _logoKey = GlobalKey();
+
   double x = 0;
   double y = 0;
   int dx = 0;
@@ -49,7 +61,6 @@ class _BouncingRoverLogoState extends State<BouncingRoverLogo> {
 
   bool get hasStarted => dx != 0 && dy != 0;
 
-  final _logoKey = GlobalKey();
   Timer? _updateTimer;
 
   @override
@@ -116,8 +127,8 @@ class _BouncingRoverLogoState extends State<BouncingRoverLogo> {
           child: Image.asset(
             key: _logoKey,
             context.colorScheme.brightness == Brightness.light
-                ? "assets/logo-light.png"
-                : "assets/logo-dark.png",
+                ? "assets/logo_dark.png"
+                : "assets/logo_light.png",
             height: 128,
           ),
         )
@@ -129,8 +140,8 @@ class _BouncingRoverLogoState extends State<BouncingRoverLogo> {
           child: Image.asset(
             key: _logoKey,
             context.colorScheme.brightness == Brightness.light
-                ? "assets/logo-light.png"
-                : "assets/logo-dark.png",
+                ? "assets/logo_dark.png"
+                : "assets/logo_light.png",
             height: 128,
           ),
         ),

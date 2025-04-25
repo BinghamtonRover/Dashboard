@@ -220,7 +220,7 @@ class MiniDashboard extends ReactiveWidget<MiniViewModel> {
     home: MiniHomePage(model: model),
     routes: {
       Routes.home: (_) => MiniHomePage(model: model),
-      Routes.screenSaver: (_) => const MiniScreenSaver(),
+      Routes.screenSaver: (_) => MiniScreenSaver(),
       Routes.settings: (_) => SettingsPage(),
     },
   );

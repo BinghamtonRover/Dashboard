@@ -250,8 +250,8 @@ class MiniHomeSystemStatus extends ReusableReactiveWidget<LogsViewModel> {
             },
             child: Image.asset(
               context.colorScheme.brightness == Brightness.light
-                  ? "assets/logo-light.png"
-                  : "assets/logo-dark.png",
+                  ? "assets/logo_dark.png"
+                  : "assets/logo_light.png",
             ),
           ),
         ),
