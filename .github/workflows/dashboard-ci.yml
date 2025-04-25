@@ -85,6 +85,9 @@ jobs:
       - name: Flutter Doctor
         run: flutter doctor -v
 
+      - name: Generate Icons
+        run: dart run flutter_launcher_icons
+
       - name: Build Windows
         run: flutter build windows
 
@@ -120,6 +123,9 @@ jobs:
 
       - name: Flutter Doctor
         run: flutter doctor -v
+
+      - name: Generate Icons
+        run: dart run flutter_launcher_icons
 
       - name: Build MSIX
         run: |
@@ -160,6 +166,9 @@ jobs:
 
       - name: Install build dependencies
         run: brew install automake libtool
+
+      - name: Generate Icons
+        run: dart run flutter_launcher_icons
 
       - name: Build MacOS
         run: flutter build macos

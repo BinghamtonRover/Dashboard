@@ -52,19 +52,16 @@ dev_dependencies:
   very_good_analysis: ^6.0.0
 
 # Generates icons for the given platforms
-#   Run: flutter pub run icons_launcher:create
-icons_launcher:
-  image_path: "assets/logo.png"
-  platforms:
-    android:
-      enable: true
-    windows:
-      enable: true
-
+#   Run: dart run flutter_launcher_icons
 flutter_launcher_icons:
   image_path: "assets/logo.png"
   android: true
   windows:
+    generate: true
+    icon_size: 256
+  macos:
+    generate: true
+  linux:
     generate: true
 
 # Builds a Windows .msix App Installer file for the Dashboard.
