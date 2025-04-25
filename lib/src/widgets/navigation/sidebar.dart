@@ -106,14 +106,12 @@ class MetricsList extends ReusableReactiveWidget<Metrics> {
   Widget build(BuildContext context, Metrics model) => Theme(
     // expansion tiles don't have much customizability
     data: Theme.of(context).copyWith(
-      listTileTheme: ListTileTheme.of(context).copyWith(
-        dense: true,
-        minVerticalPadding: 4,
-        minTileHeight: 24,
-      ),
+      listTileTheme: ListTileTheme.of(
+        context,
+      ).copyWith(dense: true, minVerticalPadding: 4, minTileHeight: 24),
     ),
     child: ExpansionTile(
-      dense: true, 
+      dense: true,
       expandedCrossAxisAlignment: CrossAxisAlignment.start,
       expandedAlignment: Alignment.centerLeft,
       childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
@@ -123,11 +121,13 @@ class MetricsList extends ReusableReactiveWidget<Metrics> {
           color: model.overallSeverity?.color,
           fontSize: 20,
         ),
+      ),
       children: [
-        for (final MetricLine metric in model.allMetrics) SelectableText(
-          metric.text,
-          style: TextStyle(color: metric.severity?.color),
-        ),
+        for (final MetricLine metric in model.allMetrics)
+          SelectableText(
+            metric.text,
+            style: TextStyle(color: metric.severity?.color),
+          ),
         const SizedBox(height: 4),
       ],
     ),
