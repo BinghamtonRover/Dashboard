@@ -36,22 +36,20 @@ class DeviceStatuses extends ReusableReactiveWidget<LogsViewModel> {
     );
   }
 
-  static const _devices = [Device.SUBSYSTEMS, Device.VIDEO, Device.AUTONOMY];
-
   @override
   Widget build(BuildContext context, LogsViewModel model) => Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      for (final device in _devices)
+      for (final socket in models.sockets.sockets)
         SizedBox(
           width: 250,
           child: Card(
             child: Column(
               children: [
                 ListTile(
-                  onTap: () => model.resetDevice(device),
+                  onTap: () => model.resetDevice(socket.device),
                   leading: const Icon(Icons.restart_alt),
-                  title: Text("Reset ${device.humanName}"),
+                  title: Text("Reset ${socket.device.humanName}"),
                   subtitle: const Text("The device will reboot"),
                 ),
                 Padding(
@@ -59,15 +57,16 @@ class DeviceStatuses extends ReusableReactiveWidget<LogsViewModel> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Icon(Icons.circle, color: getStatusColor(device)),
+                      Icon(Icons.circle, color: getStatusColor(socket.device)),
                       NetworkStatusIcon(
-                        device: device,
+                        device: socket.device,
                         tooltip: "Ping Device",
-                        onPressed: Platform.isWindows
-                            ? () => model.ping(device)
-                            : null,
+                        onPressed:
+                            Platform.isWindows
+                                ? () => model.ping(socket.device)
+                                : null,
                       ),
-                      sshButton(device) ?? Container(),
+                      sshButton(socket.device) ?? Container(),
                     ],
                   ),
                 ),
@@ -149,14 +148,16 @@ class LogsState extends State<LogsPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    body: Column(children: [
-      const SizedBox(height: 12),
-      DeviceStatuses(model),
-      const SizedBox(height: 12),
-      LogsOptions(model.options),
-      const Divider(),
-      Expanded(child: LogsBody(model)),
-    ],),
+    body: Column(
+      children: [
+        const SizedBox(height: 12),
+        DeviceStatuses(model),
+        const SizedBox(height: 12),
+        LogsOptions(model.options),
+        const Divider(),
+        Expanded(child: LogsBody(model)),
+      ],
+    ),
     appBar: AppBar(
       title: const Text("Logs"),
       actions: [
@@ -167,17 +168,59 @@ class LogsState extends State<LogsPage> {
             context: context,
             builder: (context) => AlertDialog(
               title: const Text("Logs Help"),
-              content: Column(mainAxisSize: MainAxisSize.min, children: [
-                const Text("This page contains all logs received by the dashboard.\nSelecting a level means that only messages of that level or higher will be shown.", textAlign: TextAlign.center,),
-                const SizedBox(height: 4),
-                ListTile(leading: criticalWidget, title: const Text("Critical"), subtitle: const Text("The rover is in a broken state and may shutdown")),
-                const ListTile(leading: errorWidget, title: Text("Error"), subtitle: Text("Something you tried didn't work, but the rover can still function")),
-                const ListTile(leading: warningWidget, title: Text("Warning"), subtitle: Text("Something may have gone wrong, you should check it out")),
-                ListTile(leading: infoWidget, title: const Text("Info"), subtitle: const Text("The rover is functioning normally")),
-                const ListTile(leading: debugWidget, title: Text("Debug"), subtitle: Text("Extra information that shows what the rover's thinking")),
-                const ListTile(leading: traceWidget, title: Text("Trace"), subtitle: Text("Values from the code to debug specific issues")),
-                const SizedBox(height: 12),
-              ],),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "This page contains all logs received by the dashboard.\nSelecting a level means that only messages of that level or higher will be shown.",
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 4),
+                  ListTile(
+                    leading: criticalWidget,
+                    title: const Text("Critical"),
+                    subtitle: const Text(
+                      "The rover is in a broken state and may shutdown",
+                    ),
+                  ),
+                  const ListTile(
+                    leading: errorWidget,
+                    title: Text("Error"),
+                    subtitle: Text(
+                      "Something you tried didn't work, but the rover can still function",
+                    ),
+                  ),
+                  const ListTile(
+                    leading: warningWidget,
+                    title: Text("Warning"),
+                    subtitle: Text(
+                      "Something may have gone wrong, you should check it out",
+                    ),
+                  ),
+                  ListTile(
+                    leading: infoWidget,
+                    title: const Text("Info"),
+                    subtitle: const Text(
+                      "The rover is functioning normally",
+                    ),
+                  ),
+                  const ListTile(
+                    leading: debugWidget,
+                    title: Text("Debug"),
+                    subtitle: Text(
+                      "Extra information that shows what the rover's thinking",
+                    ),
+                  ),
+                  const ListTile(
+                    leading: traceWidget,
+                    title: Text("Trace"),
+                    subtitle: Text(
+                      "Values from the code to debug specific issues",
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+              ),
               actions: [
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
@@ -211,14 +254,15 @@ class LogsBody extends ReusableReactiveWidget<LogsViewModel> {
   const LogsBody(super.model);
 
   @override
-  Widget build(BuildContext context, LogsViewModel model) => model.logs.isEmpty
-    ? const Center(child: Text("No logs yet"))
-    : ListView.builder(
-      itemCount: model.logs.length,
-      controller: model.scrollController,
-      reverse: true,
-      itemBuilder: (context, index) => LogWidget(model.logs[index]),
-    );
+  Widget build(BuildContext context, LogsViewModel model) =>
+      model.logs.isEmpty
+          ? const Center(child: Text("No logs yet"))
+          : ListView.builder(
+            itemCount: model.logs.length,
+            controller: model.scrollController,
+            reverse: true,
+            itemBuilder: (context, index) => LogWidget(model.logs[index]),
+          );
 }
 
 /// The icon to show for logs with [BurtLogLevel.critical].
@@ -256,6 +300,9 @@ class LogWidget extends StatelessWidget {
   Widget build(BuildContext context) => ListTile(
     leading: icon,
     title: Text(log.title),
-    subtitle: log.body.isEmpty ? Text(log.device.humanName) : Text("${log.device.humanName}\n${log.body}".trim()),
+    subtitle:
+        log.body.isEmpty
+            ? Text(log.device.humanName)
+            : Text("${log.device.humanName}\n${log.body}".trim()),
   );
 }
