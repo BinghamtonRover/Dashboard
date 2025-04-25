@@ -1,4 +1,4 @@
-name: Analyze & Build Dashboard
+name: Dashboard
 
 # Builds a Windows App Installer (.msix) for the Dashboard
 #
@@ -79,13 +79,13 @@ jobs:
           cache: true
           cache-path: ${{ runner.tool_cache }}/flutter/windows
 
-      - name: Flutter Doctor
-        run: flutter doctor
-
       - name: Install packages
         run: flutter pub get
 
-      - name: Build windows dashboard
+      - name: Flutter Doctor
+        run: flutter doctor
+
+      - name: Build Windows
         run: flutter build windows
 
       - name: Upload executable
@@ -114,6 +114,9 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
           cache-path: ${{ runner.tool_cache }}/flutter/windows
+
+      - name: Install packages
+        run: flutter pub get
 
       - name: Flutter Doctor
         run: flutter doctor
@@ -149,7 +152,10 @@ jobs:
           cache: true
           cache-path: ${{ runner.tool_cache }}/flutter/macos
 
-      - name: Check on Flutter
+      - name: Install packages
+        run: flutter pub get
+
+      - name: Flutter Doctor
         run: flutter doctor -v
 
       - name: Install build dependencies
