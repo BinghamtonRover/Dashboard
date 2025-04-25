@@ -40,6 +40,12 @@ dev_dependencies:
   msix: ^3.16.9
   very_good_analysis: ^6.0.0
 
+dependency_overrides:
+  flutter_sdl_gamepad:
+    git:
+      url: https://github.com/BinghamtonRover/flutter_sdl_gamepad.git
+      ref: 65e33a1deb186f137200d2723b25fa8e847f4e71
+
 # Generates icons for the given platforms
 #   Run: dart run flutter_launcher_icons
 flutter_launcher_icons:
