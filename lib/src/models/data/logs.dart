@@ -40,6 +40,9 @@ class LogsModel extends Model {
   /// The most recent [maxLogCount] received for [Device.SUBSYSTEMS]
   final ListQueue<BurtLog> autonomyLogs = ListQueue();
 
+  /// The most recent [maxLogCount] of messages from the base station
+  final ListQueue<BurtLog> baseStationLogs = ListQueue();
+
   /// The most recent [maxLogCount] of messages from the dashboard
   final ListQueue<BurtLog> dashboardLogs = ListQueue();
 
@@ -67,6 +70,7 @@ class LogsModel extends Model {
     Device.SUBSYSTEMS => subsystemLogs,
     Device.VIDEO => videoLogs,
     Device.AUTONOMY => autonomyLogs,
+    Device.BASE_STATION => baseStationLogs,
     Device.DASHBOARD => dashboardLogs,
     null => allLogs,
     _ => null,
@@ -87,12 +91,34 @@ class LogsModel extends Model {
     notifyListeners();
 
     // Show important messages to the footer.
-    if (display) { // Prevents showing dashboard messages that have already been shown
+    if (display) {
+      // Prevents showing dashboard messages that have already been shown
       switch (log.level) {
-        case BurtLogLevel.critical: models.home.setMessage(severity: Severity.critical, text: log.title, permanent: true, logMessage: false);
-        case BurtLogLevel.warning: models.home.setMessage(severity: Severity.warning, text: log.title, logMessage: false);
-        case BurtLogLevel.error: models.home.setMessage(severity: Severity.error, text: log.title, logMessage: false);
-        case BurtLogLevel.info: models.home.setMessage(severity: Severity.info, text: "${log.device.humanName}: ${log.title}", logMessage: false);
+        case BurtLogLevel.critical:
+          models.home.setMessage(
+            severity: Severity.critical,
+            text: log.title,
+            permanent: true,
+            logMessage: false,
+          );
+        case BurtLogLevel.warning:
+          models.home.setMessage(
+            severity: Severity.warning,
+            text: log.title,
+            logMessage: false,
+          );
+        case BurtLogLevel.error:
+          models.home.setMessage(
+            severity: Severity.error,
+            text: log.title,
+            logMessage: false,
+          );
+        case BurtLogLevel.info:
+          models.home.setMessage(
+            severity: Severity.info,
+            text: "${log.device.humanName}: ${log.title}",
+            logMessage: false,
+          );
         case BurtLogLevel.debug:
         case BurtLogLevel.trace:
         case BurtLogLevel.BURT_LOG_LEVEL_UNDEFINED:
@@ -120,6 +146,7 @@ class LogsModel extends Model {
     subsystemLogs.clear();
     videoLogs.clear();
     autonomyLogs.clear();
+    baseStationLogs.clear();
     dashboardLogs.clear();
     deviceSeverity.clear();
     models.home.clear(clearErrors: true);
