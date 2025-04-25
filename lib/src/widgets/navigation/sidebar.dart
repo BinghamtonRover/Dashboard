@@ -21,43 +21,55 @@ class Sidebar extends StatelessWidget {
           children: [
             TabBar(
               tabs: [
-                Tab(child: Text("Metrics & Controls", style: TextStyle(color: context.colorScheme.onSurface)),),
-                Tab(child: Text("Views", style: TextStyle(color: context.colorScheme.onSurface))),
+                Tab(
+                  child: Text(
+                    "Metrics & Controls",
+                    style: TextStyle(color: context.colorScheme.onSurface),
+                  ),
+                ),
+                Tab(
+                  child: Text(
+                    "Views",
+                    style: TextStyle(color: context.colorScheme.onSurface),
+                  ),
+                ),
               ],
             ),
             Expanded(
               child: TabBarView(
                 children: [
-                  ListView(
+                  SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
-                    children: [
-                      Text(
-                        "Metrics",
-                        style: context.textTheme.displaySmall,
-                        textAlign: TextAlign.center,
-                      ),
-                      for (final metrics in models.rover.metrics.allMetrics)
-                        MetricsList(metrics),
-                      const Divider(),
-                      Text(
-                        "Controls",
-                        style: context.textTheme.displaySmall,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 4),
-                      ControlsDisplay(
-                        controller: models.rover.controller1,
-                        gamepadNum: 1,
-                      ),
-                      ControlsDisplay(
-                        controller: models.rover.controller2,
-                        gamepadNum: 2,
-                      ),
-                      ControlsDisplay(
-                        controller: models.rover.controller3,
-                        gamepadNum: 3,
-                      ),
-                    ],
+                    child: Column(
+                      children: [
+                        Text(
+                          "Metrics",
+                          style: context.textTheme.headlineSmall,
+                          textAlign: TextAlign.center,
+                        ),
+                        for (final metrics in models.rover.metrics.allMetrics)
+                          MetricsList(metrics),
+                        const Divider(),
+                        Text(
+                          "Controls",
+                          style: context.textTheme.headlineSmall,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 4),
+                        ControlsDisplay(
+                          controller: models.rover.controller1,
+                          gamepadNum: 1,
+                        ),
+                        ControlsDisplay(
+                          controller: models.rover.controller2,
+                          gamepadNum: 2,
+                        ),
+                        ControlsDisplay(
+                          controller: models.rover.controller3,
+                          gamepadNum: 3,
+                        ),
+                      ],
+                    ),
                   ),
                   Column(
                     children: [
@@ -91,22 +103,34 @@ class MetricsList extends ReusableReactiveWidget<Metrics> {
   const MetricsList(super.model);
 
   @override
-  Widget build(BuildContext context, Metrics model) => ExpansionTile(
-    expandedCrossAxisAlignment: CrossAxisAlignment.start,
-    expandedAlignment: Alignment.centerLeft,
-    childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
-    title: Text(
-      model.name,
-      style: Theme.of(context).textTheme.headlineSmall
-        ?.copyWith(color: model.overallSeverity?.color),
+  Widget build(BuildContext context, Metrics model) => Theme(
+    // expansion tiles don't have much customizability
+    data: Theme.of(context).copyWith(
+      listTileTheme: ListTileTheme.of(
+        context,
+      ).copyWith(dense: true, minVerticalPadding: 4, minTileHeight: 24),
     ),
-    children: [
-      for (final MetricLine metric in model.allMetrics) SelectableText(
-        metric.text,
-        style: TextStyle(color: metric.severity?.color),
+    child: ExpansionTile(
+      dense: true,
+      expandedCrossAxisAlignment: CrossAxisAlignment.start,
+      expandedAlignment: Alignment.centerLeft,
+      childrenPadding: const EdgeInsets.symmetric(horizontal: 16),
+      title: Text(
+        model.name,
+        style: context.textTheme.titleLarge?.copyWith(
+          color: model.overallSeverity?.color,
+          fontSize: 20,
+        ),
       ),
-      const SizedBox(height: 4),
-    ],
+      children: [
+        for (final MetricLine metric in model.allMetrics)
+          SelectableText(
+            metric.text,
+            style: TextStyle(color: metric.severity?.color),
+          ),
+        const SizedBox(height: 4),
+      ],
+    ),
   );
 }
 
@@ -133,27 +157,36 @@ class ControlsDisplay extends ReusableReactiveWidget<Controller> {
   }) : super(controller);
 
   @override
-  Widget build(BuildContext context, Controller model) => ExpansionTile(
-    expandedCrossAxisAlignment: CrossAxisAlignment.start,
-    expandedAlignment: Alignment.centerLeft,
-    childrenPadding: const EdgeInsets.symmetric(
-      horizontal: 16,
-      vertical: 8,
+  Widget build(BuildContext context, Controller model) => Theme(
+    data: Theme.of(context).copyWith(
+      listTileTheme: ListTileTheme.of(context).copyWith(
+        minVerticalPadding: 4,
+        minTileHeight: 24,
+      ),
     ),
-    title: Text(
-      model.controls.mode.name,
-      style: Theme.of(context).textTheme.titleLarge,
-      textAlign: TextAlign.start,
-    ),
-    children: [
-      for (final entry in model.controls.buttonMapping.entries) ...[
-        Text(entry.key, style: Theme.of(context).textTheme.labelLarge),
-        Text(
-          "  ${entry.value}",
-          style: Theme.of(context).textTheme.bodyMedium,
+    child: ExpansionTile(
+      expandedCrossAxisAlignment: CrossAxisAlignment.start,
+      expandedAlignment: Alignment.centerLeft,
+      childrenPadding: const EdgeInsets.symmetric(
+        horizontal: 16,
+      ),
+      title: Text(
+        model.controls.mode.name,
+        style: context.textTheme.titleLarge?.copyWith(
+          fontSize: 20,
         ),
+        textAlign: TextAlign.start,
+      ),
+      children: [
+        for (final entry in model.controls.buttonMapping.entries) ...[
+          Text(entry.key, style: context.textTheme.labelLarge),
+          Text(
+            "  ${entry.value}",
+            style: context.textTheme.bodyMedium,
+          ),
+        ],
       ],
-    ],
+    ),
   );
 }
 
