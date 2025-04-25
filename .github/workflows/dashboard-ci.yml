@@ -219,9 +219,6 @@ jobs:
       - name: Build Linux
         run: flutter build linux
 
-      - name: Rename SDL3 build file
-        run: mv build/linux/x64/release/bundle/lib/libSD3.so.* build/linux/x64/release/bundle/lib/libSD3.so
-
       - name: Upload linux executable
         uses: actions/upload-artifact@v4
         with:
