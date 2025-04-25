@@ -224,15 +224,6 @@ class _VideoFeedState extends State<VideoFeed> {
                   icon: const Icon(Icons.add_a_photo),
                   onPressed: () => models.video.saveFrame(videoFeed.cameraName),
                 ),
-                const SizedBox(width: 5),
-                IconButton(
-                  tooltip: "Take onboard screenshot (high quality)",
-                  onPressed: () => models.video.takeOnboardScreenshot(
-                    widget.videoFeed.id,
-                    videoFeed.details,
-                  ),
-                  icon: const Icon(Icons.add_photo_alternate),
-                ),
               ],
               const SizedBox(width: 5),
               IconButton(
