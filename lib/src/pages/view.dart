@@ -5,6 +5,7 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/src/pages/controller.dart";
+import "package:rover_dashboard/src/pages/base_station.dart";
 import "package:rover_dashboard/widgets.dart";
 
 /// A function that builds a view of the given index.
@@ -136,6 +137,11 @@ class DashboardView {
       name: Routes.controllers,
       iconFunc: (context) => Icon(Icons.sports_esports, color: context.colorScheme.onSurface.withValues(alpha: 0.5)),
       builder: (context, index) => ControllersPage(index: index),
+    ),
+    DashboardView(
+      name: Routes.baseStation,
+      builder: (context, index) => BaseStationPage(index: index),
+      iconFunc: (context) => Icon(Icons.cell_tower, color: context.colorScheme.onSurface.withValues(alpha: 0.5)),
     ),
   ];
 

@@ -60,6 +60,9 @@ class Routes {
   /// The name of the rocks page.
   static const String rocks = "Rocks";
 
+  /// The name of the base station page
+  static const String baseStation = "Base Station";
+
 	/// The name of the blank page.
 	static const String blank = "Remove View";
 }

@@ -43,6 +43,9 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 	/// Since the tank runs multiple programs, the port is discarded and only the address is used.
 	final SocketBuilder tankSocket;
 
+  /// The view model representing the [SocketInfo] for the base station program.
+  final SocketBuilder baseSocket;
+
   /// The view model for [NetworkSettings.connectionTimeout].
   final NumberBuilder<double> connectionTimeout;
 
@@ -55,13 +58,15 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 		videoSocket = SocketBuilder(initial.videoSocket),
 		autonomySocket = SocketBuilder(initial.autonomySocket),
 		tankSocket = SocketBuilder(initial.tankSocket),
+    baseSocket = SocketBuilder(initial.baseSocket),
     connectionTimeout = NumberBuilder<double>(initial.connectionTimeout, min: 0);
 
 	@override
 	bool get isValid => dataSocket.isValid
 		&& videoSocket.isValid
 		&& autonomySocket.isValid
-		&& tankSocket.isValid;
+		&& tankSocket.isValid
+    && baseSocket.isValid;
 
 	@override
 	NetworkSettings get value => NetworkSettings(
@@ -69,8 +74,51 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 		videoSocket: videoSocket.value,
 		autonomySocket: autonomySocket.value,
 		tankSocket: tankSocket.value,
+    baseSocket: baseSocket.value,
 		connectionTimeout: connectionTimeout.value,
 	);
+}
+
+/// A [ValueBuilder] representing a [BaseStationSettings]
+class BaseStationSettingsBuilder extends ValueBuilder<BaseStationSettings> {
+  /// The view model for [BaseStationSettings.latitude].
+  final NumberBuilder<double> latitude;
+
+  /// The view model for [BaseStationSettings.longitude].
+  final NumberBuilder<double> longitude;
+
+  /// The view model for [BaseStationSettings.altitude].
+  final NumberBuilder<double> altitude;
+
+  /// The view model for [BaseStationSettings.angleTolerance].
+  final NumberBuilder<double> angleTolerance;
+
+  /// Modifies the given [BaseStationSettings]
+  BaseStationSettingsBuilder(BaseStationSettings original)
+      : latitude = NumberBuilder(original.latitude),
+        longitude = NumberBuilder(original.longitude),
+        altitude = NumberBuilder(original.altitude),
+        angleTolerance = NumberBuilder(original.angleTolerance) {
+    latitude.addListener(notifyListeners);
+    longitude.addListener(notifyListeners);
+    altitude.addListener(notifyListeners);
+    angleTolerance.addListener(notifyListeners);
+  }
+
+  @override
+  bool get isValid =>
+      latitude.isValid &&
+      longitude.isValid &&
+      altitude.isValid &&
+      angleTolerance.isValid;
+
+  @override
+  BaseStationSettings get value => BaseStationSettings(
+        latitude: latitude.value,
+        longitude: longitude.value,
+        altitude: altitude.value,
+        angleTolerance: angleTolerance.value,
+      );
 }
 
 /// A [ValueBuilder] representing an [ArmSettings].
@@ -341,6 +389,9 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	/// The [NetworkSettings] view model.
 	final NetworkSettingsBuilder network;
 
+  /// The [BaseStationSettings] view moel.
+  final BaseStationSettingsBuilder baseStation;
+
 	/// The [ArmSettings] view model.
 	final ArmSettingsBuilder arm;
 
@@ -359,12 +410,14 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	/// Modifies the user's settings.
 	SettingsBuilder() :
 		network = NetworkSettingsBuilder(models.settings.network),
+    baseStation = BaseStationSettingsBuilder(models.settings.baseStation),
 		arm = ArmSettingsBuilder(models.settings.arm),
 		science = ScienceSettingsBuilder(models.settings.science),
     dashboard = DashboardSettingsBuilder(models.settings.dashboard),
 		easterEggs = EasterEggsSettingsBuilder(models.settings.easterEggs)
 	{
 		network.addListener(notifyListeners);
+    baseStation.addListener(notifyListeners);
 		arm.addListener(notifyListeners);
 		science.addListener(notifyListeners);
     dashboard.addListener(notifyListeners);
@@ -381,6 +434,7 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	@override
 	Settings get value => Settings(
 		network: network.value,
+    baseStation: baseStation.value,
 		arm: arm.value,
 		science: science.value,
     dashboard: dashboard.value,
