@@ -37,7 +37,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   icons_launcher: ^3.0.0
-  msix: ^3.9.1
+  msix: ^3.16.9
   very_good_analysis: ^6.0.0
 
 # Generates icons for the given platforms
