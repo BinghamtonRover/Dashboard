@@ -21,6 +21,15 @@ class _BarChart extends StatelessWidget {
         touchTooltipData: BarTouchTooltipData(
           fitInsideVertically: true, 
           fitInsideHorizontally: true,
+          getTooltipItem: (group, groupIndex, rod, rodIndex) {
+            final color = rod.gradient?.colors.first ?? rod.color;
+            final textStyle = TextStyle(
+              color: color,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            );
+            return BarTooltipItem(rod.toY.toStringAsFixed(4), textStyle);
+          },
         ),
       ),
       minY: -1,
