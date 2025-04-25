@@ -123,7 +123,6 @@ class MetricsList extends ReusableReactiveWidget<Metrics> {
           color: model.overallSeverity?.color,
           fontSize: 20,
         ),
-      ),
       children: [
         for (final MetricLine metric in model.allMetrics) SelectableText(
           metric.text,
@@ -135,7 +134,7 @@ class MetricsList extends ReusableReactiveWidget<Metrics> {
   );
 }
 
-/// Extension for COlors on Severity
+/// Extension for Colors on Severity
 extension SeverityUtil on Severity {
   /// Fetch the color based on the severity
   Color? get color => switch (this) {
