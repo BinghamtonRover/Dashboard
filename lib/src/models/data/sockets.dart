@@ -41,6 +41,9 @@ class Sockets extends Model {
     return result.toString().trim();
   }
 
+  /// Whether any socket in [sockets] is enabled
+  bool get isEnabled => sockets.any((socket) => socket.isEnabled);
+
   /// Returns the corresponding [DashboardSocket] for the [device]
   ///
   /// Returns null if no device is passed or there is no corresponding socket
@@ -52,20 +55,40 @@ class Sockets extends Model {
     _ => null,
   };
 
-  @override
-  Future<void> init() async {
-    for (final socket in sockets) {
-      socket.connectionStatus.addListener(() => socket.connectionStatus.value
+	@override
+	Future<void> init() async {
+		for (final socket in sockets) {
+			socket.connectionStatus.addListener(() => socket.connectionStatus.value
         ? onConnect(socket.device)
         : onDisconnect(socket.device),
       );
-      socket.messages.listen(models.messages.addMessage);
+      socket.messages.listen((message) {
+        if (!socket.isEnabled) return;
+        models.messages.addMessage(message);
+      });
       await socket.init();
+		}
+		final level = Logger.level;
+		Logger.level = LogLevel.warning;
+		await updateSockets();
+		Logger.level = level;
+    notifyListeners();
+	}
+
+  /// Enables all sockets without restarting them
+  void enable() {
+    for (final socket in sockets) {
+      socket.enable();
     }
-    final level = Logger.level;
-    Logger.level = LogLevel.warning;
-    await updateSockets();
-    Logger.level = level;
+    notifyListeners();
+  }
+
+  /// Disconnects from all sockets without restarting them
+  void disable() {
+		for (final socket in sockets) {
+			socket.disable();
+		}
+    notifyListeners();
   }
 
   @override
