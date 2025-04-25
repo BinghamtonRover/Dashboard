@@ -152,6 +152,9 @@ jobs:
       - name: Check on Flutter
         run: flutter doctor -v
 
+      - name: Install build dependencies
+        run: brew install automake libtool
+
       - name: Build MacOS
         run: flutter build macos
 
