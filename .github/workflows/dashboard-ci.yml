@@ -147,7 +147,7 @@ jobs:
           if-no-files-found: error
 
   build-macos:
-    name: Build MacOS DMG
+    name: Build MacOS
     runs-on: macos-latest
     steps:
       - name: Clone repository
