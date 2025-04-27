@@ -100,11 +100,23 @@ jobs:
       - name: Zip windows executable
         run: tar -acf dashboard_windows_portable.zip -C build/windows/x64/runner/Release/ *
 
-      - name: Upload executable
+      - name: Upload windows portable
         uses: actions/upload-artifact@v4
         with:
           name: dashboard_windows_portable
           path: dashboard_windows_portable.zip
+
+      - name: Build windows installer
+        run: |
+          choco install innosetup -y
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" windows_installer_script.iss
+
+      - name: Upload windows installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_windows_installer
+          path: build/windows/x64/runner/installer/rover-dashboard-setup.exe
+          if-no-files-found: error
 
   build-msix:
     name: Build Windows MSIX
@@ -249,6 +261,11 @@ jobs:
         with:
           name: dashboard_windows_portable
 
+      - name: Download Windows Installer
+        uses: actions/download-artifact@v4
+        with:
+          name: dashboard_windows_installer
+
       - name: Download Windows MSIX
         uses: actions/download-artifact@v4
         with:
@@ -269,12 +286,19 @@ jobs:
         with:
           name: dashboard_linux
 
+      - name: Organize files
+        run: |
+          ls -al
+          mv dashboard.msix dashboard_msix.msix
+          mv rover-dashboard-setup.exe dashboard_windows_installer.exe
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
             dashboard_msix.msix
             dashboard_windows_portable.zip
+            dashboard_windows_installer.exe
             dashboard_macos.dmg
             dashboard_linux.tar
             trust_windows.bat
