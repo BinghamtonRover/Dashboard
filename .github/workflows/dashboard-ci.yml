@@ -241,13 +241,13 @@ jobs:
         run: flutter build linux
 
       - name: Zip Linux executable
-        run: tar -cvzf dashboard_linux.tar.gz -C build/linux/x64/release/bundle/ $(ls -A build/linux/x64/release/bundle/)
+        run: tar -czf dashboard_linux.tar.gz -C build/linux/x64/release/bundle/ $(ls -A build/linux/x64/release/bundle/)
 
       - name: Upload linux executable
         uses: actions/upload-artifact@v4
         with:
           name: dashboard_linux
-          path: dashboard_linux.tar
+          path: dashboard_linux.tar.gz
           if-no-files-found: error
 
   create-release:
