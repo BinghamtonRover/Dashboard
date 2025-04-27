@@ -10,26 +10,19 @@ on:
 
 jobs:
   documentation:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./repo
+    runs-on: ubuntu-22.04
     steps:
-      - name: Cache Flutter
-        id: cache-flutter
-        uses: actions/cache@v2
+      - name: Install flutter
+        uses: subosito/flutter-action@v2
         with:
-          path: flutter/
-          key: ${{ runner.os }}-flutter
+          channel: stable
+          cache: true
+          cache-path: ${{ runner.tool_cache }}/flutter/linux
 
-      - name: Install Flutter
-        if: steps.cache-flutter.outputs.cache-hit != 'true'
-        uses: britannio/action-install-flutter@v1.0
-
-      - uses: actions/checkout@v2
+      - name: Clone repo
+        uses: actions/checkout@v2
         with: 
           fetch-depth: 0
-          path: repo  # keep Flutter separate
           submodules: recursive
 
       - name: Git Setup
