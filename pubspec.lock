@@ -218,12 +218,11 @@ packages:
   flutter_sdl_gamepad:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "65e33a1deb186f137200d2723b25fa8e847f4e71"
-      resolved-ref: "65e33a1deb186f137200d2723b25fa8e847f4e71"
-      url: "https://github.com/BinghamtonRover/flutter_sdl_gamepad.git"
-    source: git
-    version: "1.0.0"
+      name: flutter_sdl_gamepad
+      sha256: e9cd9f4d33ee37ab727a95c500c66f05adb82faf2d6b28fb108290ffcadcd0f8
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
