@@ -302,7 +302,7 @@ jobs:
             dashboard_macos.dmg
             dashboard_linux.tar
             trust_windows.bat
-          name: ${{ github.ref_name }}
+          name: Dashboard Draft Release ${{ github.ref_name }}
           generate_release_notes: true
           fail_on_unmatched_files: true
           draft: true
