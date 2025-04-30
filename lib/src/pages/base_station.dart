@@ -130,13 +130,15 @@ class _BaseStationPainter extends CustomPainter {
   }
 
   void drawRover(Canvas canvas, Size size) {
-    // UI uses CW+, geometry uses CCW+
-    final uiAntennaAngle = -antennaAngle;
-    var uiTargetAngle = targetAngle != null ? -targetAngle! : null;
+    // The antenna angle adjusted to fit in the same rotational
+    // origin as the rest of the angles for the widget
+    // (0 degrees is facing to the right)
+    final adjustedAntennaAngle = antennaAngle + pi / 2;
 
     final delta = roverCoordinates.toUTM() - stationCoordinates.toUTM();
     final deltaAngle = atan2(delta.y, delta.x);
-    uiTargetAngle ??= -deltaAngle;
+    final uiTargetAngle =
+        targetAngle != null ? targetAngle! + pi / 2 : deltaAngle;
 
     final roverPaint = Paint()..color = Colors.blue;
 
@@ -144,22 +146,20 @@ class _BaseStationPainter extends CustomPainter {
     final center = Offset(size.width, size.height) / 2;
 
     final roverPosition =
-        center +
-        Offset(cos(deltaAngle - pi / 2), sin(deltaAngle - pi / 2)) * radius;
+        center + Offset(cos(deltaAngle), -sin(deltaAngle)) * radius;
 
     canvas.drawCircle(roverPosition, size.width / 50, roverPaint);
 
     final antennaPosition =
         center +
-        Offset(cos(uiAntennaAngle - pi / 2), sin(uiAntennaAngle - pi / 2)) *
-            radius;
+        Offset(cos(adjustedAntennaAngle), -sin(adjustedAntennaAngle)) * radius;
 
     final minTolerance = uiTargetAngle - (angleTolerance / 2) * pi / 180;
     final maxTolerance = uiTargetAngle + (angleTolerance / 2) * pi / 180;
 
     final inRange =
-        _wrapAngle(uiAntennaAngle - minTolerance) >= 0 &&
-        _wrapAngle(uiAntennaAngle - maxTolerance) <= 0;
+        _wrapAngle(adjustedAntennaAngle - minTolerance) >= 0 &&
+        _wrapAngle(adjustedAntennaAngle - maxTolerance) <= 0;
 
     final antennaPaint =
         Paint()
@@ -175,11 +175,7 @@ class _BaseStationPainter extends CustomPainter {
     drawDashedLine(
       canvas: canvas,
       p1: center,
-      p2:
-          center +
-          Offset(cos(minTolerance - pi / 2), sin(minTolerance - pi / 2)) *
-              radius *
-              1.1,
+      p2: center + Offset(cos(minTolerance), -sin(minTolerance)) * radius * 1.1,
       dashWidth: 5,
       dashSpace: 5,
       paint: rangePaint,
@@ -188,11 +184,7 @@ class _BaseStationPainter extends CustomPainter {
     drawDashedLine(
       canvas: canvas,
       p1: center,
-      p2:
-          center +
-          Offset(cos(maxTolerance - pi / 2), sin(maxTolerance - pi / 2)) *
-              radius *
-              1.1,
+      p2: center + Offset(cos(maxTolerance), -sin(maxTolerance)) * radius * 1.1,
       dashWidth: 5,
       dashSpace: 5,
       paint: rangePaint,
@@ -232,5 +224,11 @@ class _BaseStationPainter extends CustomPainter {
   double _wrapAngle(double angle) => atan2(sin(angle), cos(angle));
 
   @override
-  bool shouldRepaint(_BaseStationPainter oldDelegate) => true;
+  bool shouldRepaint(_BaseStationPainter oldDelegate) =>
+      antennaAngle != oldDelegate.antennaAngle ||
+      angleTolerance != oldDelegate.angleTolerance ||
+      targetAngle != oldDelegate.targetAngle ||
+      outlineColor != oldDelegate.outlineColor ||
+      roverCoordinates != oldDelegate.roverCoordinates ||
+      stationCoordinates != oldDelegate.stationCoordinates;
 }
