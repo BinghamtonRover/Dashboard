@@ -194,11 +194,12 @@ packages:
   flutter_libserialport:
     dependency: "direct main"
     description:
-      name: flutter_libserialport
-      sha256: "20c320dcde8592a16f9badc0cacad61b1fb283dbec647b6ebfc1020f8274c67b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.0"
+      path: "."
+      ref: main
+      resolved-ref: bf6342c60e36a5a376123417932ad9454607a257
+      url: "https://github.com/NeariX67/flutter_libserialport"
+    source: git
+    version: "0.5.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:

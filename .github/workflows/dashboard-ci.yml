@@ -43,33 +43,40 @@ jobs:
       - name: Analyze
         run: flutter analyze --dartdocs
 
-  # build-android:
-  #   name: Build Android APK
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Clone repository
-  #       uses: actions/checkout@v4
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
 
-  #     - name: Setup Java
-  #       uses: actions/setup-java@v4
-  #       with:
-  #         distribution: "zulu"
-  #         java-version: '17'
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
 
-  #     - name: Install Flutter
-  #       uses: subosito/flutter-action@v2
-  #       with:
-  #         cache: true
-  #         cache-key: "flutter-ubuntu"  # we don't need *the* most recent build
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          cache-path: ${{ runner.tool_cache }}/flutter/linux
 
-  #     - name: Build APK
-  #       run: flutter build apk
+      - name: Install packages
+        run: flutter pub get
 
-  #     - name: Upload APK
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: dashboard_android
-  #         path: build/app/outputs/apk/release/app-release.apk
+      - name: Generate Icons
+        run: dart run flutter_launcher_icons
+
+      - name: Build APK
+        run: flutter build apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_android
+          path: build/app/outputs/apk/release/app-release.apk
 
   build-windows:
     name: Build Windows
