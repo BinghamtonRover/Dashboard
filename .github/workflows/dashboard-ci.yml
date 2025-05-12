@@ -250,17 +250,37 @@ jobs:
           path: dashboard_linux.tar.gz
           if-no-files-found: error
 
+  build-mini:
+    name: Build Mini Dashboard
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          cache-path: ${{ runner.tool_cache }}/flutter/linux
+
+      - name: Install packages
+        run: flutter pub get
+
+      - name: Install flutterpi_tool
+        run: flutter pub global activate flutterpi_tool
+
       - name: Build mini dashboard
         run: dart run :build_mini
 
       - name: Zip mini dashboard
-        run: tar -czf mini_dashboard.tar.gz -C build/flutter_assets/ $(ls -A build/flutter_assets/)
+        run: tar -czf mini_dashboard_pi.tar.gz -C build/flutter_assets/ $(ls -A build/flutter_assets/)
 
       - name: Upload mini dashboard
         uses: actions/upload-artifact@v4
         with:
-          name: mini_dashboard
-          path: mini_dashboard.tar.gz
+          name: mini_dashboard_pi
+          path: mini_dashboard_pi.tar.gz
           if-no-files-found: error
 
   create-release:
