@@ -207,7 +207,7 @@ jobs:
         uses: L-Super/create-dmg-actions@v1.0.3
         with:
           dmg_name: dashboard_macos
-          src_dir: build/macos/Build/Products/Release/rover_control_dashboard.app
+          src_dir: build/macos/Build/Products/Release/rover_dashboard.app
 
       - name: Upload DMG
         uses: actions/upload-artifact@v4
