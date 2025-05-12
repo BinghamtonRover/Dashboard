@@ -1,13 +1,8 @@
 name: Dashboard
 
-# Builds a Windows App Installer (.msix) for the Dashboard
-#
-# To use this action, add your Windows Certificate file, in base64 format, to a
-# repository secret called WINDOWS_CERTIFICATE. This action then:
-# - Installs Flutter and clones your repository
-# - Decodes your text certificate into a binary .pfx file
-# - Runs flutter pub run msix:create to build and sign your Flutter app
-# - Creates a new release and uploads the generated .msix file to it
+# Runs code analysis and builds the dashboard for all supported platforms
+# This runs on every PR and new commit to main, and if ran on a manual dispatch,
+# can put all build files into a new draft release
 
 on:
   push:
@@ -156,9 +151,7 @@ jobs:
         run: dart run flutter_launcher_icons
 
       - name: Build MSIX
-        run: |
-          flutter pub get
-          dart run msix:create
+        run: dart run msix:create
 
       - name: Upload MSIX
         uses: actions/upload-artifact@v4
@@ -255,6 +248,19 @@ jobs:
         with:
           name: dashboard_linux
           path: dashboard_linux.tar.gz
+          if-no-files-found: error
+
+      - name: Build mini dashboard
+        run: dart run :build_mini
+
+      - name: Zip mini dashboard
+        run: tar -czf mini_dashboard.tar.gz -C build/flutter_assets/ $(ls -A build/flutter_assets/)
+
+      - name: Upload mini dashboard
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini_dashboard
+          path: mini_dashboard.tar.gz
           if-no-files-found: error
 
   create-release:
