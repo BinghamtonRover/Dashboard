@@ -4,7 +4,7 @@
 #define MyAppName "Rover Dashboard"
 #define MyAppPublisher "Binghamton University Rover Team"
 #define MyAppURL "https://github.com/BinghamtonRover"
-#define MyAppExeName "rover_control_dashboard.exe"
+#define MyAppExeName "rover_dashboard.exe"
 #define MyAppSourceDir "build\windows\x64\runner\Release"
 #define MyAppExePath MyAppSourceDir + "\" + MyAppExeName
 ; The "name" of the app version, which is pretty printed, this is
