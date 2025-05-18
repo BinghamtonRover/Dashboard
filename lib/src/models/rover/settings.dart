@@ -17,28 +17,34 @@ class RoverSettings extends Model {
 	/// A shorthand for accessing [UpdateSetting.status].
 	RoverStatus get status => settings.status;
 
-	/// The last received confirmation from each socket.
-	int _handshakes = 0;
-
 	@override
-	Future<void> init() async {
-		models.messages.stream.onMessage(
-			name: UpdateSetting().messageName,
-			constructor: UpdateSetting.fromBuffer,
-			callback: (settings) => _handshakes++,
-		);
-	}
+	Future<void> init() async {}
 
 	/// Sends an [UpdateSetting] and awaits a response.
 	///
 	/// The response must be an echo of the data sent, to ensure the rover acknowledges the data.
 	/// Returns true if the handshake succeeds.
 	Future<bool> tryChangeSettings(UpdateSetting value) async {
-		_handshakes = 0;
-		models.sockets.data.sendMessage(value);
-		await Future<void>.delayed(confirmationDelay);
-		if (_handshakes != 3) {
-			models.home.setMessage(severity: Severity.error, text: "Could not update settings");
+    final expectedHandshakes =
+        models.sockets.sockets.where((socket) => socket.isConnected).map(
+              (socket) => socket.tryHandshake(
+                message: value,
+                timeout: confirmationDelay,
+                constructor: UpdateSetting.fromBuffer,
+              ),
+            );
+
+    if (expectedHandshakes.isEmpty) {
+      return true;
+    }
+
+    final receivedHandshakes = (await Future.wait(expectedHandshakes)).where((e) => e).length;
+
+		if (receivedHandshakes < expectedHandshakes.length) {
+      models.home.setMessage(
+        severity: Severity.error,
+        text: "Could not update settings, received $receivedHandshakes/${expectedHandshakes.length} handshakes",
+      );
 			return false;
 		}
 		return true;
@@ -48,24 +54,33 @@ class RoverSettings extends Model {
 	///
 	/// See [RoverStatus] for details.
 	Future<void> setStatus(RoverStatus value) async {
-    if (!models.rover.isConnected || !models.sockets.isEnabled) return;
-    if (value == RoverStatus.AUTONOMOUS || value == RoverStatus.IDLE) {
+    if (!models.sockets.sockets.any((e) => e.isConnected || !models.sockets.isEnabled)) return;
+    final message = UpdateSetting(status: value);
+    if (value != RoverStatus.MANUAL) {
       for (final controller in models.rover.controllers) {
         controller.setMode(OperatingMode.none);
       }
-    } else if (value == RoverStatus.MANUAL) {
-      models.rover.setDefaultControls();
-    } else {
-      final message = UpdateSetting(status: value);
-      models.sockets.video.sendMessage(message);
-      models.sockets.autonomy.sendMessage(message);
-      if (!await tryChangeSettings(message)) return;
     }
 
-    models.home.setMessage(severity: Severity.info, text: "Set mode to ${value.humanName}");
-		settings.status = value;
-		models.rover.status.value = value;
-		notifyListeners();
+    if (!await tryChangeSettings(message)) {
+      return;
+    }
+
+    if (value == RoverStatus.MANUAL) {
+      models.rover.setDefaultControls();
+    }
+
+    if (value == RoverStatus.RESTART) {
+      models.rover.status.value = RoverStatus.IDLE;
+
+      models.home.setMessage(severity: Severity.info, text: "Restarting sockets");
+    } else if (value != RoverStatus.POWER_OFF) {
+      models.rover.status.value = value;
+
+      models.home.setMessage(severity: Severity.info, text: "Set mode to ${value.humanName}");
+    }
+
+    notifyListeners();
 	}
 
 	/// Changes the color of the rover's LED strip.

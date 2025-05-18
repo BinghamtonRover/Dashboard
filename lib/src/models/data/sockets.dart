@@ -58,16 +58,34 @@ class Sockets extends Model {
 	@override
 	Future<void> init() async {
 		for (final socket in sockets) {
-			socket.connectionStatus.addListener(() => socket.connectionStatus.value
-        ? onConnect(socket.device)
-        : onDisconnect(socket.device),
-      );
+			socket.connectionStatus.addListener(() {
+        if (socket.connectionStatus.value) {
+          socket.sendMessage(models.rover.settings.settings);
+          onConnect(socket.device);
+        } else {
+          onDisconnect(socket.device);
+        }
+      });
       socket.messages.listen((message) {
         if (!socket.isEnabled) return;
         models.messages.addMessage(message);
       });
       await socket.init();
 		}
+    data.messages.onMessage(
+      name: UpdateSetting().messageName,
+      constructor: UpdateSetting.fromBuffer,
+      callback: (setting) {
+        if (!setting.hasStatus()) return;
+
+        final status = setting.status;
+        if (status == RoverStatus.RESTART || status == RoverStatus.POWER_OFF) {
+          return;
+        }
+
+        models.rover.status.value = status;
+      },
+    );
 		final level = Logger.level;
 		Logger.level = LogLevel.warning;
 		await updateSockets();
