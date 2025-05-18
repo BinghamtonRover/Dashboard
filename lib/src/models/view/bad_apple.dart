@@ -80,12 +80,16 @@ mixin BadAppleViewModel on ChangeNotifier {
       if (badAppleAudioPlayer.position != Duration.zero) {
         sampleTime = badAppleAudioPlayer.position;
       }
-      badAppleFrame =
+      final currentFrame =
           ((sampleTime.inMicroseconds.toDouble() / 1e6) * 30.0).round();
-      if (badAppleFrame >= badAppleLastFrame || imagesArchive == null) {
+      if (currentFrame >= badAppleLastFrame || imagesArchive == null) {
         stopBadApple();
         break;
       }
+      if (currentFrame == badAppleFrame) {
+        continue;
+      }
+      badAppleFrame = currentFrame;
       final obstacles = _loadBadAppleFrame(imagesArchive!, badAppleFrame);
       if (obstacles == null) {
         continue;
