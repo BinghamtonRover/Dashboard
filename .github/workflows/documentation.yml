@@ -1,8 +1,8 @@
 name: Documentation
 
 # Documents the Dart code within this project with the `dartdoc` tool.
-# Publishes the result to a separate branch, `documentation`, under the `docs` folder. 
-# Set GitHub pages to publish that target to get an online documentation site. 
+# Publishes the result to a separate branch, `documentation`, under the `docs` folder.
+# Set GitHub pages to publish that target to get an online documentation site.
 
 on:
   push:
@@ -10,6 +10,7 @@ on:
 
 jobs:
   documentation:
+    name: Generate Documentation
     runs-on: ubuntu-22.04
     steps:
       - name: Install flutter
@@ -32,9 +33,6 @@ jobs:
           git branch --all
           git switch --track origin/documentation
           git reset --hard origin/main
-
-      - name: Add Flutter to path
-        run: echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
 
       - name: Flutter Setup 
         run: |
