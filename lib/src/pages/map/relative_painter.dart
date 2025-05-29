@@ -201,7 +201,6 @@ class MapRelativePainter extends CustomPainter {
       b.dx - arrowSize * cos(angle + arrowAngle),
       b.dy - arrowSize * sin(angle + arrowAngle),
     );
-    // path.close();
     canvas.drawPath(path, paint);
   }
 
