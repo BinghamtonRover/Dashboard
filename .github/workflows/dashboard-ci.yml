@@ -188,6 +188,9 @@ jobs:
       - name: Flutter Doctor
         run: flutter doctor -v
 
+      - name: Install AppDmg tool
+        run: npm install --global appdmg
+
       - name: Install build dependencies
         run: brew install automake libtool
 
@@ -198,10 +201,7 @@ jobs:
         run: flutter build macos
 
       - name: Create macOS DMG
-        uses: L-Super/create-dmg-actions@v1.0.3
-        with:
-          dmg_name: dashboard_macos
-          src_dir: build/macos/Build/Products/Release/rover_dashboard.app
+        run: appdmg macos/installer_config.json dashboard_macos.dmg
 
       - name: Upload DMG
         uses: actions/upload-artifact@v4
