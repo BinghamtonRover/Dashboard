@@ -1,4 +1,3 @@
-
 import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 
@@ -29,11 +28,7 @@ class MapPageHeader extends StatelessWidget {
     return Tooltip(
       message: models.rover.metrics.position.getRTKString(rtkMode),
       waitDuration: const Duration(milliseconds: 500),
-      child: Icon(
-        icon,
-        color: context.colorScheme.onSurface,
-        size: 28,
-      ),
+      child: Icon(icon, color: context.colorScheme.onSurface, size: 28),
     );
   }
 
@@ -45,27 +40,24 @@ class MapPageHeader extends StatelessWidget {
       children: [
         const SizedBox(width: 8),
         Text("Map", style: context.textTheme.headlineMedium),
-        if (models.settings.easterEggs.badApple) IconButton(
-          iconSize: 48,
-          icon: CircleAvatar(
-            backgroundImage: const AssetImage("assets/bad_apple_thumbnail.webp"),
-            child: model.isPlayingBadApple
-              ? const Icon(Icons.block, color: Colors.red, size: 36)
-              : null,
+        if (models.settings.easterEggs.badApple)
+          IconButton(
+            iconSize: 48,
+            icon: CircleAvatar(
+              backgroundImage: const AssetImage(
+                "assets/bad_apple_thumbnail.webp",
+              ),
+              child: model.isPlayingBadApple
+                  ? const Icon(Icons.block, color: Colors.red, size: 36)
+                  : null,
+            ),
+            onPressed: model.isPlayingBadApple
+                ? model.stopBadApple
+                : model.startBadApple,
           ),
-          onPressed: model.isPlayingBadApple
-            ? model.stopBadApple
-            : model.startBadApple,
-        ),
         const SizedBox(width: 5),
-        Row(
-          children: [
-            const Text("RTK Status: "),
-            rtkStateIcon(context),
-          ],
-        ),
+        Row(children: [const Text("RTK Status: "), rtkStateIcon(context)]),
         const Spacer(),
-        // ViewsSelector(index: index),
       ],
     ),
   );
