@@ -6,7 +6,7 @@ name: Documentation
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
   documentation:
@@ -22,7 +22,7 @@ jobs:
 
       - name: Clone repo
         uses: actions/checkout@v2
-        with: 
+        with:
           fetch-depth: 0
           submodules: recursive
 
@@ -34,7 +34,7 @@ jobs:
           git switch --track origin/documentation
           git reset --hard origin/main
 
-      - name: Flutter Setup 
+      - name: Flutter Setup
         run: |
           flutter packages get
           flutter pub global activate dartdoc
@@ -51,7 +51,7 @@ jobs:
 
       - name: Generate documentation
         run: flutter pub global run dartdoc --ignore 'unresolved-doc-reference,not-implemented,no-documentable-libraries,ambiguous-reexport' --exclude 'dart:async,dart:collection,dart:convert,dart:core,dart:developer,dart:io,dart:isolate,dart:math,dart:typed_data,dart:ui,dart:html,dart:js,dart:ffi,dart:js_util' --quiet --json --output docs --no-validate-links --no-verbose-warnings --no-allow-non-local-warnings
-        
+
       - name: Commit and push files
         run: |
           cd docs
