@@ -1,35 +1,29 @@
 name: Documentation
 
 # Documents the Dart code within this project with the `dartdoc` tool.
-# Publishes the result to a separate branch, `documentation`, under the `docs` folder. 
-# Set GitHub pages to publish that target to get an online documentation site. 
+# Publishes the result to a separate branch, `documentation`, under the `docs` folder.
+# Set GitHub pages to publish that target to get an online documentation site.
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
   documentation:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./repo
+    name: Generate Documentation
+    runs-on: ubuntu-22.04
     steps:
-      - name: Cache Flutter
-        id: cache-flutter
-        uses: actions/cache@v2
+      - name: Install flutter
+        uses: subosito/flutter-action@v2
         with:
-          path: flutter/
-          key: ${{ runner.os }}-flutter
+          channel: stable
+          cache: true
+          cache-path: ${{ runner.tool_cache }}/flutter/linux
 
-      - name: Install Flutter
-        if: steps.cache-flutter.outputs.cache-hit != 'true'
-        uses: britannio/action-install-flutter@v1.0
-
-      - uses: actions/checkout@v2
-        with: 
+      - name: Clone repo
+        uses: actions/checkout@v2
+        with:
           fetch-depth: 0
-          path: repo  # keep Flutter separate
           submodules: recursive
 
       - name: Git Setup
@@ -40,10 +34,7 @@ jobs:
           git switch --track origin/documentation
           git reset --hard origin/main
 
-      - name: Add Flutter to path
-        run: echo "$GITHUB_WORKSPACE/flutter/bin" >> $GITHUB_PATH
-
-      - name: Flutter Setup 
+      - name: Flutter Setup
         run: |
           flutter packages get
           flutter pub global activate dartdoc
@@ -60,7 +51,7 @@ jobs:
 
       - name: Generate documentation
         run: flutter pub global run dartdoc --ignore 'unresolved-doc-reference,not-implemented,no-documentable-libraries,ambiguous-reexport' --exclude 'dart:async,dart:collection,dart:convert,dart:core,dart:developer,dart:io,dart:isolate,dart:math,dart:typed_data,dart:ui,dart:html,dart:js,dart:ffi,dart:js_util' --quiet --json --output docs --no-validate-links --no-verbose-warnings --no-allow-non-local-warnings
-        
+
       - name: Commit and push files
         run: |
           cd docs
