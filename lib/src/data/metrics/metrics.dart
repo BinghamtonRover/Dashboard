@@ -2,7 +2,7 @@
 
 import "dart:math";
 
-import "package:flutter/foundation.dart";
+import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -34,6 +34,9 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
 
 	/// A collective name for this group of metrics (usually the name of the subsystem).
 	String get name;
+
+  /// An icon to visually represent the metrics
+  IconData get icon => Icons.circle;
 
 	/// A list of user-friendly explanations for each of the metrics.
 	/// 

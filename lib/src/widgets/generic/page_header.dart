@@ -1,7 +1,7 @@
 ﻿import "package:flutter/material.dart";
 import "package:rover_dashboard/src/widgets/navigation/views_list.dart";
 
-/// A widget for teh header of a page
+/// A widget for the header of a page
 class PageHeader extends StatelessWidget {
   /// The index of the page within the views pane
   final int pageIndex;

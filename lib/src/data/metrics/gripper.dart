@@ -6,7 +6,10 @@ class GripperMetrics extends Metrics<GripperData> {
 	GripperMetrics() : super(GripperData());
 
 	@override
-	String get name => "Gripper";
+	String name = "Gripper";
+
+  @override
+  Version supportedVersion = Version(major: 1);
 
 	/// Returns a description of a [MotorData].
 	List<MetricLine> getMotorData(MotorData motor) => [
@@ -31,9 +34,6 @@ class GripperMetrics extends Metrics<GripperData> {
     MetricLine("Pinch:"),
 		...getMotorData(data.pinch),
 	];
-
-  @override
-  Version get supportedVersion => Version(major: 1);
 
   @override
   Version parseVersion(GripperData message) => message.version;

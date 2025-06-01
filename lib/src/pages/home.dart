@@ -1,5 +1,6 @@
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
+import "package:rover_dashboard/app.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -16,8 +17,11 @@ class SocketSwitcher extends ReusableReactiveWidget<Sockets> {
     value: model.rover,
     onChanged: model.setRover,
     focusNode: FocusNode(),
-    dropdownColor: context.colorScheme.secondary,
-    style: const TextStyle(color: Colors.white),
+    dropdownColor: darkSurface,
+    style: context.textTheme.bodyLarge?.copyWith(
+      color: Colors.white,
+      fontWeight: FontWeight.w500,
+    ),
     items: [
       for (final type in RoverType.values) DropdownMenuItem(
         value: type,
@@ -66,6 +70,7 @@ class HomePageState extends State<HomePage>{
           // An AnimatedSize widget automatically shrinks the widget away
           AnimatedSize(
             duration: const Duration(milliseconds: 250),
+            curve: Curves.easeInOut,
             child: showSidebar ? const Sidebar() : Container(),
           ),
         ],

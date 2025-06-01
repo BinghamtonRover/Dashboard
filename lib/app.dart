@@ -40,9 +40,6 @@ class RoverControlDashboard extends ReusableReactiveWidget<SettingsModel> {
         backgroundColor: binghamtonGreen,
         foregroundColor: Colors.white,
       ),
-      dropdownMenuTheme: const DropdownMenuThemeData(
-        textStyle: TextStyle(fontWeight: FontWeight.normal),
-      ),
     ),
     darkTheme: ThemeData(
       colorScheme: ColorScheme.fromSeed(
@@ -51,9 +48,6 @@ class RoverControlDashboard extends ReusableReactiveWidget<SettingsModel> {
         surface: darkSurface,
         secondary: secondaryColor,
         onSecondary: Colors.white,
-      ),
-      dropdownMenuTheme: const DropdownMenuThemeData(
-        textStyle: TextStyle(fontWeight: FontWeight.normal),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: binghamtonGreen,
