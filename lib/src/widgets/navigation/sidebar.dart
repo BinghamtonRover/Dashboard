@@ -17,7 +17,15 @@ class _SidebarDecoration extends StatelessWidget {
     child: Container(
       width: 310,
       decoration: BoxDecoration(
-        boxShadow: const [BoxShadow(offset: Offset(-2, 2), blurRadius: 10.5)],
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(-2, 2),
+            blurRadius: 10.5,
+            color: context.colorScheme.brightness == Brightness.dark
+                ? Colors.black
+                : Colors.grey.shade600,
+          ),
+        ],
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(15),
           bottomLeft: Radius.circular(15),

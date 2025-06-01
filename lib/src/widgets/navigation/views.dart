@@ -6,6 +6,32 @@ import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/pages.dart";
 import "package:rover_dashboard/widgets.dart";
 
+/// Decoration for the view area to add shadows and depth styling
+class _ViewAreaDecoration extends StatelessWidget {
+  /// The widget to add the styling to
+  final Widget child;
+
+  const _ViewAreaDecoration({required this.child});
+
+  @override
+  Widget build(BuildContext context) => Container(
+    decoration: BoxDecoration(
+      boxShadow: [
+        BoxShadow(
+          offset: const Offset(2, 2),
+          blurRadius: 10.5,
+          color: context.colorScheme.brightness == Brightness.dark
+              ? Colors.black
+              : Colors.grey.shade600,
+        ),
+      ],
+      borderRadius: BorderRadius.circular(15),
+      color: context.colorScheme.surface,
+    ),
+    child: ClipRRect(borderRadius: BorderRadius.circular(15), child: child),
+  );
+}
+
 class _ViewArea extends StatelessWidget {
   /// The views model
   final ViewsModel model;
@@ -20,17 +46,8 @@ class _ViewArea extends StatelessWidget {
     onWillAcceptWithDetails: (details) =>
         details.data.name != model.views[index].name,
     onAcceptWithDetails: (details) => model.replaceView(index, details.data),
-    builder: (context, candidateData, rejectedData) => Container(
-      decoration: BoxDecoration(
-        boxShadow: const [BoxShadow(offset: Offset(2, 2), blurRadius: 10.5)],
-        borderRadius: BorderRadius.circular(15),
-        color: context.colorScheme.surface,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: model.views[index].builder(context, index),
-      ),
-    ),
+    builder: (context, candidateData, rejectedData) =>
+        _ViewAreaDecoration(child: model.views[index].builder(context, index)),
   );
 }
 
