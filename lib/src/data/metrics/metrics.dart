@@ -36,7 +36,7 @@ abstract class Metrics<T extends Message> with ChangeNotifier {
 	String get name;
 
   /// An icon to visually represent the metrics
-  IconData get icon => Icons.circle;
+  IconData get icon => Icons.square_outlined;
 
 	/// A list of user-friendly explanations for each of the metrics.
 	/// 
