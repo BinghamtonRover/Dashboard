@@ -1,3 +1,4 @@
+import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 
@@ -10,7 +11,13 @@ class ScienceMetrics extends Metrics<ScienceData> {
 	ScienceMetrics() : super(ScienceData());
 
 	@override
-	String get name => "Science";
+	String name = "Science";
+
+  @override
+  Version supportedVersion = Version(major: 1);
+
+  @override
+  IconData icon = Icons.science;
 
 	@override
 	List<MetricLine> get allMetrics => [  
@@ -30,9 +37,6 @@ class ScienceMetrics extends Metrics<ScienceData> {
 
   @override 
   Version parseVersion(ScienceData message) => message.version;
-
-  @override
-  Version get supportedVersion => Version(major: 1);
 
   @override
   Message get versionCommand => ScienceCommand(version: supportedVersion);

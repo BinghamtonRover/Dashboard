@@ -1,4 +1,5 @@
 import "package:collection/collection.dart";
+import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
@@ -10,7 +11,13 @@ class DriveMetrics extends Metrics<DriveData> {
 	DriveMetrics() : super(DriveData());
 
 	@override
-	String get name => "Drive";
+	String name = "Drive";
+
+  @override
+  Version supportedVersion = Version(major: 1);
+
+  @override
+  IconData icon = Icons.drive_eta;
 
   /// The severity based on the throttle speed.
   Severity? get throttleSeverity {
@@ -83,9 +90,6 @@ class DriveMetrics extends Metrics<DriveData> {
 
   /// The charge of the battery, as a percentage.
   double get batteryPercentage => (batteryVoltage - 19) / (24.5 - 19);  // 19-24.5 as a percentage
-  
-  @override
-  Version get supportedVersion => Version(major: 1);
 
   @override
   Version parseVersion(DriveData message) => message.version;

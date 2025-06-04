@@ -1,4 +1,5 @@
 import "package:collection/collection.dart";
+import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 
@@ -11,8 +12,18 @@ class VisionMetrics extends Metrics<VideoData> {
   /// This allows several packets of data to come in from different cameras
   /// and not have them be overwriting each other
   final List<VideoData> cameraDetections = [];
+
   /// Const constructor for vision metrics
   VisionMetrics() : super(VideoData());
+
+  @override
+  String name = "Vision";
+
+  @override
+  Version supportedVersion = Version(major: 1, minor: 2);
+
+  @override
+  IconData icon = Icons.remove_red_eye_outlined;
   
   @override
   List<MetricLine> get allMetrics => [
@@ -46,9 +57,6 @@ class VisionMetrics extends Metrics<VideoData> {
       }),
     ],
   ];
-  
-  @override
-  String get name => "Vision";
 
   // This has to be overriden since otherwise it will keep appending targets to the list
   @override
@@ -66,9 +74,6 @@ class VisionMetrics extends Metrics<VideoData> {
   
   @override
   Version parseVersion(VideoData message) => message.version;
-
-  @override
-  Version get supportedVersion => Version(major: 1, minor: 2);
   
   @override
   Message get versionCommand => VideoData(version: Version(major: 1, minor: 2));
