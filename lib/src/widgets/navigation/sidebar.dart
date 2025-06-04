@@ -15,6 +15,7 @@ class _SidebarDecoration extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsetsGeometry.only(left: 4, top: 8, bottom: 8),
     child: Container(
+      padding: const EdgeInsets.only(bottom: 8),
       width: 310,
       decoration: BoxDecoration(
         boxShadow: [
