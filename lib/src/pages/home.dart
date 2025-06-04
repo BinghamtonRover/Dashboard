@@ -18,10 +18,7 @@ class SocketSwitcher extends ReusableReactiveWidget<Sockets> {
     onChanged: model.setRover,
     focusNode: FocusNode(),
     dropdownColor: darkSurface,
-    style: context.textTheme.bodyLarge?.copyWith(
-      color: Colors.white,
-      fontWeight: FontWeight.w500,
-    ),
+    style: context.textTheme.titleMedium?.copyWith(color: Colors.white),
     items: [
       for (final type in RoverType.values) DropdownMenuItem(
         value: type,
