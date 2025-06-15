@@ -7,6 +7,7 @@ class FooterViewModel with ChangeNotifier {
   /// A list of other listenable models to subscribe to.
   List<Listenable> get otherModels => [
     models.rover.metrics.drive,
+    models.rover.metrics.vitals,
     models.rover.status,
     models.sockets.data.connectionStrength,
     models.sockets.video.connectionStrength,
@@ -31,11 +32,25 @@ class FooterViewModel with ChangeNotifier {
   /// Access to the drive metrics.
   DriveMetrics get driveMetrics => models.rover.metrics.drive;
 
+  /// Access to the vitals metrics.
+  VitalsMetrics get vitalsMetrics => models.rover.metrics.vitals;
+
   String get _batteryVoltage => driveMetrics.batteryVoltage.toStringAsFixed(2);
   String get _batteryPercent => (driveMetrics.batteryPercentage * 100).toStringAsFixed(0);
 
   /// A message about the rover's battery voltage and percentage.
   String get batteryMessage => "Battery: $_batteryVoltage ($_batteryPercent%)";
+
+  /// Gets the battery warning message if voltage is too low.
+  String? get batteryWarningMessage {
+    final severity = vitalsMetrics.voltageSeverity;
+    if (severity == null) return null;
+    final severityText = severity == Severity.warning ? "Warning" : "Critical";
+    return "$severityText! Battery Level at $_batteryPercent%";
+  }
+
+  /// Gets the severity of the battery warning.
+  Severity? get batteryWarningSeverity => vitalsMetrics.voltageSeverity;
 
   /// Whether the rover is connected.
   bool get isConnected => models.rover.isConnected;
