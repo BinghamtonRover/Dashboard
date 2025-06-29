@@ -70,6 +70,7 @@ class Footer extends StatelessWidget {
       alignment: WrapAlignment.spaceBetween,
       children: [
         MessageDisplay(showLogs: showLogs),
+        const BatteryWarningDisplay(),
         const StatusIcons(),
       ],
     ),
@@ -325,5 +326,83 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
         ),
       ),
     ),
+  );
+}
+
+/// Displays a flashing battery warning when voltage is too low.
+class BatteryWarningDisplay extends StatefulWidget {
+  /// Creates the battery warning display.
+  const BatteryWarningDisplay();
+
+  @override
+  BatteryWarningDisplayState createState() => BatteryWarningDisplayState();
+}
+
+/// State for the battery warning display with flashing animation.
+class BatteryWarningDisplayState extends State<BatteryWarningDisplay>
+    with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+  late FooterViewModel _footerModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _footerModel = FooterViewModel();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    _animation = Tween<double>(begin: 0.3, end: 1).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _footerModel.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: _footerModel,
+    builder: (context, _) {
+      final message = _footerModel.batteryWarningMessage;
+      final severity = _footerModel.batteryWarningSeverity;
+      
+      if (message == null || severity == null) {
+        _animationController.stop();
+        return const SizedBox.shrink();
+      }
+
+      if (severity == Severity.warning) {
+        _animationController.repeat(reverse: true);
+      } else {
+        _animationController.stop();
+        _animationController.value = 1.0;
+      }
+
+      return AnimatedBuilder(
+        animation: _animation,
+        builder: (context, child) => Opacity(
+          opacity: severity == Severity.warning ? _animation.value : 1.0,
+          child: Card(
+            color: severity.color ?? Colors.black,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Text(
+                message,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    },
   );
 }
