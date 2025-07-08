@@ -67,17 +67,24 @@ class Footer extends StatelessWidget {
     color: binghamtonGreen,
     child: SizedBox(
       height: 48,
-      child: Stack(
+      child: Row(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              MessageDisplay(showLogs: showLogs),
-              const StatusIcons(),
-            ],
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: MessageDisplay(showLogs: showLogs),
+            ),
           ),
-          const Align(
-            child: BatteryWarningDisplay(),
+          const Expanded(
+            child: Center(
+              child: BatteryWarningDisplay(),
+            ),
+          ),
+          const Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: StatusIcons(),
+            ),
           ),
         ],
       ),
