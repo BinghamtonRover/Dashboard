@@ -65,14 +65,22 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ColoredBox(
     color: binghamtonGreen,
-    child: Wrap(
-      crossAxisAlignment: WrapCrossAlignment.center,
-      alignment: WrapAlignment.spaceBetween,
-      children: [
-        MessageDisplay(showLogs: showLogs),
-        const BatteryWarningDisplay(),
-        const StatusIcons(),
-      ],
+    child: SizedBox(
+      height: 48,
+      child: Stack(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              MessageDisplay(showLogs: showLogs),
+              const StatusIcons(),
+            ],
+          ),
+          const Align(
+            child: BatteryWarningDisplay(),
+          ),
+        ],
+      ),
     ),
   );
 }
@@ -350,12 +358,25 @@ class BatteryWarningDisplayState extends State<BatteryWarningDisplay>
     super.initState();
     _footerModel = FooterViewModel();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 4000),
       vsync: this,
     );
-    _animation = Tween<double>(begin: 0.3, end: 1).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
+    _animation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0, end: 1)
+            .chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 37.5,
+      ),
+      TweenSequenceItem(
+        tween: ConstantTween<double>(1),
+        weight: 25,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1, end: 0)
+            .chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 37.5,
+      ),
+    ]).animate(_animationController);
   }
 
   @override
@@ -378,7 +399,7 @@ class BatteryWarningDisplayState extends State<BatteryWarningDisplay>
       }
 
       if (severity == Severity.warning) {
-        _animationController.repeat(reverse: true);
+        _animationController.repeat();
       } else {
         _animationController.stop();
         _animationController.value = 1.0;
