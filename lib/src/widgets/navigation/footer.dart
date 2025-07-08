@@ -407,6 +407,8 @@ class BatteryWarningDisplayState extends State<BatteryWarningDisplay>
 
       if (severity == Severity.warning) {
         _animationController.repeat();
+      } else if (severity == Severity.critical) {
+        _animationController.repeat();
       } else {
         _animationController.stop();
         _animationController.value = 1.0;
@@ -414,10 +416,38 @@ class BatteryWarningDisplayState extends State<BatteryWarningDisplay>
 
       return AnimatedBuilder(
         animation: _animation,
-        builder: (context, child) => Opacity(
-          opacity: severity == Severity.warning ? _animation.value : 1.0,
-          child: Card(
-            color: severity.color ?? Colors.black,
+        builder: (context, child) {
+          final baseColor = severity.color ?? Colors.black;
+          Color cardColor;
+          
+          if (severity == Severity.warning) {
+            // For warnings, opacity animation (fade in/out)
+            return Opacity(
+              opacity: _animation.value,
+              child: Card(
+                color: baseColor,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  child: Text(
+                    message,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          } else if (severity == Severity.critical) {
+            // For critical, brightness animation (bright to dark)
+            final brightness = 0.3 + (_animation.value * 0.7); // Range from 0.3 to 1.0
+            cardColor = Color.lerp(baseColor.withValues(alpha: 0.3), baseColor, brightness) ?? baseColor;
+          } else {
+            cardColor = baseColor;
+          }
+          
+          return Card(
+            color: cardColor,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Text(
@@ -428,8 +458,8 @@ class BatteryWarningDisplayState extends State<BatteryWarningDisplay>
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       );
     },
   );
