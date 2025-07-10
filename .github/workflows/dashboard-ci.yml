@@ -101,7 +101,8 @@ jobs:
         run: flutter build windows
 
       - name: Zip windows executable
-        run: tar -acf dashboard_windows_portable.zip -C build/windows/x64/runner/Release/ *
+        working-directory: build/windows/x64/runner/Release
+        run: Compress-Archive -Path * -DestinationPath ${{ github.workspace }}/dashboard_windows_portable.zip
 
       - name: Upload windows portable
         uses: actions/upload-artifact@v4
@@ -242,7 +243,8 @@ jobs:
         run: flutter build linux
 
       - name: Zip Linux executable
-        run: tar -czf dashboard_linux.tar.gz -C build/linux/x64/release/bundle/ $(ls -A build/linux/x64/release/bundle/)
+        working-directory: build/linux/x64/release/bundle
+        run: tar -zcf ${{ github.workspace }}/dashboard_linux.tar.gz *
 
       - name: Upload linux executable
         uses: actions/upload-artifact@v4
