@@ -121,7 +121,7 @@ class NavigationToolbar extends StatelessWidget {
 }
 
 /// The footer navigation toolbar, responsible for showing vitals and logs.
-class Footer extends StatefulWidget {
+class Footer extends StatelessWidget {
   /// Whether to show logs. Disable this when on the logs page.
   final bool showLogs;
   
@@ -129,30 +129,10 @@ class Footer extends StatefulWidget {
   const Footer({super.key, this.showLogs = true});
 
   @override
-  FooterState createState() => FooterState();
-}
-
-/// State for the Footer widget that manages the shared FooterViewModel.
-class FooterState extends State<Footer> {
-  late FooterViewModel _footerModel;
-
-  @override
-  void initState() {
-    super.initState();
-    _footerModel = FooterViewModel();
-  }
-
-  @override
-  void dispose() {
-    _footerModel.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) => NavigationToolbar(
-    leading: MessageDisplayComponent(showLogs: widget.showLogs),
-    center: BatteryWarningDisplayComponent(footerModel: _footerModel),
-    trailing: StatusIconsComponent(footerModel: _footerModel),
+    leading: MessageDisplayComponent(showLogs: showLogs),
+    center: const BatteryWarningDisplayComponent(),
+    trailing: const StatusIconsComponent(),
   );
 }
 
@@ -192,12 +172,12 @@ class NetworkStatusIcon extends ReusableReactiveWidget<ValueNotifier<double>> {
 }
 
 /// A few icons displaying the rover's current status.
-class StatusIcons extends StatelessWidget {
-  /// The footer view model to use for data.
-  final FooterViewModel? footerModel;
-
+class StatusIcons extends ReactiveWidget<FooterViewModel> {
   /// A const constructor.
-  const StatusIcons({super.key, this.footerModel});
+  const StatusIcons();
+
+  @override
+  FooterViewModel createModel() => FooterViewModel();
 
   /// A color representing a meter's fill.
   static Color getColor(double percentage) => switch (percentage) {
@@ -269,19 +249,7 @@ class StatusIcons extends StatelessWidget {
     : models.rover.settings.setStatus(input);
 
   @override
-  Widget build(BuildContext context) {
-    if (footerModel != null) {
-      return ListenableBuilder(
-        listenable: footerModel!,
-        builder: (context, _) => _buildStatusIcons(context, footerModel!),
-      );
-    } else {
-      // Fallback to creating model internally for backward compatibility
-      return _ReactiveStatusIcons();
-    }
-  }
-
-  Widget _buildStatusIcons(BuildContext context, FooterViewModel model) => Row(
+  Widget build(BuildContext context, FooterViewModel model) => Row(
     mainAxisSize: MainAxisSize.min,
     children: [
       const ControllerMenu(),
@@ -294,7 +262,7 @@ class StatusIcons extends StatelessWidget {
             ? getBatteryIcon(model.batteryPercentage)
             : Icons.battery_unknown,
           color:  model.isConnected
-            ? StatusIcons.getColor(model.batteryPercentage)
+            ? getColor(model.batteryPercentage)
             : Colors.black,
         ),
       ),
@@ -329,15 +297,6 @@ class StatusIcons extends StatelessWidget {
       const SizedBox(width: 4),
     ],
   );
-}
-
-/// Reactive version of StatusIcons for backward compatibility.
-class _ReactiveStatusIcons extends ReactiveWidget<FooterViewModel> {
-  @override
-  FooterViewModel createModel() => FooterViewModel();
-
-  @override
-  Widget build(BuildContext context, FooterViewModel model) => StatusIcons(footerModel: model)._buildStatusIcons(context, model);
 }
 
 /// Allows the user to connect to the firmware directly, over Serial.
@@ -431,11 +390,8 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
 
 /// Displays a flashing battery warning when voltage is too low.
 class BatteryWarningDisplay extends StatefulWidget {
-  /// The footer view model to use for data.
-  final FooterViewModel footerModel;
-
   /// Creates the battery warning display.
-  const BatteryWarningDisplay({required this.footerModel, super.key});
+  const BatteryWarningDisplay();
 
   @override
   BatteryWarningDisplayState createState() => BatteryWarningDisplayState();
@@ -446,10 +402,12 @@ class BatteryWarningDisplayState extends State<BatteryWarningDisplay>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
+  late FooterViewModel _footerModel;
 
   @override
   void initState() {
     super.initState();
+    _footerModel = FooterViewModel();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 4000),
       vsync: this,
@@ -475,15 +433,16 @@ class BatteryWarningDisplayState extends State<BatteryWarningDisplay>
   @override
   void dispose() {
     _animationController.dispose();
+    _footerModel.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: widget.footerModel,
+    listenable: _footerModel,
     builder: (context, _) {
-      final message = widget.footerModel.batteryWarningMessage;
-      final severity = widget.footerModel.batteryWarningSeverity;
+      final message = _footerModel.batteryWarningMessage;
+      final severity = _footerModel.batteryWarningSeverity;
       
       if (message == null || severity == null) {
         _animationController.stop();
@@ -552,14 +511,11 @@ class BatteryWarningDisplayState extends State<BatteryWarningDisplay>
 
 /// Navigation toolbar component for displaying status icons.
 class StatusIconsComponent extends NavigationToolbarComponent {
-  /// The footer view model to use for data.
-  final FooterViewModel footerModel;
-
   /// Creates a status icons component.
-  const StatusIconsComponent({required this.footerModel, super.key});
+  const StatusIconsComponent({super.key});
 
   @override
-  Widget build(BuildContext context) => StatusIcons(footerModel: footerModel);
+  Widget build(BuildContext context) => const StatusIcons();
 }
 
 /// Navigation toolbar component for displaying messages.
@@ -576,12 +532,9 @@ class MessageDisplayComponent extends NavigationToolbarComponent {
 
 /// Navigation toolbar component for displaying battery warnings.
 class BatteryWarningDisplayComponent extends NavigationToolbarComponent {
-  /// The footer view model to use for data.
-  final FooterViewModel footerModel;
-
   /// Creates a battery warning display component.
-  const BatteryWarningDisplayComponent({required this.footerModel, super.key});
+  const BatteryWarningDisplayComponent({super.key});
 
   @override
-  Widget build(BuildContext context) => BatteryWarningDisplay(footerModel: footerModel);
+  Widget build(BuildContext context) => const BatteryWarningDisplay();
 }
