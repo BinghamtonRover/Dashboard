@@ -390,8 +390,11 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
 
 /// Displays a flashing battery warning when voltage is too low.
 class BatteryWarningDisplay extends StatefulWidget {
+  /// The footer view model to use for data.
+  final FooterViewModel model;
+
   /// Creates the battery warning display.
-  const BatteryWarningDisplay();
+  const BatteryWarningDisplay({required this.model, super.key});
 
   @override
   BatteryWarningDisplayState createState() => BatteryWarningDisplayState();
@@ -402,12 +405,10 @@ class BatteryWarningDisplayState extends State<BatteryWarningDisplay>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
-  late FooterViewModel _footerModel;
 
   @override
   void initState() {
     super.initState();
-    _footerModel = FooterViewModel();
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 4000),
       vsync: this,
@@ -433,16 +434,15 @@ class BatteryWarningDisplayState extends State<BatteryWarningDisplay>
   @override
   void dispose() {
     _animationController.dispose();
-    _footerModel.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: _footerModel,
+    listenable: widget.model,
     builder: (context, _) {
-      final message = _footerModel.batteryWarningMessage;
-      final severity = _footerModel.batteryWarningSeverity;
+      final message = widget.model.batteryWarningMessage;
+      final severity = widget.model.batteryWarningSeverity;
       
       if (message == null || severity == null) {
         _animationController.stop();
@@ -536,5 +536,31 @@ class BatteryWarningDisplayComponent extends NavigationToolbarComponent {
   const BatteryWarningDisplayComponent({super.key});
 
   @override
-  Widget build(BuildContext context) => const BatteryWarningDisplay();
+  Widget build(BuildContext context) => _BatteryWarningDisplayWrapper();
+}
+
+/// Internal wrapper widget to manage FooterViewModel for BatteryWarningDisplay.
+class _BatteryWarningDisplayWrapper extends StatefulWidget {
+  @override
+  _BatteryWarningDisplayWrapperState createState() => _BatteryWarningDisplayWrapperState();
+}
+
+/// State for the battery warning display wrapper.
+class _BatteryWarningDisplayWrapperState extends State<_BatteryWarningDisplayWrapper> {
+  late FooterViewModel _model;
+
+  @override
+  void initState() {
+    super.initState();
+    _model = FooterViewModel();
+  }
+
+  @override
+  void dispose() {
+    _model.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => BatteryWarningDisplay(model: _model);
 }
