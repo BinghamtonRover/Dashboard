@@ -1,3 +1,4 @@
+import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
@@ -7,7 +8,10 @@ class VitalsMetrics extends Metrics {
   VitalsMetrics() : super(DriveData());
 
   @override
-  Version parseVersion(Message message) => Version(major: 0, minor: 0);
+  String name = "Vitals";
+
+  @override
+  IconData icon = Icons.bolt;
 
   /// Provides access to the drive data.
   DriveData get drive => models.rover.metrics.drive.data;
@@ -48,10 +52,10 @@ class VitalsMetrics extends Metrics {
   ];
 
   @override
-  String get name => "Vitals";
+  Version supportedVersion = Version(major: 0, minor: 0);
 
   @override
-  Version get supportedVersion => Version(major: 0, minor: 0);
+  Version parseVersion(Message message) => Version(major: 0, minor: 0);
 
   @override
   DriveCommand get versionCommand => DriveCommand(version: supportedVersion);
