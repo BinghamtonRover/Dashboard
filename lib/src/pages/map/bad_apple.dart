@@ -1,4 +1,3 @@
-
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/data.dart";
@@ -90,6 +89,5 @@ class BadApplePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(BadApplePainter oldDelegate) =>
-    frameNumber != oldDelegate.frameNumber;
+  bool shouldRepaint(BadApplePainter other) => frameNumber != other.frameNumber;
 }
