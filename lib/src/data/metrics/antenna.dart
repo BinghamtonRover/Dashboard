@@ -1,4 +1,5 @@
-﻿import "package:rover_dashboard/data.dart";
+﻿import "package:flutter/material.dart";
+import "package:rover_dashboard/data.dart";
 
 /// Metrics about the antenna received from the Base Station
 class BaseStationMetrics extends Metrics<BaseStationData> {
@@ -6,7 +7,13 @@ class BaseStationMetrics extends Metrics<BaseStationData> {
   BaseStationMetrics() : super(BaseStationData());
 
   @override
-  String get name => "Base Station";
+  String name = "Base Station";
+
+  @override
+  Version supportedVersion = Version(major: 1);
+
+  @override
+  IconData icon = Icons.settings_input_antenna;
 
   String _controlModeName(AntennaControlMode mode) => switch(mode) {
     AntennaControlMode.ANTENNA_CONTROL_MODE_UNDEFINED => "Unknown",
@@ -31,9 +38,6 @@ class BaseStationMetrics extends Metrics<BaseStationData> {
 
   @override
   Version parseVersion(BaseStationData message) => message.version;
-
-  @override
-  Version get supportedVersion => Version(major: 1);
 
   @override
   Message get versionCommand => BaseStationCommand(version: supportedVersion);

@@ -1,9 +1,19 @@
+import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 
 /// Metrics for the relay devices on the rover
 class RelayMetrics extends Metrics<RelaysData> {
   /// Default constructor for Relay Metrics
   RelayMetrics() : super(RelaysData());
+
+  @override
+  String name = "Relays";
+
+  @override
+  Version supportedVersion = Version();
+
+  @override
+  IconData icon = Icons.settings_input_component;
 
   @override
   List<MetricLine> get allMetrics => [
@@ -18,13 +28,7 @@ class RelayMetrics extends Metrics<RelaysData> {
   ];
 
   @override
-  String get name => "Relays";
-
-  @override
   Version parseVersion(RelaysData message) => Version();
-
-  @override
-  Version get supportedVersion => Version();
 
   @override
   Message get versionCommand => RelaysCommand();

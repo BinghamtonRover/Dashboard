@@ -1,3 +1,4 @@
+import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 
@@ -9,7 +10,13 @@ class PositionMetrics extends Metrics<RoverPosition> {
   PositionMetrics() : super(RoverPosition());
 
 	@override
-	String get name => "Position";
+	String name = "Position";
+
+  @override
+  Version supportedVersion = Version(major: 1);
+
+  @override
+  IconData icon = Icons.gps_fixed;
 
 	/// The position of the base station. Setting this value updates the UI.
 	GpsCoordinates get baseStation => models.settings.baseStation.gpsCoordinates;
@@ -61,9 +68,6 @@ class PositionMetrics extends Metrics<RoverPosition> {
 
   @override
   Version parseVersion(RoverPosition message) => message.version;
-
-  @override
-  Version get supportedVersion => Version(major: 1);
 
   @override
   Message get versionCommand => RoverPosition(version: supportedVersion);

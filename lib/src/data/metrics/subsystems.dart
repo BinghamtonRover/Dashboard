@@ -1,3 +1,4 @@
+import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 
@@ -5,6 +6,15 @@ import "package:rover_dashboard/services.dart";
 class SubsystemsMetrics extends Metrics<SubsystemsData> {
   /// Default constructor for subsystems metrics
   SubsystemsMetrics() : super(SubsystemsData());
+
+  @override
+  String name = "Subsystems";
+
+  @override
+  Version supportedVersion = Version(major: 1, minor: 0);
+
+  @override
+  IconData icon = Icons.cable;
 
   /// Utility method to get the display string of a sensor's connection
   String sensorConnectionStatus(String sensorName, BoolState value) =>
@@ -37,13 +47,7 @@ class SubsystemsMetrics extends Metrics<SubsystemsData> {
   ];
 
   @override
-  String get name => "Subsystems";
-
-  @override
   Version parseVersion(SubsystemsData message) => message.version;
-
-  @override
-  Version get supportedVersion => Version(major: 1, minor: 0);
 
   @override
   Message get versionCommand => SubsystemsCommand(version: supportedVersion);
