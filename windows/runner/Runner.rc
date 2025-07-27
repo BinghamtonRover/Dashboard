@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "dashboard" "\0"
+            VALUE "CompanyName", "edu.binghamton.rover" "\0"
+            VALUE "FileDescription", "rover_dashboard" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "dashboard" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "dashboard.exe" "\0"
-            VALUE "ProductName", "dashboard" "\0"
+            VALUE "InternalName", "rover_dashboard" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 edu.binghamton.rover. All rights reserved." "\0"
+            VALUE "OriginalFilename", "rover_dashboard.exe" "\0"
+            VALUE "ProductName", "rover_dashboard" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
