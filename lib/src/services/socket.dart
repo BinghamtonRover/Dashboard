@@ -34,18 +34,15 @@ class DashboardSocket extends BurtSocket with RoverTimesync {
     destinations.add(address);
   }
 
-  late final bool _sendTimesync;
-
   @override
-  bool get shouldSendTimesync => _sendTimesync;
+  final bool shouldSendTimesync;
 
   /// Listens for incoming messages on a UDP socket and sends heartbeats to the [device].
   DashboardSocket({
     required super.device,
-    bool sendTimesync = false,
+    this.shouldSendTimesync = false,
     super.timesyncAddress,
-  }) : _sendTimesync = sendTimesync,
-       super(port: null, quiet: true, keepDestination: true, maxClients: 1);
+  }) : super(port: null, quiet: true, keepDestination: true, maxClients: 1);
 
   @override
   Duration get heartbeatInterval => Duration(milliseconds: 1000 ~/ frequency);
