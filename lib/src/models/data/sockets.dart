@@ -10,7 +10,7 @@ class Sockets extends Model {
   /// A UDP socket for sending and receiving Protobuf data.
   late final data = DashboardSocket(
     device: Device.SUBSYSTEMS,
-    sendTimesync: true,
+    shouldSendTimesync: true,
     timesyncAddress: models.settings.network.timesyncSocket,
   );
 
