@@ -23,6 +23,17 @@ class DashboardSocket extends BurtSocket with RoverTimesync {
   /// Number of times to check heart beat per seconds based on `models.settings.network.connectionTimeout`.
   double get frequency => models.settings.network.connectionTimeout;
 
+  /// The destination this socket is set to
+  SocketInfo? get destination =>
+      destinations.isNotEmpty ? destinations.first : null;
+
+  /// Sets the destination of this socket
+  set destination(SocketInfo? address) {
+    if (address == null) return;
+    destinations.clear();
+    destinations.add(address);
+  }
+
   late final bool _sendTimesync;
 
   @override
@@ -34,7 +45,7 @@ class DashboardSocket extends BurtSocket with RoverTimesync {
     bool sendTimesync = false,
     super.timesyncAddress,
   }) : _sendTimesync = sendTimesync,
-       super(port: null, quiet: true, keepDestination: true);
+       super(port: null, quiet: true, keepDestination: true, maxClients: 1);
 
   @override
   Duration get heartbeatInterval => Duration(milliseconds: 1000 ~/ frequency);
