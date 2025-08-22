@@ -4,8 +4,8 @@ import "package:rover_dashboard/models.dart";
 
 /// A data model that listens for updated data and provides [Metrics] to the UI.
 class RoverMetrics extends Model {
-	/// Data from the science subsystem.
-	final science = ScienceMetrics();
+  /// Data from the science subsystem.
+  final science = ScienceMetrics();
 
   /// Data from the GPS.
   final position = PositionMetrics();
@@ -21,7 +21,7 @@ class RoverMetrics extends Model {
 
   /// Vitals data from the rover.
   final vitals = VitalsMetrics();
-  
+
   /// Subsystems status from the rover
   final subsystems = SubsystemsMetrics();
 
@@ -34,11 +34,22 @@ class RoverMetrics extends Model {
   /// Data from the Base Station
   final baseStation = BaseStationMetrics();
 
-	/// A list of all the metrics to iterate over.
-	///
-	/// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
-	/// when new data is received. As a getter, every time it is called it will use new data.
-	List<Metrics> get allMetrics => [vitals, position, drive, science, arm, subsystems, relays, vision, baseStation];
+  /// A list of all the metrics to iterate over.
+  ///
+  /// NOTE: Keep this as a getter, NOT a field. If this is made a field, then it won't update
+  /// when new data is received. As a getter, every time it is called it will use new data.
+  List<Metrics> get allMetrics => [
+    vitals,
+    position,
+    drive,
+    science,
+    arm,
+    gripper,
+    subsystems,
+    relays,
+    vision,
+    baseStation,
+  ];
 
   /// Whether the given command is supported by the rover.
   bool isSupportedVersion(Message command) {
@@ -56,33 +67,33 @@ class RoverMetrics extends Model {
     BaseStationCommand().messageName: baseStation,
   };
 
-	@override
-	Future<void> init() async {
-		models.messages.stream.onMessage(
-			name: DriveData().messageName,
-			constructor: DriveData.fromBuffer,
-			callback: drive.update,
-		);
-		models.messages.stream.onMessage(
-			name: ScienceData().messageName,
-			constructor: ScienceData.fromBuffer,
-			callback: science.update,
-		);
+  @override
+  Future<void> init() async {
     models.messages.stream.onMessage(
-			name: RoverPosition().messageName,
-			constructor: RoverPosition.fromBuffer,
-			callback: position.update,
-		);
-		models.messages.stream.onMessage(
-			name: ArmData().messageName,
-			constructor: ArmData.fromBuffer,
-			callback: arm.update,
-		);
-		models.messages.stream.onMessage(
-			name: GripperData().messageName,
-			constructor: GripperData.fromBuffer,
-			callback: gripper.update,
-		);
+      name: DriveData().messageName,
+      constructor: DriveData.fromBuffer,
+      callback: drive.update,
+    );
+    models.messages.stream.onMessage(
+      name: ScienceData().messageName,
+      constructor: ScienceData.fromBuffer,
+      callback: science.update,
+    );
+    models.messages.stream.onMessage(
+      name: RoverPosition().messageName,
+      constructor: RoverPosition.fromBuffer,
+      callback: position.update,
+    );
+    models.messages.stream.onMessage(
+      name: ArmData().messageName,
+      constructor: ArmData.fromBuffer,
+      callback: arm.update,
+    );
+    models.messages.stream.onMessage(
+      name: GripperData().messageName,
+      constructor: GripperData.fromBuffer,
+      callback: gripper.update,
+    );
     models.messages.stream.onMessage(
       name: RelaysData().messageName,
       constructor: RelaysData.fromBuffer,
@@ -110,7 +121,7 @@ class RoverMetrics extends Model {
     );
     drive.addListener(vitals.notify);
     // versionTimer = Timer.periodic(versionInterval, _sendVersions);
-	}
+  }
 
   // /// A timer to broadcast the supported Protobuf version every [versionInterval] seconds.
   // Timer? versionTimer;
