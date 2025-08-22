@@ -1,0 +1,345 @@
+name: Dashboard
+
+# Runs code analysis and builds the dashboard for all supported platforms
+# This runs on every PR and new commit to main, and if ran on a manual dispatch,
+# can put all build files into a new draft release
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      publish-release:
+        type: boolean
+        description: Publish Draft Release
+        default: false
+        required: false
+
+env:
+  FLUTTER_VERSION: 3.32.5
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          cache-path: ${{ runner.tool_cache }}/flutter/linux
+
+      - name: Analyze
+        run: flutter analyze --dartdocs
+
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          cache-path: ${{ runner.tool_cache }}/flutter/linux
+
+      - name: Install packages
+        run: flutter pub get
+
+      - name: Generate Icons
+        run: dart run flutter_launcher_icons
+
+      - name: Build APK
+        run: flutter build apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_android
+          path: build/app/outputs/apk/release/app-release.apk
+
+  build-windows:
+    name: Build Windows
+    runs-on: windows-2025
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          cache-path: ${{ runner.tool_cache }}/flutter/windows
+
+      - name: Install packages
+        run: flutter pub get
+
+      - name: Flutter Doctor
+        run: flutter doctor -v
+
+      - name: Generate Icons
+        run: dart run flutter_launcher_icons
+
+      - name: Build Windows
+        run: flutter build windows
+
+      - name: Zip windows executable
+        working-directory: build/windows/x64/runner/Release
+        run: Compress-Archive -Path * -DestinationPath ${{ github.workspace }}/dashboard_windows_portable.zip
+
+      - name: Upload windows portable
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_windows_portable
+          path: dashboard_windows_portable.zip
+
+      - name: Build windows installer
+        run: |
+          choco install innosetup -y
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" windows_installer_script.iss
+
+      - name: Upload windows installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_windows_installer
+          path: build/windows/x64/runner/installer/rover-dashboard-setup.exe
+          if-no-files-found: error
+
+  build-msix:
+    name: Build Windows MSIX
+    runs-on: windows-2025
+    env:
+      windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Load certificate
+        run: |
+          echo "${{ env.windows_certificate }}" > windows_certificate_decoded.txt
+          openssl enc -base64 -d -in windows_certificate_decoded.txt -out windows_certificate.pfx
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          cache-path: ${{ runner.tool_cache }}/flutter/windows
+
+      - name: Install packages
+        run: flutter pub get
+
+      - name: Flutter Doctor
+        run: flutter doctor -v
+
+      - name: Generate Icons
+        run: dart run flutter_launcher_icons
+
+      - name: Build MSIX
+        run: dart run msix:create
+
+      - name: Upload MSIX
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_msix
+          path: build/windows/x64/runner/Release/dashboard.msix
+          if-no-files-found: error
+
+      - name: Upload MSIX
+        uses: actions/upload-artifact@v4
+        with:
+          name: trust_msix
+          path: windows/trust_windows.bat
+          if-no-files-found: error
+
+  build-macos:
+    name: Build MacOS
+    runs-on: macos-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          cache-path: ${{ runner.tool_cache }}/flutter/macos
+
+      - name: Install packages
+        run: flutter pub get
+
+      - name: Flutter Doctor
+        run: flutter doctor -v
+
+      - name: Install build dependencies
+        run: brew install automake libtool
+
+      - name: Generate Icons
+        run: dart run flutter_launcher_icons
+
+      - name: Build MacOS
+        run: flutter build macos
+
+      - name: Create macOS DMG
+        uses: L-Super/create-dmg-actions@v1.0.3
+        with:
+          dmg_name: dashboard_macos
+          src_dir: build/macos/Build/Products/Release/rover_dashboard.app
+
+      - name: Upload DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_macos
+          path: dashboard_macos.dmg
+          if-no-files-found: error
+
+  build-linux:
+    name: Build Linux
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          cache-path: ${{ runner.tool_cache }}/flutter/linux
+
+      - name: Install packages
+        run: flutter pub get
+
+      - name: Flutter Doctor
+        run: flutter doctor -v
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libglu1-mesa ninja-build libgtk-3-dev liblzma-dev
+
+      - name: Generate Icons
+        run: dart run flutter_launcher_icons
+
+      - name: Build Linux
+        run: flutter build linux
+
+      - name: Zip Linux executable
+        working-directory: build/linux/x64/release/bundle
+        run: tar -czf ${{ github.workspace }}/dashboard_linux.tar.gz *
+
+      - name: Upload linux executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard_linux
+          path: dashboard_linux.tar.gz
+          if-no-files-found: error
+
+  build-mini:
+    name: Build Mini Dashboard
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          cache-path: ${{ runner.tool_cache }}/flutter/linux
+
+      - name: Install packages
+        run: flutter pub get
+
+      - name: Install flutterpi_tool
+        run: flutter pub global activate flutterpi_tool
+
+      - name: Build mini dashboard
+        run: dart run :build_mini
+
+      - name: Zip mini dashboard
+        working-directory: build/flutter_assets
+        run: tar -czf ${{ github.workspace }}/mini_dashboard_pi.tar.gz *
+
+      - name: Upload mini dashboard
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini_dashboard_pi
+          path: mini_dashboard_pi.tar.gz
+          if-no-files-found: error
+
+  create-release:
+    name: Publish Release
+    runs-on: ubuntu-22.04
+    needs: [build-windows, build-msix, build-macos, build-linux]
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.publish-release }}
+    steps:
+      - name: Download Windows Portable
+        uses: actions/download-artifact@v4
+        with:
+          name: dashboard_windows_portable
+
+      - name: Download Windows Installer
+        uses: actions/download-artifact@v4
+        with:
+          name: dashboard_windows_installer
+
+      - name: Download Windows MSIX
+        uses: actions/download-artifact@v4
+        with:
+          name: dashboard_msix
+
+      - name: Download Windows trust script
+        uses: actions/download-artifact@v4
+        with:
+          name: trust_msix
+
+      - name: Download MacOS release
+        uses: actions/download-artifact@v4
+        with:
+          name: dashboard_macos
+
+      - name: Download Linux release
+        uses: actions/download-artifact@v4
+        with:
+          name: dashboard_linux
+
+      - name: Organize files
+        run: |
+          ls -al
+          mv dashboard.msix dashboard_msix.msix
+          mv rover-dashboard-setup.exe dashboard_windows_installer.exe
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dashboard_msix.msix
+            dashboard_windows_portable.zip
+            dashboard_windows_installer.exe
+            dashboard_macos.dmg
+            dashboard_linux.tar
+            trust_windows.bat
+          name: Dashboard Draft Release ${{ github.ref_name }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          draft: true

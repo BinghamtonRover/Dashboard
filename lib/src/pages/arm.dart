@@ -239,7 +239,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
           const Text("Laser Light"),
           const SizedBox(width: 5),
           Switch(
-            activeThumbColor: Colors.red,
+            activeColor: Colors.red,
             value: model.desiredLaserState,
             onChanged: (value) => model.setLaser(laser: value),
           ),
