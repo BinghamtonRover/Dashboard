@@ -30,6 +30,8 @@ dependencies:
   coordinate_converter: ^1.2.3
   archive: ^4.0.7
   image: ^4.5.4
+  ffi: ^2.1.4
+  sdl3: ^0.1.45
 
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
