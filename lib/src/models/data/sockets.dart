@@ -72,7 +72,9 @@ class Sockets extends Model {
   String get connectionSummary {
     final result = StringBuffer();
     for (final socket in sockets) {
-      result.write("${socket.device.humanName}: ${(socket.connectionStrength.value * 100).toStringAsFixed(0)}%\n");
+      result.write(
+        "${socket.device.humanName}: ${(socket.connectionStrength.value * 100).toStringAsFixed(0)}%\n",
+      );
     }
     return result.toString().trim();
   }
@@ -93,7 +95,8 @@ class Sockets extends Model {
 
     // Make sure that all sockets are properly created and mapped
     for (final device in _deviceSocketMap.keys) {
-      assert(sockets.contains(_deviceSocketMap[device]),
+      assert(
+        sockets.contains(_deviceSocketMap[device]),
         "Socket for device $device is added to List<DashboardSocket> get sockets",
       );
       assert(
@@ -104,22 +107,23 @@ class Sockets extends Model {
 
     await timesync.init();
     for (final socket in sockets) {
-      socket.connectionStatus.addListener(() => socket.connectionStatus.value
-        ? onConnect(socket.device)
-        : onDisconnect(socket.device),
+      socket.connectionStatus.addListener(
+        () => socket.connectionStatus.value
+            ? onConnect(socket.device)
+            : onDisconnect(socket.device),
       );
       socket.messages.listen((message) {
         if (!socket.isEnabled) return;
         models.messages.addMessage(message);
       });
       await socket.init();
-		}
-		final level = Logger.level;
-		Logger.level = LogLevel.warning;
-		await updateSockets();
-		Logger.level = level;
+    }
+    final level = Logger.level;
+    Logger.level = LogLevel.warning;
+    await updateSockets();
+    Logger.level = level;
     notifyListeners();
-	}
+  }
 
   /// Enables all sockets without restarting them
   void enable() {
@@ -131,9 +135,9 @@ class Sockets extends Model {
 
   /// Disconnects from all sockets without restarting them
   void disable() {
-		for (final socket in sockets) {
-			socket.disable();
-		}
+    for (final socket in sockets) {
+      socket.disable();
+    }
     notifyListeners();
   }
 
@@ -150,7 +154,10 @@ class Sockets extends Model {
 
   /// Notifies the user when a new device has connected.
   void onConnect(Device device) {
-    models.home.setMessage(severity: Severity.info, text: "The ${device.humanName} has connected");
+    models.home.setMessage(
+      severity: Severity.info,
+      text: "The ${device.humanName} has connected",
+    );
     if (device == Device.SUBSYSTEMS) {
       models.rover.status.value = models.rover.settings.status;
       models.rover.controller1.gamepad.pulse();
@@ -162,8 +169,13 @@ class Sockets extends Model {
 
   /// Notifies the user when a device has disconnected.
   void onDisconnect(Device device) {
-    models.home.setMessage(severity: Severity.critical, text: "The ${device.humanName} has disconnected");
-    if (device == Device.SUBSYSTEMS) models.rover.status.value = RoverStatus.DISCONNECTED;
+    models.home.setMessage(
+      severity: Severity.critical,
+      text: "The ${device.humanName} has disconnected",
+    );
+    if (device == Device.SUBSYSTEMS) {
+      models.rover.status.value = RoverStatus.DISCONNECTED;
+    }
     if (device == Device.VIDEO) models.video.reset();
     notifyListeners();
   }
@@ -197,7 +209,10 @@ class Sockets extends Model {
   Future<void> setRover(RoverType? value) async {
     if (value == null) return;
     rover = value;
-    models.home.setMessage(severity: Severity.info, text: "Using: ${rover.name}");
+    models.home.setMessage(
+      severity: Severity.info,
+      text: "Using: ${rover.name}",
+    );
     await reset();
     notifyListeners();
   }
