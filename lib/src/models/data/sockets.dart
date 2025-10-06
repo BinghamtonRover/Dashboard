@@ -12,23 +12,51 @@ class Sockets extends Model {
     timesyncAddress: models.settings.network.timesyncSocket,
   );
 
+  DashboardSocket _registerSocket({
+    required Device device,
+    required SocketInfo Function() info,
+  }) {
+    final socket = DashboardSocket(device: device);
+    _deviceSocketMap[device] = socket;
+    _deviceSocketInfoMap[device] = info;
+    return socket;
+  }
+
   /// A UDP socket for sending and receiving Protobuf data.
-  late final data = DashboardSocket(device: Device.SUBSYSTEMS);
+  late final DashboardSocket data = _registerSocket(
+    device: Device.SUBSYSTEMS,
+    info: () => models.settings.network.subsystemsSocket,
+  );
 
   /// A UDP socket for receiving video.
-  late final video = DashboardSocket(device: Device.VIDEO);
+  late final DashboardSocket video = _registerSocket(
+    device: Device.VIDEO,
+    info: () => models.settings.network.videoSocket,
+  );
 
   /// A UDP socket for controlling autonomy.
-  late final autonomy = DashboardSocket(device: Device.AUTONOMY);
+  late final DashboardSocket autonomy = _registerSocket(
+    device: Device.AUTONOMY,
+    info: () => models.settings.network.autonomySocket,
+  );
 
   /// A UDP socket for controlling the base station
-  late final baseStation = DashboardSocket(device: Device.BASE_STATION);
-
-  /// The timestamp to use for sending messages with all sockets
-  DateTime get timestamp => timesync.timestamp;
+  late final DashboardSocket baseStation = _registerSocket(
+    device: Device.BASE_STATION,
+    info: () => models.settings.network.baseSocket,
+  );
 
   /// A list of all the sockets this model manages.
   List<DashboardSocket> get sockets => [data, video, autonomy, baseStation];
+
+  /// Maps each device to its corresponding socket
+  final Map<Device, DashboardSocket> _deviceSocketMap = {};
+
+  /// Maps each device to its setting for its socket destination
+  final Map<Device, SocketInfo Function()> _deviceSocketInfoMap = {};
+
+  /// The timestamp to use for sending messages with all sockets
+  DateTime get timestamp => timesync.timestamp;
 
   /// The rover-like system currently in use.
   RoverType rover = RoverType.rover;
@@ -55,16 +83,25 @@ class Sockets extends Model {
   /// Returns the corresponding [DashboardSocket] for the [device]
   ///
   /// Returns null if no device is passed or there is no corresponding socket
-  DashboardSocket? socketForDevice(Device device) => switch (device) {
-    Device.SUBSYSTEMS => data,
-    Device.VIDEO => video,
-    Device.AUTONOMY => autonomy,
-    Device.BASE_STATION => baseStation,
-    _ => null,
-  };
+  DashboardSocket? socketForDevice(Device device) => _deviceSocketMap[device];
 
   @override
   Future<void> init() async {
+    // Hacky way to make sure all calls to [_registerSocket] are completed
+    // this is due to the way Dart does lazy initialization: https://dart.dev/null-safety/understanding-null-safety#lazy-initialization
+    sockets;
+
+    // Make sure that all sockets are properly created and mapped
+    for (final device in _deviceSocketMap.keys) {
+      assert(sockets.contains(_deviceSocketMap[device]),
+        "Socket for device $device is added to List<DashboardSocket> get sockets",
+      );
+      assert(
+        _deviceSocketInfoMap.containsKey(device),
+        "Device $device has a corresponding destination function in _deviceSocketInfoMap",
+      );
+    }
+
     await timesync.init();
     for (final socket in sockets) {
       socket.connectionStatus.addListener(() => socket.connectionStatus.value
@@ -106,6 +143,8 @@ class Sockets extends Model {
       await socket.dispose();
     }
     await timesync.dispose();
+    _deviceSocketMap.clear();
+    _deviceSocketInfoMap.clear();
     super.dispose();
   }
 
@@ -135,10 +174,10 @@ class Sockets extends Model {
     timesync.timesyncDestination = settings.timesyncSocket.copyWith(
       address: addressOverride,
     );
-    data.destination = settings.subsystemsSocket.copyWith(address: addressOverride);
-    video.destination = settings.videoSocket.copyWith(address: addressOverride);
-    autonomy.destination = settings.autonomySocket.copyWith(address: addressOverride);
-    baseStation.destination = settings.baseSocket.copyWith(address: addressOverride);
+    for (final device in _deviceSocketMap.keys) {
+      socketForDevice(device)!.destination = _deviceSocketInfoMap[device]!()
+          .copyWith(address: addressOverride);
+    }
   }
 
   /// Resets all the sockets.
