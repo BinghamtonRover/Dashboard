@@ -12,38 +12,26 @@ class Sockets extends Model {
     timesyncAddress: models.settings.network.timesyncSocket,
   );
 
-  DashboardSocket _registerSocket({
-    required Device device,
+  void _registerSocket({
+    required DashboardSocket socket,
     required SocketInfo Function() info,
   }) {
-    final socket = DashboardSocket(device: device);
-    _deviceSocketMap[device] = socket;
-    _deviceSocketInfoMap[device] = info;
-    return socket;
+    _deviceSocketMap[socket.device] = socket;
+    _deviceSocketInfoMap[socket.device] = info;
   }
 
   /// A UDP socket for sending and receiving Protobuf data.
-  late final DashboardSocket data = _registerSocket(
-    device: Device.SUBSYSTEMS,
-    info: () => models.settings.network.subsystemsSocket,
-  );
+  final DashboardSocket data = DashboardSocket(device: Device.SUBSYSTEMS);
 
   /// A UDP socket for receiving video.
-  late final DashboardSocket video = _registerSocket(
-    device: Device.VIDEO,
-    info: () => models.settings.network.videoSocket,
-  );
+  final DashboardSocket video = DashboardSocket(device: Device.VIDEO);
 
   /// A UDP socket for controlling autonomy.
-  late final DashboardSocket autonomy = _registerSocket(
-    device: Device.AUTONOMY,
-    info: () => models.settings.network.autonomySocket,
-  );
+  final DashboardSocket autonomy = DashboardSocket(device: Device.AUTONOMY);
 
   /// A UDP socket for controlling the base station
-  late final DashboardSocket baseStation = _registerSocket(
+  final DashboardSocket baseStation = DashboardSocket(
     device: Device.BASE_STATION,
-    info: () => models.settings.network.baseSocket,
   );
 
   /// A list of all the sockets this model manages.
@@ -89,9 +77,22 @@ class Sockets extends Model {
 
   @override
   Future<void> init() async {
-    // Hacky way to make sure all calls to [_registerSocket] are completed
-    // this is due to the way Dart does lazy initialization: https://dart.dev/null-safety/understanding-null-safety#lazy-initialization
-    sockets;
+    _registerSocket(
+      socket: data,
+      info: () => models.settings.network.subsystemsSocket,
+    );
+    _registerSocket(
+      socket: video,
+      info: () => models.settings.network.videoSocket,
+    );
+    _registerSocket(
+      socket: autonomy,
+      info: () => models.settings.network.autonomySocket,
+    );
+    _registerSocket(
+      socket: baseStation,
+      info: () => models.settings.network.baseSocket,
+    );
 
     // Make sure that all sockets are properly created and mapped
     for (final device in _deviceSocketMap.keys) {
