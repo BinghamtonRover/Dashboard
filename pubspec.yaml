@@ -44,7 +44,7 @@ dependency_overrides:
   flutter_sdl_gamepad:
     git:
       url: https://github.com/BinghamtonRover/flutter_sdl_gamepad.git
-      ref: 79b17037be5b173114f605fd71bc8ced9caae67f
+      ref: folder-restructure
 
 # Generates icons for the given platforms
 #   Run: dart run flutter_launcher_icons

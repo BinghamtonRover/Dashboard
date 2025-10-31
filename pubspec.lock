@@ -219,8 +219,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "79b17037be5b173114f605fd71bc8ced9caae67f"
-      resolved-ref: "79b17037be5b173114f605fd71bc8ced9caae67f"
+      ref: folder-restructure
+      resolved-ref: c488d2ae400ebf14d83e982ded69adad1ca8abca
       url: "https://github.com/BinghamtonRover/flutter_sdl_gamepad.git"
     source: git
     version: "1.1.1"
