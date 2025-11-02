@@ -98,6 +98,11 @@ class CameraDetailsEditor extends ReactiveWidget<CameraDetailsBuilder> {
             model: model.fps,
             titleFlex: 2,
           ),
+          NumberEditor(
+            name: "Camera Rotation",
+            model: model.rotation,
+            titleFlex: 2,
+          ),
           const SizedBox(height: 24),
           if (model.isLoading) const Text("Loading..."),
           if (model.error != null) Text(model.error!, style: const TextStyle(color: Colors.red)),

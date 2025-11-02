@@ -1,6 +1,8 @@
 PODS:
   - audio_session (0.0.1):
     - FlutterMacOS
+  - file_picker (0.0.1):
+    - FlutterMacOS
   - flutter_libserialport (0.0.1):
     - FlutterMacOS
     - libserialport
@@ -8,6 +10,7 @@ PODS:
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
   - just_audio (0.0.1):
+    - Flutter
     - FlutterMacOS
   - libserialport (0.1.1)
   - package_info_plus (0.0.1):
@@ -20,10 +23,11 @@ PODS:
 
 DEPENDENCIES:
   - audio_session (from `Flutter/ephemeral/.symlinks/plugins/audio_session/macos`)
+  - file_picker (from `Flutter/ephemeral/.symlinks/plugins/file_picker/macos`)
   - flutter_libserialport (from `Flutter/ephemeral/.symlinks/plugins/flutter_libserialport/macos`)
   - flutter_sdl_gamepad (from `Flutter/ephemeral/.symlinks/plugins/flutter_sdl_gamepad/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
-  - just_audio (from `Flutter/ephemeral/.symlinks/plugins/just_audio/macos`)
+  - just_audio (from `Flutter/ephemeral/.symlinks/plugins/just_audio/darwin`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - url_launcher_macos (from `Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos`)
@@ -35,6 +39,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   audio_session:
     :path: Flutter/ephemeral/.symlinks/plugins/audio_session/macos
+  file_picker:
+    :path: Flutter/ephemeral/.symlinks/plugins/file_picker/macos
   flutter_libserialport:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_libserialport/macos
   flutter_sdl_gamepad:
@@ -42,7 +48,7 @@ EXTERNAL SOURCES:
   FlutterMacOS:
     :path: Flutter/ephemeral
   just_audio:
-    :path: Flutter/ephemeral/.symlinks/plugins/just_audio/macos
+    :path: Flutter/ephemeral/.symlinks/plugins/just_audio/darwin
   package_info_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos
   path_provider_foundation:
@@ -51,16 +57,17 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos
 
 SPEC CHECKSUMS:
-  audio_session: dea1f41890dbf1718f04a56f1d6150fd50039b72
-  flutter_libserialport: d1a505fd4b05785f7b50cc7c93b361937ea1c5bd
-  flutter_sdl_gamepad: 43b4a85c66bf14d1a655773c7667f330b656b925
-  FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
-  just_audio: 9b67ca7b97c61cfc9784ea23cd8cc55eb226d489
+  audio_session: eaca2512cf2b39212d724f35d11f46180ad3a33e
+  file_picker: 7584aae6fa07a041af2b36a2655122d42f578c1a
+  flutter_libserialport: 2c523cb8d8203fc6d1b0da88190da31ac970eb93
+  flutter_sdl_gamepad: 8ac8a5a5fcf7fba251e029f47128c3957fe22012
+  FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
+  just_audio: 4e391f57b79cad2b0674030a00453ca5ce817eed
   libserialport: 1cb25e66ef3c92a8e59c2ea3820302c3fa2268cd
-  package_info_plus: fa739dd842b393193c5ca93c26798dff6e3d0e0c
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  url_launcher_macos: c82c93949963e55b228a30115bd219499a6fe404
+  package_info_plus: f0052d280d17aa382b932f399edf32507174e870
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  url_launcher_macos: 0fba8ddabfc33ce0a9afe7c5fef5aab3d8d2d673
 
-PODFILE CHECKSUM: 353c8bcc5d5b0994e508d035b5431cfe18c1dea7
+PODFILE CHECKSUM: 0d3963a09fc94f580682bd88480486da345dc3f0
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

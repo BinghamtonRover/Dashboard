@@ -24,6 +24,9 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
 	/// How many frames per second to capture. See [CameraDetails.fps].
 	final NumberBuilder<int> fps;
 
+  /// How many degrees the view is rotated. See [CameraDetails.rotation].
+	final NumberBuilder<int> rotation;
+
 	/// The name of this camera.
 	/// 
 	/// This should not be changed by the user as it will cause multiple cameras to stream
@@ -52,6 +55,7 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
       streamHeight,
       quality,
       fps,
+      rotation,
     ];
 
 	/// Creates a [ValueBuilder] view model to change a [CameraDetails].
@@ -62,6 +66,7 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
     streamHeight = NumberBuilder(data.streamHeight, min: 0, max: 600),
 		quality = NumberBuilder(data.quality, min: 0, max: 100),
 		fps = NumberBuilder(data.fps, min: 0, max: 60),
+    rotation = NumberBuilder(data.rotation, min: 0, max: 360),
 		name = data.name,
 		status = CameraStatus.CAMERA_ENABLED,
     autofocus = data.autofocus;
@@ -74,6 +79,7 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
       streamHeight.isValid &&
       quality.isValid &&
       fps.isValid &&
+      rotation.isValid &&
       okStatuses.contains(status);
 
 
@@ -85,6 +91,7 @@ class CameraDetailsBuilder extends ValueBuilder<CameraDetails> {
     streamHeight: streamHeight.value,
 		quality: quality.value,
 		fps: fps.value,
+    rotation: rotation.value,
 		name: name,
 		status: status,
     focus: 0,
