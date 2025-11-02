@@ -100,7 +100,7 @@ class CameraDetailsEditor extends ReactiveWidget<CameraDetailsBuilder> {
           ),
           NumberEditor(
             name: "Camera Rotation",
-            model: model.rotation,
+            model: model.rotationQuarters,
             titleFlex: 2,
           ),
           const SizedBox(height: 24),
