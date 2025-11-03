@@ -220,7 +220,7 @@ packages:
     description:
       path: "."
       ref: folder-restructure
-      resolved-ref: 0745283a9ad9cdbf3060bbe14b02527a56340434
+      resolved-ref: 59a87e1636e90f7b29bfdbc7b2066e68bf86c350
       url: "https://github.com/BinghamtonRover/flutter_sdl_gamepad.git"
     source: git
     version: "1.1.1"
