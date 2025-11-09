@@ -98,10 +98,15 @@ class CameraDetailsEditor extends ReactiveWidget<CameraDetailsBuilder> {
             model: model.fps,
             titleFlex: 2,
           ),
-          NumberEditor(
-            name: "Camera Rotation",
-            model: model.rotationQuarters,
-            titleFlex: 2,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: DropdownEditor<int>(
+              name: "Camera Rotation",
+              humanName: (value) => "${value * 90}°",
+              value: model.rotationQuarters.value,
+              onChanged: (value) => model.rotationQuarters.value = value,
+              items: const [0, 1, 2, 3],
+            ),
           ),
           const SizedBox(height: 24),
           if (model.isLoading) const Text("Loading..."),
