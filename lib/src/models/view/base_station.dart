@@ -31,7 +31,7 @@ class BaseStationModel with ChangeNotifier {
 
   /// Initializes the view model
   void init() {
-    _dataSubscription = models.messages.stream.onMessage(
+    _dataSubscription = models.messages.stream.listenFor(
       name: BaseStationData().messageName,
       constructor: BaseStationData.fromBuffer,
       callback: onNewData,

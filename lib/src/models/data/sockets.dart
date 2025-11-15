@@ -113,7 +113,7 @@ class Sockets extends Model {
             ? onConnect(socket.device)
             : onDisconnect(socket.device),
       );
-      socket.messages.listen((message) {
+      socket.messages.map((e) => e.message).listen((message) {
         if (!socket.isEnabled) return;
         models.messages.addMessage(message);
       });
