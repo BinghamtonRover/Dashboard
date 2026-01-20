@@ -445,11 +445,11 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
                     children: [
                       const SizedBox(width: 4),
                       Icon(getIcon(model.message?.severity),
-                          color: Colors.white),
+                          color: Colors.white,),
                       const SizedBox(width: 4),
                       if (model.message == null)
                         const Text("Open logs",
-                            style: TextStyle(color: Colors.white))
+                            style: TextStyle(color: Colors.white),)
                       else
                         Tooltip(
                           message: "Click to open logs",
