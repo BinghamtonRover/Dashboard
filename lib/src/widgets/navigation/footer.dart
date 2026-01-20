@@ -85,8 +85,10 @@ class Footer extends ReactiveWidget<FooterViewModel> {
 
 /// Displays a flashing warning when battery voltage is low.
 class VoltageWarning extends StatefulWidget {
+  /// The view model that provides battery and connection metrics.
   final FooterViewModel model;
-
+  
+  /// Creates a voltage warning widget.
   const VoltageWarning({required this.model});
 
   @override
