@@ -457,11 +457,11 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
                               ? Row(
                                   children: [
                                     Image.asset("assets/clippy.webp",
-                                        width: 36, height: 36),
+                                        width: 36, height: 36,),
                                     const Text(" -- "),
                                     Text(model.message!.text,
                                         style: const TextStyle(
-                                            color: Colors.white),),
+                                            color: Colors.white,),),
                                   ],
                                 )
                               : Text(model.message!.text,
