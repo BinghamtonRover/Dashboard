@@ -297,11 +297,11 @@ class StatusIcons extends ReusableReactiveWidget<FooterViewModel> {
               builder: (ctx) => AlertDialog(
                 title: const Text("Are you sure?"),
                 content: const Text(
-                    "This will turn off the rover and you must physically turn it back on again"),
+                    "This will turn off the rover and you must physically turn it back on again",),
                 actions: [
                   TextButton(
                       child: const Text("Cancel"),
-                      onPressed: () => Navigator.of(context).pop()),
+                      onPressed: () => Navigator.of(context).pop(),),
                   ElevatedButton(
                     onPressed: () {
                       models.rover.settings.setStatus(input);
@@ -361,7 +361,7 @@ class StatusIcons extends ReusableReactiveWidget<FooterViewModel> {
                   : Colors.black,
             ),
             onPressed: () => showDialog<void>(
-                context: context, builder: (_) => ColorEditor(ColorBuilder())),
+                context: context, builder: (_) => ColorEditor(ColorBuilder()),),
             tooltip: "Change LED strip",
           ),
           const SizedBox(width: 4),
@@ -430,7 +430,7 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
         child: InkWell(
           onTap: showLogs
               ? () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(builder: (context) => LogsPage()))
+                  MaterialPageRoute<void>(builder: (context) => LogsPage()),)
               : null,
           child: Card(
             shadowColor: Colors.transparent,
