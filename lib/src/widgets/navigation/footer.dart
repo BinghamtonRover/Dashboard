@@ -461,11 +461,11 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
                                     const Text(" -- "),
                                     Text(model.message!.text,
                                         style: const TextStyle(
-                                            color: Colors.white)),
+                                            color: Colors.white),),
                                   ],
                                 )
                               : Text(model.message!.text,
-                                  style: const TextStyle(color: Colors.white)),
+                                  style: const TextStyle(color: Colors.white),),
                         ),
                       const SizedBox(width: 8),
                     ],
