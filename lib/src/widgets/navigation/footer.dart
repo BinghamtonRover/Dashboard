@@ -87,7 +87,7 @@ class Footer extends ReactiveWidget<FooterViewModel> {
 class VoltageWarning extends StatefulWidget {
   /// The view model that provides battery and connection metrics.
   final FooterViewModel model;
-  
+
   /// Creates a voltage warning widget.
   const VoltageWarning({required this.model});
 
@@ -299,11 +299,13 @@ class StatusIcons extends ReusableReactiveWidget<FooterViewModel> {
               builder: (ctx) => AlertDialog(
                 title: const Text("Are you sure?"),
                 content: const Text(
-                    "This will turn off the rover and you must physically turn it back on again",),
+                  "This will turn off the rover and you must physically turn it back on again",
+                ),
                 actions: [
                   TextButton(
-                      child: const Text("Cancel"),
-                      onPressed: () => Navigator.of(context).pop(),),
+                    child: const Text("Cancel"),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
                   ElevatedButton(
                     onPressed: () {
                       models.rover.settings.setStatus(input);
@@ -363,7 +365,9 @@ class StatusIcons extends ReusableReactiveWidget<FooterViewModel> {
                   : Colors.black,
             ),
             onPressed: () => showDialog<void>(
-                context: context, builder: (_) => ColorEditor(ColorBuilder()),),
+              context: context,
+              builder: (_) => ColorEditor(ColorBuilder()),
+            ),
             tooltip: "Change LED strip",
           ),
           const SizedBox(width: 4),
@@ -432,7 +436,8 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
         child: InkWell(
           onTap: showLogs
               ? () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(builder: (context) => LogsPage()),)
+                    MaterialPageRoute<void>(builder: (context) => LogsPage()),
+                  )
               : null,
           child: Card(
             shadowColor: Colors.transparent,
@@ -446,28 +451,40 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(width: 4),
-                      Icon(getIcon(model.message?.severity),
-                          color: Colors.white,),
+                      Icon(
+                        getIcon(model.message?.severity),
+                        color: Colors.white,
+                      ),
                       const SizedBox(width: 4),
                       if (model.message == null)
-                        const Text("Open logs",
-                            style: TextStyle(color: Colors.white),)
+                        const Text(
+                          "Open logs",
+                          style: TextStyle(color: Colors.white),
+                        )
                       else
                         Tooltip(
                           message: "Click to open logs",
                           child: models.settings.easterEggs.enableClippy
                               ? Row(
                                   children: [
-                                    Image.asset("assets/clippy.webp",
-                                        width: 36, height: 36,),
+                                    Image.asset(
+                                      "assets/clippy.webp",
+                                      width: 36,
+                                      height: 36,
+                                    ),
                                     const Text(" -- "),
-                                    Text(model.message!.text,
-                                        style: const TextStyle(
-                                            color: Colors.white,),),
+                                    Text(
+                                      model.message!.text,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ],
                                 )
-                              : Text(model.message!.text,
-                                  style: const TextStyle(color: Colors.white),),
+                              : Text(
+                                  model.message!.text,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
                         ),
                       const SizedBox(width: 8),
                     ],
