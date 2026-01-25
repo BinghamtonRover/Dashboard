@@ -45,12 +45,12 @@ class PositionModel with ChangeNotifier {
     if(data.hasThrottle()) throttle = data.throttle;
     if(data.hasRight()) rightWheels = throttle * data.right;
     if(data.hasLeft()) leftWheels = throttle * data.left;
-    if(data.hasFrontLeft()) wheelsRPM[0] = data.frontLeft;
-    if(data.hasMiddleLeft()) wheelsRPM[1] = data.middleLeft;
-    if(data.hasBackLeft()) wheelsRPM[2] = data.backLeft;
-    if(data.hasFrontRight()) wheelsRPM[3] = data.frontRight;
-    if(data.hasMiddleRight()) wheelsRPM[4] = data.middleRight;
-    if(data.hasBackRight()) wheelsRPM[5] = data.backRight;
+    // if(data.hasFrontLeft()) wheelsRPM[0] = data.frontLeft;
+    // if(data.hasMiddleLeft()) wheelsRPM[1] = data.middleLeft;
+    // if(data.hasBackLeft()) wheelsRPM[2] = data.backLeft;
+    // if(data.hasFrontRight()) wheelsRPM[3] = data.frontRight;
+    // if(data.hasMiddleRight()) wheelsRPM[4] = data.middleRight;
+    // if(data.hasBackRight()) wheelsRPM[5] = data.backRight;
     _updateWheelColors();
 		notifyListeners();
 	}
