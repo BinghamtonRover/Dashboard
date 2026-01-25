@@ -32,8 +32,10 @@ class ControllerMenu extends StatelessWidget {
       alignmentOffset: const Offset(-48, 0),
       builder: (context, controller, child) => IconButton(
         icon: const Icon(Icons.sports_esports_rounded),
-        color: models.rover.controllers.any((controller) => controller.isConnected)
-          ? Colors.green : disconnectColor,
+        color:
+            models.rover.controllers.any((controller) => controller.isConnected)
+            ? Colors.green
+            : disconnectColor,
         onPressed: () => toggleMenu(controller),
       ),
       menuChildren: [
@@ -56,24 +58,147 @@ class ControllerMenu extends StatelessWidget {
 }
 
 /// The footer, responsible for showing vitals and logs.
-class Footer extends StatelessWidget {
+class Footer extends ReactiveWidget<FooterViewModel> {
   /// Whether to show logs. Disable this when on the logs page.
   final bool showLogs;
+
   /// Creates the footer.
   const Footer({this.showLogs = true});
 
   @override
-  Widget build(BuildContext context) => ColoredBox(
+  FooterViewModel createModel() => FooterViewModel();
+
+  @override
+  Widget build(BuildContext context, FooterViewModel model) => ColoredBox(
     color: binghamtonGreen,
     child: Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       alignment: WrapAlignment.spaceBetween,
       children: [
         MessageDisplay(showLogs: showLogs),
-        const StatusIcons(),
+        VoltageWarning(model: model),
+        StatusIcons(model: model),
       ],
     ),
   );
+}
+
+/// Displays a flashing warning when battery voltage is low.
+class VoltageWarning extends StatefulWidget {
+  /// The view model that provides battery and connection metrics.
+  final FooterViewModel model;
+
+  /// Creates a voltage warning widget.
+  const VoltageWarning({required this.model});
+
+  @override
+  State<VoltageWarning> createState() => _VoltageWarningState();
+}
+
+class _VoltageWarningState extends State<VoltageWarning>
+    with SingleTickerProviderStateMixin {
+  late AnimationController controller;
+  late Animation<Color?> colorAnimation;
+
+  static const double warningVoltage = 21;
+  static const double criticalVoltage = 20;
+
+  bool get isLow => widget.model.driveMetrics.batteryVoltage < warningVoltage;
+  bool get isCritical =>
+      widget.model.driveMetrics.batteryVoltage < criticalVoltage;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+
+    widget.model.addListener(checkVoltage);
+    updateAnimation();
+  }
+
+  void updateAnimation() {
+    if (isCritical) {
+      colorAnimation = ColorTween(
+        begin: Colors.red.shade900,
+        end: Colors.red.shade700,
+      ).animate(controller);
+    } else {
+      colorAnimation = ColorTween(
+        begin: Colors.yellow.shade800,
+        end: Colors.yellow.shade600,
+      ).animate(controller);
+    }
+  }
+
+  void checkVoltage() {
+    if (!mounted) return;
+
+    if (!widget.model.isConnected || !isLow) {
+      controller.stop();
+      controller.reset();
+      return;
+    }
+
+    updateAnimation();
+
+    if (!controller.isAnimating) {
+      controller.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.model.removeListener(checkVoltage);
+    controller.dispose();
+    super.dispose();
+  }
+
+  String getWarningMessage(double voltage) {
+    if (voltage < criticalVoltage) {
+      return "Battery critical: ${voltage.toStringAsFixed(2)} V - Change battery immediately";
+    } else {
+      return "Battery low: ${voltage.toStringAsFixed(2)} V - Change battery soon";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!isLow) return const SizedBox.shrink();
+    final voltage = widget.model.driveMetrics.batteryVoltage;
+
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, child) => Card(
+        color:
+            colorAnimation.value ??
+            (isCritical ? Colors.red.shade900 : Colors.yellow.shade800),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.battery_alert, color: Colors.white),
+              const SizedBox(width: 8),
+              SizedBox(
+                width: 450,
+                child: Text(
+                  getWarningMessage(voltage),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 /// A network status icon for the given device.
@@ -91,12 +216,12 @@ class NetworkStatusIcon extends ReusableReactiveWidget<ValueNotifier<double>> {
     required this.tooltip,
   }) : super(models.sockets.socketForDevice(device)!.connectionStrength);
 
-  IconData _getNetworkIcon(double percentage) => switch(percentage) {
+  IconData _getNetworkIcon(double percentage) => switch (percentage) {
     >= 0.8 => Icons.signal_wifi_statusbar_4_bar,
     >= 0.6 => Icons.network_wifi_3_bar,
     >= 0.4 => Icons.network_wifi_2_bar,
     >= 0.2 => Icons.network_wifi_1_bar,
-    >  0.0 => Icons.signal_wifi_0_bar,
+    > 0.0 => Icons.signal_wifi_0_bar,
     _ => Icons.signal_wifi_off_outlined,
   };
 
@@ -112,12 +237,9 @@ class NetworkStatusIcon extends ReusableReactiveWidget<ValueNotifier<double>> {
 }
 
 /// A few icons displaying the rover's current status.
-class StatusIcons extends ReactiveWidget<FooterViewModel> {
+class StatusIcons extends ReusableReactiveWidget<FooterViewModel> {
   /// A const constructor.
-  const StatusIcons();
-
-  @override
-  FooterViewModel createModel() => FooterViewModel();
+  const StatusIcons({required FooterViewModel model}) : super(model);
 
   /// A color representing a meter's fill.
   static Color getColor(double percentage) => switch (percentage) {
@@ -136,7 +258,7 @@ class StatusIcons extends ReactiveWidget<FooterViewModel> {
     >= 0.36 => Icons.battery_3_bar,
     >= 0.24 => Icons.battery_2_bar,
     >= 0.12 => Icons.battery_1_bar,
-    _       => Icons.battery_0_bar,
+    _ => Icons.battery_0_bar,
   };
 
   /// An appropriate battery icon representing the rover's current status.
@@ -151,7 +273,7 @@ class StatusIcons extends ReactiveWidget<FooterViewModel> {
   };
 
   /// The color of the rover's status icon.
-  Color getStatusColor(RoverStatus status) => switch(status) {
+  Color getStatusColor(RoverStatus status) => switch (status) {
     RoverStatus.DISCONNECTED => Colors.black,
     RoverStatus.IDLE => Colors.yellow,
     RoverStatus.MANUAL => Colors.green,
@@ -171,22 +293,31 @@ class StatusIcons extends ReactiveWidget<FooterViewModel> {
   };
 
   /// Change the mode of the rover, confirming if the user wants to shut it off.
-  Future<void> changeMode(BuildContext context, RoverStatus input) => input == RoverStatus.POWER_OFF
-    ? showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text("Are you sure?"),
-        content: const Text("This will turn off the rover and you must physically turn it back on again"),
-        actions: [
-          TextButton(child: const Text("Cancel"), onPressed: () => Navigator.of(context).pop()),
-          ElevatedButton(
-            onPressed: () { models.rover.settings.setStatus(input); Navigator.of(context).pop(); },
-            child: const Text("Continue"),
+  Future<void> changeMode(BuildContext context, RoverStatus input) =>
+      input == RoverStatus.POWER_OFF
+      ? showDialog<void>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text("Are you sure?"),
+            content: const Text(
+              "This will turn off the rover and you must physically turn it back on again",
+            ),
+            actions: [
+              TextButton(
+                child: const Text("Cancel"),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  models.rover.settings.setStatus(input);
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Continue"),
+              ),
+            ],
           ),
-        ],
-      ),
-    )
-    : models.rover.settings.setStatus(input);
+        )
+      : models.rover.settings.setStatus(input);
 
   @override
   Widget build(BuildContext context, FooterViewModel model) => Row(
@@ -199,14 +330,15 @@ class StatusIcons extends ReactiveWidget<FooterViewModel> {
         onPressed: null,
         icon: Icon(
           model.isConnected
-            ? getBatteryIcon(model.batteryPercentage)
-            : Icons.battery_unknown,
-          color:  model.isConnected
-            ? getColor(model.batteryPercentage)
-            : Colors.black,
+              ? getBatteryIcon(model.batteryPercentage)
+              : Icons.battery_unknown,
+          color: model.isConnected
+              ? getColor(model.batteryPercentage)
+              : Colors.black,
         ),
       ),
-      PopupMenuButton(  // rover mode
+      PopupMenuButton(
+        // rover mode
         tooltip: "Change mode",
         onSelected: (input) => changeMode(context, input),
         icon: Icon(
@@ -215,23 +347,26 @@ class StatusIcons extends ReactiveWidget<FooterViewModel> {
         ),
         itemBuilder: (_) => [
           for (final value in RoverStatus.values)
-            if (value != RoverStatus.DISCONNECTED)  // can't select this!
+            if (value != RoverStatus.DISCONNECTED) // can't select this!
               PopupMenuItem(value: value, child: Text(value.humanName)),
         ],
       ),
-      NetworkStatusIcon(  // network icon
+      NetworkStatusIcon(
+        // network icon
         device: Device.SUBSYSTEMS,
         tooltip: "${model.connectionSummary}\nClick to reset",
         onPressed: model.resetNetwork,
       ),
-      IconButton(  // LED strip
+      IconButton(
+        // LED strip
         icon: Icon(
           Icons.circle,
-          color: model.isConnected
-            ? getLedColor(model.ledColor)
-            : Colors.black,
-          ),
-        onPressed: () => showDialog<void>(context: context, builder: (_) => ColorEditor(ColorBuilder())),
+          color: model.isConnected ? getLedColor(model.ledColor) : Colors.black,
+        ),
+        onPressed: () => showDialog<void>(
+          context: context,
+          builder: (_) => ColorEditor(ColorBuilder()),
+        ),
         tooltip: "Change LED strip",
       ),
       const SizedBox(width: 4),
@@ -248,20 +383,18 @@ class SerialButton extends ReusableReactiveWidget<SerialModel> {
 
   @override
   Widget build(BuildContext context, SerialModel model) => PopupMenuButton(
-    icon: Icon(
-      Icons.usb,
-      color: model.hasDevice ? Colors.green : Colors.black,
-    ),
+    icon: Icon(Icons.usb, color: model.hasDevice ? Colors.green : Colors.black),
     tooltip: "Select device",
     onSelected: model.toggle,
     itemBuilder: (_) => [
-      for (final String port in DelegateSerialPort.allPorts) PopupMenuItem(
-        value: port,
-        child: ListTile(
-          title: Text(port),
-          leading: model.isConnected(port) ? const Icon(Icons.check) : null,
+      for (final String port in DelegateSerialPort.allPorts)
+        PopupMenuItem(
+          value: port,
+          child: ListTile(
+            title: Text(port),
+            leading: model.isConnected(port) ? const Icon(Icons.check) : null,
+          ),
         ),
-      ),
     ],
   );
 }
@@ -296,33 +429,56 @@ class MessageDisplay extends ReusableReactiveWidget<HomeModel> {
   Widget build(BuildContext context, HomeModel model) => SizedBox(
     height: 48,
     child: InkWell(
-      onTap: showLogs ? () => Navigator.of(context).push(MaterialPageRoute<void>(builder: (context) => LogsPage())) : null,
+      onTap: showLogs
+          ? () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute<void>(builder: (context) => LogsPage()))
+          : null,
       child: Card(
         shadowColor: Colors.transparent,
         color: getColor(model.message?.severity),
         shape: ContinuousRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        child: (model.message == null && !showLogs) ? const SizedBox() : Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(width: 4),
-            Icon(getIcon(model.message?.severity), color: Colors.white),
-            const SizedBox(width: 4),
-            if (model.message == null) const Text("Open logs", style: TextStyle(color: Colors.white))
-            else Tooltip(
-              message: "Click to open logs",
-              child: models.settings.easterEggs.enableClippy
-                ? Row(children: [
-                  Image.asset("assets/clippy.webp", width: 36, height: 36),
-                  const Text(" -- "),
-                  Text(model.message!.text, style: const TextStyle(color: Colors.white)),
-                ],)
-                : Text(model.message!.text, style: const TextStyle(color: Colors.white)),
-            ),
-            const SizedBox(width: 8),
-          ],
-        ),
+        child: (model.message == null && !showLogs)
+            ? const SizedBox()
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(width: 4),
+                  Icon(getIcon(model.message?.severity), color: Colors.white),
+                  const SizedBox(width: 4),
+                  if (model.message == null)
+                    const Text(
+                      "Open logs",
+                      style: TextStyle(color: Colors.white),
+                    )
+                  else
+                    Tooltip(
+                      message: "Click to open logs",
+                      child: models.settings.easterEggs.enableClippy
+                          ? Row(
+                              children: [
+                                Image.asset(
+                                  "assets/clippy.webp",
+                                  width: 36,
+                                  height: 36,
+                                ),
+                                const Text(" -- "),
+                                Text(
+                                  model.message!.text,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            )
+                          : Text(
+                              model.message!.text,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                    ),
+                  const SizedBox(width: 8),
+                ],
+              ),
       ),
     ),
   );
