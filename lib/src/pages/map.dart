@@ -3,6 +3,7 @@ import "package:burt_network/protobuf.dart";
 import "package:flutter/material.dart";
 
 import "package:rover_dashboard/models.dart";
+import "package:rover_dashboard/src/pages/map/relative_painter.dart";
 import "package:rover_dashboard/widgets.dart";
 
 import "map/bad_apple.dart";
@@ -14,14 +15,19 @@ import "map/legend.dart";
 /// Displays a bird's-eye view of the rover and its path to the goal.
 class MapPage extends ReactiveWidget<AutonomyModel> {
   /// Gets the color for a given [AutonomyCell].
-  Color? getColor(AutonomyCell cell, AutonomyModel model) => switch (cell) {
-    AutonomyCell.destination => Colors.green,
-    AutonomyCell.obstacle => Colors.black,
-    AutonomyCell.path => Colors.blueGrey,
-    AutonomyCell.empty => Colors.white,
-    AutonomyCell.marker => Colors.red,
-    AutonomyCell.rover => getColor(model.roverCellType, model),
-  };
+  Color? getColor(AutonomyCell cell, AutonomyModel model) {
+    if (!model.snapToGrid) {
+      return null;
+    }
+    return switch (cell) {
+      AutonomyCell.destination => Colors.green,
+      AutonomyCell.obstacle => Colors.black,
+      AutonomyCell.path => Colors.blueGrey,
+      AutonomyCell.empty => null,
+      AutonomyCell.marker => Colors.red,
+      AutonomyCell.rover => getColor(model.roverCellType, model),
+    };
+  }
 
   /// Places a marker at the given location and closes the dialog opened by [promptForMarker].
   void placeMarker(BuildContext context, AutonomyModel model, GpsCoordinates coordinates) {
@@ -73,23 +79,27 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
           width: 24,
           decoration: BoxDecoration(
             color: getColor(cell.cellType, model),
-            border: Border.all(),
-          ),
-          child: cell.cellType != AutonomyCell.rover ? null : LayoutBuilder(
-            builder: (context, constraints) => Container(
-              color: Colors.blue,
-              width: double.infinity,
-              height: double.infinity,
-              margin: EdgeInsets.all(constraints.maxWidth / 15),
-              child: Transform.rotate(
-                angle: -model.roverHeading * pi / 180,
-                child: Icon(
-                  Icons.arrow_upward,
-                  size: constraints.maxWidth * 24 / 30,
-                ),
-              ),
+            border: Border.all(
+              color: model.snapToGrid ? Colors.black : Colors.grey.shade500,
             ),
           ),
+          child: cell.cellType != AutonomyCell.rover || !model.snapToGrid
+              ? null
+              : LayoutBuilder(
+                  builder: (context, constraints) => Container(
+                    color: Colors.blue,
+                    width: double.infinity,
+                    height: double.infinity,
+                    margin: EdgeInsets.all(constraints.maxWidth / 15),
+                    child: Transform.rotate(
+                      angle: -model.roverHeading * pi / 180,
+                      child: Icon(
+                        Icons.arrow_upward,
+                        size: constraints.maxWidth * 24 / 30,
+                      ),
+                    ),
+                  ),
+                ),
         ),
       ),
     ),
@@ -122,6 +132,33 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
     ],
   );
 
+  /// The grid displaying the map
+  Widget createMapGrid(AutonomyModel model) => Stack(
+    fit: StackFit.expand,
+    children: [
+      Container(color: Colors.white),
+      Column(
+        children: [
+          for (final row in model.grid.reversed)
+            Expanded(
+              child: Row(
+                children: [for (final cell in row) createCell(model, cell)],
+              ),
+            ),
+        ],
+      ),
+      if (!model.snapToGrid)
+        IgnorePointer(
+          child: ClipRect(
+            child: CustomPaint(
+              willChange: true,
+              painter: MapRelativePainter(model: model),
+            ),
+          ),
+        ),
+    ],
+  );
+
   @override
   Widget build(BuildContext context, AutonomyModel model) => LayoutBuilder(
     builder: (context, constraints) => Column(
@@ -141,25 +178,14 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: (!model.isPlayingBadApple)
-                    ? Column(
-                      children: [
-                        for (final row in model.grid.reversed)
-                          Expanded(
-                            child: Row(
-                              children: [
-                                for (final cell in row)
-                                  createCell(model, cell),
-                              ],
-                            ),
+                      ? createMapGrid(model)
+                      : CustomPaint(
+                          willChange: true,
+                          painter: BadApplePainter(
+                            frameNumber: model.badAppleFrame,
+                            obstacles: model.data.obstacles,
                           ),
-                      ],
-                    )
-                    : CustomPaint(
-                        painter: BadApplePainter(
-                          frameNumber: model.badAppleFrame,
-                          obstacles: model.data.obstacles,
                         ),
-                      ),
                 ),
               ),
               const SizedBox(width: 16),
@@ -179,9 +205,20 @@ class MapPage extends ReactiveWidget<AutonomyModel> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Scale:",
+                            "View Options:",
                             style: context.textTheme.titleLarge,
                           ),
+                          Row(
+                            children: [
+                              const Text("Snap to Grid:"),
+                              const SizedBox(width: 5),
+                              Switch(
+                                value: model.snapToGrid,
+                                onChanged: (value) => model.snapToGrid = value,
+                              ),
+                            ],
+                          ),
+                          const Text("Scale:"),
                           Slider(
                             value: model.gridSize.clamp(1, 41).toDouble(),
                             min: 1,

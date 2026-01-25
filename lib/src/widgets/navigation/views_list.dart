@@ -57,25 +57,20 @@ class ViewsList extends ReactiveWidget<ViewsSidebarModel> {
   @override
   Widget build(BuildContext context, ViewsSidebarModel model) => ListView(
     children: [
-      Row(children: [
-        const SizedBox(
-          width: 100,
-          child: ListTile(
-            title: Text("Split"),
+      Row(
+        children: [
+          const SizedBox(width: 100, child: ListTile(title: Text("Split"))),
+          DropdownMenu<SplitMode>(
+            initialSelection: models.views.splitMode,
+            onSelected: models.views.updateSplitMode,
+            textStyle: context.textTheme.bodyMedium,
+            dropdownMenuEntries: [
+              for (final value in SplitMode.values)
+                DropdownMenuEntry(value: value, label: value.humanName),
+            ],
           ),
-        ),
-        DropdownMenu<SplitMode>(
-          initialSelection: models.views.splitMode,
-          onSelected: models.views.updateSplitMode,
-          textStyle: context.textTheme.bodyMedium,
-          dropdownMenuEntries: [
-            for (final value in SplitMode.values) DropdownMenuEntry(
-              value: value,
-              label: value.humanName,
-            ),
-          ],
-        ),
-      ],),
+        ],
+      ),
       ExpansionTile(
         title: const Text("Presets"),
         children: [

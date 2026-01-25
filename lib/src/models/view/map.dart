@@ -46,11 +46,15 @@ class GridOffset {
 }
 
 extension _GpsCoordinatesToBlock on GpsCoordinates {
-  GpsCoordinates get toGridBlock {
+  Offset toGridBlock(UTMCoordinates centerPosition) {
     final utmCoordinates = toUTM();
-    return GpsCoordinates(
-      latitude: (utmCoordinates.y / models.settings.dashboard.mapBlockSize).roundToDouble(),
-      longitude: (utmCoordinates.x / models.settings.dashboard.mapBlockSize).roundToDouble(),
+    return Offset(
+      ((utmCoordinates.x - centerPosition.x) /
+              models.settings.dashboard.mapBlockSize)
+          .roundToDouble(),
+      ((utmCoordinates.y - centerPosition.y) /
+              models.settings.dashboard.mapBlockSize)
+          .roundToDouble(),
     );
   }
 }
@@ -69,6 +73,17 @@ typedef AutonomyGrid = List<List<MapCellData>>;
 /// center (by keeping track of its [centerPosition]) and filling the other cells with [AutonomyCell]s.
 ///
 class AutonomyModel with ChangeNotifier, BadAppleViewModel {
+  /// Whether or not to place all of the rover's surroundings on a grid
+  bool _snapToGrid = false;
+
+  /// Whether or not to place all of the rover's surroundings on a grid
+  bool get snapToGrid => _snapToGrid;
+
+  set snapToGrid(bool value) {
+    _snapToGrid = value;
+    notifyListeners();
+  }
+
   @override
   int gridSize = 11;
 
@@ -137,15 +152,22 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 
   /// The cell type of the rover that isn't [AutonomyCell.rover]
   AutonomyCell get roverCellType {
-    final roverCoordinates = roverPosition.toGridBlock;
+    final roverCoordinates = roverPosition.toGridBlock(centerPosition);
 
-    if (data.hasDestination() && data.destination.toGridBlock == roverCoordinates) {
+    if (data.hasDestination() &&
+        data.destination.toGridBlock(centerPosition) == roverCoordinates) {
       return AutonomyCell.destination;
-    } else if (data.obstacles.map((e) => e.toGridBlock).contains(roverCoordinates)) {
+    } else if (data.obstacles.any(
+      (e) => e.toGridBlock(centerPosition) == roverCoordinates,
+    )) {
       return AutonomyCell.obstacle;
-    } else if (markers.map((e) => e.toGridBlock).contains(roverCoordinates)) {
+    } else if (markers.any(
+      (e) => e.toGridBlock(centerPosition) == roverCoordinates,
+    )) {
       return AutonomyCell.marker;
-    } else if (data.path.map((e) => e.toGridBlock).contains(roverCoordinates)) {
+    } else if (data.path.any(
+      (e) => e.toGridBlock(centerPosition) == roverCoordinates,
+    )) {
       return AutonomyCell.path;
     }
 
@@ -193,13 +215,13 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
     // - rover.longitude => (gridSize - 1) / 2
     // - rover.latitude => (gridSize - 1) / 2
     // Then, everything else should be offset by that
-    final utmCoordinates = gps.toUTM();
-    final x = ((utmCoordinates.x - centerPosition.x) / precisionMeters).round();
-    final y = ((utmCoordinates.y - centerPosition.y) / precisionMeters).round();
+    final gridPosition = gps.toGridBlock(centerPosition);
+    final x = gridPosition.dx.round();
+    final y = gridPosition.dy.round();
 
     if (x < 0 || x >= gridSize) return;
     if (y < 0 || y >= gridSize) return;
-    grid[y][x] = (coordinates: gps, cellType: value);
+    grid[y][x] = (coordinates: grid[y][x].coordinates, cellType: value);
   }
 
   /// Determines the new [centerPosition] based on the current [roverPosition].
@@ -250,14 +272,16 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 
   /// Places a marker at the rover's current position.
   void placeMarkerOnRover() {
-    if (!markers.any((e) => e.toGridBlock == roverPosition.toGridBlock)) {
+    if (!markers.any((e) => e.toGridBlock(centerPosition) == roverPosition.toGridBlock(centerPosition))) {
       placeMarker(roverPosition);
     }
   }
 
   /// Removes a marker from [gps]
   void removeMarker(GpsCoordinates gps) {
-    if (markers.remove(gps)) {
+    final lengthBefore = markers.length;
+    markers.removeWhere((e) => e.toGridBlock(centerPosition) == gps.toGridBlock(centerPosition));
+    if (markers.length != lengthBefore) {
       notifyListeners();
     } else {
       models.home.setMessage(severity: Severity.info, text: "Marker not found");
@@ -276,7 +300,11 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
 
   /// Adds or removes a marker at the given location.
   void toggleMarker(MapCellData cell) {
-    if (markers.contains(cell.coordinates)) {
+    if (markers.any(
+      (e) =>
+          e.toGridBlock(centerPosition) ==
+          cell.coordinates.toGridBlock(centerPosition),
+    )) {
       removeMarker(cell.coordinates);
     } else {
       placeMarker(cell.coordinates);
