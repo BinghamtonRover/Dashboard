@@ -12,9 +12,6 @@ class ArmModel with ChangeNotifier {
   /// The [Metrics] model for arm data.
   ArmData get arm => models.rover.metrics.arm.data;
 
-  /// The [Metrics] model for gripper data.
-  GripperData get gripper => models.rover.metrics.gripper.data;
-
   /// The timer that updates this page.
   Timer? timer;
 
@@ -23,7 +20,7 @@ class ArmModel with ChangeNotifier {
 
   /// Sets the initial laser state to the current laser state and starts a timer to refresh at 100 Hz.
   ArmModel() {
-    desiredLaserState = gripper.laserState.toBool();
+    desiredLaserState = arm.laserState.toBool();
     timer = Timer.periodic(const Duration(milliseconds: 10), _update);
   }
 
@@ -34,8 +31,8 @@ class ArmModel with ChangeNotifier {
   }
 
   void _update([_]) {
-    if (desiredLaserState != gripper.laserState.toBool()) {
-      final command = GripperCommand(laserState: desiredLaserState ? BoolState.ON : BoolState.OFF);
+    if (desiredLaserState != arm.laserState.toBool()) {
+      final command = ArmCommand(laserState: desiredLaserState ? BoolState.ON : BoolState.OFF);
       models.messages.sendMessage(command);
     }
     notifyListeners();
@@ -44,16 +41,18 @@ class ArmModel with ChangeNotifier {
   /// Sets the laser on or off
   void setLaser({required bool laser}) {
     desiredLaserState = laser;
-    final command = GripperCommand(laserState: desiredLaserState ? BoolState.ON : BoolState.OFF);
+    final command = ArmCommand(
+      laserState: desiredLaserState ? BoolState.ON : BoolState.OFF,
+    );
     models.messages.sendMessage(command);
   }
 
   /// The angles of the arm.
   ArmAngles get angles => (
-        shoulder: arm.shoulder.currentAngle,
-        elbow: arm.elbow.currentAngle,
-        lift: gripper.lift.currentAngle,
-      );
+    shoulder: arm.shoulder.currentAngle,
+    elbow: arm.elbow.currentAngle,
+    lift: arm.lift.currentAngle,
+  );
 
   /// The position of the mouse, if it's in the box.
   Offset? mousePosition;
@@ -79,10 +78,12 @@ class ArmModel with ChangeNotifier {
     final shoulderCommand = MotorCommand(angle: ikAngles!.shoulder);
     final elbowCommand = MotorCommand(angle: ikAngles!.elbow);
     final liftCommand = MotorCommand(angle: ikAngles!.lift);
-    final armCommand = ArmCommand(shoulder: shoulderCommand, elbow: elbowCommand);
-    final gripperCommand = GripperCommand(lift: liftCommand);
+    final armCommand = ArmCommand(
+      shoulder: shoulderCommand,
+      elbow: elbowCommand,
+      lift: liftCommand,
+    );
     models.messages.sendMessage(armCommand);
-    models.messages.sendMessage(gripperCommand);
   }
 }
 

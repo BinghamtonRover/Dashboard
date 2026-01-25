@@ -45,11 +45,11 @@ packages:
     dependency: "direct main"
     description:
       path: burt_network
-      ref: "2.7.0"
-      resolved-ref: c4b75cff512fadcb5eb7943c76b84a4b9a4410a4
+      ref: "2.8.0"
+      resolved-ref: "962b4376ffbfeb0137bb659f0b6e182787eb134a"
       url: "https://github.com/BinghamtonRover/Rover-Code.git"
     source: git
-    version: "2.7.0"
+    version: "2.8.0"
   characters:
     dependency: transitive
     description:
@@ -526,10 +526,10 @@ packages:
     dependency: "direct main"
     description:
       name: protobuf
-      sha256: "68645b24e0716782e58948f8467fd42a880f255096a821f9e7d0ec625b00c84d"
+      sha256: "75ec242d22e950bdcc79ee38dd520ce4ee0bc491d7fadc4ea47694604d22bf06"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "6.0.0"
   pub_semver:
     dependency: transitive
     description:
