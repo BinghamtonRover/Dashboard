@@ -166,8 +166,8 @@ class _VoltageWarningState extends State<VoltageWarning>
 
   @override
   Widget build(BuildContext context) {
-    if (!isLow) return const SizedBox.shrink();
     final voltage = widget.model.driveMetrics.batteryVoltage;
+    if (!isLow || voltage == 0) return const SizedBox.shrink();
 
     return AnimatedBuilder(
       animation: controller,
@@ -182,15 +182,12 @@ class _VoltageWarningState extends State<VoltageWarning>
             children: [
               const Icon(Icons.battery_alert, color: Colors.white),
               const SizedBox(width: 8),
-              SizedBox(
-                width: 450,
-                child: Text(
-                  getWarningMessage(voltage),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+              Text(
+                getWarningMessage(voltage),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
