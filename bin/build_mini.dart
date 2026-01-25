@@ -28,7 +28,14 @@ Future<void> installFlutterPiTool() async {
 
 Future<void> buildMiniDashboard() async {
   const command = "flutterpi_tool";
-  const args = ["build", "-t", "lib/mini.dart", "--release", "--arch=arm64"];
+  const args = [
+    "build",
+    "-t",
+    "lib/mini.dart",
+    "--release",
+    "--arch=arm64",
+    "--dart-define=rover.mini_dashboard=true",
+  ];
   final process = await Process.start(command, args, runInShell: true);
   process.stdout.listen((output) {
     final line = String.fromCharCodes(output).trim();

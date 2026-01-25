@@ -24,7 +24,7 @@ It’s worth noting that the platform-specific directories **do not** contain th
 
 As explained in the files listed above, these libraries are organized hierarchically, starting with `data` and ending with `pages` (and ultimately being imported by `main.dart`). Each library can only import libraries before it to avoid cyclic dependencies. Each library can get quite complex and contain several smaller libraries – this is only the high-level overview of the project’s structure. 
 
-A Dart library is technically just a file. To add more complexity, classes and functions are split into other files, and they are all collected into one main file that `export`s them all. For example, all the data classes are under `lib/src/data`, but you can import them by importing from `lib/data.dart` (using a package import: `import package:rover_control_dashboard/data.dart`). Specific documentation on individual libraries can be found in their corresponding library file. 
+A Dart library is technically just a file. To add more complexity, classes and functions are split into other files, and they are all collected into one main file that `export`s them all. For example, all the data classes are under `lib/src/data`, but you can import them by importing from `lib/data.dart` (using a package import: `import package:rover_dashboard/data.dart`). Specific documentation on individual libraries can be found in their corresponding library file. 
 
  ## Compiling
 
