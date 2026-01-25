@@ -50,23 +50,23 @@ class ArmControls extends RoverControls {
     ),
 
 		// Gripper
-		if (state.normalDpadY != 0) GripperCommand(lift: MotorCommand(moveRadians: state.normalDpadY * settings.lift)),
-		if (state.normalDpadX != 0) GripperCommand(rotate: MotorCommand(moveRadians: state.normalDpadX * settings.rotate)),
-		if (state.normalTriggers != 0) GripperCommand(pinch: MotorCommand(moveRadians: state.normalTriggers * settings.pinch)),
+		if (state.normalDpadY != 0) ArmCommand(lift: MotorCommand(moveRadians: state.normalDpadY * settings.lift)),
+		if (state.normalDpadX != 0) ArmCommand(rotate: MotorCommand(moveRadians: state.normalDpadX * settings.rotate)),
+		if (state.normalTriggers != 0) ArmCommand(pinch: MotorCommand(moveRadians: state.normalTriggers * settings.pinch)),
 
 		// Custom actions
-		if (state.buttonA && !isAPressed) () { isAPressed = true; return GripperCommand(open: true); }(),
-		if (state.buttonB && !isBPressed) () { isBPressed = true; return GripperCommand(close: true); }(),
+		if (state.buttonA && !isAPressed) () { isAPressed = true; return ArmCommand(open: true); }(),
+		if (state.buttonB && !isBPressed) () { isBPressed = true; return ArmCommand(close: true); }(),
 		if (state.buttonX && !isXPressed) () { isXPressed = true; return ArmCommand(jab: true); }(),
-		if (state.buttonY && !isYPressed) () { isYPressed = true; return GripperCommand(spin: true); }(),
+		if (state.buttonY && !isYPressed) () { isYPressed = true; return ArmCommand(spin: true); }(),
 
 		// General commands
-		if (state.buttonBack) ...[ArmCommand(stop: true), GripperCommand(stop: true)],
-		if (state.buttonStart) ...[ArmCommand(calibrate: true), GripperCommand(calibrate: true)],
+		if (state.buttonBack) ...[ArmCommand(stop: true), ArmCommand(stop: true)],
+		if (state.buttonStart) ...[ArmCommand(calibrate: true), ArmCommand(calibrate: true)],
 	];
 
 	@override
-	List<Message> get onDispose => [ ArmCommand(stop: true), GripperCommand(stop: true) ];
+	List<Message> get onDispose => [ ArmCommand(stop: true), ArmCommand(stop: true) ];
 
 	@override
 	Map<String, String> get buttonMapping => {
