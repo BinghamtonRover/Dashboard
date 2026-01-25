@@ -219,7 +219,7 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: folder-restructure
+      ref: "59a87e1636e90f7b29bfdbc7b2066e68bf86c350"
       resolved-ref: "59a87e1636e90f7b29bfdbc7b2066e68bf86c350"
       url: "https://github.com/BinghamtonRover/flutter_sdl_gamepad.git"
     source: git
@@ -792,5 +792,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.8.0-0 <4.0.0"
+  dart: ">=3.10.0 <4.0.0"
   flutter: ">=3.27.0"
