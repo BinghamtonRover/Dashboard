@@ -130,7 +130,7 @@ class SubsystemsViewModel extends ChangeNotifier {
   /// Sends a command to zero the Rover's IMU
   Future<void> zeroImu() async {
     final command = SubsystemsCommand(
-      zeroIMU: true,
+      zeroImu: true,
       version: Version(major: 1, minor: 0),
     );
     if (await models.sockets.data.tryHandshake(

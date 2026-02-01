@@ -46,16 +46,12 @@ class ScienceControls extends RoverControls {
     ],
         
     if (state.normalLeftY != 0) ScienceCommand(subsurfaceMotor: subsurfaceIncrement * state.normalLeftY),
-    if (state.normalRightY != 0) ScienceCommand(scoopMotor: scoopIncrement * state.normalRightY),
 
     if (state.buttonA) ScienceCommand(pumps: PumpState.PUMP_ON)
     else ScienceCommand(pumps: PumpState.PUMP_OFF),
 
     if (state.buttonB) ScienceCommand(funnel: ServoState.SERVO_OPEN)
     else ScienceCommand(funnel: ServoState.SERVO_CLOSE),
-
-    if (state.dpadUp) ScienceCommand(scoop: ServoState.SERVO_OPEN),
-    if (state.dpadDown) ScienceCommand(scoop: ServoState.SERVO_CLOSE),
 
     if (state.buttonStart) ScienceCommand(calibrate: true),
     if (state.buttonBack) ScienceCommand(stop: true),
@@ -70,9 +66,7 @@ class ScienceControls extends RoverControls {
       "Dirt carousel": "Left and right shoulders"
     else 
       "Prev/Next tubes": "Left and right shoulders",
-    "Scooper arm": "Right stick (vertical)",
     "Subsurface sampler": "Left stick (vertical)",
-    "Open/Close scoop": "D-pad Up/Down",
     "Activate pumps": "A (hold)",
     "Open funnel": "B (hold)",
   };
