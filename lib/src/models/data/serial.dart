@@ -44,13 +44,15 @@ class SerialModel extends Model {
           models.messages.addMessage(
             controlData.drive.wrap(wrapper.timestamp.toDateTime()),
           );
-          return;
-        } else if (controlData.hasRelays()) {
+        }
+
+        if (controlData.hasRelays()) {
           models.messages.addMessage(
             controlData.relays.wrap(wrapper.timestamp.toDateTime()),
           );
-          return;
         }
+
+        return;
       }
       models.messages.addMessage(wrapper);
     });
