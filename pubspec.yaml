@@ -14,7 +14,7 @@ dependencies:
     git:
       url: https://github.com/BinghamtonRover/Rover-Code.git
       path: burt_network
-      ref: 2.8.0
+      ref: 27fc0c268345d822147025b9cd7ff6b0d9641774
   file_picker: ^8.0.0+1
   fl_chart: ^0.69.0
   flutter_libserialport: ^0.6.0
