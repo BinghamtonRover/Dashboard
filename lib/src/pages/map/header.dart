@@ -57,6 +57,10 @@ class MapPageHeader extends StatelessWidget {
           ),
         const SizedBox(width: 5),
         Row(children: [const Text("RTK Status: "), rtkStateIcon(context)]),
+        const SizedBox(width: 10),
+        Text(
+          "Lat: ${model.roverPosition.latitude.toStringAsFixed(10)}° Long: ${model.roverPosition.longitude.toStringAsFixed(10)}° Alt: ${model.roverPosition.altitude}m",
+        ),
         const Spacer(),
       ],
     ),
