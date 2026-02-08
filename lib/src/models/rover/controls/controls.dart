@@ -1,6 +1,7 @@
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 
+import "arm_ik.dart";
 import "arm.dart";
 import "base_station.dart";
 import "camera.dart";
@@ -24,11 +25,12 @@ const gamepadDelay = Duration(milliseconds: 10);
 /// To use this class, subclass it and implement [parseInputs]. Be sure to add your class to the
 /// [RoverControls.forMode] constructor so it can be used within the UI.
 abstract class RoverControls {
-	/// Classes with a factory constructor must also have a regular constructor to be overriden.
-	const RoverControls();
+  /// Classes with a factory constructor must also have a regular constructor to be overriden.
+  const RoverControls();
 
-	/// Creates the appropriate [RoverControls] for this mode.
-	factory RoverControls.forMode(OperatingMode mode) => switch (mode) {
+  /// Creates the appropriate [RoverControls] for this mode.
+  factory RoverControls.forMode(OperatingMode mode) => switch (mode) {
+    OperatingMode.armIk => ArmIkControls(),
     OperatingMode.arm => ArmControls(),
     OperatingMode.science => ScienceControls(),
     OperatingMode.drive => DriveControls(),
@@ -36,7 +38,7 @@ abstract class RoverControls {
     OperatingMode.cameras => CameraControls(),
     OperatingMode.modernDrive => ModernDriveControls(),
     OperatingMode.baseStation => BaseStationControls(),
-	};
+  };
 
 	/// The [OperatingMode] for these controls.
 	OperatingMode get mode;

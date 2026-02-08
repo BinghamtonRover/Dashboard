@@ -88,7 +88,7 @@ class ArmSettings {
     armRoll = json?["armRoll"] ?? 0.1,
     wristRoll = json?["rotate"] ?? json?["wristRoll"] ?? 0.1,
     useIK = json?["useIK"] ?? false,
-    ikIncrement = json?["ikIncrement"] ?? 10;
+    ikIncrement = json?["ikIncrement"] ?? 0.05;
 
   /// Serializes these settings to a JSON map.
   Json toJson() => {
