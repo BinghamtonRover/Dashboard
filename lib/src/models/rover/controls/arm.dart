@@ -43,16 +43,32 @@ class ArmControls extends RoverControls {
     if (state.normalRightY.abs() > state.normalRightX.abs() && state.normalRightY != 0)
       ArmCommand(shoulder: MotorCommand(moveRadians: state.normalRightY * settings.shoulder)),
     if (state.normalLeftY != 0) ArmCommand(elbow: MotorCommand(moveRadians: state.normalLeftY * settings.elbow)),
-    // The bumpers should be pseudo-IK: Move the shoulder and elbow in sync.
-    if (state.normalShoulder != 0) ArmCommand(
-      shoulder: MotorCommand(moveRadians: state.normalShoulder * settings.shoulder * -1),
-      elbow: MotorCommand(moveRadians: state.normalShoulder * settings.elbow),
-    ),
 
-		// Gripper
-		if (state.normalDpadY != 0) ArmCommand(lift: MotorCommand(moveRadians: state.normalDpadY * settings.lift)),
-		if (state.normalDpadX != 0) ArmCommand(rotate: MotorCommand(moveRadians: state.normalDpadX * settings.rotate)),
-		if (state.normalTriggers != 0) ArmCommand(pinch: MotorCommand(moveRadians: state.normalTriggers * settings.pinch)),
+    // Arm band roll
+    if (state.normalShoulder != 0)
+      ArmCommand(
+        roll: MotorCommand(
+          moveRadians: state.normalShoulder * settings.armRoll,
+        ),
+      ),
+
+    // Wrist
+		if (state.normalDpadY != 0)
+      ArmCommand(
+        wrist: WristCommand(
+          pitch: MotorCommand(moveRadians: state.normalDpadY * settings.lift),
+        ),
+      ),
+    if (state.normalDpadX != 0)
+      ArmCommand(
+        wrist: WristCommand(
+          roll: MotorCommand(moveRadians: state.normalDpadX * settings.wristRoll),
+        ),
+      ),
+    if (state.normalTriggers != 0)
+      ArmCommand(
+        pinch: MotorCommand(moveRadians: state.normalTriggers * settings.pinch),
+      ),
 
 		// Custom actions
 		if (state.buttonA && !isAPressed) () { isAPressed = true; return ArmCommand(open: true); }(),
@@ -65,30 +81,30 @@ class ArmControls extends RoverControls {
 		if (state.buttonStart) ...[ArmCommand(calibrate: true), ArmCommand(calibrate: true)],
 	];
 
-	@override
-	List<Message> get onDispose => [ ArmCommand(stop: true), ArmCommand(stop: true) ];
+  @override
+  List<Message> get onDispose => [ ArmCommand(stop: true), ArmCommand(stop: true) ];
 
-	@override
-	Map<String, String> get buttonMapping => {
+  @override
+  Map<String, String> get buttonMapping => {
     // Manual control
     "Swivel": "Right joystick (horizontal)",
     "Shoulder": "Right joystick (vertical)",
     "Elbow": "Left stick (vertical)",
-    "Pseudo-IK": "Bumpers",
 
-		// Gripper
-		"Lift gripper": "D-pad up/down",
-		"Rotate gripper": "D-pad left/right",
-		"Pinch": "Triggers",
+    // Wrist
+    "Arm Roll": "Bumpers",
+    "Wrist Pitch": "D-pad up/down",
+    "Wrist Roll": "D-pad left/right",
+    "Pinch": "Triggers",
 
-		// Custom actions
-		"Fully close": "A",
-		"Fully open": "B",
-		"Press keyboard": "X",
-		"Spin gripper": "Y",
+    // Custom actions
+    "Fully close": "A",
+    "Fully open": "B",
+    "Press keyboard": "X",
+    "Spin gripper": "Y",
 
-		// General
-		"Stop": "Select",
-		"Calibrate": "Start",
-	};
+    // General
+    "Stop": "Select",
+    "Calibrate": "Start",
+  };
 }

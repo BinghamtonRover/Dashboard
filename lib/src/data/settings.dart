@@ -53,8 +53,11 @@ class ArmSettings {
   /// How many radians to lift the gripper each frame.
   final double lift;
 
-  /// How many radians to rotate the gripper each frame.
-  final double rotate;
+  /// How many radians to rotate the arm roll each frame.
+  final double armRoll;
+
+  /// How many radians to rotate the wrist roll each frame.
+  final double wristRoll;
 
   /// How many mm to move every 10 ms in IK mode.
   final double ikIncrement;
@@ -69,7 +72,8 @@ class ArmSettings {
     required this.swivel,
     required this.pinch,
     required this.lift,
-    required this.rotate,
+    required this.armRoll,
+    required this.wristRoll,
     required this.ikIncrement,
     required this.useIK,
  });
@@ -81,7 +85,8 @@ class ArmSettings {
     swivel = json?["swivel"] ?? 0.02,
     pinch = json?["pinch"] ?? 0.006,
     lift = json?["lift"] ?? 0.02,
-    rotate = json?["rotate"] ?? 0.1,
+    armRoll = json?["armRoll"] ?? 0.1,
+    wristRoll = json?["rotate"] ?? json?["wristRoll"] ?? 0.1,
     useIK = json?["useIK"] ?? false,
     ikIncrement = json?["ikIncrement"] ?? 10;
 
@@ -92,7 +97,7 @@ class ArmSettings {
     "swivel": swivel,
     "pinch": pinch,
     "lift": lift,
-    "rotate": rotate,
+    "wristRoll": wristRoll,
     "useIK": useIK,
     "ikIncrement": ikIncrement,
   };
