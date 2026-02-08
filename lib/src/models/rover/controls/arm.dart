@@ -35,8 +35,11 @@ class ArmControls extends RoverControls {
 		if (!state.buttonY) isYPressed = false;
 	}
 
-	@override
-	List<Message> parseInputs(GamepadState state) => [
+  @override
+  List<Message> parseInputs(GamepadState state) => [
+    // Base command
+    ArmCommand(usingIk: BoolState.NO),
+
     // Manual control
     if (state.normalRightX.abs() > state.normalRightY.abs() && state.normalRightX != 0)
       ArmCommand(swivel: MotorCommand(moveRadians: state.normalRightX * settings.swivel)),
