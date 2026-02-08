@@ -10,7 +10,7 @@ class ArmIkControls extends RoverControls {
   /// The coordinates of the end effector.
   ///
   /// The arm uses IK to move all the joints to stay at these coordinates.
-  Coordinates ikPosition = Coordinates();
+  Pose3d ikPosition = Pose3d();
 
   bool _positionReceived = false;
 
@@ -22,7 +22,9 @@ class ArmIkControls extends RoverControls {
       );
 
   void _onArmData(ArmData data) {
-    ikPosition = data.currentPosition;
+    ikPosition.translation = data.currentPosition;
+    ikPosition.rotation = data.currentOrientation;
+
     _positionReceived = true;
     _dataSubscription?.cancel();
     _dataSubscription = null;
@@ -38,18 +40,24 @@ class ArmIkControls extends RoverControls {
     }
 
     if (_positionReceived) {
-      ikPosition.x +=
+      ikPosition.translation.x +=
           state.normalLeftJoystickX * models.settings.arm.ikIncrement;
-      ikPosition.y +=
+      ikPosition.translation.y +=
           state.normalLeftJoystickY * models.settings.arm.ikIncrement;
 
       final normalZMovement = (state.buttonY ? 0 : 1) - (state.buttonA ? 0 : 1);
-      ikPosition.z += normalZMovement * models.settings.arm.ikIncrement;
+      ikPosition.translation.z +=
+          normalZMovement * models.settings.arm.ikIncrement;
+
+      ikPosition.rotation.x +=
+          state.normalRightJoystickY * models.settings.arm.lift;
+      ikPosition.rotation.y +=
+          state.normalRightJoystickX * models.settings.arm.wristRoll;
     }
 
     return [
       if (_positionReceived)
-        ArmCommand(ikX: ikPosition.x, ikY: ikPosition.y, ikZ: ikPosition.z),
+        ArmCommand(usingIk: BoolState.YES, pose: ikPosition),
 
       // Wrist pitch
       ArmCommand(
