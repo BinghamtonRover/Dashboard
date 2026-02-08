@@ -81,7 +81,7 @@ class ArmModel with ChangeNotifier {
     final armCommand = ArmCommand(
       shoulder: shoulderCommand,
       elbow: elbowCommand,
-      lift: liftCommand,
+      wrist: WristCommand(pitch: liftCommand),
     );
     models.messages.sendMessage(armCommand);
   }
