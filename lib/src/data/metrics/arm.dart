@@ -27,8 +27,8 @@ class ArmMetrics extends Metrics<ArmData> {
 	@override
 	List<MetricLine> get allMetrics => [
 		MetricLine("IK: "),
-		MetricLine("  Current: ${data.currentPosition.prettyPrint}"),
-		MetricLine("  Target: ${data.targetPosition.prettyPrint}"),
+    MetricLine("  Current: ${data.currentPose.translation.prettyPrint}"),
+    MetricLine("  Target: ${data.targetPose.translation.prettyPrint}"),
 		MetricLine("------------------------------"),
 		MetricLine("Swivel: "),
     ...getMotorData(data.base),

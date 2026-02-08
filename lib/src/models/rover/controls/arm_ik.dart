@@ -22,8 +22,7 @@ class ArmIkControls extends RoverControls {
       );
 
   void _onArmData(ArmData data) {
-    ikPosition.translation = data.currentPosition;
-    ikPosition.rotation = data.currentOrientation;
+    ikPosition = data.currentPose;
 
     _positionReceived = true;
     _dataSubscription?.cancel();
@@ -57,7 +56,7 @@ class ArmIkControls extends RoverControls {
 
     return [
       if (_positionReceived)
-        ArmCommand(usingIk: BoolState.YES, pose: ikPosition),
+        ArmCommand(usingIk: BoolState.YES, ikPose: ikPosition),
 
       // Wrist pitch
       ArmCommand(
