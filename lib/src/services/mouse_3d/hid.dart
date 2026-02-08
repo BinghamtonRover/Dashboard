@@ -2,6 +2,7 @@ import "dart:async";
 import "dart:ffi" as ffi;
 
 import "package:ffi/ffi.dart";
+import "package:flutter/foundation.dart";
 import "package:rover_dashboard/src/services/mouse_3d/mouse_3d.dart";
 import "package:rover_dashboard/src/services/mouse_3d/state.dart";
 import "package:sdl3/sdl3.dart" as sdl;
@@ -71,9 +72,11 @@ class HIDMouse3d extends Mouse3d {
       isReading = false;
 
       if (!isConnected) return;
-      print(
-        'X: ${_lastReadState.x.toStringAsFixed(5)}\tY: ${_lastReadState.y.toStringAsFixed(5)}\tZ: ${_lastReadState.z.toStringAsFixed(5)}\tYaw: ${_lastReadState.yaw.toStringAsFixed(5)}\tPitch: ${_lastReadState.pitch.toStringAsFixed(5)}\t Roll: ${_lastReadState.roll.toStringAsFixed(5)}',
-      );
+      if (kDebugMode) {
+        print(
+          "X: ${_lastReadState.x.toStringAsFixed(5)}\tY: ${_lastReadState.y.toStringAsFixed(5)}\tZ: ${_lastReadState.z.toStringAsFixed(5)}\tYaw: ${_lastReadState.yaw.toStringAsFixed(5)}\tPitch: ${_lastReadState.pitch.toStringAsFixed(5)}\t Roll: ${_lastReadState.roll.toStringAsFixed(5)}",
+        );
+      }
     });
   }
 

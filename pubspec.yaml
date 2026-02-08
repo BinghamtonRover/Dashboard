@@ -31,7 +31,7 @@ dependencies:
   archive: ^4.0.7
   image: ^4.5.4
   ffi: ^2.1.4
-  sdl3: ^0.1.45
+  sdl3: ^2.4.1
 
 # Prefer to use `flutter pub add --dev packageName` rather than modify this section by hand.
 dev_dependencies:
@@ -46,7 +46,7 @@ dependency_overrides:
   flutter_sdl_gamepad:
     git:
       url: https://github.com/BinghamtonRover/flutter_sdl_gamepad.git
-      ref: 59a87e1636e90f7b29bfdbc7b2066e68bf86c350
+      ref: 9ece085c43ddb4b32331c1a019133307a6a37b83
 
 # Generates icons for the given platforms
 #   Run: dart run flutter_launcher_icons
