@@ -15,7 +15,7 @@ class ArmIkControls extends RoverControls {
   bool _positionReceived = false;
 
   late StreamSubscription<ArmData>? _dataSubscription = models.messages.stream
-      .onMessage(
+      .listenFor(
         name: ArmData().messageName,
         constructor: ArmData.fromBuffer,
         callback: _onArmData,
