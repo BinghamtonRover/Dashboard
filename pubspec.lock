@@ -45,11 +45,11 @@ packages:
     dependency: "direct main"
     description:
       path: burt_network
-      ref: "2.7.0"
-      resolved-ref: c4b75cff512fadcb5eb7943c76b84a4b9a4410a4
+      ref: "314fe06eb56ac7f78000f39932943654582ae25d"
+      resolved-ref: "314fe06eb56ac7f78000f39932943654582ae25d"
       url: "https://github.com/BinghamtonRover/Rover-Code.git"
     source: git
-    version: "2.7.0"
+    version: "2.8.0"
   characters:
     dependency: transitive
     description:
@@ -219,8 +219,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "59a87e1636e90f7b29bfdbc7b2066e68bf86c350"
-      resolved-ref: "59a87e1636e90f7b29bfdbc7b2066e68bf86c350"
+      ref: "9ece085c43ddb4b32331c1a019133307a6a37b83"
+      resolved-ref: "9ece085c43ddb4b32331c1a019133307a6a37b83"
       url: "https://github.com/BinghamtonRover/flutter_sdl_gamepad.git"
     source: git
     version: "1.1.1"
@@ -526,10 +526,10 @@ packages:
     dependency: "direct main"
     description:
       name: protobuf
-      sha256: "68645b24e0716782e58948f8467fd42a880f255096a821f9e7d0ec625b00c84d"
+      sha256: "75ec242d22e950bdcc79ee38dd520ce4ee0bc491d7fadc4ea47694604d22bf06"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "6.0.0"
   pub_semver:
     dependency: transitive
     description:
@@ -550,18 +550,18 @@ packages:
     dependency: transitive
     description:
       name: sdl3
-      sha256: "289f805ba182ba0b9b656dbb81e71ffc0d8d789e18cf20e1e54d93226ec79718"
+      sha256: "784ca047c9c09ce6ba02fe4042d8ec44d8d97fc45955f1e749c2fc2846b049f3"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.45"
+    version: "2.5.0"
   sdl_gamepad:
     dependency: transitive
     description:
       name: sdl_gamepad
-      sha256: "107d6e54dc980a74b13e135276090b14ff4e6566a3e660eb2f663f553ed594b9"
+      sha256: b5c2330c1cffda2ee7e876882e26fcff9c275c14b6cbcd0486fc935b1ac65d9b
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.1"
+    version: "1.1.2"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -792,5 +792,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.10.0 <4.0.0"
+  dart: ">=3.10.6 <4.0.0"
   flutter: ">=3.27.0"

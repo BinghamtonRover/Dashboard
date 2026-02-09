@@ -10,7 +10,7 @@ class ArmMetrics extends Metrics<ArmData> {
 	String name = "Arm Base";
 
   @override
-  Version supportedVersion = Version(major: 1);
+  Version supportedVersion = Version(major: 1, minor: 2);
 
   @override
   IconData icon = Icons.precision_manufacturing_outlined;
@@ -27,8 +27,8 @@ class ArmMetrics extends Metrics<ArmData> {
 	@override
 	List<MetricLine> get allMetrics => [
 		MetricLine("IK: "),
-		MetricLine("  Current: ${data.currentPosition.prettyPrint}"),
-		MetricLine("  Target: ${data.targetPosition.prettyPrint}"),
+    MetricLine("  Current: ${data.currentPose.translation.prettyPrint}"),
+    MetricLine("  Target: ${data.targetPose.translation.prettyPrint}"),
 		MetricLine("------------------------------"),
 		MetricLine("Swivel: "),
     ...getMotorData(data.base),

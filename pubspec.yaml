@@ -14,14 +14,14 @@ dependencies:
     git:
       url: https://github.com/BinghamtonRover/Rover-Code.git
       path: burt_network
-      ref: 2.7.0
+      ref: 314fe06eb56ac7f78000f39932943654582ae25d
   file_picker: ^8.0.0+1
   fl_chart: ^0.69.0
   flutter_libserialport: ^0.6.0
   package_info_plus: ^8.0.0
   flutter_resizable_container: ^3.0.2
   path_provider: ^2.0.14
-  protobuf: ^3.0.0
+  protobuf: ^6.0.0
   url_launcher: ^6.1.10
   just_audio: ^0.9.42
   collection: ^1.18.0
@@ -44,7 +44,7 @@ dependency_overrides:
   flutter_sdl_gamepad:
     git:
       url: https://github.com/BinghamtonRover/flutter_sdl_gamepad.git
-      ref: 59a87e1636e90f7b29bfdbc7b2066e68bf86c350
+      ref: 9ece085c43ddb4b32331c1a019133307a6a37b83
 
 # Generates icons for the given platforms
 #   Run: dart run flutter_launcher_icons
