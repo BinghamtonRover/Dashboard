@@ -45,8 +45,8 @@ packages:
     dependency: "direct main"
     description:
       path: burt_network
-      ref: "314fe06eb56ac7f78000f39932943654582ae25d"
-      resolved-ref: "314fe06eb56ac7f78000f39932943654582ae25d"
+      ref: urc-2026-network-v3
+      resolved-ref: "7b09f6d6786c09395d1b100b9809282cc70b8e5c"
       url: "https://github.com/BinghamtonRover/Rover-Code.git"
     source: git
     version: "2.8.0"
