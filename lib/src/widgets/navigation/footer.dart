@@ -100,6 +100,7 @@ class _VoltageWarningState extends State<VoltageWarning>
   late AnimationController controller;
   late Animation<Color?> colorAnimation;
 
+  bool _isShowing = false;
   static const double warningVoltage = 21;
   static const double criticalVoltage = 20;
 
@@ -134,20 +135,32 @@ class _VoltageWarningState extends State<VoltageWarning>
   }
 
   void checkVoltage() {
-    if (!mounted) return;
+  if (!mounted) return;
 
-    if (!widget.model.isConnected || !isLow) {
-      controller.stop();
-      controller.reset();
-      return;
-    }
-
-    updateAnimation();
-
-    if (!controller.isAnimating) {
-      controller.repeat(reverse: true);
-    }
+  final voltage = widget.model.driveMetrics.batteryVoltage;
+  
+  // Turn on when below threshold
+  if (voltage < warningVoltage && voltage > 0) {
+    _isShowing = true;
   }
+  
+  // Turn off when 0.5V above threshold (prevents flickering)
+  if (voltage > warningVoltage + 0.5 || voltage == 0) {
+    _isShowing = false;
+  }
+
+  if (!widget.model.isConnected || !_isShowing) {
+    controller.stop();
+    controller.reset();
+    return;
+  }
+
+  updateAnimation();
+
+  if (!controller.isAnimating) {
+    controller.repeat(reverse: true);
+  }
+}
 
   @override
   void dispose() {
@@ -167,7 +180,7 @@ class _VoltageWarningState extends State<VoltageWarning>
   @override
   Widget build(BuildContext context) {
     final voltage = widget.model.driveMetrics.batteryVoltage;
-    if (!isLow || voltage == 0) return const SizedBox.shrink();
+    if (!_isShowing) return const SizedBox.shrink();
 
     return AnimatedBuilder(
       animation: controller,
