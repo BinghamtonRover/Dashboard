@@ -22,6 +22,7 @@ class SubsystemsViewModel extends ChangeNotifier {
     Device.DRIVE => models.rover.metrics.drive,
     Device.SCIENCE => models.rover.metrics.science,
     Device.RELAY => models.rover.metrics.relays,
+    Device.CONTROL_BOARD => models.rover.metrics.drive,
     _ => null,
   };
 
@@ -73,11 +74,14 @@ class SubsystemsViewModel extends ChangeNotifier {
     if (desiredRelays.arm == BoolState.BOOL_UNDEFINED) {
       desiredRelays.arm = relays.arm;
     }
-    if (desiredRelays.drive == BoolState.BOOL_UNDEFINED) {
-      desiredRelays.drive = relays.drive;
-    }
     if (desiredRelays.science == BoolState.BOOL_UNDEFINED) {
       desiredRelays.science = relays.science;
+    }
+    if (desiredRelays.middleLeftMotor == BoolState.BOOL_UNDEFINED) {
+      desiredRelays.middleLeftMotor = relays.middleLeftMotor;
+    }
+    if (desiredRelays.middleRightMotor == BoolState.BOOL_UNDEFINED) {
+      desiredRelays.middleRightMotor = relays.middleRightMotor;
     }
     if (desiredRelays.frontLeftMotor == BoolState.BOOL_UNDEFINED) {
       desiredRelays.frontLeftMotor = relays.frontLeftMotor;
@@ -100,10 +104,11 @@ class SubsystemsViewModel extends ChangeNotifier {
     toggleRelay(
       RelaysCommand(
         arm: BoolState.OFF,
-        drive: BoolState.OFF,
         science: BoolState.OFF,
         frontLeftMotor: BoolState.OFF,
         frontRightMotor: BoolState.OFF,
+        middleLeftMotor: BoolState.OFF,
+        middleRightMotor: BoolState.OFF,
         backLeftMotor: BoolState.OFF,
         backRightMotor: BoolState.OFF,
         bypass: BoolState.OFF,
@@ -116,10 +121,11 @@ class SubsystemsViewModel extends ChangeNotifier {
     toggleRelay(
       RelaysCommand(
         arm: BoolState.ON,
-        drive: BoolState.ON,
         science: BoolState.ON,
         frontLeftMotor: BoolState.ON,
         frontRightMotor: BoolState.ON,
+        middleLeftMotor: BoolState.ON,
+        middleRightMotor: BoolState.ON,
         backLeftMotor: BoolState.ON,
         backRightMotor: BoolState.ON,
         bypass: BoolState.ON,
