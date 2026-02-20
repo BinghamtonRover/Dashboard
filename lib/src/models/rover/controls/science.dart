@@ -10,20 +10,25 @@ import "controls.dart";
 class ScienceControls extends RoverControls {
   /// Whether the shoulder buttons should move tubes or steps.
   bool tubeMode = true;
+
   /// The amount of steps to move the dirt carousel when the button is held.
   double carouselIncrement = 1000;
+
   /// The amount of steps to move the scooper when the button is held.
   double scoopIncrement = 1000;
+
   /// The amount of steps to move the subsurface sampler when the button is held.
   double subsurfaceIncrement = 1000;
 
   /// Whether the left bumper was pressed last frame.
   bool leftBumper = false;
+
   /// Whether the right bumper was pressed last frame.
   bool rightBumper = false;
+
   /// -1 if the left bumper was pressed, +1 if the right bumper was pressed, 0 otherwise.
   int bumperFlag = 0;
-  
+
   @override
   OperatingMode get mode => OperatingMode.science;
 
@@ -42,16 +47,22 @@ class ScienceControls extends RoverControls {
       if (bumperFlag == -1) ScienceCommand(carousel: CarouselCommand.PREV_TUBE),
       if (bumperFlag == 1) ScienceCommand(carousel: CarouselCommand.NEXT_TUBE),
     ] else ...[
-      if (state.normalShoulder != 0) ScienceCommand(carouselMotor: carouselIncrement * state.normalShoulder),
+      if (state.normalShoulder != 0)
+        ScienceCommand(carouselMotor: carouselIncrement * state.normalShoulder),
     ],
-        
-    if (state.normalLeftY != 0) ScienceCommand(subsurfaceMotor: subsurfaceIncrement * state.normalLeftY),
 
-    if (state.buttonA) ScienceCommand(pumps: PumpState.PUMP_ON)
-    else ScienceCommand(pumps: PumpState.PUMP_OFF),
+    if (state.normalLeftY != 0)
+      ScienceCommand(subsurfaceMotor: subsurfaceIncrement * state.normalLeftY),
 
-    if (state.buttonB) ScienceCommand(funnel: ServoState.SERVO_OPEN)
-    else ScienceCommand(funnel: ServoState.SERVO_CLOSE),
+    if (state.buttonA)
+      ScienceCommand(pumps: PumpState.PUMP_ON)
+    else
+      ScienceCommand(pumps: PumpState.PUMP_OFF),
+
+    if (state.buttonB)
+      ScienceCommand(funnel: ServoState.SERVO_OPEN)
+    else
+      ScienceCommand(funnel: ServoState.SERVO_CLOSE),
 
     if (state.buttonStart) ScienceCommand(calibrate: true),
     if (state.buttonBack) ScienceCommand(stop: true),
@@ -62,9 +73,9 @@ class ScienceControls extends RoverControls {
 
   @override
   Map<String, String> get buttonMapping => {
-    if (tubeMode) 
+    if (tubeMode)
       "Dirt carousel": "Left and right shoulders"
-    else 
+    else
       "Prev/Next tubes": "Left and right shoulders",
     "Subsurface sampler": "Left stick (vertical)",
     "Activate pumps": "A (hold)",
