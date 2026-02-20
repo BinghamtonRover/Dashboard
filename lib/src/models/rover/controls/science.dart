@@ -14,11 +14,11 @@ class ScienceControls extends RoverControls {
   /// The amount of steps to move the dirt carousel when the button is held.
   double carouselIncrement = 1000;
 
-  /// The amount of steps to move the scooper when the button is held.
-  double scoopIncrement = 1000;
+  /// The maximum RPM to apply to the auger motor when the stick is fully deflected.
+  double augerMaxRpm = 0.4;
 
-  /// The amount of steps to move the subsurface sampler when the button is held.
-  double subsurfaceIncrement = 1000;
+  /// The amount of steps to move the linear slider when the stick is held.
+  double linearSliderIncrement = 1000;
 
   /// Whether the left bumper was pressed last frame.
   bool leftBumper = false;
@@ -51,8 +51,13 @@ class ScienceControls extends RoverControls {
         ScienceCommand(carouselMotor: carouselIncrement * state.normalShoulder),
     ],
 
-    if (state.normalLeftY != 0)
-      ScienceCommand(subsurfaceMotor: subsurfaceIncrement * state.normalLeftY),
+    if (state.normalTriggers != 0)
+      ScienceCommand(
+        auger: AugerCommand(speedRpm: state.normalTriggers.abs() * augerMaxRpm),
+      ),
+
+    if (state.normalRightY != 0)
+      ScienceCommand(linearSlider: linearSliderIncrement * state.normalRightY),
 
     if (state.buttonA)
       ScienceCommand(pumps: PumpState.PUMP_ON)
@@ -60,9 +65,19 @@ class ScienceControls extends RoverControls {
       ScienceCommand(pumps: PumpState.PUMP_OFF),
 
     if (state.buttonB)
-      ScienceCommand(funnel: ServoState.SERVO_OPEN)
+      ScienceCommand(
+        auger: AugerCommand(
+          upperServo: ServoState.SERVO_OPEN,
+          lowerServo: ServoState.SERVO_OPEN,
+        ),
+      )
     else
-      ScienceCommand(funnel: ServoState.SERVO_CLOSE),
+      ScienceCommand(
+        auger: AugerCommand(
+          upperServo: ServoState.SERVO_CLOSE,
+          lowerServo: ServoState.SERVO_CLOSE,
+        ),
+      ),
 
     if (state.buttonStart) ScienceCommand(calibrate: true),
     if (state.buttonBack) ScienceCommand(stop: true),
@@ -77,8 +92,9 @@ class ScienceControls extends RoverControls {
       "Dirt carousel": "Left and right shoulders"
     else
       "Prev/Next tubes": "Left and right shoulders",
-    "Subsurface sampler": "Left stick (vertical)",
-    "Activate pumps": "A (hold)",
-    "Open funnel": "B (hold)",
+      "Auger speed": "Triggers",
+      "Linear slider": "Right stick (vertical)",
+      "Activate pumps": "A (hold)",
+      "Open auger servos": "B (hold)",
   };
 }
