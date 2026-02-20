@@ -27,5 +27,6 @@ class BaseStationControls extends RoverControls {
   @override
   Map<String, String> get buttonMapping => {
     "Swivel": "Right Joystick (horizontal)",
+    "Pivot": "Right joystick",
   };
 }
