@@ -45,8 +45,8 @@ packages:
     dependency: "direct main"
     description:
       path: burt_network
-      ref: bcca57ef8deebe542240bc7be1a633f79df0b538
-      resolved-ref: bcca57ef8deebe542240bc7be1a633f79df0b538
+      ref: a658dd55bbf7330dd963533af37db43f3094dd72
+      resolved-ref: a658dd55bbf7330dd963533af37db43f3094dd72
       url: "https://github.com/BinghamtonRover/Rover-Code.git"
     source: git
     version: "2.8.0"
