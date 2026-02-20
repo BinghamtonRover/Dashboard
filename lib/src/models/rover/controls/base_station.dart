@@ -19,6 +19,9 @@ class BaseStationControls extends RoverControls {
         swivel: MotorCommand(
           moveRadians: -state.normalRightX * 0.005,
         ),
+        pitch: MotorCommand(
+          moveRadians: -state.normalRightY * 0.005,
+        ),
       ),
       version: Version(major: 1),
     ),
@@ -27,5 +30,6 @@ class BaseStationControls extends RoverControls {
   @override
   Map<String, String> get buttonMapping => {
     "Swivel": "Right Joystick (horizontal)",
+    "Pitch": "Right joystick (vertical)",
   };
 }
