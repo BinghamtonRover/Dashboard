@@ -133,42 +133,42 @@ class _VoltageWarningState extends State<VoltageWarning>
   }
 
   void checkVoltage() {
-  if (!mounted) return;
+    if (!mounted) return;
 
-  final voltage = widget.model.driveMetrics.batteryVoltage;
-  
-  // Turn on warning when below threshold
-  if (voltage < warningVoltage && voltage > 0) {
-    _isShowing = true;
-  }
-  
-  // Turn off warning when 0.5V above threshold
-  if (voltage > warningVoltage + 0.5 || voltage == 0) {
-    _isShowing = false;
-  }
+    final voltage = widget.model.driveMetrics.batteryVoltage;
 
-  // Turn on critical when below threshold
-  if (voltage < criticalVoltage && voltage > 0) {
-    _isCritical = true;
-  }
-  
-  // Turn off critical when 0.5V above threshold
-  if (voltage > criticalVoltage + 0.5) {
-    _isCritical = false;
-  }
+    // Turn on warning when below threshold
+    if (voltage < warningVoltage && voltage > 0) {
+      _isShowing = true;
+    }
 
-  if (!widget.model.isConnected || !_isShowing) {
-    controller.stop();
-    controller.reset();
-    return;
-  }
+    // Turn off warning when 0.5V above threshold
+    if (voltage > warningVoltage + 0.5 || voltage == 0) {
+      _isShowing = false;
+    }
 
-  updateAnimation();
+    // Turn on critical when below threshold
+    if (voltage < criticalVoltage && voltage > 0) {
+      _isCritical = true;
+    }
 
-  if (!controller.isAnimating) {
-    controller.repeat(reverse: true);
+    // Turn off critical when 0.5V above threshold
+    if (voltage > criticalVoltage + 0.5) {
+      _isCritical = false;
+    }
+
+    if (!widget.model.isConnected || !_isShowing) {
+      controller.stop();
+      controller.reset();
+      return;
+    }
+
+    updateAnimation();
+
+    if (!controller.isAnimating) {
+      controller.repeat(reverse: true);
+    }
   }
-}
 
   @override
   void dispose() {
