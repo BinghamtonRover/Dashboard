@@ -67,54 +67,54 @@ class RoverMetrics extends Model {
     BaseStationCommand().messageName: baseStation,
   };
 
-  @override
-  Future<void> init() async {
-    models.messages.stream.onMessage(
-      name: DriveData().messageName,
-      constructor: DriveData.fromBuffer,
-      callback: drive.update,
-    );
-    models.messages.stream.onMessage(
-      name: ScienceData().messageName,
-      constructor: ScienceData.fromBuffer,
-      callback: science.update,
-    );
-    models.messages.stream.onMessage(
-      name: RoverPosition().messageName,
-      constructor: RoverPosition.fromBuffer,
-      callback: position.update,
-    );
-    models.messages.stream.onMessage(
-      name: ArmData().messageName,
-      constructor: ArmData.fromBuffer,
-      callback: arm.update,
-    );
-    models.messages.stream.onMessage(
-      name: GripperData().messageName,
-      constructor: GripperData.fromBuffer,
-      callback: gripper.update,
-    );
-    models.messages.stream.onMessage(
+	@override
+	Future<void> init() async {
+		models.messages.stream.listenFor(
+			name: DriveData().messageName,
+			constructor: DriveData.fromBuffer,
+			callback: drive.update,
+		);
+		models.messages.stream.listenFor(
+			name: ScienceData().messageName,
+			constructor: ScienceData.fromBuffer,
+			callback: science.update,
+		);
+    models.messages.stream.listenFor(
+			name: RoverPosition().messageName,
+			constructor: RoverPosition.fromBuffer,
+			callback: position.update,
+		);
+		models.messages.stream.listenFor(
+			name: ArmData().messageName,
+			constructor: ArmData.fromBuffer,
+			callback: arm.update,
+		);
+		models.messages.stream.listenFor(
+			name: ArmData().messageName,
+			constructor: ArmData.fromBuffer,
+			callback: gripper.update,
+		);
+    models.messages.stream.listenFor(
       name: RelaysData().messageName,
       constructor: RelaysData.fromBuffer,
       callback: relays.update,
     );
-    models.messages.stream.onMessage(
+    models.messages.stream.listenFor(
       name: SubsystemsData().messageName,
       constructor: SubsystemsData.fromBuffer,
       callback: subsystems.update,
     );
-    models.messages.stream.onMessage(
+    models.messages.stream.listenFor(
       name: VideoData().messageName,
       constructor: VideoData.fromBuffer,
       callback: vision.update,
     );
-    models.messages.stream.onMessage(
+    models.messages.stream.listenFor(
       name: BaseStationData().messageName,
       constructor: BaseStationData.fromBuffer,
       callback: baseStation.update,
     );
-    models.messages.stream.onMessage(
+    models.messages.stream.listenFor(
       name: AntennaFirmwareData().messageName,
       constructor: AntennaFirmwareData.fromBuffer,
       callback: baseStation.updateFromFirmware,

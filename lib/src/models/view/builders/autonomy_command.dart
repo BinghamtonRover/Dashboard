@@ -32,7 +32,7 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 	/// Listens for incoming confirmations from the rover that it received the command.
   Future<void> init() async {
     await Future<void>.delayed(const Duration(seconds: 1));
-		_subscription = models.messages.stream.onMessage(
+		_subscription = models.messages.stream.listenFor(
 			name: AutonomyCommand().messageName,
 			constructor: AutonomyCommand.fromBuffer,
 			callback: (data) => _handshake = data,

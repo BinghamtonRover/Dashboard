@@ -21,7 +21,7 @@ class LidarViewModel with ChangeNotifier {
 
   /// Initializes the lidar view mode.
   void init() {
-    _subscription = models.messages.stream.onMessage<LidarPointCloud>(
+    _subscription = models.messages.stream.listenFor<LidarPointCloud>(
       name: LidarPointCloud().messageName,
       constructor: LidarPointCloud.fromBuffer,
       callback: handleData,

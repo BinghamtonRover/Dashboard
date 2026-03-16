@@ -57,7 +57,7 @@ class LogsModel extends Model {
 
   @override
   Future<void> init() async {
-    models.messages.stream.onMessage<BurtLog>(
+    models.messages.stream.listenFor<BurtLog>(
       name: BurtLog().messageName,
       constructor: BurtLog.fromBuffer,
       callback: handleLog,
