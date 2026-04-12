@@ -75,7 +75,10 @@ class MiniHomePage extends StatelessWidget {
       title: Text("Dashboard v${models.home.version ?? ''}"),
       actions: [
         IconButton(
-          onPressed: () => Navigator.of(context).pushNamed(Routes.settings),
+          onPressed: () => showDialog<void>(
+            context: context,
+            builder: (_) => SettingsPage(),
+          ),
           icon: const Icon(Icons.settings),
         ),
         const SizedBox(width: 10),
@@ -132,26 +135,25 @@ class PowerButton extends StatelessWidget {
         await showDialog<void>(
           context: context,
           barrierDismissible: false,
-          builder:
-              (_) => AlertDialog(
-                title: const Text("Are you sure?"),
-                content: const Text(
-                  "This will turn off the rover and you must physically turn it back on again",
-                ),
-                actions: [
-                  TextButton(
-                    child: const Text("Cancel"),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      models.rover.settings.setStatus(RoverStatus.POWER_OFF);
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("Continue"),
-                  ),
-                ],
+          builder: (_) => AlertDialog(
+            title: const Text("Are you sure?"),
+            content: const Text(
+              "This will turn off the rover and you must physically turn it back on again",
+            ),
+            actions: [
+              TextButton(
+                child: const Text("Cancel"),
+                onPressed: () => Navigator.of(context).pop(),
               ),
+              ElevatedButton(
+                onPressed: () {
+                  models.rover.settings.setStatus(RoverStatus.POWER_OFF);
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Continue"),
+              ),
+            ],
+          ),
         );
       },
     ),
@@ -197,8 +199,9 @@ class MiniDashboard extends ReactiveWidget<MiniViewModel> {
     initialRoute: Routes.screenSaver,
     title: "Binghamton University Rover Team",
     debugShowCheckedModeBanner: false,
-    themeMode:
-        models.isReady ? models.settings.dashboard.themeMode : ThemeMode.system,
+    themeMode: models.isReady
+        ? models.settings.dashboard.themeMode
+        : ThemeMode.system,
     theme: ThemeData(
       colorScheme: ColorScheme.fromSeed(seedColor: binghamtonGreen),
       appBarTheme: const AppBarTheme(
