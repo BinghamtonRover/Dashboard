@@ -10,20 +10,25 @@ import "controls.dart";
 class ScienceControls extends RoverControls {
   /// Whether the shoulder buttons should move tubes or steps.
   bool tubeMode = true;
+
   /// The amount of steps to move the dirt carousel when the button is held.
   double carouselIncrement = 1000;
-  /// The amount of steps to move the scooper when the button is held.
-  double scoopIncrement = 1000;
-  /// The amount of steps to move the subsurface sampler when the button is held.
-  double subsurfaceIncrement = 1000;
+
+  /// The maximum RPM to apply to the auger motor when the stick is fully deflected.
+  double augerMaxRpm = 0.4;
+
+  /// The amount of steps to move the linear slider when the stick is held.
+  double linearSliderIncrement = 1000;
 
   /// Whether the left bumper was pressed last frame.
   bool leftBumper = false;
+
   /// Whether the right bumper was pressed last frame.
   bool rightBumper = false;
+
   /// -1 if the left bumper was pressed, +1 if the right bumper was pressed, 0 otherwise.
   int bumperFlag = 0;
-  
+
   @override
   OperatingMode get mode => OperatingMode.science;
 
@@ -42,20 +47,37 @@ class ScienceControls extends RoverControls {
       if (bumperFlag == -1) ScienceCommand(carousel: CarouselCommand.PREV_TUBE),
       if (bumperFlag == 1) ScienceCommand(carousel: CarouselCommand.NEXT_TUBE),
     ] else ...[
-      if (state.normalShoulder != 0) ScienceCommand(carouselMotor: carouselIncrement * state.normalShoulder),
+      if (state.normalShoulder != 0)
+        ScienceCommand(carouselMotor: carouselIncrement * state.normalShoulder),
     ],
-        
-    if (state.normalLeftY != 0) ScienceCommand(subsurfaceMotor: subsurfaceIncrement * state.normalLeftY),
-    if (state.normalRightY != 0) ScienceCommand(scoopMotor: scoopIncrement * state.normalRightY),
 
-    if (state.buttonA) ScienceCommand(pumps: PumpState.PUMP_ON)
-    else ScienceCommand(pumps: PumpState.PUMP_OFF),
+    if (state.normalTriggers != 0)
+      ScienceCommand(
+        auger: AugerCommand(speedRpm: state.normalTriggers.abs() * augerMaxRpm),
+      ),
 
-    if (state.buttonB) ScienceCommand(funnel: ServoState.SERVO_OPEN)
-    else ScienceCommand(funnel: ServoState.SERVO_CLOSE),
+    if (state.normalRightY != 0)
+      ScienceCommand(linearSlider: linearSliderIncrement * state.normalRightY),
 
-    if (state.dpadUp) ScienceCommand(scoop: ServoState.SERVO_OPEN),
-    if (state.dpadDown) ScienceCommand(scoop: ServoState.SERVO_CLOSE),
+    if (state.buttonA)
+      ScienceCommand(pumps: PumpState.PUMP_ON)
+    else
+      ScienceCommand(pumps: PumpState.PUMP_OFF),
+
+    if (state.buttonB)
+      ScienceCommand(
+        auger: AugerCommand(
+          upperServo: ServoState.SERVO_OPEN,
+          lowerServo: ServoState.SERVO_OPEN,
+        ),
+      )
+    else
+      ScienceCommand(
+        auger: AugerCommand(
+          upperServo: ServoState.SERVO_CLOSE,
+          lowerServo: ServoState.SERVO_CLOSE,
+        ),
+      ),
 
     if (state.buttonStart) ScienceCommand(calibrate: true),
     if (state.buttonBack) ScienceCommand(stop: true),
@@ -66,14 +88,13 @@ class ScienceControls extends RoverControls {
 
   @override
   Map<String, String> get buttonMapping => {
-    if (tubeMode) 
+    if (tubeMode)
       "Dirt carousel": "Left and right shoulders"
-    else 
+    else
       "Prev/Next tubes": "Left and right shoulders",
-    "Scooper arm": "Right stick (vertical)",
-    "Subsurface sampler": "Left stick (vertical)",
-    "Open/Close scoop": "D-pad Up/Down",
-    "Activate pumps": "A (hold)",
-    "Open funnel": "B (hold)",
+      "Auger speed": "Triggers",
+      "Linear slider": "Right stick (vertical)",
+      "Activate pumps": "A (hold)",
+      "Open auger servos": "B (hold)",
   };
 }
