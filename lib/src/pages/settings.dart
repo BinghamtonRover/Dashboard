@@ -61,13 +61,16 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
               isScrollable: true,
               tabAlignment: TabAlignment.start,
               tabs: [
-                Tab(text: "Network"),
-                Tab(text: "Base Station"),
-                Tab(text: "Arm"),
-                Tab(text: "Science"),
-                Tab(text: "Dashboard"),
-                Tab(text: "Easter Eggs"),
-                Tab(text: "Misc"),
+                Tab(icon: Icon(Icons.wifi), text: "Network"),
+                Tab(
+                  icon: Icon(Icons.settings_input_antenna),
+                  text: "Base Station",
+                ),
+                Tab(icon: Icon(Icons.precision_manufacturing), text: "Arm"),
+                Tab(icon: Icon(Icons.science), text: "Science"),
+                Tab(icon: Icon(Icons.dashboard), text: "Dashboard"),
+                Tab(icon: Icon(Icons.celebration), text: "Easter Eggs"),
+                Tab(icon: Icon(Icons.more_horiz), text: "Misc"),
               ],
             ),
             Expanded(
