@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the getLogsActions function from the pages library, for the Dart programming language.">
+  <title>getLogsActions function - pages library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="../" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">rover_dashboard</a></li>
+    <li><a href="../pages/">pages.dart</a></li>
+    <li class="self-crumb">getLogsActions function</li>
+  </ol>
+  <div class="self-name">getLogsActions</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="pages&#47;pages-library-sidebar.html"
+      data-below-sidebar="">
+      <div>
+  <div id="external-links" class="btn-group"><a title="View source code" class="source-link" href="https://github.com/BinghamtonRover/rover-control-dashboard/blob/main/lib/src/pages/logs.dart#L145"><span class="material-symbols-outlined">description</span></a></div>
+<h1><span class="kind-function">getLogsActions</span> function 
+ 
+</h1></div>
+
+    <section class="multi-line-signature">
+        
+<span class="returntype">List<span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span>&gt;</span></span>
+<span class="name ">getLogsActions</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="getLogsActions-param-context"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a></span> <span class="parameter-name">context</span>, </span></li>
+<li><span class="parameter" id="getLogsActions-param-model"><span class="type-annotation"><a href="../models/LogsViewModel-class.html">LogsViewModel</a></span> <span class="parameter-name">model</span></span></li>
+</ol>)
+
+        
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Returns a list of widgets that are used as the header or footer actions for the log page</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">List&lt;Widget&gt; getLogsActions(BuildContext context, LogsViewModel model) =&gt; [
+  IconButton(
+    icon: const Icon(Icons.help, color: Colors.white),
+    tooltip: &quot;Help&quot;,
+    onPressed:
+        () =&gt; showDialog&lt;void&gt;(
+          context: context,
+          builder:
+              (context) =&gt; AlertDialog(
+                scrollable: true,
+                title: const Text(&quot;Logs Help&quot;),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      &quot;This page contains all logs received by the dashboard.\nSelecting a level means that only messages of that level or higher will be shown.&quot;,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 4),
+                    ListTile(
+                      leading: criticalWidget,
+                      title: const Text(&quot;Critical&quot;),
+                      subtitle: const Text(
+                        &quot;The rover is in a broken state and may shutdown&quot;,
+                      ),
+                    ),
+                    const ListTile(
+                      leading: errorWidget,
+                      title: Text(&quot;Error&quot;),
+                      subtitle: Text(
+                        &quot;Something you tried didn&#39;t work, but the rover can still function&quot;,
+                      ),
+                    ),
+                    const ListTile(
+                      leading: warningWidget,
+                      title: Text(&quot;Warning&quot;),
+                      subtitle: Text(
+                        &quot;Something may have gone wrong, you should check it out&quot;,
+                      ),
+                    ),
+                    ListTile(
+                      leading: infoWidget,
+                      title: const Text(&quot;Info&quot;),
+                      subtitle: const Text(&quot;The rover is functioning normally&quot;),
+                    ),
+                    const ListTile(
+                      leading: debugWidget,
+                      title: Text(&quot;Debug&quot;),
+                      subtitle: Text(
+                        &quot;Extra information that shows what the rover&#39;s thinking&quot;,
+                      ),
+                    ),
+                    const ListTile(
+                      leading: traceWidget,
+                      title: Text(&quot;Trace&quot;),
+                      subtitle: Text(
+                        &quot;Values from the code to debug specific issues&quot;,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                ),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () =&gt; Navigator.of(context).pop(),
+                    child: const Text(&quot;Close&quot;),
+                  ),
+                ],
+              ),
+        ),
+  ),
+  IconButton(
+    icon: const Icon(Icons.vertical_align_bottom, color: Colors.white),
+    onPressed: model.jumpToBottom,
+    tooltip: &quot;Jump to Bottom&quot;,
+  ),
+  IconButton(
+    icon: const Icon(Icons.delete_forever, color: Colors.white),
+    onPressed: models.logs.clear,
+    tooltip: &quot;Clear Logs&quot;,
+  ),
+];</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li><a href="../index.html">rover_dashboard</a></li>
+    <li><a href="../pages/">pages</a></li>
+    <li class="self-crumb">getLogsActions function</li>
+</ol>
+
+    <h5>pages library</h5>
+    <div id="dartdoc-sidebar-left-content"></div>
+  </div><!--/.sidebar-offcanvas-left-->
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+</main>
+<footer>
+  <span class="no-break">
+    rover_dashboard
+      2025.4.25+21
+  </span>
+  
+</footer>
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
