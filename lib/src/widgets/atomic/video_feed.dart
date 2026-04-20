@@ -185,11 +185,43 @@ class _VideoFeedState extends State<VideoFeed> {
             ),
           ),
           Expanded(
-            child: InteractiveViewer(
-              child: RawImage(
-                image: imageLoader.image,
-                fit: BoxFit.contain,
-              ),
+            child: Stack(
+              children: [
+                InteractiveViewer(
+                  child: RawImage(
+                    image: imageLoader.image,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                Positioned(
+                  left: 8,
+                  bottom: 8,
+                  child: IconButton(
+                    tooltip: "Rotate left",
+                    icon: const Icon(Icons.rotate_left),
+                    onPressed: () async {
+                      final current = videoFeed.details.rotationQuarters;
+                      final newValue = (current - 1 + 4) % 4;
+                      final updatedDetails = videoFeed.details.rebuild((b) => b.rotationQuarters = newValue);
+                      await models.video.updateCamera(videoFeed.id, updatedDetails);
+                    },
+                  ),
+                ),
+                Positioned(
+                  right: 8,
+                  bottom: 8,
+                  child: IconButton(
+                    tooltip: "Rotate right",
+                    icon: const Icon(Icons.rotate_right),
+                    onPressed: () async {
+                      final current = videoFeed.details.rotationQuarters;
+                      final newValue = (current + 1) % 4;
+                      final updatedDetails = videoFeed.details.rebuild((b) => b.rotationQuarters = newValue);
+                      await models.video.updateCamera(videoFeed.id, updatedDetails);
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ],
