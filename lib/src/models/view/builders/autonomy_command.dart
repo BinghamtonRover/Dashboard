@@ -15,35 +15,14 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 	/// The view model to edit the [AutonomyCommand.destination].
 	final gps = GpsBuilder();
 
-	/// The handshake as received by the rover after [submit] is called.
-	AutonomyCommand? _handshake;
-
 	/// Whether the dashboard is awaiting a response from the rover.
 	bool isLoading = false;
 
-  /// A constructor to call [init] when created.
-	AutonomyCommandBuilder() { init(); }
+  /// A constructor for AutonomyCommandBuilder
+	AutonomyCommandBuilder();
 
   @override
   List<ChangeNotifier> get otherBuilders => [gps, arucoID, models.rover.status];
-
-  StreamSubscription<AutonomyCommand>? _subscription;
-
-	/// Listens for incoming confirmations from the rover that it received the command.
-  Future<void> init() async {
-    await Future<void>.delayed(const Duration(seconds: 1));
-		_subscription = models.messages.stream.onMessage(
-			name: AutonomyCommand().messageName,
-			constructor: AutonomyCommand.fromBuffer,
-			callback: (data) => _handshake = data,
-		);
-	}
-
-	@override
-	void dispose() {
-    _subscription?.cancel();
-		super.dispose();
-	}
 
 	@override
 	bool get isValid => gps.isValid && (task == AutonomyTask.GPS_ONLY || arucoID.isValid);
@@ -63,13 +42,14 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 
 	/// Sends this command to the rover using [Sockets.autonomy].
 	Future<void> submit(AutonomyCommand value) async {
-		_handshake = null;
 		isLoading = true;
 		notifyListeners();
-		models.sockets.autonomy.sendMessage(value);
 		models.home.setMessage(severity: Severity.info, text: "Submitting autonomy command...");
-		await Future<void>.delayed(const Duration(seconds: 1));
-		if (_handshake != null) {
+    if (await models.sockets.autonomy.tryHandshake(
+      message: value,
+      timeout: const Duration(seconds: 1),
+      constructor: AutonomyCommand.fromBuffer,
+    )) {
 			models.home.setMessage(severity: Severity.info, text: "Command received");
 		} else {
 			models.home.setMessage(severity: Severity.error, text: "Command not received");
@@ -80,17 +60,18 @@ class AutonomyCommandBuilder extends ValueBuilder<AutonomyCommand> {
 
 	/// Forces the rover to go back to the previous waypoint.
 	Future<void> abort() async {
-		_handshake = null;
 		isLoading = true;
 		notifyListeners();
 		final message = AutonomyCommand(abort: true);
 		// x3 just in case
 		models.sockets.autonomy.sendMessage(message);
 		models.sockets.autonomy.sendMessage(message);
-		models.sockets.autonomy.sendMessage(message);
 		models.home.setMessage(severity: Severity.info, text: "Aborting...");
-		await Future<void>.delayed(const Duration(seconds: 1));
-		if (_handshake != null) {
+    if (await models.sockets.autonomy.tryHandshake(
+      message: message,
+      timeout: const Duration(seconds: 1),
+      constructor: AutonomyCommand.fromBuffer,
+    )) {
 			models.home.setMessage(severity: Severity.info, text: "Command received");
 		} else {
 			models.home.setMessage(severity: Severity.critical, text: "Command not received");
