@@ -22,7 +22,7 @@ class RoverSettings extends Model {
 
 	@override
 	Future<void> init() async {
-		models.messages.stream.onMessage(
+		models.messages.stream.listenFor(
 			name: UpdateSetting().messageName,
 			constructor: UpdateSetting.fromBuffer,
 			callback: (settings) => _handshakes++,

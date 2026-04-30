@@ -39,9 +39,9 @@ class SubsystemsPage extends ReactiveWidget<SubsystemsViewModel> {
   }
 
   @override
-  Widget build(BuildContext context, SubsystemsViewModel model) => LayoutBuilder(
-    builder:
-        (context, constraints) => Column(
+  Widget build(BuildContext context, SubsystemsViewModel model) =>
+      LayoutBuilder(
+        builder: (context, constraints) => Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             PageHeader(
@@ -86,8 +86,14 @@ class SubsystemsPage extends ReactiveWidget<SubsystemsViewModel> {
                                     onPressed: () => model.zeroImu(),
                                     child: const Text("Zero IMU"),
                                   ),
-                                  sensorConnectionStatus("GPS", model.subsystems.gpsConnected),
-                                  sensorConnectionStatus("IMU", model.subsystems.imuConnected),
+                                  sensorConnectionStatus(
+                                    "GPS",
+                                    model.subsystems.gpsConnected,
+                                  ),
+                                  sensorConnectionStatus(
+                                    "IMU",
+                                    model.subsystems.imuConnected,
+                                  ),
                                 ],
                               ),
                             ),
@@ -112,7 +118,7 @@ class SubsystemsPage extends ReactiveWidget<SubsystemsViewModel> {
             ),
           ],
         ),
-  );
+      );
 }
 
 /// A widget to display the status and toggle switches of the Relays
@@ -180,10 +186,7 @@ class RelaysView extends StatelessWidget {
               child: Icon(Icons.question_mark),
             )
           else if (desired != null)
-            desiredIcon(
-              current,
-              desired,
-            ),
+            desiredIcon(current, desired),
         ],
       ),
     );
@@ -203,36 +206,48 @@ class RelaysView extends StatelessWidget {
             name: "Front Left",
             relayState: (data) => data.frontLeftMotor,
             desiredState: (desired) => desired.frontLeftMotor,
-            toggleCommand:
-                ({required BoolState value}) =>
-                    RelaysCommand(frontLeftMotor: value),
+            toggleCommand: ({required BoolState value}) =>
+                RelaysCommand(frontLeftMotor: value),
           ),
           relaySwitch(
             context,
             name: "Front Right",
             relayState: (data) => data.frontRightMotor,
             desiredState: (desired) => desired.frontRightMotor,
-            toggleCommand:
-                ({required BoolState value}) =>
-                    RelaysCommand(frontRightMotor: value),
+            toggleCommand: ({required BoolState value}) =>
+                RelaysCommand(frontRightMotor: value),
+          ),
+          relaySwitch(
+            context,
+            name: "Mid Left",
+            relayState: (data) => data.middleLeftMotor,
+            desiredState: (desired) => desired.middleLeftMotor,
+            toggleCommand: ({required BoolState value}) =>
+                RelaysCommand(middleLeftMotor: value),
+          ),
+          relaySwitch(
+            context,
+            name: "Mid Right",
+            relayState: (data) => data.middleRightMotor,
+            desiredState: (desired) => desired.middleRightMotor,
+            toggleCommand: ({required BoolState value}) =>
+                RelaysCommand(middleRightMotor: value),
           ),
           relaySwitch(
             context,
             name: "Back Left",
             relayState: (data) => data.backLeftMotor,
             desiredState: (desired) => desired.backLeftMotor,
-            toggleCommand:
-                ({required BoolState value}) =>
-                    RelaysCommand(backLeftMotor: value),
+            toggleCommand: ({required BoolState value}) =>
+                RelaysCommand(backLeftMotor: value),
           ),
           relaySwitch(
             context,
             name: "Back Right",
             relayState: (data) => data.backRightMotor,
             desiredState: (desired) => desired.backRightMotor,
-            toggleCommand:
-                ({required BoolState value}) =>
-                    RelaysCommand(backRightMotor: value),
+            toggleCommand: ({required BoolState value}) =>
+                RelaysCommand(backRightMotor: value),
           ),
         ],
       ),
@@ -243,27 +258,19 @@ class RelaysView extends StatelessWidget {
         children: [
           relaySwitch(
             context,
-            name: "Drive",
-            relayState: (data) => data.drive,
-            desiredState: (desired) => desired.drive,
-            toggleCommand:
-                ({required BoolState value}) => RelaysCommand(drive: value),
-          ),
-          relaySwitch(
-            context,
             name: "Arm",
             relayState: (data) => data.arm,
             desiredState: (desired) => desired.arm,
-            toggleCommand:
-                ({required BoolState value}) => RelaysCommand(arm: value),
+            toggleCommand: ({required BoolState value}) =>
+                RelaysCommand(arm: value),
           ),
           relaySwitch(
             context,
             name: "Science",
             relayState: (data) => data.science,
             desiredState: (desired) => desired.science,
-            toggleCommand:
-                ({required BoolState value}) => RelaysCommand(science: value),
+            toggleCommand: ({required BoolState value}) =>
+                RelaysCommand(science: value),
           ),
           SizedBox(
             width: 75,

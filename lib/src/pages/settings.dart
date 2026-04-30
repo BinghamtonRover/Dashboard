@@ -138,6 +138,10 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
             model: model.network.tankSocket,
             editPort: false,
           ),
+          SocketEditor(
+            name: "Timesync destination",
+            model: model.network.timesyncSocket,
+          ),
           NumberEditor(
             name: "Heartbeats per second",
             model: model.network.connectionTimeout,
@@ -205,8 +209,12 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
           NumberEditor(name: "Swivel increment", model: model.arm.swivel),
           NumberEditor(name: "Shoulder increment", model: model.arm.shoulder),
           NumberEditor(name: "Elbow increment", model: model.arm.elbow),
-          NumberEditor(name: "Wrist rotate increment", model: model.arm.rotate),
-          NumberEditor(name: "Wrist lift increment", model: model.arm.lift),
+          NumberEditor(name: "Arm roll increment", model: model.arm.armRoll),
+          NumberEditor(
+            name: "Wrist roll increment",
+            model: model.arm.wristRoll,
+          ),
+          NumberEditor(name: "Wrist pitch increment", model: model.arm.lift),
           NumberEditor(name: "Pinch increment", model: model.arm.pinch),
         ],
       ),

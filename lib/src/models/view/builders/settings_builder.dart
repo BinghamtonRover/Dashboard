@@ -38,6 +38,9 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 	/// The view model representing the [SocketInfo] for the autonomy program.
 	final SocketBuilder autonomySocket;
 
+	/// The view model representing the [SocketInfo] for the timesync server.
+	final SocketBuilder timesyncSocket;
+
 	/// The view model representing the [SocketInfo] for the tank.
 	///
 	/// Since the tank runs multiple programs, the port is discarded and only the address is used.
@@ -50,13 +53,20 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
   final NumberBuilder<double> connectionTimeout;
 
 	@override
-	List<SocketBuilder> get otherBuilders => [dataSocket, videoSocket, autonomySocket, tankSocket];
+  List<SocketBuilder> get otherBuilders => [
+    dataSocket,
+    videoSocket,
+    autonomySocket,
+    timesyncSocket,
+    tankSocket,
+  ];
 
 	/// Creates the view model based on the current [Settings].
 	NetworkSettingsBuilder(NetworkSettings initial) :
 		dataSocket = SocketBuilder(initial.subsystemsSocket),
 		videoSocket = SocketBuilder(initial.videoSocket),
 		autonomySocket = SocketBuilder(initial.autonomySocket),
+    timesyncSocket = SocketBuilder(initial.timesyncSocket),
 		tankSocket = SocketBuilder(initial.tankSocket),
     baseSocket = SocketBuilder(initial.baseSocket),
     connectionTimeout = NumberBuilder<double>(initial.connectionTimeout, min: 0);
@@ -66,13 +76,15 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 		&& videoSocket.isValid
 		&& autonomySocket.isValid
 		&& tankSocket.isValid
-    && baseSocket.isValid;
+    && baseSocket.isValid
+    && timesyncSocket.isValid;
 
 	@override
 	NetworkSettings get value => NetworkSettings(
 		subsystemsSocket: dataSocket.value,
 		videoSocket: videoSocket.value,
 		autonomySocket: autonomySocket.value,
+    timesyncSocket: timesyncSocket.value,
 		tankSocket: tankSocket.value,
     baseSocket: baseSocket.value,
 		connectionTimeout: connectionTimeout.value,
@@ -122,77 +134,84 @@ class BaseStationSettingsBuilder extends ValueBuilder<BaseStationSettings> {
 }
 
 /// A [ValueBuilder] representing an [ArmSettings].
-class ArmSettingsBuilder extends ValueBuilder<ArmSettings>{
-	/// The view model for [ArmSettings.swivel].
-	final NumberBuilder<double> swivel;
+class ArmSettingsBuilder extends ValueBuilder<ArmSettings> {
+  /// The view model for [ArmSettings.swivel].
+  final NumberBuilder<double> swivel;
 
-	/// The view model for [ArmSettings.shoulder].
-	final NumberBuilder<double> shoulder;
+  /// The view model for [ArmSettings.shoulder].
+  final NumberBuilder<double> shoulder;
 
-	/// The view model for [ArmSettings.elbow].
-	final NumberBuilder<double> elbow;
+  /// The view model for [ArmSettings.elbow].
+  final NumberBuilder<double> elbow;
 
-	/// The view model for [ArmSettings.lift].
-	final NumberBuilder<double> lift;
+  /// The view model for [ArmSettings.lift].
+  final NumberBuilder<double> lift;
 
-	/// The view model for [ArmSettings.pinch].
-	final NumberBuilder<double> pinch;
+  /// The view model for [ArmSettings.pinch].
+  final NumberBuilder<double> pinch;
 
-	/// The view model for [ArmSettings.rotate].
-	final NumberBuilder<double> rotate;
+  /// The view model for [ArmSettings.wristRoll].
+  final NumberBuilder<double> wristRoll;
 
-	/// The view model for [ArmSettings.ikIncrement].
-	final NumberBuilder<double> ik;
+  /// The view model for [ArmSettings.armRoll].
+  final NumberBuilder<double> armRoll;
 
-	/// Whether to use manual control or IK.
-	bool useIK;
+  /// The view model for [ArmSettings.ikIncrement].
+  final NumberBuilder<double> ik;
 
-	/// Modifies the given [ArmSettings].
-	ArmSettingsBuilder(ArmSettings initial) :
-		swivel = NumberBuilder(initial.swivel),
-		shoulder = NumberBuilder(initial.shoulder),
-		elbow = NumberBuilder(initial.elbow),
-		lift = NumberBuilder(initial.lift),
-		rotate = NumberBuilder(initial.rotate),
-		pinch = NumberBuilder(initial.pinch),
-		ik = NumberBuilder(initial.ikIncrement),
-		useIK = initial.useIK
-	{
-		swivel.addListener(notifyListeners);
-		shoulder.addListener(notifyListeners);
-		elbow.addListener(notifyListeners);
-		lift.addListener(notifyListeners);
-		rotate.addListener(notifyListeners);
-		pinch.addListener(notifyListeners);
-		ik.addListener(notifyListeners);
-	}
+  /// Whether to use manual control or IK.
+  bool useIK;
 
-	@override
-	bool get isValid => swivel.isValid
-		&& shoulder.isValid
-		&& elbow.isValid
-		&& lift.isValid
-		&& rotate.isValid
-		&& pinch.isValid
-		&& ik.isValid;
+  /// Modifies the given [ArmSettings].
+  ArmSettingsBuilder(ArmSettings initial)
+    : swivel = NumberBuilder(initial.swivel),
+      shoulder = NumberBuilder(initial.shoulder),
+      elbow = NumberBuilder(initial.elbow),
+      lift = NumberBuilder(initial.lift),
+      armRoll = NumberBuilder(initial.armRoll),
+      wristRoll = NumberBuilder(initial.wristRoll),
+      pinch = NumberBuilder(initial.pinch),
+      ik = NumberBuilder(initial.ikIncrement),
+      useIK = initial.useIK {
+    swivel.addListener(notifyListeners);
+    shoulder.addListener(notifyListeners);
+    elbow.addListener(notifyListeners);
+    lift.addListener(notifyListeners);
+    armRoll.addListener(notifyListeners);
+    wristRoll.addListener(notifyListeners);
+    pinch.addListener(notifyListeners);
+    ik.addListener(notifyListeners);
+  }
 
-	/// Updates the [useIK] variable.
-	void updateIK(bool input) {	// ignore: avoid_positional_boolean_parameters
-		useIK = input;
-		notifyListeners();
-	}
+  @override
+  bool get isValid =>
+      swivel.isValid &&
+      shoulder.isValid &&
+      elbow.isValid &&
+      lift.isValid &&
+      wristRoll.isValid &&
+      pinch.isValid &&
+      ik.isValid;
 
-	@override
-	ArmSettings get value => ArmSettings(
-		shoulder: shoulder.value,
-		elbow: elbow.value,
-		swivel: swivel.value,
-		pinch: pinch.value,
-		lift: lift.value,
-		rotate: rotate.value,
-		ikIncrement: ik.value,
-		useIK: useIK,
-	);
+  /// Updates the [useIK] variable.
+  // ignore: avoid_positional_boolean_parameters
+  void updateIK(bool input) {
+    useIK = input;
+    notifyListeners();
+  }
+
+  @override
+  ArmSettings get value => ArmSettings(
+    shoulder: shoulder.value,
+    elbow: elbow.value,
+    swivel: swivel.value,
+    pinch: pinch.value,
+    lift: lift.value,
+    armRoll: armRoll.value,
+    wristRoll: wristRoll.value,
+    ikIncrement: ik.value,
+    useIK: useIK,
+  );
 }
 
 /// A [ValueBuilder] that modifies a [ScienceSettings].
@@ -418,22 +437,21 @@ class SettingsBuilder extends ValueBuilder<Settings> {
 	/// Whether the page is loading.
 	bool isLoading = false;
 
-	/// Modifies the user's settings.
-	SettingsBuilder() :
-		network = NetworkSettingsBuilder(models.settings.network),
-    baseStation = BaseStationSettingsBuilder(models.settings.baseStation),
-		arm = ArmSettingsBuilder(models.settings.arm),
-		science = ScienceSettingsBuilder(models.settings.science),
-    dashboard = DashboardSettingsBuilder(models.settings.dashboard),
-		easterEggs = EasterEggsSettingsBuilder(models.settings.easterEggs)
-	{
-		network.addListener(notifyListeners);
+  /// Modifies the user's settings.
+  SettingsBuilder()
+    : network = NetworkSettingsBuilder(models.settings.network),
+      baseStation = BaseStationSettingsBuilder(models.settings.baseStation),
+      arm = ArmSettingsBuilder(models.settings.arm),
+      science = ScienceSettingsBuilder(models.settings.science),
+      dashboard = DashboardSettingsBuilder(models.settings.dashboard),
+      easterEggs = EasterEggsSettingsBuilder(models.settings.easterEggs) {
+    network.addListener(notifyListeners);
     baseStation.addListener(notifyListeners);
-		arm.addListener(notifyListeners);
-		science.addListener(notifyListeners);
+    arm.addListener(notifyListeners);
+    science.addListener(notifyListeners);
     dashboard.addListener(notifyListeners);
-		easterEggs.addListener(notifyListeners);
-	}
+    easterEggs.addListener(notifyListeners);
+  }
 
 	@override
 	bool get isValid => network.isValid

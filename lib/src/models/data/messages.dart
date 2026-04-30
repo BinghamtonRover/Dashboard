@@ -33,7 +33,7 @@ class MessagesModel extends Model {
 
   final _controller = StreamController<WrappedMessage>.broadcast();
 
-  /// The stream of messages. Use [WrappedMessageStream.onMessage] to subscribe to messages.
+  /// The stream of messages. Use [WrappedMessageStream.listenFor] to subscribe to messages.
   Stream<WrappedMessage> get stream => _controller.stream;
 
   /// Adds a message to the [stream].

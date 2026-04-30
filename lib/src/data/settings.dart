@@ -53,8 +53,11 @@ class ArmSettings {
   /// How many radians to lift the gripper each frame.
   final double lift;
 
-  /// How many radians to rotate the gripper each frame.
-  final double rotate;
+  /// How many radians to rotate the arm roll each frame.
+  final double armRoll;
+
+  /// How many radians to rotate the wrist roll each frame.
+  final double wristRoll;
 
   /// How many mm to move every 10 ms in IK mode.
   final double ikIncrement;
@@ -69,7 +72,8 @@ class ArmSettings {
     required this.swivel,
     required this.pinch,
     required this.lift,
-    required this.rotate,
+    required this.armRoll,
+    required this.wristRoll,
     required this.ikIncrement,
     required this.useIK,
  });
@@ -81,9 +85,10 @@ class ArmSettings {
     swivel = json?["swivel"] ?? 0.02,
     pinch = json?["pinch"] ?? 0.006,
     lift = json?["lift"] ?? 0.02,
-    rotate = json?["rotate"] ?? 0.1,
+    armRoll = json?["armRoll"] ?? 0.1,
+    wristRoll = json?["rotate"] ?? json?["wristRoll"] ?? 0.1,
     useIK = json?["useIK"] ?? false,
-    ikIncrement = json?["ikIncrement"] ?? 10;
+    ikIncrement = json?["ikIncrement"] ?? 0.05;
 
   /// Serializes these settings to a JSON map.
   Json toJson() => {
@@ -92,7 +97,7 @@ class ArmSettings {
     "swivel": swivel,
     "pinch": pinch,
     "lift": lift,
-    "rotate": rotate,
+    "wristRoll": wristRoll,
     "useIK": useIK,
     "ikIncrement": ikIncrement,
   };
@@ -159,6 +164,9 @@ class NetworkSettings {
   /// The address and port of the autonomy program.
   final SocketInfo autonomySocket;
 
+  /// The address to use for time synchronization
+  final SocketInfo timesyncSocket;
+
   /// The address of the tank. The port is ignored.
   ///
   /// The Tank is a model rover that has all the same programs as the rover. This field does not
@@ -175,6 +183,7 @@ class NetworkSettings {
     required this.subsystemsSocket,
     required this.videoSocket,
     required this.autonomySocket,
+    required this.timesyncSocket,
     required this.tankSocket,
     required this.baseSocket,
     required this.connectionTimeout,
@@ -185,6 +194,7 @@ class NetworkSettings {
     subsystemsSocket = json?.getSocket("subsystemsSocket") ?? SocketInfo.raw("192.168.1.20", 8001),
     videoSocket = json?.getSocket("videoSocket") ?? SocketInfo.raw("192.168.1.30", 8002),
     autonomySocket = json?.getSocket("autonomySocket") ?? SocketInfo.raw("192.168.1.30", 8003),
+    timesyncSocket = json?.getSocket("timesyncSocket") ?? SocketInfo.raw("192.168.1.20", 8020),
     tankSocket = json?.getSocket("tankSocket") ?? SocketInfo.raw("192.168.1.40", 8000),
     baseSocket = json?.getSocket("baseSocket") ?? SocketInfo.raw("192.168.1.50", 8005),
     connectionTimeout = json?["connectionTimeout"] ?? 5;
@@ -194,6 +204,7 @@ class NetworkSettings {
     "subsystemsSocket": subsystemsSocket.toJson(),
     "videoSocket": videoSocket.toJson(),
     "autonomySocket": autonomySocket.toJson(),
+    "timesyncSocket": timesyncSocket.toJson(),
     "tankSocket": tankSocket.toJson(),
     "baseSocket": baseSocket.toJson(),
     "connectionTimeout": connectionTimeout,

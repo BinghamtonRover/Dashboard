@@ -1,26 +1,50 @@
 import "dart:io";
 
-import "package:burt_network/logging.dart";
+import "package:burt_network/burt_network.dart";
 import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
 
 /// Coordinates all the sockets to point to the right [RoverType].
 class Sockets extends Model {
+  /// A UDP socket for handling time synchronization with the rover
+  late final timesync = TimesyncSocket(
+    timesyncAddress: models.settings.network.timesyncSocket,
+  );
+
+  void _registerSocket({
+    required DashboardSocket socket,
+    required SocketInfo Function() info,
+  }) {
+    _deviceSocketMap[socket.device] = socket;
+    _deviceSocketInfoMap[socket.device] = info;
+  }
+
   /// A UDP socket for sending and receiving Protobuf data.
-  late final data = DashboardSocket(device: Device.SUBSYSTEMS);
+  final DashboardSocket data = DashboardSocket(device: Device.SUBSYSTEMS);
 
   /// A UDP socket for receiving video.
-  late final video = DashboardSocket(device: Device.VIDEO);
+  final DashboardSocket video = DashboardSocket(device: Device.VIDEO);
 
   /// A UDP socket for controlling autonomy.
-  late final autonomy = DashboardSocket(device: Device.AUTONOMY);
+  final DashboardSocket autonomy = DashboardSocket(device: Device.AUTONOMY);
 
   /// A UDP socket for controlling the base station
-  late final baseStation = DashboardSocket(device: Device.BASE_STATION);
+  final DashboardSocket baseStation = DashboardSocket(
+    device: Device.BASE_STATION,
+  );
 
   /// A list of all the sockets this model manages.
   List<DashboardSocket> get sockets => [data, video, autonomy, baseStation];
+
+  /// Maps each device to its corresponding socket
+  final Map<Device, DashboardSocket> _deviceSocketMap = {};
+
+  /// Maps each device to its setting for its socket destination
+  final Map<Device, SocketInfo Function()> _deviceSocketInfoMap = {};
+
+  /// The timestamp to use for sending messages with all sockets
+  DateTime get timestamp => timesync.timestamp;
 
   /// The rover-like system currently in use.
   RoverType rover = RoverType.rover;
@@ -36,7 +60,9 @@ class Sockets extends Model {
   String get connectionSummary {
     final result = StringBuffer();
     for (final socket in sockets) {
-      result.write("${socket.device.humanName}: ${(socket.connectionStrength.value * 100).toStringAsFixed(0)}%\n");
+      result.write(
+        "${socket.device.humanName}: ${(socket.connectionStrength.value * 100).toStringAsFixed(0)}%\n",
+      );
     }
     return result.toString().trim();
   }
@@ -47,33 +73,58 @@ class Sockets extends Model {
   /// Returns the corresponding [DashboardSocket] for the [device]
   ///
   /// Returns null if no device is passed or there is no corresponding socket
-  DashboardSocket? socketForDevice(Device device) => switch (device) {
-    Device.SUBSYSTEMS => data,
-    Device.VIDEO => video,
-    Device.AUTONOMY => autonomy,
-    Device.BASE_STATION => baseStation,
-    _ => null,
-  };
+  DashboardSocket? socketForDevice(Device device) => _deviceSocketMap[device];
 
-	@override
-	Future<void> init() async {
-		for (final socket in sockets) {
-			socket.connectionStatus.addListener(() => socket.connectionStatus.value
-        ? onConnect(socket.device)
-        : onDisconnect(socket.device),
+  @override
+  Future<void> init() async {
+    _registerSocket(
+      socket: data,
+      info: () => models.settings.network.subsystemsSocket,
+    );
+    _registerSocket(
+      socket: video,
+      info: () => models.settings.network.videoSocket,
+    );
+    _registerSocket(
+      socket: autonomy,
+      info: () => models.settings.network.autonomySocket,
+    );
+    _registerSocket(
+      socket: baseStation,
+      info: () => models.settings.network.baseSocket,
+    );
+
+    // Make sure that all sockets are properly created and mapped
+    for (final device in _deviceSocketMap.keys) {
+      assert(
+        sockets.contains(_deviceSocketMap[device]),
+        "Socket for device $device is added to List<DashboardSocket> get sockets",
       );
-      socket.messages.listen((message) {
+      assert(
+        _deviceSocketInfoMap.containsKey(device),
+        "Device $device has a corresponding destination function in _deviceSocketInfoMap",
+      );
+    }
+
+    await timesync.init();
+    for (final socket in sockets) {
+      socket.connectionStatus.addListener(
+        () => socket.connectionStatus.value
+            ? onConnect(socket.device)
+            : onDisconnect(socket.device),
+      );
+      socket.messages.map((e) => e.message).listen((message) {
         if (!socket.isEnabled) return;
         models.messages.addMessage(message);
       });
       await socket.init();
-		}
-		final level = Logger.level;
-		Logger.level = LogLevel.warning;
-		await updateSockets();
-		Logger.level = level;
+    }
+    final level = Logger.level;
+    Logger.level = LogLevel.warning;
+    await updateSockets();
+    Logger.level = level;
     notifyListeners();
-	}
+  }
 
   /// Enables all sockets without restarting them
   void enable() {
@@ -85,9 +136,9 @@ class Sockets extends Model {
 
   /// Disconnects from all sockets without restarting them
   void disable() {
-		for (final socket in sockets) {
-			socket.disable();
-		}
+    for (final socket in sockets) {
+      socket.disable();
+    }
     notifyListeners();
   }
 
@@ -96,12 +147,18 @@ class Sockets extends Model {
     for (final socket in sockets) {
       await socket.dispose();
     }
+    await timesync.dispose();
+    _deviceSocketMap.clear();
+    _deviceSocketInfoMap.clear();
     super.dispose();
   }
 
   /// Notifies the user when a new device has connected.
   void onConnect(Device device) {
-    models.home.setMessage(severity: Severity.info, text: "The ${device.humanName} has connected");
+    models.home.setMessage(
+      severity: Severity.info,
+      text: "The ${device.humanName} has connected",
+    );
     if (device == Device.SUBSYSTEMS) {
       models.rover.status.value = models.rover.settings.status;
       models.rover.controller1.gamepad.pulse();
@@ -113,8 +170,13 @@ class Sockets extends Model {
 
   /// Notifies the user when a device has disconnected.
   void onDisconnect(Device device) {
-    models.home.setMessage(severity: Severity.critical, text: "The ${device.humanName} has disconnected");
-    if (device == Device.SUBSYSTEMS) models.rover.status.value = RoverStatus.DISCONNECTED;
+    models.home.setMessage(
+      severity: Severity.critical,
+      text: "The ${device.humanName} has disconnected",
+    );
+    if (device == Device.SUBSYSTEMS) {
+      models.rover.status.value = RoverStatus.DISCONNECTED;
+    }
     if (device == Device.VIDEO) models.video.reset();
     notifyListeners();
   }
@@ -122,10 +184,13 @@ class Sockets extends Model {
   /// Set the right IP addresses for the rover or tank.
   Future<void> updateSockets() async {
     final settings = models.settings.network;
-    data.destination = settings.subsystemsSocket.copyWith(address: addressOverride);
-    video.destination = settings.videoSocket.copyWith(address: addressOverride);
-    autonomy.destination = settings.autonomySocket.copyWith(address: addressOverride);
-    baseStation.destination = settings.baseSocket.copyWith(address: addressOverride);
+    timesync.timesyncDestination = settings.timesyncSocket.copyWith(
+      address: addressOverride,
+    );
+    for (final device in _deviceSocketMap.keys) {
+      socketForDevice(device)!.destination = _deviceSocketInfoMap[device]!()
+          .copyWith(address: addressOverride);
+    }
   }
 
   /// Resets all the sockets.
@@ -145,7 +210,10 @@ class Sockets extends Model {
   Future<void> setRover(RoverType? value) async {
     if (value == null) return;
     rover = value;
-    models.home.setMessage(severity: Severity.info, text: "Using: ${rover.name}");
+    models.home.setMessage(
+      severity: Severity.info,
+      text: "Using: ${rover.name}",
+    );
     await reset();
     notifyListeners();
   }

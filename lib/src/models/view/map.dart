@@ -102,7 +102,7 @@ class AutonomyModel with ChangeNotifier, BadAppleViewModel {
   /// Initializes the view model.
   Future<void> init() async {
     recenterRover();
-    _subscription = models.messages.stream.onMessage<AutonomyData>(
+    _subscription = models.messages.stream.listenFor<AutonomyData>(
       name: AutonomyData().messageName,
       constructor: AutonomyData.fromBuffer,
       callback: onNewData,

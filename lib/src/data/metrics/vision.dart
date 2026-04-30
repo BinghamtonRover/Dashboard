@@ -4,11 +4,11 @@ import "package:rover_dashboard/data.dart";
 import "package:rover_dashboard/services.dart";
 
 /// Metrics about the vision of the rover's cameras
-/// 
+///
 /// This includes data such as aruco tags, and object detections
 class VisionMetrics extends Metrics<VideoData> {
   /// A cache of detection results from different cameras
-  /// 
+  ///
   /// This allows several packets of data to come in from different cameras
   /// and not have them be overwriting each other
   final List<VideoData> cameraDetections = [];
@@ -24,7 +24,7 @@ class VisionMetrics extends Metrics<VideoData> {
 
   @override
   IconData icon = Icons.remove_red_eye_outlined;
-  
+
   @override
   List<MetricLine> get allMetrics => [
     if (cameraDetections.isEmpty)
@@ -49,9 +49,9 @@ class VisionMetrics extends Metrics<VideoData> {
           yield MetricLine("      x: ${bestPose.translation.x.toStringAsFixed(3)}m");
           yield MetricLine("      y: ${bestPose.translation.y.toStringAsFixed(3)}m");
           yield MetricLine("      z: ${bestPose.translation.z.toStringAsFixed(3)}m");
-          yield MetricLine("      roll: ${bestPose.rotation.x.toStringAsFixed(2)}°");
-          yield MetricLine("      pitch: ${bestPose.rotation.y.toStringAsFixed(2)}°");
-          yield MetricLine("      yaw: ${bestPose.rotation.z.toStringAsFixed(2)}°");
+          yield MetricLine("      roll: ${bestPose.rotation.roll.toStringAsFixed(2)}°");
+          yield MetricLine("      pitch: ${bestPose.rotation.pitch.toStringAsFixed(2)}°");
+          yield MetricLine("      yaw: ${bestPose.rotation.yaw.toStringAsFixed(2)}°");
           yield MetricLine("    Best Reprojection Error: ${target.bestPnpResult.reprojectionError.toStringAsFixed(3)}");
         }
       }),
@@ -62,19 +62,21 @@ class VisionMetrics extends Metrics<VideoData> {
   @override
   void update(VideoData value) {
     if (value.hasFrame()) return;
-    if (!checkVersion(value)) return;    
-    cameraDetections.removeWhere((result) => result.details.name == value.details.name);
+    if (!checkVersion(value)) return;
+    cameraDetections.removeWhere(
+      (result) => result.details.name == value.details.name,
+    );
     if (value.detectedObjects.isNotEmpty) {
       cameraDetections.add(value.deepCopy());
-      cameraDetections.sort();
+      cameraDetections.sortBy((e) => e.details.name.value);
     }
-		services.files.logData(value);
-		notifyListeners();
+    services.files.logData(value);
+    notifyListeners();
   }
-  
+
   @override
   Version parseVersion(VideoData message) => message.version;
-  
+
   @override
   Message get versionCommand => VideoData(version: Version(major: 1, minor: 2));
 }

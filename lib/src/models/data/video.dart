@@ -123,12 +123,12 @@ class VideoModel extends Model {
 
 	@override
 	Future<void> init() async {
-		models.messages.stream.onMessage<VideoData>(
+		models.messages.stream.listenFor<VideoData>(
 			name: VideoData().messageName,
 			constructor: VideoData.fromBuffer,
 			callback: handleData,
 		);
-		models.messages.stream.onMessage<VideoCommand>(
+		models.messages.stream.listenFor<VideoCommand>(
 			name: VideoCommand().messageName,
 			constructor: VideoCommand.fromBuffer,
 			callback: (command) => _handshake = command,

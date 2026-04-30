@@ -23,8 +23,23 @@ class DashboardSocket extends BurtSocket {
   /// Number of times to check heart beat per seconds based on `models.settings.network.connectionTimeout`.
   double get frequency => models.settings.network.connectionTimeout;
 
+  /// The destination this socket is set to
+  SocketInfo? get destination =>
+      destinations.isNotEmpty ? destinations.first : null;
+
+  /// Sets the destination of this socket
+  set destination(SocketInfo? address) {
+    if (address == null) return;
+    destinations.clear();
+    destinations.add(address);
+  }
+
+  @override
+  DateTime get timestamp => models.sockets.timestamp;
+
   /// Listens for incoming messages on a UDP socket and sends heartbeats to the [device].
-  DashboardSocket({required super.device}) : super(port: null, quiet: true, keepDestination: true);
+  DashboardSocket({required super.device})
+      : super(port: null, quiet: true, keepDestination: true);
 
   @override
   Duration get heartbeatInterval => Duration(milliseconds: 1000 ~/ frequency);
