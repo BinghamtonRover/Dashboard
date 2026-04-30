@@ -65,11 +65,11 @@ extension RoverStatusHumanName on RoverStatus {
   }
 }
 
-/// Extensions for [Coordinates] messages.
-extension CoordinatesUtils on Coordinates {
-  /// Adds two coordinates.
-  Coordinates operator +(Coordinates other) =>
-    Coordinates(x: x + other.x, y: y + other.y, z: z + other.z);
+/// Extensions for [Translation3d] messages.
+extension TranslationUtils on Translation3d {
+  /// Adds two Translation3d.
+  Translation3d operator +(Translation3d other) =>
+    Translation3d(x: x + other.x, y: y + other.y, z: z + other.z);
 
   /// Returns a user-friendly format of these coordinates.
   String get prettyPrint => "(${x.toStringAsFixed(2)}, ${y.toStringAsFixed(2)}, ${z.toStringAsFixed(2)})";

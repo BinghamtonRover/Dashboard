@@ -51,20 +51,20 @@ class PositionMetrics extends Metrics<RoverPosition> {
 		MetricLine("  Altitude: ${data.gps.altitude.toStringAsFixed(2)} m"),
     MetricLine("  RTK Mode: ${getRTKString(data.gps.rtkMode)}"),
 		MetricLine("Orientation:",),
-		MetricLine("  X: ${data.orientation.x.toStringAsFixed(2)}°", severity: getRotationSeverity(data.orientation.x)),
-		MetricLine("  Y: ${data.orientation.y.toStringAsFixed(2)}°", severity: getRotationSeverity(data.orientation.y)),
-		MetricLine("  Z: ${data.orientation.z.toStringAsFixed(2)}°"),
+		MetricLine("  Pitch: ${pitch.toStringAsFixed(2)}°", severity: getRotationSeverity(pitch)),
+		MetricLine("  Roll: ${roll.toStringAsFixed(2)}°", severity: getRotationSeverity(roll)),
+		MetricLine("  Yaw: ${angle.toStringAsFixed(2)}°"),
     MetricLine("Distance: ${data.gps.distanceTo(baseStation).toStringAsFixed(2)} m",),
 	];
 
   /// The angle to orient the rover on a front view map
-  double get roll => data.orientation.y;
+  double get roll => data.orientation.roll;
 
   /// The angle to orient the rover on a side view map
-  double get pitch => data.orientation.x;
+  double get pitch => data.orientation.pitch;
 
   /// The angle to orient the rover on the top-down map.
-	double get angle => data.orientation.z;
+	double get angle => data.orientation.yaw;
 
   @override
   Version parseVersion(RoverPosition message) => message.version;

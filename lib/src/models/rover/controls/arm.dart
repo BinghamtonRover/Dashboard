@@ -10,7 +10,7 @@ class ArmControls extends RoverControls {
 	/// The coordinates of the gripper.
 	///
 	/// The arm uses IK to move all the joints to stay at these coordinates.
-	Coordinates ik = Coordinates(x: 0.5, y: 0.5, z: 0.5);
+	Translation3d ik = Translation3d(x: 0.5, y: 0.5, z: 0.5);
 
 	/// Tracks whether the A button is pressed, so the action is only done once.
 	bool isAPressed = false;

@@ -48,9 +48,9 @@ class ArmIkControls extends RoverControls {
       ikPosition.translation.z +=
           normalZMovement * models.settings.arm.ikIncrement;
 
-      ikPosition.rotation.x +=
+      ikPosition.rotation.pitch +=
           state.normalRightJoystickY * models.settings.arm.lift;
-      ikPosition.rotation.y +=
+      ikPosition.rotation.roll+=
           state.normalRightJoystickX * models.settings.arm.wristRoll;
     }
 
