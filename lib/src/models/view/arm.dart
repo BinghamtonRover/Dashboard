@@ -7,7 +7,7 @@ import "package:rover_dashboard/models.dart";
 
 /// View model for the arm inverse kinematics page
 ///
-/// This view model gets its data from [RoverMetrics.arm] and [RoverMetrics.position].
+/// This view model gets its data from [RoverMetrics.arm] and [RoverMetrics.gripper].
 class ArmModel with ChangeNotifier {
   /// The [Metrics] model for arm data.
   ArmData get arm => models.rover.metrics.arm.data;
@@ -35,7 +35,9 @@ class ArmModel with ChangeNotifier {
 
   void _update([_]) {
     if (desiredLaserState != gripper.laserState.toBool()) {
-      final command = GripperCommand(laserState: desiredLaserState ? BoolState.ON : BoolState.OFF);
+      final command = GripperCommand(
+        laserState: desiredLaserState ? BoolState.ON : BoolState.OFF,
+      );
       models.messages.sendMessage(command);
     }
     notifyListeners();
@@ -44,16 +46,20 @@ class ArmModel with ChangeNotifier {
   /// Sets the laser on or off
   void setLaser({required bool laser}) {
     desiredLaserState = laser;
-    final command = GripperCommand(laserState: desiredLaserState ? BoolState.ON : BoolState.OFF);
+    final command = GripperCommand(
+      laserState: desiredLaserState ? BoolState.ON : BoolState.OFF,
+    );
     models.messages.sendMessage(command);
   }
 
   /// The angles of the arm.
   ArmAngles get angles => (
-        shoulder: arm.shoulder.currentAngle,
-        elbow: arm.elbow.currentAngle,
-        lift: gripper.lift.currentAngle,
-      );
+    shoulder: arm.shoulder.currentAngle,
+    elbow: arm.elbow.currentAngle,
+    lift: gripper.lift.currentAngle,
+    // TODO(SELESTER11): use arm.jointAngles.wristPitchSingle once burt_network is updated
+    wristPitch: 0.0,
+  );
 
   /// The position of the mouse, if it's in the box.
   Offset? mousePosition;
@@ -79,20 +85,29 @@ class ArmModel with ChangeNotifier {
     final shoulderCommand = MotorCommand(angle: ikAngles!.shoulder);
     final elbowCommand = MotorCommand(angle: ikAngles!.elbow);
     final liftCommand = MotorCommand(angle: ikAngles!.lift);
-    final armCommand = ArmCommand(shoulder: shoulderCommand, elbow: elbowCommand);
+    final armCommand = ArmCommand(
+      shoulder: shoulderCommand,
+      elbow: elbowCommand,
+    );
     final gripperCommand = GripperCommand(lift: liftCommand);
     models.messages.sendMessage(armCommand);
     models.messages.sendMessage(gripperCommand);
   }
 }
 
-/// The three angles of the arm joints: shoulder, elbow, and lift. Swivel is not included.
-typedef ArmAngles = ({double shoulder, double elbow, double lift});
+/// The angles of the arm joints: shoulder, elbow, lift, and wrist pitch. Swivel is not included.
+typedef ArmAngles = ({
+  double shoulder,
+  double elbow,
+  double lift,
+  double wristPitch,
+});
 
 /// The coordinates of each joint of the arm.
 typedef ArmCoordinates = ({
   Offset shoulder,
   Offset elbow,
   Offset wrist,
+  Offset wristTip,
   Offset fingers,
 });
