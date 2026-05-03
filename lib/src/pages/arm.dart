@@ -1,8 +1,8 @@
+import "package:rover_dashboard/src/data/protobuf.dart";
 import "dart:math";
 
 import "package:flutter/material.dart";
 
-import "package:rover_dashboard/src/data/protobuf.dart";
 import "package:rover_dashboard/src/models/view/arm.dart";
 import "package:rover_dashboard/widgets.dart";
 
@@ -27,14 +27,20 @@ class ArmPainterTop extends CustomPainter {
   Offset getShoulder(Size size) {
     const shoulderX = 0.0;
     const shoulderY = 0.0;
-    return Offset(toAbsolute(shoulderX) + size.width / 2, -toAbsolute(shoulderY) + size.height / 2);
+    return Offset(
+      toAbsolute(shoulderX) + size.width / 2,
+      -toAbsolute(shoulderY) + size.height / 2,
+    );
   }
 
   /// Gets the location of the elbow joint.
   Offset getElbow(Size size) {
     final elbowX = cos(swivelAngle + pi / 2);
     final elbowY = sin(swivelAngle + pi / 2);
-    return Offset(toAbsolute(elbowX) + size.width / 2, -toAbsolute(elbowY) + size.height / 2);
+    return Offset(
+      toAbsolute(elbowX) + size.width / 2,
+      -toAbsolute(elbowY) + size.height / 2,
+    );
   }
 
   @override
@@ -76,13 +82,16 @@ class ArmPainterSide extends CustomPainter {
   double toAbsolute(double relative) => relative;
 
   /// The relative length of the shoulder-elbow segment.
-  static const shoulderLength = 530/530;
+  static const shoulderLength = 530 / 530;
 
   /// The relative length of the elbow-wrist segment.
-  static const elbowLength = 440/530;
+  static const elbowLength = 440 / 530;
 
   /// The relative length of the gripper.
-  static const gripperLength = 310/530;
+  static const gripperLength = 310 / 530;
+
+  /// The relative length of the wrist pitch segment. Needs lab calibration.
+  static const wristPitchLength = 150 / 530;
 
   /// The total relative length of the arm.
   static const totalArmLength = shoulderLength + elbowLength;
@@ -94,22 +103,42 @@ class ArmPainterSide extends CustomPainter {
     const shoulderY = 0.0;
     final a2 = angles.shoulder - pi + angles.elbow;
     final a3 = a2 + angles.lift;
+    final a4 = a3 + angles.wristPitch;
     final length = min(size.width / 4, size.height / 2);
     final elbowX = length * shoulderLength * cos(angles.shoulder);
     final elbowY = length * shoulderLength * sin(angles.shoulder);
     final wristX = length * elbowLength * cos(a2) + elbowX;
     final wristY = length * elbowLength * sin(a2) + elbowY;
-    final gripperX = length * gripperLength * cos(a3) + wristX;
-    final gripperY = length * gripperLength * sin(a3) + wristY;
+    final wristTipX = length * gripperLength * cos(a3) + wristX;
+    final wristTipY = length * gripperLength * sin(a3) + wristY;
+    final fingersX = length * wristPitchLength * cos(a4) + wristTipX;
+    final fingersY = length * wristPitchLength * sin(a4) + wristTipY;
 
-    final shoulderJoint = Offset(toAbsolute(shoulderX) + size.width / 2, -toAbsolute(shoulderY) + size.height);
-    final elbowJoint = Offset(toAbsolute(elbowX) + size.width / 2, -toAbsolute(elbowY) + size.height);
-    final wristJoint = Offset(toAbsolute(wristX) + size.width / 2, -toAbsolute(wristY) + size.height);
-    final gripLocation = Offset(toAbsolute(gripperX) + size.width / 2, -toAbsolute(gripperY) + size.height);
+    final shoulderJoint = Offset(
+      toAbsolute(shoulderX) + size.width / 2,
+      -toAbsolute(shoulderY) + size.height,
+    );
+    final elbowJoint = Offset(
+      toAbsolute(elbowX) + size.width / 2,
+      -toAbsolute(elbowY) + size.height,
+    );
+    final wristJoint = Offset(
+      toAbsolute(wristX) + size.width / 2,
+      -toAbsolute(wristY) + size.height,
+    );
+    final wristTipJoint = Offset(
+      toAbsolute(wristTipX) + size.width / 2,
+      -toAbsolute(wristTipY) + size.height,
+    );
+    final gripLocation = Offset(
+      toAbsolute(fingersX) + size.width / 2,
+      -toAbsolute(fingersY) + size.height,
+    );
     return (
       shoulder: shoulderJoint,
       elbow: elbowJoint,
       wrist: wristJoint,
+      wristTip: wristTipJoint,
       fingers: gripLocation,
     );
   }
@@ -135,8 +164,14 @@ class ArmPainterSide extends CustomPainter {
         ..strokeWidth = 2;
       final radius1 = length * (shoulderLength + elbowLength);
       final radius2 = length * (shoulderLength - elbowLength);
-      final rect1 = Rect.fromCircle(center: coordinates.shoulder, radius: radius1);
-      final rect2 = Rect.fromCircle(center: coordinates.shoulder, radius: radius2);
+      final rect1 = Rect.fromCircle(
+        center: coordinates.shoulder,
+        radius: radius1,
+      );
+      final rect2 = Rect.fromCircle(
+        center: coordinates.shoulder,
+        radius: radius2,
+      );
       canvas.drawArc(rect1, 0, -pi, false, radiusPaint);
       canvas.drawArc(rect2, 0, -pi, false, radiusPaint);
     }
@@ -169,23 +204,26 @@ class ArmPainterSide extends CustomPainter {
       shoulder: shoulder,
       elbow: elbow,
       lift: -1 * (shoulder + elbow) + pi,
+      wristPitch: model.angles.wristPitch,
     );
   }
 
   /// Paints the arm given its joint positions.
-  void paintArm(Canvas canvas, Size size, ArmCoordinates coordinates, {double opacity = 1}) {
+  void paintArm(
+    Canvas canvas,
+    Size size,
+    ArmCoordinates coordinates, {
+    double opacity = 1,
+  }) {
     final points = [
       coordinates.shoulder,
       coordinates.elbow,
       coordinates.wrist,
+      coordinates.wristTip,
       coordinates.fingers,
     ];
 
-    final lineColors = [
-      Colors.red,
-      Colors.green,
-      Colors.blue,
-    ];
+    final lineColors = [Colors.red, Colors.green, Colors.blue, Colors.purple];
 
     final firstCirclePaint = Paint()
       ..color = lineColors[0].withValues(alpha: opacity)
@@ -229,7 +267,8 @@ class ArmPage extends ReactiveWidget<ArmModel> {
   Widget build(BuildContext context, ArmModel model) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      PageHeader(  // The header at the top
+      PageHeader(
+        // The header at the top
         pageIndex: index,
         children: [
           const SizedBox(width: 8),
