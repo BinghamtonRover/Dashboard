@@ -138,6 +138,10 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
             model: model.network.tankSocket,
             editPort: false,
           ),
+          SocketEditor(
+            name: "Timesync destination",
+            model: model.network.timesyncSocket,
+          ),
           NumberEditor(
             name: "Heartbeats per second",
             model: model.network.connectionTimeout,

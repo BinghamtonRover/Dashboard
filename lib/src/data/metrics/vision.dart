@@ -49,9 +49,9 @@ class VisionMetrics extends Metrics<VideoData> {
           yield MetricLine("      x: ${bestPose.translation.x.toStringAsFixed(3)}m");
           yield MetricLine("      y: ${bestPose.translation.y.toStringAsFixed(3)}m");
           yield MetricLine("      z: ${bestPose.translation.z.toStringAsFixed(3)}m");
-          yield MetricLine("      roll: ${bestPose.rotation.x.toStringAsFixed(2)}°");
-          yield MetricLine("      pitch: ${bestPose.rotation.y.toStringAsFixed(2)}°");
-          yield MetricLine("      yaw: ${bestPose.rotation.z.toStringAsFixed(2)}°");
+          yield MetricLine("      roll: ${bestPose.rotation.roll.toStringAsFixed(2)}°");
+          yield MetricLine("      pitch: ${bestPose.rotation.pitch.toStringAsFixed(2)}°");
+          yield MetricLine("      yaw: ${bestPose.rotation.yaw.toStringAsFixed(2)}°");
           yield MetricLine("    Best Reprojection Error: ${target.bestPnpResult.reprojectionError.toStringAsFixed(3)}");
         }
       }),

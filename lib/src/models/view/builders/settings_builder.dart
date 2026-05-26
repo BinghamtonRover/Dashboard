@@ -38,6 +38,9 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 	/// The view model representing the [SocketInfo] for the autonomy program.
 	final SocketBuilder autonomySocket;
 
+	/// The view model representing the [SocketInfo] for the timesync server.
+	final SocketBuilder timesyncSocket;
+
 	/// The view model representing the [SocketInfo] for the tank.
 	///
 	/// Since the tank runs multiple programs, the port is discarded and only the address is used.
@@ -50,13 +53,20 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
   final NumberBuilder<double> connectionTimeout;
 
 	@override
-	List<SocketBuilder> get otherBuilders => [dataSocket, videoSocket, autonomySocket, tankSocket];
+  List<SocketBuilder> get otherBuilders => [
+    dataSocket,
+    videoSocket,
+    autonomySocket,
+    timesyncSocket,
+    tankSocket,
+  ];
 
 	/// Creates the view model based on the current [Settings].
 	NetworkSettingsBuilder(NetworkSettings initial) :
 		dataSocket = SocketBuilder(initial.subsystemsSocket),
 		videoSocket = SocketBuilder(initial.videoSocket),
 		autonomySocket = SocketBuilder(initial.autonomySocket),
+    timesyncSocket = SocketBuilder(initial.timesyncSocket),
 		tankSocket = SocketBuilder(initial.tankSocket),
     baseSocket = SocketBuilder(initial.baseSocket),
     connectionTimeout = NumberBuilder<double>(initial.connectionTimeout, min: 0);
@@ -66,13 +76,15 @@ class NetworkSettingsBuilder extends ValueBuilder<NetworkSettings> {
 		&& videoSocket.isValid
 		&& autonomySocket.isValid
 		&& tankSocket.isValid
-    && baseSocket.isValid;
+    && baseSocket.isValid
+    && timesyncSocket.isValid;
 
 	@override
 	NetworkSettings get value => NetworkSettings(
 		subsystemsSocket: dataSocket.value,
 		videoSocket: videoSocket.value,
 		autonomySocket: autonomySocket.value,
+    timesyncSocket: timesyncSocket.value,
 		tankSocket: tankSocket.value,
     baseSocket: baseSocket.value,
 		connectionTimeout: connectionTimeout.value,
