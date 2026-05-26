@@ -158,7 +158,7 @@ jobs:
       - name: Build MSIX
         run: dart run msix:create
       
-      - name: Rename msix
+      - name: Rename MSIX
         working-directory: build/windows/x64/runner/Release
         run: Rename-Item "dashboard.msix" "dashboard_msix.msix"
 
@@ -310,22 +310,21 @@ jobs:
 
       - name: Download Artifacts
         uses: actions/download-artifact@v8
+        with:
+          path: artifacts
+          skip-decompress: true
 
       - name: Organize files
+        working-directory: artifacts
         run: |
           ls -al
           mv rover-dashboard-setup.exe dashboard_windows_installer.exe
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
-          files: |
-            dashboard_msix.msix
-            dashboard_windows_portable.zip
-            dashboard_windows_installer.exe
-            dashboard_macos.dmg
-            dashboard_linux.tar.gz
-            trust_windows.bat
+          working-directory: artifacts
+          files: '*'
           name: Dashboard Draft Release ${{ env.APP_VERSION }}
           tag_name: v${{ env.APP_VERSION }}
           generate_release_notes: true
