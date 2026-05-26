@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Clone repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Clone repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -66,20 +66,23 @@ jobs:
         run: dart run flutter_launcher_icons
 
       - name: Build APK
-        run: flutter build apk
+        run: flutter build 
+      
+      - name: Rename APK
+        run: mv build/app/outputs/apk/release/app-release.apk build/app/outputs/apk/release/dashboard_android.apk
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: dashboard_android
-          path: build/app/outputs/apk/release/app-release.apk
+          archive: false
+          path: build/app/outputs/apk/release/dashboard_android.apk
 
   build-windows:
     name: Build Windows
     runs-on: windows-2025
     steps:
       - name: Clone repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
@@ -105,9 +108,9 @@ jobs:
         run: Compress-Archive -Path * -DestinationPath ${{ github.workspace }}/dashboard_windows_portable.zip
 
       - name: Upload windows portable
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: dashboard_windows_portable
+          archive: false
           path: dashboard_windows_portable.zip
 
       - name: Build windows installer
@@ -116,9 +119,9 @@ jobs:
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" windows_installer_script.iss
 
       - name: Upload windows installer
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: dashboard_windows_installer
+          archive: false
           path: build/windows/x64/runner/installer/rover-dashboard-setup.exe
           if-no-files-found: error
 
@@ -129,7 +132,7 @@ jobs:
       windows_certificate: ${{ secrets.WINDOWS_CERTIFICATE }}
     steps:
       - name: Clone repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Load certificate
         run: |
@@ -154,18 +157,22 @@ jobs:
 
       - name: Build MSIX
         run: dart run msix:create
+      
+      - name: Rename msix
+        working-directory: build/windows/x64/runner/Release
+        run: Rename-Item "dashboard.msix" "dashboard_msix.msix"
 
       - name: Upload MSIX
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: dashboard_msix
-          path: build/windows/x64/runner/Release/dashboard.msix
+          archive: false
+          path: build/windows/x64/runner/Release/dashboard_msix.msix
           if-no-files-found: error
 
       - name: Upload MSIX
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: trust_msix
+          archive: false
           path: windows/trust_windows.bat
           if-no-files-found: error
 
@@ -174,7 +181,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Clone repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
@@ -205,9 +212,9 @@ jobs:
           src_dir: build/macos/Build/Products/Release/rover_dashboard.app
 
       - name: Upload DMG
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: dashboard_macos
+          archive: false
           path: dashboard_macos.dmg
           if-no-files-found: error
 
@@ -216,7 +223,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Clone repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
@@ -247,9 +254,9 @@ jobs:
         run: tar -czf ${{ github.workspace }}/dashboard_linux.tar.gz *
 
       - name: Upload linux executable
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: dashboard_linux
+          archive: false
           path: dashboard_linux.tar.gz
           if-no-files-found: error
 
@@ -258,7 +265,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Clone repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
@@ -281,9 +288,9 @@ jobs:
         run: tar -czf ${{ github.workspace }}/mini_dashboard_pi.tar.gz *
 
       - name: Upload mini dashboard
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: mini_dashboard_pi
+          archive: false
           path: mini_dashboard_pi.tar.gz
           if-no-files-found: error
 
@@ -294,47 +301,19 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.publish-release }}
     steps:
       - name: Clone repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Get version
         run: |
           APP_VERSION=$(yq -r .version pubspec.yaml)
           echo "APP_VERSION=$APP_VERSION" >> $GITHUB_ENV
 
-      - name: Download Windows Portable
-        uses: actions/download-artifact@v4
-        with:
-          name: dashboard_windows_portable
-
-      - name: Download Windows Installer
-        uses: actions/download-artifact@v4
-        with:
-          name: dashboard_windows_installer
-
-      - name: Download Windows MSIX
-        uses: actions/download-artifact@v4
-        with:
-          name: dashboard_msix
-
-      - name: Download Windows trust script
-        uses: actions/download-artifact@v4
-        with:
-          name: trust_msix
-
-      - name: Download MacOS release
-        uses: actions/download-artifact@v4
-        with:
-          name: dashboard_macos
-
-      - name: Download Linux release
-        uses: actions/download-artifact@v4
-        with:
-          name: dashboard_linux
+      - name: Download Artifacts
+        uses: actions/download-artifact@v8
 
       - name: Organize files
         run: |
           ls -al
-          mv dashboard.msix dashboard_msix.msix
           mv rover-dashboard-setup.exe dashboard_windows_installer.exe
 
       - name: Create Release
