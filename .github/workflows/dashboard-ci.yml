@@ -337,7 +337,7 @@ jobs:
             dashboard_windows_portable.zip
             dashboard_windows_installer.exe
             dashboard_macos.dmg
-            dashboard_linux.tar
+            dashboard_linux.tar.gz
             trust_windows.bat
           name: Dashboard Draft Release ${{ github.ref_name }}
           generate_release_notes: true
