@@ -298,7 +298,7 @@ jobs:
 
       - name: Get version
         run: |
-          APP_VERSION=$(yq -r .version ../../pubspec.yaml)
+          APP_VERSION=$(yq -r .version pubspec.yaml)
           echo "APP_VERSION=$APP_VERSION" >> $GITHUB_ENV
 
       - name: Download Windows Portable
