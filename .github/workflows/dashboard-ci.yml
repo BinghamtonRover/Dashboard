@@ -66,16 +66,16 @@ jobs:
         run: dart run flutter_launcher_icons
 
       - name: Build APK
-        run: flutter build 
+        run: flutter build apk
       
       - name: Rename APK
-        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/dashboard_android.apk
+        run: mv build/app/outputs/apk/release/app-release.apk build/app/outputs/apk/release/dashboard_android.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v7
         with:
           archive: false
-          path: build/app/outputs/flutter-apk/dashboard_android.apk
+          path: build/app/outputs/apk/release/dashboard_android.apk
 
   build-windows:
     name: Build Windows
