@@ -47,7 +47,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: "zulu"
           java-version: "17"
@@ -206,7 +206,7 @@ jobs:
         run: flutter build macos
 
       - name: Create macOS DMG
-        uses: L-Super/create-dmg-actions@v1.0.3
+        uses: L-Super/create-dmg-actions@v1.1.0
         with:
           dmg_name: dashboard_macos
           src_dir: build/macos/Build/Products/Release/rover_dashboard.app
@@ -305,7 +305,7 @@ jobs:
 
       - name: Get version
         run: |
-          APP_VERSION=$(yq -r .version pubspec.yaml)
+          APP_VERSION=$(yq -r .version pubspec.yaml | cut -d '+' -f 1)
           echo "APP_VERSION=$APP_VERSION" >> $GITHUB_ENV
 
       - name: Download Artifacts
