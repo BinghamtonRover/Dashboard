@@ -325,7 +325,7 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           files: artifacts/*
-          name: Dashboard Draft Release ${{ env.APP_VERSION }}
+          name: v${{ env.APP_VERSION }}
           tag_name: v${{ env.APP_VERSION }}
           generate_release_notes: true
           fail_on_unmatched_files: true
