@@ -100,12 +100,11 @@ class _VoltageWarningState extends State<VoltageWarning>
   late AnimationController controller;
   late Animation<Color?> colorAnimation;
 
+  bool _isShowing = false;
+  bool _isCritical = false;
+
   static const double warningVoltage = 21;
   static const double criticalVoltage = 20;
-
-  bool get isLow => widget.model.driveMetrics.batteryVoltage < warningVoltage;
-  bool get isCritical =>
-      widget.model.driveMetrics.batteryVoltage < criticalVoltage;
 
   @override
   void initState() {
@@ -120,7 +119,7 @@ class _VoltageWarningState extends State<VoltageWarning>
   }
 
   void updateAnimation() {
-    if (isCritical) {
+    if (_isCritical) {
       colorAnimation = ColorTween(
         begin: Colors.red.shade900,
         end: Colors.red.shade700,
@@ -136,7 +135,29 @@ class _VoltageWarningState extends State<VoltageWarning>
   void checkVoltage() {
     if (!mounted) return;
 
-    if (!widget.model.isConnected || !isLow) {
+    final voltage = widget.model.driveMetrics.batteryVoltage;
+
+    // Turn on warning when below threshold
+    if (voltage < warningVoltage && voltage > 0) {
+      _isShowing = true;
+    }
+
+    // Turn off warning when 0.5V above threshold
+    if (voltage > warningVoltage + 0.5 || voltage == 0) {
+      _isShowing = false;
+    }
+
+    // Turn on critical when below threshold
+    if (voltage < criticalVoltage && voltage > 0) {
+      _isCritical = true;
+    }
+
+    // Turn off critical when 0.5V above threshold
+    if (voltage > criticalVoltage + 0.5) {
+      _isCritical = false;
+    }
+
+    if (!widget.model.isConnected || !_isShowing) {
       controller.stop();
       controller.reset();
       return;
@@ -157,7 +178,7 @@ class _VoltageWarningState extends State<VoltageWarning>
   }
 
   String getWarningMessage(double voltage) {
-    if (voltage < criticalVoltage) {
+    if (_isCritical) {
       return "Battery critical: ${voltage.toStringAsFixed(2)} V - Change battery immediately";
     } else {
       return "Battery low: ${voltage.toStringAsFixed(2)} V - Change battery soon";
@@ -167,14 +188,14 @@ class _VoltageWarningState extends State<VoltageWarning>
   @override
   Widget build(BuildContext context) {
     final voltage = widget.model.driveMetrics.batteryVoltage;
-    if (!isLow || voltage == 0) return const SizedBox.shrink();
+    if (!_isShowing) return const SizedBox.shrink();
 
     return AnimatedBuilder(
       animation: controller,
       builder: (context, child) => Card(
         color:
             colorAnimation.value ??
-            (isCritical ? Colors.red.shade900 : Colors.yellow.shade800),
+            (_isCritical ? Colors.red.shade900 : Colors.yellow.shade800),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Row(

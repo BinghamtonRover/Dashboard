@@ -62,7 +62,6 @@ class RoverMetrics extends Model {
     ScienceCommand().messageName: science,
     DriveCommand().messageName: drive,
     ArmCommand().messageName: arm,
-    GripperCommand().messageName: gripper,
     SubsystemsCommand().messageName: subsystems,
     BaseStationCommand().messageName: baseStation,
   };

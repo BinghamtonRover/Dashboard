@@ -2,46 +2,55 @@ import "package:flutter/material.dart";
 import "package:rover_dashboard/data.dart";
 
 /// Metrics about the gripper on the HREI subsystem.
-class GripperMetrics extends Metrics<GripperData> {
+class GripperMetrics extends Metrics<ArmData> {
   /// Metrics about the gripper.
-  GripperMetrics() : super(GripperData());
+  GripperMetrics() : super(ArmData());
 
   @override
   String name = "Gripper";
 
   @override
-  Version supportedVersion = Version(major: 1);
+  Version supportedVersion = Version();
 
   @override
   IconData icon = Icons.compress;
 
-	/// Returns a description of a [MotorData].
+  /// Returns a description of a [MotorData].
   List<MetricLine> getMotorData(MotorData motor) => [
-    MetricLine("  Is moving? ${motor.isMoving.displayName}", severity: motor.isMoving.toBool() ? Severity.info : null),
-    MetricLine("  Limit? ${motor.isLimitSwitchPressed.displayName}", severity: motor.isLimitSwitchPressed.toBool() ? Severity.warning : null),
+    MetricLine(
+      "  Is moving? ${motor.isMoving.displayName}",
+      severity: motor.isMoving.toBool() ? Severity.info : null,
+    ),
+    MetricLine(
+      "  Limit? ${motor.isLimitSwitchPressed.displayName}",
+      severity: motor.isLimitSwitchPressed.toBool() ? Severity.warning : null,
+    ),
     MetricLine("  Direction: ${motor.direction.humanName}"),
     MetricLine("  Steps: ${motor.currentStep} --> ${motor.targetStep}"),
     MetricLine("  Angle: ${motor.currentAngle.toDegrees() % 360} degrees"),
   ];
 
-	@override
+  @override
   List<MetricLine> get allMetrics => [
     MetricLine("Camera Angle: ${data.servoAngle} degrees"),
-    MetricLine("Laser: ${data.laserState.displayName}", severity: data.laserState.toBool() ? Severity.critical : null),
-    MetricLine("------------------------------",),
+    MetricLine(
+      "Laser: ${data.laserState.displayName}",
+      severity: data.laserState.toBool() ? Severity.critical : null,
+    ),
+    MetricLine("------------------------------"),
     MetricLine("Lift:"),
-    ...getMotorData(data.lift,),
-    MetricLine("------------------------------",),
+    ...getMotorData(data.lift),
+    MetricLine("------------------------------"),
     MetricLine("Rotate"),
     ...getMotorData(data.rotate),
-    MetricLine("------------------------------",),
+    MetricLine("------------------------------"),
     MetricLine("Pinch:"),
     ...getMotorData(data.pinch),
   ];
 
   @override
-  Version parseVersion(GripperData message) => message.version;
+  Version parseVersion(ArmData message) => message.version;
 
   @override
-  Message get versionCommand => GripperCommand(version: supportedVersion);
+  Message get versionCommand => ArmCommand(version: supportedVersion);
 }

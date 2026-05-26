@@ -26,14 +26,25 @@ class BaseStationMetrics extends Metrics<BaseStationData> {
   List<MetricLine> get allMetrics => [
     MetricLine("Control Mode: ${_controlModeName(data.mode)}"),
     MetricLine("Antenna:"),
+    MetricLine("  Swivel:"),
     MetricLine(
-      "  Is Moving: ${data.antenna.swivel.isMoving.displayName}",
+      "    Is Moving: ${data.antenna.swivel.isMoving.displayName}",
       severity: data.antenna.swivel.isMoving.toBool() ? Severity.info : null,
     ),
-		MetricLine("  Direction: ${data.antenna.swivel.direction.humanName}"),
-		MetricLine("  Steps: ${data.antenna.swivel.currentStep} --> ${data.antenna.swivel.targetStep}"),
-		MetricLine("  Angle: ${data.antenna.swivel.currentAngle.toDegrees() % 360}°"),
-		MetricLine("  Target Angle: ${data.antenna.swivel.targetAngle.toDegrees() % 360}°"),    
+		MetricLine("    Direction: ${data.antenna.swivel.direction.humanName}"),
+		MetricLine("    Steps: ${data.antenna.swivel.currentStep} --> ${data.antenna.swivel.targetStep}"),
+		MetricLine("    Angle: ${data.antenna.swivel.currentAngle.toDegrees() % 360}°"),
+		MetricLine("    Target Angle: ${data.antenna.swivel.targetAngle.toDegrees() % 360}°"),    
+
+    MetricLine("  Pitch:"),
+    MetricLine(
+      "    Is Moving: ${data.antenna.pitch.isMoving.displayName}",
+      severity: data.antenna.pitch.isMoving.toBool() ? Severity.info : null,
+    ),
+		MetricLine("    Direction: ${data.antenna.pitch.direction.humanName}"),
+		MetricLine("    Steps: ${data.antenna.pitch.currentStep} --> ${data.antenna.pitch.targetStep}"),
+		MetricLine("    Angle: ${data.antenna.pitch.currentAngle.toDegrees() % 360}°"),
+		MetricLine("    Target Angle: ${data.antenna.pitch.targetAngle.toDegrees() % 360}°"),    
   ];
 
   @override
