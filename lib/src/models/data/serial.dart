@@ -37,7 +37,25 @@ class SerialModel extends Model {
     	models.home.setMessage(severity: Severity.error, text: "Could not connect to $port");
     	return;
     }
-    device.messages.listen(models.messages.addMessage);
+    device.messages.listen((wrapper) {
+      if (wrapper.name == ControlData().messageName) {
+        final controlData = ControlData.fromBuffer(wrapper.data);
+        if (controlData.hasDrive()) {
+          models.messages.addMessage(
+            controlData.drive.wrap(wrapper.timestamp.toDateTime()),
+          );
+        }
+
+        if (controlData.hasRelays()) {
+          models.messages.addMessage(
+            controlData.relays.wrap(wrapper.timestamp.toDateTime()),
+          );
+        }
+
+        return;
+      }
+      models.messages.addMessage(wrapper);
+    });
     models.home.setMessage(severity: Severity.info, text: "Connected to $port");
     devices[port] = device;
     notifyListeners();

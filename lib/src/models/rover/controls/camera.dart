@@ -35,7 +35,7 @@ class CameraControls extends RoverControls {
     DriveCommand(frontTilt: frontTilt),
     DriveCommand(rearSwivel: rearSwivel),
     DriveCommand(rearTilt: rearTilt),
-    GripperCommand(servoAngle: armTilt.round()),
+    ArmCommand(servoAngle: armTilt.round()),
 	];
 
   @override

@@ -62,7 +62,6 @@ class RoverMetrics extends Model {
     ScienceCommand().messageName: science,
     DriveCommand().messageName: drive,
     ArmCommand().messageName: arm,
-    GripperCommand().messageName: gripper,
     SubsystemsCommand().messageName: subsystems,
     BaseStationCommand().messageName: baseStation,
   };
@@ -90,8 +89,8 @@ class RoverMetrics extends Model {
       callback: arm.update,
     );
     models.messages.stream.onMessage(
-      name: GripperData().messageName,
-      constructor: GripperData.fromBuffer,
+      name: ArmData().messageName,
+      constructor: ArmData.fromBuffer,
       callback: gripper.update,
     );
     models.messages.stream.onMessage(

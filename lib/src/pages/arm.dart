@@ -244,7 +244,7 @@ class ArmPage extends ReactiveWidget<ArmModel> {
             onChanged: (value) => model.setLaser(laser: value),
           ),
           const SizedBox(width: 5),
-          if (model.desiredLaserState == model.gripper.laserState.toBool())
+          if (model.desiredLaserState == model.arm.laserState.toBool())
             const Tooltip(
               message: "The laser has been updated",
               child: Icon(Icons.check, color: Colors.green),

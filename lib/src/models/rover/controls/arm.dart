@@ -35,60 +35,79 @@ class ArmControls extends RoverControls {
 		if (!state.buttonY) isYPressed = false;
 	}
 
-	@override
-	List<Message> parseInputs(GamepadState state) => [
+  @override
+  List<Message> parseInputs(GamepadState state) => [
+    // Base command
+    ArmCommand(usingIk: BoolState.NO),
+
     // Manual control
     if (state.normalRightX.abs() > state.normalRightY.abs() && state.normalRightX != 0)
       ArmCommand(swivel: MotorCommand(moveRadians: state.normalRightX * settings.swivel)),
     if (state.normalRightY.abs() > state.normalRightX.abs() && state.normalRightY != 0)
       ArmCommand(shoulder: MotorCommand(moveRadians: state.normalRightY * settings.shoulder)),
     if (state.normalLeftY != 0) ArmCommand(elbow: MotorCommand(moveRadians: state.normalLeftY * settings.elbow)),
-    // The bumpers should be pseudo-IK: Move the shoulder and elbow in sync.
-    if (state.normalShoulder != 0) ArmCommand(
-      shoulder: MotorCommand(moveRadians: state.normalShoulder * settings.shoulder * -1),
-      elbow: MotorCommand(moveRadians: state.normalShoulder * settings.elbow),
-    ),
 
-		// Gripper
-		if (state.normalDpadY != 0) GripperCommand(lift: MotorCommand(moveRadians: state.normalDpadY * settings.lift)),
-		if (state.normalDpadX != 0) GripperCommand(rotate: MotorCommand(moveRadians: state.normalDpadX * settings.rotate)),
-		if (state.normalTriggers != 0) GripperCommand(pinch: MotorCommand(moveRadians: state.normalTriggers * settings.pinch)),
+    // Arm band roll
+    if (state.normalShoulder != 0)
+      ArmCommand(
+        roll: MotorCommand(
+          moveRadians: state.normalShoulder * settings.armRoll,
+        ),
+      ),
+
+    // Wrist
+		if (state.normalDpadY != 0)
+      ArmCommand(
+        wrist: WristCommand(
+          pitch: MotorCommand(moveRadians: state.normalDpadY * settings.lift),
+        ),
+      ),
+    if (state.normalDpadX != 0)
+      ArmCommand(
+        wrist: WristCommand(
+          roll: MotorCommand(moveRadians: state.normalDpadX * settings.wristRoll),
+        ),
+      ),
+    if (state.normalTriggers != 0)
+      ArmCommand(
+        pinch: MotorCommand(moveRadians: state.normalTriggers * settings.pinch),
+      ),
 
 		// Custom actions
-		if (state.buttonA && !isAPressed) () { isAPressed = true; return GripperCommand(open: true); }(),
-		if (state.buttonB && !isBPressed) () { isBPressed = true; return GripperCommand(close: true); }(),
+		if (state.buttonA && !isAPressed) () { isAPressed = true; return ArmCommand(open: true); }(),
+		if (state.buttonB && !isBPressed) () { isBPressed = true; return ArmCommand(close: true); }(),
 		if (state.buttonX && !isXPressed) () { isXPressed = true; return ArmCommand(jab: true); }(),
-		if (state.buttonY && !isYPressed) () { isYPressed = true; return GripperCommand(spin: true); }(),
+		if (state.buttonY && !isYPressed) () { isYPressed = true; return ArmCommand(spin: true); }(),
 
 		// General commands
-		if (state.buttonBack) ...[ArmCommand(stop: true), GripperCommand(stop: true)],
-		if (state.buttonStart) ...[ArmCommand(calibrate: true), GripperCommand(calibrate: true)],
+		if (state.buttonBack) ...[ArmCommand(stop: true), ArmCommand(stop: true)],
+		if (state.buttonStart) ...[ArmCommand(calibrate: true), ArmCommand(calibrate: true)],
 	];
 
-	@override
-	List<Message> get onDispose => [ ArmCommand(stop: true), GripperCommand(stop: true) ];
+  @override
+  List<Message> get onDispose => [ ArmCommand(stop: true), ArmCommand(stop: true) ];
 
-	@override
-	Map<String, String> get buttonMapping => {
+  @override
+  Map<String, String> get buttonMapping => {
     // Manual control
     "Swivel": "Right joystick (horizontal)",
     "Shoulder": "Right joystick (vertical)",
     "Elbow": "Left stick (vertical)",
-    "Pseudo-IK": "Bumpers",
 
-		// Gripper
-		"Lift gripper": "D-pad up/down",
-		"Rotate gripper": "D-pad left/right",
-		"Pinch": "Triggers",
+    // Wrist
+    "Arm Roll": "Bumpers",
+    "Wrist Pitch": "D-pad up/down",
+    "Wrist Roll": "D-pad left/right",
+    "Pinch": "Triggers",
 
-		// Custom actions
-		"Fully close": "A",
-		"Fully open": "B",
-		"Press keyboard": "X",
-		"Spin gripper": "Y",
+    // Custom actions
+    "Fully close": "A",
+    "Fully open": "B",
+    "Press keyboard": "X",
+    "Spin gripper": "Y",
 
-		// General
-		"Stop": "Select",
-		"Calibrate": "Start",
-	};
+    // General
+    "Stop": "Select",
+    "Calibrate": "Start",
+  };
 }

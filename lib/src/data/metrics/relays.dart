@@ -20,15 +20,16 @@ class RelayMetrics extends Metrics<RelaysData> {
     MetricLine("Override: ${data.mechanicalOverride.displayName}"),
     MetricLine("Front Left: ${data.frontLeftMotor.displayName}"),
     MetricLine("Front Right: ${data.frontRightMotor.displayName}"),
+    MetricLine("Middle Left: ${data.middleLeftMotor.displayName}"),
+    MetricLine("Middle Right: ${data.middleRightMotor.displayName}"),
     MetricLine("Back Left: ${data.backLeftMotor.displayName}"),
     MetricLine("Back Right: ${data.backRightMotor.displayName}"),
-    MetricLine("Drive: ${data.drive.displayName}"),
     MetricLine("Arm: ${data.arm.displayName}"),
     MetricLine("Science: ${data.science.displayName}"),
   ];
 
   @override
-  Version parseVersion(RelaysData message) => Version();
+  Version parseVersion(RelaysData message) => message.version;
 
   @override
   Message get versionCommand => RelaysCommand();

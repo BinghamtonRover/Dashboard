@@ -28,6 +28,11 @@ enum OperatingMode {
 	/// Focus on helping the user manipulate the arm.
 	arm("Arm"),
 
+  /// Arm IK
+  ///
+  /// Focus on helping the user manipulate the arm with inverse kinematics.
+  armIk("Arm IK"),
+
   /// Base Station mode.
   /// 
   /// Focus on manually manipulating the base station antenna
