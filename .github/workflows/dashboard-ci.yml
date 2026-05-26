@@ -323,8 +323,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v3
         with:
-          working_directory: artifacts
-          files: '*'
+          files: 'artifacts/*'
           name: Dashboard Draft Release ${{ env.APP_VERSION }}
           tag_name: v${{ env.APP_VERSION }}
           generate_release_notes: true
