@@ -67,12 +67,15 @@ jobs:
 
       - name: Build APK
         run: flutter build 
+      
+      - name: Rename APK
+        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/dashboard_android.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v7
         with:
           archive: false
-          path: build/app/outputs/apk/release/app-release.apk
+          path: build/app/outputs/flutter-apk/dashboard_android.apk
 
   build-windows:
     name: Build Windows
@@ -312,7 +315,6 @@ jobs:
         run: |
           ls -al
           mv rover-dashboard-setup.exe dashboard_windows_installer.exe
-          mv app-release.apk dashboard_android.apk
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
