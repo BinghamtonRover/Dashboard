@@ -233,8 +233,8 @@ class VideoModel extends Model {
   /// it will fail silently. However, if the server simply doesn't respond, it will show a warning.
   Future<void> toggleCamera(CameraName name, {required bool enable}) async {
     final details = feeds[name]!.details;
-    if (enable && details.status != CameraStatus.CAMERA_DISABLED) return;
-    if (!enable && details.status == CameraStatus.CAMERA_DISCONNECTED) return;
+    if (enable && details.status == CameraStatus.CAMERA_ENABLED) return;
+    if (!enable && details.status == CameraStatus.CAMERA_DISABLED) return;
 
     details.status = enable
         ? CameraStatus.CAMERA_ENABLED
