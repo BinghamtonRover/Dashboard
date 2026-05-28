@@ -127,6 +127,8 @@ class _VideoFeedState extends State<VideoFeed> {
         return "Camera is reading too much detail\nReduce the quality or resolution";
       case CameraStatus.CAMERA_HAS_NO_NAME:
         return "Camera has no name\nChange lib/src/utils/constants.dart on the video Pi";
+      case CameraStatus.CAMERA_SHUTDOWN:
+        return "Camera shutting down.";
       case CameraStatus.CAMERA_ENABLED:
         if (videoFeed.hasFrame) {
           return "Loading feed...";
@@ -140,6 +142,7 @@ class _VideoFeedState extends State<VideoFeed> {
   @override
   void initState() {
     videoFeed.frameNotifier.addListener(onImageUpdate);
+    videoFeed.status.addListener(onVideoConnectionChanged);
     models.sockets.video.connectionStatus.addListener(onVideoConnectionChanged);
     super.initState();
   }
@@ -148,6 +151,7 @@ class _VideoFeedState extends State<VideoFeed> {
   void dispose() {
     videoFeed.frameNotifier.removeListener(onImageUpdate);
     models.sockets.video.connectionStatus.removeListener(onVideoConnectionChanged);
+    videoFeed.status.addListener(onVideoConnectionChanged);
 
     imageLoader.dispose();
     settings.dispose();
@@ -213,6 +217,42 @@ class _VideoFeedState extends State<VideoFeed> {
               ),
               Text(videoFeed.cameraName.humanName),
               const Spacer(),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                ),
+                onPressed: () => models.video.toggleCamera(
+                  videoFeed.cameraName,
+                  enable: true,
+                ),
+                child: Text(
+                  "Enable",
+                  style: context.textTheme.labelLarge?.copyWith(
+                    color: Colors.lightGreen,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 5),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                ),
+                onPressed: () => models.video.toggleCamera(
+                  videoFeed.cameraName,
+                  enable: false,
+                ),
+                child: Text(
+                  "Disable",
+                  style: context.textTheme.labelLarge?.copyWith(
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 5),
               ValueListenableBuilder(
                 valueListenable: widget.videoFeed.framesPerSecond,
                 builder: (context, fps, _) => Text("$fps FPS"),

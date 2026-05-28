@@ -118,20 +118,12 @@ class VideoModel extends Model {
 	/// A timer to update the FPS counter.
 	late final Timer fpsTimer;
 
-	/// The latest handshake received by the rover.
-	VideoCommand? _handshake;
-
 	@override
 	Future<void> init() async {
 		models.messages.stream.listenFor<VideoData>(
 			name: VideoData().messageName,
 			constructor: VideoData.fromBuffer,
 			callback: handleData,
-		);
-		models.messages.stream.listenFor<VideoCommand>(
-			name: VideoCommand().messageName,
-			constructor: VideoCommand.fromBuffer,
-			callback: (command) => _handshake = command,
 		);
 		fpsTimer = Timer.periodic(const Duration(seconds: 1), updateFps);
 		reset();
@@ -219,37 +211,48 @@ class VideoModel extends Model {
 		models.home.setMessage(severity: Severity.info, text: "Screenshot saved");
 	}
 
-	/// Updates settings for the given camera.
-	Future<void> updateCamera(String id, CameraDetails details, {bool verify = true}) async {
-		_handshake = null;
-		final command = VideoCommand(id: id, details: details);
-		models.sockets.video.sendMessage(command);
-    if (!verify) return;
-		await Future<void>.delayed(const Duration(seconds: 2));
-		if (_handshake == null) throw RequestNotAccepted();
-	}
+  /// Updates settings for the given camera.
+  Future<void> updateCamera(String id, CameraDetails details, {bool verify = true}) async {
+    final command = VideoCommand(id: id, details: details);
+    if (!verify) {
+      models.sockets.video.sendMessage(command);
+      return;
+    }
+    if (!await models.sockets.video.tryHandshake(
+      message: command,
+      timeout: const Duration(seconds: 1),
+      constructor: VideoCommand.fromBuffer,
+    )) {
+      throw RequestNotAccepted();
+    }
+  }
 
-	/// Enables or disables the given camera.
-	///
-	/// This function is called automatically, so if the camera is not connected or otherwise available,
-	/// it will fail silently. However, if the server simply doesn't respond, it will show a warning.
-	Future<void> toggleCamera(CameraName name, {required bool enable}) async {
-		final details = feeds[name]!.details;
-		if (enable && details.status != CameraStatus.CAMERA_DISABLED) return;
-		if (!enable && details.status == CameraStatus.CAMERA_DISCONNECTED) return;
+  /// Enables or disables the given camera.
+  ///
+  /// This function is called automatically, so if the camera is not connected or otherwise available,
+  /// it will fail silently. However, if the server simply doesn't respond, it will show a warning.
+  Future<void> toggleCamera(CameraName name, {required bool enable}) async {
+    final details = feeds[name]!.details;
+    if (enable && details.status != CameraStatus.CAMERA_DISABLED) return;
+    if (!enable && details.status == CameraStatus.CAMERA_DISCONNECTED) return;
 
-		_handshake = null;
-		details.status = enable ? CameraStatus.CAMERA_ENABLED : CameraStatus.CAMERA_DISABLED;
-		final command = VideoCommand(id: feeds[name]!.id, details: details);
-		models.sockets.video.sendMessage(command);
-		await Future<void>.delayed(const Duration(seconds: 2));
-		if (_handshake == null) {
-			models.home.setMessage(
-				severity: Severity.warning,
-				text: "Could not ${enable ? 'enable' : 'disable'} the ${name.humanName} camera",
-			);
-		}
-	}
+    details.status = enable
+        ? CameraStatus.CAMERA_ENABLED
+        : CameraStatus.CAMERA_DISABLED;
+    final command = VideoCommand(id: feeds[name]!.id, details: details);
+
+    if (!await models.sockets.video.tryHandshake(
+      message: command,
+      timeout: const Duration(seconds: 1),
+      constructor: VideoCommand.fromBuffer,
+    )) {
+      models.home.setMessage(
+        severity: Severity.warning,
+        text:
+            "Could not ${enable ? 'enable' : 'disable'} the ${name.humanName} camera",
+      );
+    }
+  }
 }
 
 /// An exception thrown when the rover does not respond to a handshake.
