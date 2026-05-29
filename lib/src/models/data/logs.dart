@@ -134,10 +134,9 @@ class LogsModel extends Model {
   /// Saves all the logs in [saveToFileBuffer] to disk.
   Future<void> saveToFile(_) async {
     if (saveToFileBuffer.isEmpty) return;
-    for (final log in List<BurtLog>.from(saveToFileBuffer)) {
-      await services.files.logMessage(log);
-    }
+    final copy = List<BurtLog>.from(saveToFileBuffer);
     saveToFileBuffer.clear();
+    await services.files.writeLogs(copy);
   }
 
   /// Clears all the logs from memory (but not from disk).

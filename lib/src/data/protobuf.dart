@@ -90,6 +90,9 @@ extension CameraNameUtils on CameraName {
       case CameraName.SUBSYSTEM3: return "Subsystem 3";
       case CameraName.BOTTOM_LEFT: return "Bottom Left";
       case CameraName.BOTTOM_RIGHT: return "Bottom Right";
+      case CameraName.ARM_LEFT: return "Arm Left";
+      case CameraName.ARM_RIGHT: return "Arm Right";
+      case CameraName.GAP_CAM: return "Gap Cam";
     }
     // Do not use default or else you'll lose exhaustiveness checking.
     throw ArgumentError("Unrecognized camera name: $this");
@@ -117,6 +120,7 @@ extension CameraStatusUtils on CameraStatus {
       case CameraStatus.CAMERA_LOADING: return "Loading";
       case CameraStatus.FRAME_TOO_LARGE: return "Frame too large";
       case CameraStatus.CAMERA_HAS_NO_NAME: return "Camera has no name";
+      case CameraStatus.CAMERA_SHUTDOWN: return "Camera shutdown";
     }
     // Do not use default or else you'll lose exhaustiveness checking.
     throw ArgumentError("Unrecognized rover status: $this");

@@ -24,6 +24,7 @@ class ScienceMetrics extends Metrics<ScienceData> {
 		MetricLine("CO2: ${data.co2.toStringAsFixed(3)}"),
 		MetricLine("Temperature: ${data.temperature.toStringAsFixed(3)}"),
 		MetricLine("Humidity: ${data.humidity.toStringAsFixed(3)}"),
+		MetricLine("Distance to Ground: ${data.auger.distanceToGroundCm.toStringAsFixed(3)} cm"),
 	];
 
 	@override

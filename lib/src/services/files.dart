@@ -126,9 +126,7 @@ class FilesService extends Service {
     final writeFutures = <Future<void>>[];
     for (final name in batchedLogs.keys) {
       final data = batchedLogs[name]!;
-      if (data.isEmpty) {
-        continue;
-      }
+      if (data.isEmpty) continue;
       final file = loggingDir / "$name.log";
       final copy = List<WrappedMessage>.from(data);
       data.clear();
@@ -137,13 +135,13 @@ class FilesService extends Service {
 
       writeFutures.add(
         Future(() async {
+          final sink = file.openWrite(mode: FileMode.writeOnlyAppend);
           for (final wrapper in copy) {
             final encoded = base64.encode(wrapper.writeToBuffer());
-            await file.writeAsString(
-              "$encoded\n",
-              mode: FileMode.writeOnlyAppend,
-            );
+            sink.writeln(encoded);
           }
+          await sink.flush();
+          await sink.close();
         }),
       );
     }
@@ -184,10 +182,18 @@ class FilesService extends Service {
       WrappedMessage.fromBuffer(base64.decode(line)),
   ];
 
-  /// Outputs a log to its device's respective log file.
-  Future<void> logMessage(BurtLog log) async {
+  /// Outputs a list of logs to their device's respective log files.
+  Future<void> writeLogs(List<BurtLog> logs) async {
     if (!_isInit) return;
-    final file = loggingDir / "${log.device.humanName}.log";
-    await file.writeAsString("${log.format()}\n", mode: FileMode.writeOnlyAppend);
+    final logsByDevice = groupBy<BurtLog, Device>(logs, (log) => log.device);
+    for (final device in logsByDevice.keys) {
+      final file = loggingDir / "${device.humanName}.log";
+      final sink = file.openWrite(mode: FileMode.writeOnlyAppend);
+      for (final log in logsByDevice[device]!) {
+        sink.writeln(log.format());
+      }
+      await sink.flush();
+      await sink.close();
+    }
   }
 }
