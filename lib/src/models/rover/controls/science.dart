@@ -17,6 +17,12 @@ class ScienceControls extends RoverControls {
   /// The maximum RPM to apply to the auger motor when the stick is fully deflected.
   double augerMaxRpm = 0.4;
 
+  /// How quickly the auger speed ramps (RPM per second).
+  double augerRampRate = 1.0;
+
+  /// Current auger speed (RPM) being commanded — used to perform smooth ramping.
+  double augerCurrentRpm = 0.0;
+
   /// The amount of steps to move the linear slider when the stick is held.
   double linearSliderIncrement = 1000;
 
@@ -42,7 +48,22 @@ class ScienceControls extends RoverControls {
   }
 
   @override
-  List<Message> parseInputs(GamepadState state) => [
+  List<Message> parseInputs(GamepadState state) {
+    // Compute auger ramping before building the command list.
+    final target = state.normalTriggers == 0
+        ? 0.0
+        : state.normalTriggers.abs() * augerMaxRpm;
+    final dt = gamepadDelay.inMilliseconds / 1000.0; // seconds per update
+    final maxDelta = augerRampRate * dt;
+    if (augerCurrentRpm < target) {
+      final next = augerCurrentRpm + maxDelta;
+      augerCurrentRpm = next > target ? target : next;
+    } else if (augerCurrentRpm > target) {
+      final next = augerCurrentRpm - maxDelta;
+      augerCurrentRpm = next < target ? target : next;
+    }
+
+    return [
     if (tubeMode) ...[
       if (bumperFlag == -1) ScienceCommand(carousel: CarouselCommand.PREV_TUBE),
       if (bumperFlag == 1) ScienceCommand(carousel: CarouselCommand.NEXT_TUBE),
@@ -51,10 +72,7 @@ class ScienceControls extends RoverControls {
         ScienceCommand(carouselMotor: carouselIncrement * state.normalShoulder),
     ],
 
-    if (state.normalTriggers != 0)
-      ScienceCommand(
-        auger: AugerCommand(speedRpm: state.normalTriggers.abs() * augerMaxRpm),
-      ),
+    ScienceCommand(auger: AugerCommand(speedRpm: augerCurrentRpm)),
 
     if (state.normalRightY != 0)
       ScienceCommand(linearSlider: linearSliderIncrement * state.normalRightY),
@@ -81,7 +99,8 @@ class ScienceControls extends RoverControls {
 
     if (state.buttonStart) ScienceCommand(calibrate: true),
     if (state.buttonBack) ScienceCommand(stop: true),
-  ];
+    ];
+  }
 
   @override
   List<Message> get onDispose => [ScienceCommand(stop: true)];
