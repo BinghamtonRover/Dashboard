@@ -147,7 +147,7 @@ packages:
     source: hosted
     version: "1.3.3"
   ffi:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: ffi
       sha256: "289279317b4b16eb2bb7e271abccd4bf84ec9bdcbe999e278a94b804f5630418"
@@ -547,7 +547,7 @@ packages:
     source: hosted
     version: "0.28.0"
   sdl3:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: sdl3
       sha256: "784ca047c9c09ce6ba02fe4042d8ec44d8d97fc45955f1e749c2fc2846b049f3"
