@@ -7,8 +7,14 @@ class RockModel with ChangeNotifier {
   final rocks = <Rock>[
     const Rock(
       "Shale",
-      "assets/Rocks_Minerals_Images/Shale.jpg",
-      "Has to be a carbonate-rich environment to cause dark coloring",
+      "assets/Rocks_Minerals_Images/Shale2026.jpg",
+      "   \u2022 Very fine-grained"
+      "\n   \u2022 Smooth, dusty appearance"
+      "\n   \u2022 Often forms flat flakes"  
+      "\n   \u2022 Dark gray, green, or dark red color"
+      "\n Martian Relevance:"
+      "\n   \u2022 Preserves organic molecules well "
+      "\n   \u2022 Target for biosignatures ",
     ),
     const Rock(
       "Mudstone",
@@ -17,28 +23,57 @@ class RockModel with ChangeNotifier {
     ),
      const Rock(
       "Limestone",
-      "assets/Rocks_Minerals_Images/Limestone.jpg",
-      "Off white-gray, shallow marine environments, could contain fossils, chalky \n   \u2022 oolite, Chalk, Dense Limestone, Crystalline Limestone, Coquina, Micrite, Tavertine",
+      "assets/Rocks_Minerals_Images/Limestone2026.jpg",
+      "   \u2022 Very fine to medium grain "
+      "\n   \u2022 Forms blocky outcrops "
+      "\n   \u2022 Smoother/less gritty than sandstone "
+      "\n   \u2022 Sharper edges"
+      "\n   \u2022 Light gray, cream, or tan color"
+
+      "\n Martian Relevance:"
+      "\n   \u2022 Carbonates are rare on Mars "
+      "\n   \u2022 prove an ancient atmosphere rich in CO2 & neutral-pH water "
+
     ),
     const Rock(
-      "Dolomites/Dolostones",
+      "Dolomites / Dolostones",
       "assets/Rocks_Minerals_Images/Dolomite1.jpg",
       "Carbonate sedimentary rock",
+
     ),
     const Rock(
       "Conglomerates",
-      "assets/Rocks_Minerals_Images/Conglomerate.jpg",
-      "Visible, rounded clasts within the matrix",
+      "assets/Rocks_Minerals_Images/Conglomerate2026.jpg",
+      "   \u2022 natural concrete "
+      "\n   \u2022 Smooth, rounded pebbles in a finer sandy matrix" 
+      "\n   \u2022 Poorly sorted "
+
+      "\n Martian Relevance:"
+      "\n   \u2022 Discovered by Curiosity in Gale Crater "
+      "\n   \u2022 proving vigorous ancient stream flows on Mars",
     ),
    const Rock(
       "Basalt",
-      "assets/Rocks_Minerals_Images/Basalt.jpg",
-      "Fine-grained, dark coloring, no visible crystals",
+      "assets/Rocks_Minerals_Images/Basalt2026.jpg",
+      "   \u2022 Fine-grained, dull surface"
+      "\n   \u2022 Sometimes feature small holes "
+      "\n   \u2022 Vesicular texture for gas bubbles"
+      "\n   \u2022 Dark gray to black color"
+      "\n Martian Relevance:"
+      "\n   \u2022 majority of the Martian crust",
+
     ),
      const Rock(
       "Sandstone",
-      "assets/Rocks_Minerals_Images/Sandstone.jpg",
-      "Grainy appearance",
+      "assets/Rocks_Minerals_Images/Sandstone2026.jpg",
+      "   \u2022 Gritty rounded, sand-paper texture "
+      "\n   \u2022 Visible grains+ layered "
+      "\n   \u2022 Crumbly edges "
+      "\n   \u2022 Tan, red or light orange color "
+      "\n Martian Relevance: "
+      "\n   \u2022 Found widely on Mars (Gale Crater by Curiosity)"
+      "\n   \u2022 History of moving water or wind dunes",
+
     ),
     const Rock(
       "Phyllosilicates",
@@ -75,6 +110,43 @@ class RockModel with ChangeNotifier {
       "assets/Rocks_Minerals_Images/Augite.jpg",
       "Found on meteors \n   \u2022 Greenish white streak",
     ),
+    const Rock(
+      "Gypsum / Alablaster",
+      "assets/Rocks_Minerals_Images/Gypsum-Alablaster2026.jpg",
+      "   \u2022Look scratched or fibrous "
+      "\n   \u2022 Captures light differently (satiny luster)"
+      "\n   \u2022 Crystalline cleavage" 
+      "\n   \u2022 Milky white, pink or clear color"
+      "\n Martian Relevance:"
+      "\n   \u2022 highly common on Mars"
+      "\n   \u2022 planet's transition from wet to dry ",
+    ),
+        
+    const Rock(
+      "Chert / Flint",
+      "assets/Rocks_Minerals_Images/Chert-Flint2026.jpg",
+      "   \u2022 Extremely smooth, glass-like texture "
+      "\n   \u2022 Sharp, jagged edges where broken "
+      "\n   \u2022 Glints strongly in the sun "
+      "\n   \u2022 Red (Jasper), white, or gray color "
+      "\n Martian Relevance:"
+      "\n   \u2022 silica is incredible at preserving microscopic fossils ",
+
+    ),
+    const Rock(
+      "Pumice / Scoria",
+      "assets/Rocks_Minerals_Images/Pumice-Scoria2026.jpg",
+      "   \u2022 Spongy, highly porous "
+      "\n   \u2022 Very rough and lightweight "
+      "\n   \u2022 Highly vesicular + surface roughness "
+      "\n   \u2022 Pumice is light gray/tan color "
+      "\n   \u2022 Scoria is dark red/black color "
+      "\n Martian Relevance:"
+      "\n   \u2022 explosive volcanic history vs quiet effusive lava flows ",
+    ),
+
+
+
   ];
 
   /// A filtered view of [rocks] that matches the [query].
