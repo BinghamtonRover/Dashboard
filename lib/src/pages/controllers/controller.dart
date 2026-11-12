@@ -1,5 +1,3 @@
-import "dart:math";
-
 import "package:flutter/material.dart";
 import "package:rover_dashboard/models.dart";
 import "package:rover_dashboard/services.dart";
@@ -8,177 +6,209 @@ import "package:rover_dashboard/widgets.dart";
 import "button.dart";
 import "constants.dart";
 
-/// A widget that shows all button presses and analog inputs overlaid on an image of a controller.
+/// Displays controller inputs over an image of the controller.
 class ControllerWidget extends ReusableReactiveWidget<Controller> {
   /// Const constructor for Controller Widget
   const ControllerWidget(super.model);
 
-  double _getScaledValue(double normalValue, Size widgetSize) =>
-    (_getBackgroundFitWidth(widgetSize) / imageSize.width) * normalValue;
 
-  double _getBackgroundFitWidth(Size widgetSize) {
-    var fitWidth = widgetSize.width;
-    var fitHeight = widgetSize.height;
+  // Positions and sizes use the original image's pixel coordinates.
+  // FittedBox scales the image and all indicators together
 
-    if (imageSize.width < widgetSize.width && imageSize.height < widgetSize.height) {
-      fitWidth = imageSize.width;
-      fitHeight = imageSize.height;
-    }
+  // Moves a joystick marker based on its X and Y input.
+Widget _controllerJoystick({
+  required double x,
+  required double y,
+  required Offset offsetOnImage,
+  required bool? isPressed,
+}) => Positioned(
 
-    return min(fitWidth, fitHeight / (imageSize.height / imageSize.width));
-  }
+  // Center the marker, then add movement from the joystick input
+  // normalJoystickRadius stores the diameter despite its name
 
-  Offset _getPositionedOffset({
-    required Offset offsetOnImage,
-    required Size widgetSize,
-    double radius = normalButtonRadius,
-  }) {
-    final scaleFactor = _getBackgroundFitWidth(widgetSize) / imageSize.width;
-    final xFromCenter = offsetOnImage.dx - radius / 2;
-    final yFromCenter = offsetOnImage.dy - radius / 2;
+  left:
+      offsetOnImage.dx -
+      normalJoystickRadius / 2 +
+      joystickMaxOffset * x,
+  top:
+      offsetOnImage.dy -
+      normalJoystickRadius / 2 +
+      joystickMaxOffset * y,
+  child: Container(
+    width: normalJoystickRadius,
+    height: normalJoystickRadius,
+    decoration: BoxDecoration(
+      color: (isPressed ?? false) ? gamepadColor : null,
+      shape: BoxShape.circle,
+    ),
+  ),
+);
 
-    return Offset(xFromCenter, yFromCenter) * scaleFactor;
-  }
 
-  // This can't be its own widget since it has to be embedded into the stack for the position to work
-  Widget _controllerJoystick({
-    required double x,
-    required double y,
-    required Offset offsetOnImage,
-    required Size widgetSize,
-    // TODO(Levi-Lesches): Support thumbstick presses, https://github.com/Levi-Lesches/sdl_gamepad/issues/1
-    required bool? isPressed,
-  }) {
-    final scaleFactor = _getBackgroundFitWidth(widgetSize) / imageSize.width;
+// Draws a button indicator that fills when pressed
+Widget _buttonWidget({
+  required Offset offset,
+  bool? value,
+}) => Positioned(
 
-    final joystickRadius = normalJoystickRadius * scaleFactor;
-    final maxOffset = joystickMaxOffset * scaleFactor;
+  // Convert the center coordinate to the circle's top-left corner
+  // normalButtonRadius stores the diameter despite its name
+  left: offset.dx - normalButtonRadius / 2,
+  top: offset.dy - normalButtonRadius / 2,
+  child: ControllerButton(
+    isPressed: value ?? false,
+    radius: normalButtonRadius,
+    borderWidth: normalButtonOutline,
+    color: gamepadColor,
+  ),
+);
 
-    final xFromCenter = offsetOnImage.dx - normalJoystickRadius / 2;
-    final yFromCenter = offsetOnImage.dy - normalJoystickRadius / 2;
+/// Draws a meter that fills upward as the trigger is pressed
+Widget _triggerWidget({
+  required Offset offset,
+  required double? value,
+}) {
 
-    return Positioned(
-      left: xFromCenter * scaleFactor + maxOffset * x,
-      top: yFromCenter * scaleFactor + maxOffset * y,
-      child: Container(
-        width: joystickRadius,
-        height: joystickRadius,
-        decoration: BoxDecoration(
-          color: (isPressed ?? false) ? gamepadColor : null,
-          borderRadius: BorderRadius.circular(10000),
+    // Keep the fill between empty (0) and full (1)
+  final amount = (value ?? 0.0).clamp(0.0, 1.0).toDouble();
+
+  return Positioned(
+    // Center the rectangular meter around its assigned coordinate
+    left: offset.dx - normalTriggerWidth / 2,
+    top: offset.dy - normalTriggerHeight / 2,
+    child: Container(
+      width: normalTriggerWidth,
+      height: normalTriggerHeight,
+      alignment: Alignment.bottomCenter,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: gamepadColor,
+          width: normalTriggerOutline,
+          strokeAlign: BorderSide.strokeAlignOutside,
         ),
       ),
-    );
-  }
-
-  Widget _buttonWidget({
-    required Offset offset,
-    required double buttonRadius,
-    required double outlineWidth,
-    bool? value,
-  }) => Positioned(
-    left: offset.dx,
-    top: offset.dy,
-    child: ControllerButton(
-      isPressed: value ?? false,
-      radius: buttonRadius,
-      borderWidth: outlineWidth,
-      color: gamepadColor,
+      child: Container(
+        width: normalTriggerWidth,
+        height: amount * normalTriggerHeight,
+        color: gamepadColor,
+      ),
     ),
   );
+}
 
-  Widget _triggerWidget({
-    required Offset offset,
-    required double? value,
-    required Size size,
-  }) {
-    final scaleFactor = _getBackgroundFitWidth(size) / imageSize.width;
-    final triggerWidth = normalTriggerWidth * scaleFactor;
-    final triggerHeight = normalTriggerHeight * scaleFactor;
-    final borderWidth = normalTriggerOutline * scaleFactor;
-    return Positioned(
-      left: offset.dx,
-      top: offset.dy,
-      child: Container(
-        width: triggerWidth,
-        height: triggerHeight,
-        alignment: Alignment.bottomCenter,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: gamepadColor,
-            width: borderWidth,
-            strokeAlign: BorderSide.strokeAlignOutside,
-          ),
-        ),
-        child: Container(
-          width: triggerWidth,
-          height: (value ?? 0) * triggerHeight,
-          color: gamepadColor,
+  /// Builds the controller image and its input indicators
+Widget _buildGamepad(Controller model) {
+  final state = model.gamepad.getState();
+
+  return Opacity(
+
+
+    // Dims the controller when it is disconnected. Cool Right?
+    opacity: model.isConnected ? 1 : 0.50,
+
+    // Resize everything together to keep the indicators aligned
+    child: FittedBox(
+      fit: BoxFit.contain,
+      alignment: Alignment.center,
+
+      // Match the canvas to the image dimensions used by the coordinates
+      child: SizedBox(
+        width: imageSize.width,
+        height: imageSize.height,
+        child: Stack(
+          // Make the background image occupy the full canvas
+          fit: StackFit.expand,
+          children: [
+            Image.asset(controllerImageAsset, fit: BoxFit.contain),
+            
+            // Face buttons
+            _buttonWidget(
+              offset: buttonA,
+              value: state?.buttonA,
+            ),
+            _buttonWidget(
+              offset: buttonB,
+              value: state?.buttonB,
+            ),
+            _buttonWidget(
+              offset: buttonX,
+              value: state?.buttonX,
+            ),
+            _buttonWidget(
+              offset: buttonY,
+              value: state?.buttonY,
+            ),
+
+            _buttonWidget(
+              offset: leftBumper,
+              value: state?.leftShoulder,
+            ),
+            _buttonWidget(
+              offset: rightBumper,
+              value: state?.rightShoulder,
+            ),
+
+            // Start (+) and Select (-)
+            _buttonWidget(
+              offset: start,
+              value: state?.buttonStart,
+            ),
+            _buttonWidget(
+              offset: select,
+              value: state?.buttonBack,
+            ),
+
+            // D-pad directions
+            _buttonWidget(
+              offset: dPadUp,
+              value: state?.dpadUp,
+            ),
+            _buttonWidget(
+              offset: dPadDown,
+              value: state?.dpadDown,
+            ),
+            _buttonWidget(
+              offset: dPadLeft,
+              value: state?.dpadLeft,
+            ),
+            _buttonWidget(
+              offset: dPadRight,
+              value: state?.dpadRight,
+            ),
+
+            // Trigger meters show how far each trigger is pressed
+            _triggerWidget(
+              offset: leftTrigger,
+              value: state?.normalLeftTrigger,
+            ),
+            _triggerWidget(
+              offset: rightTrigger,
+              value: state?.normalRightTrigger,
+            ),
+
+            // Missing joystick input defaults to the center
+            // Invert Y for screen coordinates, which increase downward
+            _controllerJoystick(
+              x: state?.normalLeftX ?? 0,
+              y: -1 * (state?.normalLeftY ?? 0),
+              offsetOnImage: leftStick,
+              isPressed: true, // Keep the marker visible.
+            ),
+            _controllerJoystick(
+              x: state?.normalRightX ?? 0,
+              y: -1 * (state?.normalRightY ?? 0),
+              offsetOnImage: rightStick,
+              isPressed: true, // Keep the marker visible.
+            ),
+          ],
         ),
       ),
-    );
-  }
-
-  Widget _buildGamepad(BuildContext context, Size widgetSize, Controller model) {
-    final buttonRadius = _getScaledValue(normalButtonRadius, widgetSize);
-    final outlineWidth = _getScaledValue(7.5, widgetSize);
-    final state = model.gamepad.getState();
-
-    final aOffset = _getPositionedOffset(offsetOnImage: buttonA, widgetSize: widgetSize);
-    final bOffset = _getPositionedOffset(offsetOnImage: buttonB, widgetSize: widgetSize);
-    final xOffset = _getPositionedOffset(offsetOnImage: buttonX, widgetSize: widgetSize);
-    final yOffset = _getPositionedOffset(offsetOnImage: buttonY, widgetSize: widgetSize);
-    final lbOffset = _getPositionedOffset(offsetOnImage: leftBumper, widgetSize: widgetSize);
-    final rbOffset = _getPositionedOffset(offsetOnImage: rightBumper, widgetSize: widgetSize);
-    final ltOffset = _getPositionedOffset(offsetOnImage: leftTrigger, widgetSize: widgetSize);
-    final rtOffset = _getPositionedOffset(offsetOnImage: rightTrigger, widgetSize: widgetSize);
-    final startOffset = _getPositionedOffset(offsetOnImage: start, widgetSize: widgetSize);
-    final selectOffset = _getPositionedOffset(offsetOnImage: select, widgetSize: widgetSize);
-    final dPadUpOffset = _getPositionedOffset(offsetOnImage: dPadUp, widgetSize: widgetSize);
-    final dPadDownOffset = _getPositionedOffset(offsetOnImage: dPadDown, widgetSize: widgetSize);
-    final dPadLeftOffset = _getPositionedOffset(offsetOnImage: dPadLeft, widgetSize: widgetSize);
-    final dPadRightOffset = _getPositionedOffset(offsetOnImage: dPadRight, widgetSize: widgetSize);
-
-    return Opacity(
-      opacity: model.isConnected ? 1 : 0.50,
-      child: Stack(
-        children: [
-          Image.asset("assets/gamesir_controller.png", fit: BoxFit.contain),
-          _buttonWidget(buttonRadius: buttonRadius, outlineWidth: outlineWidth, offset: aOffset, value: state?.buttonA),
-          _buttonWidget(buttonRadius: buttonRadius, outlineWidth: outlineWidth, offset: bOffset, value: state?.buttonB),
-          _buttonWidget(buttonRadius: buttonRadius, outlineWidth: outlineWidth, offset: xOffset, value: state?.buttonX),
-          _buttonWidget(buttonRadius: buttonRadius, outlineWidth: outlineWidth, offset: yOffset, value: state?.buttonY),
-          _buttonWidget(buttonRadius: buttonRadius, outlineWidth: outlineWidth, offset: lbOffset, value: state?.leftShoulder),
-          _buttonWidget(buttonRadius: buttonRadius, outlineWidth: outlineWidth, offset: rbOffset, value: state?.rightShoulder),
-          _buttonWidget(buttonRadius: buttonRadius, outlineWidth: outlineWidth, offset: startOffset, value: state?.buttonStart),
-          _buttonWidget(buttonRadius: buttonRadius, outlineWidth: outlineWidth, offset: selectOffset, value: state?.buttonBack),
-          _buttonWidget(buttonRadius: buttonRadius, outlineWidth: outlineWidth, offset: dPadUpOffset, value: state?.dpadUp),
-          _buttonWidget(buttonRadius: buttonRadius, outlineWidth: outlineWidth, offset: dPadDownOffset, value: state?.dpadDown),
-          _buttonWidget(buttonRadius: buttonRadius, outlineWidth: outlineWidth, offset: dPadLeftOffset, value: state?.dpadLeft),
-          _buttonWidget(buttonRadius: buttonRadius, outlineWidth: outlineWidth, offset: dPadRightOffset, value: state?.dpadRight),
-          _triggerWidget(size: widgetSize, offset: ltOffset, value: state?.normalLeftTrigger),
-          _triggerWidget(size: widgetSize, offset: rtOffset, value: state?.normalRightTrigger),
-          _controllerJoystick(
-            x: state?.normalLeftX ?? 0,
-            y: -1 * (state?.normalLeftY ?? 0),
-            offsetOnImage: leftStick,
-            widgetSize: widgetSize,
-            isPressed: true,
-          ),
-          _controllerJoystick(
-            x: state?.normalRightX ?? 0,
-            y: -1 * (state?.normalRightY ?? 0),
-            offsetOnImage: rightStick,
-            widgetSize: widgetSize,
-            isPressed: true,
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context, Controller model) => LayoutBuilder(
-    builder: (context, constraints) => _buildGamepad(context, constraints.biggest, model),
+    ),
   );
+}
+
+// FittedBox handles scaling, so no manual size calculation is needed
+@override
+Widget build(BuildContext context, Controller model) =>
+    _buildGamepad(model);
 }
