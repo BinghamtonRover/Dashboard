@@ -135,6 +135,11 @@ class BaseStationSettingsBuilder extends ValueBuilder<BaseStationSettings> {
 
 /// A [ValueBuilder] representing an [ArmSettings].
 class ArmSettingsBuilder extends ValueBuilder<ArmSettings> {
+  /// Motor speed in electrical RPM.
+  final NumberBuilder<double> speedErpm;
+  /// Motor acceleration in electrical RPM per second.
+  final NumberBuilder<double> accelerationErpmPerSecond;
+
   /// The view model for [ArmSettings.swivel].
   final NumberBuilder<double> swivel;
 
@@ -164,7 +169,9 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings> {
 
   /// Modifies the given [ArmSettings].
   ArmSettingsBuilder(ArmSettings initial)
-    : swivel = NumberBuilder(initial.swivel),
+    : speedErpm = NumberBuilder(initial.speedErpm),
+      accelerationErpmPerSecond = NumberBuilder(initial.accelerationErpmPerSecond),
+      swivel = NumberBuilder(initial.swivel),
       shoulder = NumberBuilder(initial.shoulder),
       elbow = NumberBuilder(initial.elbow),
       lift = NumberBuilder(initial.lift),
@@ -173,6 +180,8 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings> {
       pinch = NumberBuilder(initial.pinch),
       ik = NumberBuilder(initial.ikIncrement),
       useIK = initial.useIK {
+    speedErpm.addListener(notifyListeners);
+    accelerationErpmPerSecond.addListener(notifyListeners);
     swivel.addListener(notifyListeners);
     shoulder.addListener(notifyListeners);
     elbow.addListener(notifyListeners);
@@ -185,6 +194,9 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings> {
 
   @override
   bool get isValid =>
+      speedErpm.isValid && speedErpm.value.isFinite && speedErpm.value >= 0 && speedErpm.value <= 327670 &&
+      accelerationErpmPerSecond.isValid && accelerationErpmPerSecond.value.isFinite &&
+      accelerationErpmPerSecond.value >= 0 && accelerationErpmPerSecond.value <= 327670 &&
       swivel.isValid &&
       shoulder.isValid &&
       elbow.isValid &&
@@ -202,6 +214,8 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings> {
 
   @override
   ArmSettings get value => ArmSettings(
+    speedErpm: speedErpm.value,
+    accelerationErpmPerSecond: accelerationErpmPerSecond.value,
     shoulder: shoulder.value,
     elbow: elbow.value,
     swivel: swivel.value,

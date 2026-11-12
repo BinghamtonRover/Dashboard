@@ -38,6 +38,11 @@ class ScienceSettings {
 
 /// Settings relating to the arm.
 class ArmSettings {
+  /// Motor electrical RPM and electrical RPM/s for Teensy position commands.
+  final double speedErpm;
+  /// Acceleration of position commands in electrical RPM per second.
+  final double accelerationErpmPerSecond;
+
   /// How many radians to move the shoulder joint each frame.
   final double shoulder;
 
@@ -76,10 +81,14 @@ class ArmSettings {
     required this.wristRoll,
     required this.ikIncrement,
     required this.useIK,
+    this.speedErpm = 100.0,
+    this.accelerationErpmPerSecond = 100.0,
  });
 
   /// Parses arm settings from a JSON map.
   ArmSettings.fromJson(Json? json) :
+    speedErpm = (json?["speedErpm"] as num?)?.toDouble() ?? 100.0,
+    accelerationErpmPerSecond = (json?["accelerationErpmPerSecond"] as num?)?.toDouble() ?? 100.0,
     shoulder = json?["shoulder"] ?? 0.008,
     elbow = json?["elbow"] ?? 0.008,
     swivel = json?["swivel"] ?? 0.02,
@@ -92,6 +101,8 @@ class ArmSettings {
 
   /// Serializes these settings to a JSON map.
   Json toJson() => {
+    "speedErpm": speedErpm,
+    "accelerationErpmPerSecond": accelerationErpmPerSecond,
     "shoulder": shoulder,
     "elbow": elbow,
     "swivel": swivel,

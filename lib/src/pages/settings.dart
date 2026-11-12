@@ -206,7 +206,9 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
       ValueEditor<ArmSettings>(
         name: "Arm settings",
         children: [
-          NumberEditor(name: "Swivel increment", model: model.arm.swivel),
+          NumberEditor(name: "Swivel increment (radians/tick)", model: model.arm.swivel),
+          NumberEditor(name: "Motor speed (electrical RPM)", model: model.arm.speedErpm),
+          NumberEditor(name: "Motor acceleration (electrical RPM/s)", model: model.arm.accelerationErpmPerSecond),
           NumberEditor(name: "Shoulder increment", model: model.arm.shoulder),
           NumberEditor(name: "Elbow increment", model: model.arm.elbow),
           NumberEditor(name: "Arm roll increment", model: model.arm.armRoll),

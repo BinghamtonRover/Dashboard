@@ -77,7 +77,7 @@ class SerialModel extends Model {
   void sendMessage(Message message) {
     for (final device in devices.values) {
       final thisDeviceAccepts = getCommandName(device.device);
-      if (message.messageName != thisDeviceAccepts) return;
+      if (message.messageName != thisDeviceAccepts) continue;
     	device.sendMessage(message);
     }
   }
