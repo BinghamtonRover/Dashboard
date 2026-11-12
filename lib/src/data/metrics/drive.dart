@@ -53,10 +53,22 @@ class DriveMetrics extends Metrics<DriveData> {
     MetricLine("Left: ${data.left.toStringAsFixed(2)}"),
     MetricLine("Right: ${data.right.toStringAsFixed(2)}"),
     MetricLine(
-      "Left Side: ${data.frontLeftMotor.speed.toStringAsFixed(1)}, ${data.middleLeftMotor.speed.toStringAsFixed(1)}, ${data.backLeftMotor.speed.toStringAsFixed(1)}",
+      "Left Side Speed: ${data.frontLeftMotor.speed.toStringAsFixed(1)}, ${data.middleLeftMotor.speed.toStringAsFixed(1)}, ${data.backLeftMotor.speed.toStringAsFixed(1)}",
     ),
     MetricLine(
-      "Right Side: ${data.frontRightMotor.speed.toStringAsFixed(1)}, ${data.middleRightMotor.speed.toStringAsFixed(1)}, ${data.backRightMotor.speed.toStringAsFixed(1)}",
+      "Left Side Current: ${data.frontLeftMotor.current.toStringAsFixed(2)}, ${data.middleLeftMotor.current.toStringAsFixed(2)}, ${data.backLeftMotor.current.toStringAsFixed(2)}",
+    ),
+    MetricLine(
+      "Left Side Temperature: ${data.frontLeftMotor.temperature}, ${data.middleLeftMotor.temperature}, ${data.backLeftMotor.temperature}",
+    ),
+    MetricLine(
+      "Right Side Speed: ${data.frontRightMotor.speed.toStringAsFixed(1)}, ${data.middleRightMotor.speed.toStringAsFixed(1)}, ${data.backRightMotor.speed.toStringAsFixed(1)}",
+    ),
+    MetricLine(
+      "Right Side Current: ${data.frontRightMotor.current.toStringAsFixed(2)}, ${data.middleRightMotor.current.toStringAsFixed(2)}, ${data.backRightMotor.current.toStringAsFixed(2)}",
+    ),
+    MetricLine(
+      "Right Side Temperature: ${data.frontRightMotor.temperature}, ${data.middleRightMotor.temperature}, ${data.backRightMotor.temperature}",
     ),
   ];
 
