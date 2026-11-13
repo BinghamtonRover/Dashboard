@@ -32,7 +32,9 @@ class ArmModel with ChangeNotifier {
 
   void _update([_]) {
     if (desiredLaserState != arm.laserState.toBool()) {
-      final command = ArmCommand(laserState: desiredLaserState ? BoolState.ON : BoolState.OFF);
+      final command = ArmCommand(
+        laserState: desiredLaserState ? BoolState.ON : BoolState.OFF,
+      );
       models.messages.sendMessage(command);
     }
     notifyListeners();
@@ -74,16 +76,10 @@ class ArmModel with ChangeNotifier {
 
   /// Sends a command to the arm to go to [ikAngles].
   void sendIK() {
-    if (ikAngles == null) return;
-    final shoulderCommand = MotorCommand(angle: ikAngles!.shoulder);
-    final elbowCommand = MotorCommand(angle: ikAngles!.elbow);
-    final liftCommand = MotorCommand(angle: ikAngles!.lift);
-    final armCommand = ArmCommand(
-      shoulder: shoulderCommand,
-      elbow: elbowCommand,
-      wrist: WristCommand(pitch: liftCommand),
+    models.home.setMessage(
+      severity: Severity.warning,
+      text: "IK is not configured for this arm yet. Use manual joint controls.",
     );
-    models.messages.sendMessage(armCommand);
   }
 }
 

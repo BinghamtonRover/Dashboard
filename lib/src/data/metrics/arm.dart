@@ -9,7 +9,7 @@ class ArmMetrics extends Metrics<ArmData> {
   @override
   String name = "Arm Base";
   @override
-  Version supportedVersion = Version(major: 1, minor: 5);
+  Version supportedVersion = Version(major: 1, minor: 6);
   @override
   IconData icon = Icons.precision_manufacturing_outlined;
 
