@@ -9,8 +9,9 @@ class GripperMetrics extends Metrics<ArmData> {
   @override
   String name = "Gripper";
 
+  /// The gripper reads the arm's [ArmData], so it supports the same version.
   @override
-  Version supportedVersion = Version();
+  Version supportedVersion = Version(major: 1, minor: 5);
 
   @override
   IconData icon = Icons.compress;

@@ -150,6 +150,11 @@ class DashboardView {
       builder: (context, index) => BaseStationPage(index: index),
       iconFunc: (context) => Icon(Icons.cell_tower, color: context.colorScheme.onSurface.withValues(alpha: 0.5)),
     ),
+    DashboardView(
+      name: Routes.aiAssistant,
+      iconFunc: (context) => Icon(Icons.chat_bubble_outline, color: context.colorScheme.onSurface.withValues(alpha: 0.5)),
+      builder: (context, index) => AiAssistantPage(),
+    ),
   ];
 
   /// A blank view.

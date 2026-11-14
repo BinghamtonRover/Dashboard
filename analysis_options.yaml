@@ -29,6 +29,11 @@ analyzer:
     - lib/generated/**.dart
     - test/**.dart
     - example/**.dart
+    - build/**
+    - android/**
+    - windows/**
+    - macos/**
+    - linux/**
 
 linter:
   rules:

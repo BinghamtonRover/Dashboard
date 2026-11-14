@@ -1,0 +1,35 @@
+PODS:
+  - flutter_libserialport (0.0.1):
+    - FlutterMacOS
+    - libserialport
+  - flutter_sdl_gamepad (0.0.1):
+    - FlutterMacOS
+  - FlutterMacOS (1.0.0)
+  - libserialport (0.1.1)
+
+DEPENDENCIES:
+  - flutter_libserialport (from `Flutter/ephemeral/.symlinks/plugins/flutter_libserialport/macos`)
+  - flutter_sdl_gamepad (from `Flutter/ephemeral/.symlinks/plugins/flutter_sdl_gamepad/macos`)
+  - FlutterMacOS (from `Flutter/ephemeral`)
+
+SPEC REPOS:
+  trunk:
+    - libserialport
+
+EXTERNAL SOURCES:
+  flutter_libserialport:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_libserialport/macos
+  flutter_sdl_gamepad:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_sdl_gamepad/macos
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+
+SPEC CHECKSUMS:
+  flutter_libserialport: 2c523cb8d8203fc6d1b0da88190da31ac970eb93
+  flutter_sdl_gamepad: 795bd5376989ddc249f3bd1db01e750069ac25ed
+  FlutterMacOS: c232990155153907050900a2e175c7773903ba4e
+  libserialport: 1cb25e66ef3c92a8e59c2ea3820302c3fa2268cd
+
+PODFILE CHECKSUM: 1e95c36afbfd1cb6423ceca4de7a8e1b256fb6ac
+
+COCOAPODS: 1.17.0

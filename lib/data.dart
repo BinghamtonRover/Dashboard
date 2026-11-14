@@ -12,6 +12,7 @@ library data;
 
 export "package:burt_network/protobuf.dart";
 
+export "src/data/cubemars.dart";
 export "src/data/metrics/arm.dart";
 export "src/data/metrics/drive.dart";
 export "src/data/metrics/gripper.dart";

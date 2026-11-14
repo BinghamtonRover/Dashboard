@@ -26,7 +26,9 @@ class GamepadService extends Service {
   static const maxGamepads = 3;
 
   /// Gets a list of currently connected gamepads.
-  static Iterable<int> getConnectedGamepads() => isSdlSupported
+  ///
+  /// Returns nothing until SDL has been loaded, since SDL is what reads them.
+  static Iterable<int> getConnectedGamepads() => isSdlLoaded
     ? SdlGamepad.getConnectedGamepadIds() : [];
 
   /// A list of gamepads that are currently connected.

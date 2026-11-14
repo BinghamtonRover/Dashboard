@@ -146,7 +146,9 @@ class ViewsModel extends Model with PresetsModel {
   }
 
   /// Replaces the view at the given index with the new view.
-  void replaceView(int index, DashboardView newView, {bool ignoreErrors = false}) {
+  ///
+  /// Returns whether the view was replaced. Duplicate views are refused.
+  bool replaceView(int index, DashboardView newView, {bool ignoreErrors = false}) {
     if (views.contains(newView) && newView.name != Routes.blank) {
       if (!ignoreErrors) {
         models.home.setMessage(
@@ -154,10 +156,11 @@ class ViewsModel extends Model with PresetsModel {
           text: "That view is already on-screen",
         );
       }
-      return;
+      return false;
     }
     views[index] = newView;
     notifyListeners();
+    return true;
   }
 
   /// Adds or subtracts a number of views to/from the UI

@@ -19,6 +19,7 @@ export "src/pages/electrical.dart";
 export "src/pages/view.dart";
 export "src/pages/lidar.dart";
 export "src/pages/subsystems.dart";
+export "src/pages/ai_assistant.dart";
 
 /// The names of all the pages available in the app.
 ///
@@ -65,6 +66,9 @@ class Routes {
 
   /// The name of the base station page
   static const String baseStation = "Base Station";
+
+  /// The name of the AI assistant page.
+  static const String aiAssistant = "AI Assistant";
 
 	/// The name of the blank page.
 	static const String blank = "Remove View";

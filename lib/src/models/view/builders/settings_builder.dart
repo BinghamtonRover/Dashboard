@@ -135,10 +135,107 @@ class BaseStationSettingsBuilder extends ValueBuilder<BaseStationSettings> {
 
 /// A [ValueBuilder] representing an [ArmSettings].
 class ArmSettingsBuilder extends ValueBuilder<ArmSettings> {
-  /// Motor speed in electrical RPM.
-  final NumberBuilder<double> speedErpm;
-  /// Motor acceleration in electrical RPM per second.
-  final NumberBuilder<double> accelerationErpmPerSecond;
+  /// The view model for [ArmSettings.upperArmLength].
+  final NumberBuilder<double> upperArmLength;
+
+  /// The view model for [ArmSettings.forearmLength].
+  final NumberBuilder<double> forearmLength;
+
+  /// The view model for [ArmSettings.gripperLength].
+  final NumberBuilder<double> gripperLength;
+
+  /// The view model for [ArmSettings.bracketLength].
+  final NumberBuilder<double> bracketLength;
+
+  /// The view model for [ArmSettings.baseOffset].
+  final NumberBuilder<double> baseOffset;
+
+  /// The view model for [ArmSettings.motorMountLength].
+  final NumberBuilder<double> motorMountLength;
+
+  /// The view model for [ArmSettings.swivelSpeedErpm].
+  final NumberBuilder<double> swivelSpeedErpm;
+
+  /// The view model for [ArmSettings.swivelAccelerationErpm].
+  final NumberBuilder<double> swivelAccelerationErpm;
+
+  /// The view model for [ArmSettings.swivelGearRatio].
+  final NumberBuilder<double> swivelGearRatio;
+
+  /// The view model for [ArmSettings.swivelPolePairs].
+  final NumberBuilder<double> swivelPolePairs;
+
+  /// The view model for [ArmSettings.shoulderSpeedErpm].
+  final NumberBuilder<double> shoulderSpeedErpm;
+
+  /// The view model for [ArmSettings.shoulderAccelerationErpm].
+  final NumberBuilder<double> shoulderAccelerationErpm;
+
+  /// The view model for [ArmSettings.shoulderGearRatio].
+  final NumberBuilder<double> shoulderGearRatio;
+
+  /// The view model for [ArmSettings.shoulderPolePairs].
+  final NumberBuilder<double> shoulderPolePairs;
+
+  /// The view model for [ArmSettings.elbowSpeedErpm].
+  final NumberBuilder<double> elbowSpeedErpm;
+
+  /// The view model for [ArmSettings.elbowAccelerationErpm].
+  final NumberBuilder<double> elbowAccelerationErpm;
+
+  /// The view model for [ArmSettings.elbowGearRatio].
+  final NumberBuilder<double> elbowGearRatio;
+
+  /// The view model for [ArmSettings.elbowPolePairs].
+  final NumberBuilder<double> elbowPolePairs;
+
+  /// The view model for [ArmSettings.armRollSpeedErpm].
+  final NumberBuilder<double> armRollSpeedErpm;
+
+  /// The view model for [ArmSettings.armRollAccelerationErpm].
+  final NumberBuilder<double> armRollAccelerationErpm;
+
+  /// The view model for [ArmSettings.armRollGearRatio].
+  final NumberBuilder<double> armRollGearRatio;
+
+  /// The view model for [ArmSettings.armRollPolePairs].
+  final NumberBuilder<double> armRollPolePairs;
+
+  /// The view model for [ArmSettings.liftSpeedErpm].
+  final NumberBuilder<double> liftSpeedErpm;
+
+  /// The view model for [ArmSettings.liftAccelerationErpm].
+  final NumberBuilder<double> liftAccelerationErpm;
+
+  /// The view model for [ArmSettings.liftGearRatio].
+  final NumberBuilder<double> liftGearRatio;
+
+  /// The view model for [ArmSettings.liftPolePairs].
+  final NumberBuilder<double> liftPolePairs;
+
+  /// The view model for [ArmSettings.wristRollSpeedErpm].
+  final NumberBuilder<double> wristRollSpeedErpm;
+
+  /// The view model for [ArmSettings.wristRollAccelerationErpm].
+  final NumberBuilder<double> wristRollAccelerationErpm;
+
+  /// The view model for [ArmSettings.wristRollGearRatio].
+  final NumberBuilder<double> wristRollGearRatio;
+
+  /// The view model for [ArmSettings.wristRollPolePairs].
+  final NumberBuilder<double> wristRollPolePairs;
+
+  /// The view model for [ArmSettings.pinchSpeedErpm].
+  final NumberBuilder<double> pinchSpeedErpm;
+
+  /// The view model for [ArmSettings.pinchAccelerationErpm].
+  final NumberBuilder<double> pinchAccelerationErpm;
+
+  /// The view model for [ArmSettings.pinchGearRatio].
+  final NumberBuilder<double> pinchGearRatio;
+
+  /// The view model for [ArmSettings.pinchPolePairs].
+  final NumberBuilder<double> pinchPolePairs;
 
   /// The view model for [ArmSettings.swivel].
   final NumberBuilder<double> swivel;
@@ -169,8 +266,40 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings> {
 
   /// Modifies the given [ArmSettings].
   ArmSettingsBuilder(ArmSettings initial)
-    : speedErpm = NumberBuilder(initial.speedErpm),
-      accelerationErpmPerSecond = NumberBuilder(initial.accelerationErpmPerSecond),
+    : upperArmLength = NumberBuilder(initial.upperArmLength),
+      forearmLength = NumberBuilder(initial.forearmLength),
+      gripperLength = NumberBuilder(initial.gripperLength),
+      bracketLength = NumberBuilder(initial.bracketLength),
+      baseOffset = NumberBuilder(initial.baseOffset),
+      motorMountLength = NumberBuilder(initial.motorMountLength),
+      swivelSpeedErpm = NumberBuilder(initial.swivelSpeedErpm),
+      swivelAccelerationErpm = NumberBuilder(initial.swivelAccelerationErpm),
+      swivelGearRatio = NumberBuilder(initial.swivelGearRatio),
+      swivelPolePairs = NumberBuilder(initial.swivelPolePairs),
+      shoulderSpeedErpm = NumberBuilder(initial.shoulderSpeedErpm),
+      shoulderAccelerationErpm = NumberBuilder(initial.shoulderAccelerationErpm),
+      shoulderGearRatio = NumberBuilder(initial.shoulderGearRatio),
+      shoulderPolePairs = NumberBuilder(initial.shoulderPolePairs),
+      elbowSpeedErpm = NumberBuilder(initial.elbowSpeedErpm),
+      elbowAccelerationErpm = NumberBuilder(initial.elbowAccelerationErpm),
+      elbowGearRatio = NumberBuilder(initial.elbowGearRatio),
+      elbowPolePairs = NumberBuilder(initial.elbowPolePairs),
+      armRollSpeedErpm = NumberBuilder(initial.armRollSpeedErpm),
+      armRollAccelerationErpm = NumberBuilder(initial.armRollAccelerationErpm),
+      armRollGearRatio = NumberBuilder(initial.armRollGearRatio),
+      armRollPolePairs = NumberBuilder(initial.armRollPolePairs),
+      liftSpeedErpm = NumberBuilder(initial.liftSpeedErpm),
+      liftAccelerationErpm = NumberBuilder(initial.liftAccelerationErpm),
+      liftGearRatio = NumberBuilder(initial.liftGearRatio),
+      liftPolePairs = NumberBuilder(initial.liftPolePairs),
+      wristRollSpeedErpm = NumberBuilder(initial.wristRollSpeedErpm),
+      wristRollAccelerationErpm = NumberBuilder(initial.wristRollAccelerationErpm),
+      wristRollGearRatio = NumberBuilder(initial.wristRollGearRatio),
+      wristRollPolePairs = NumberBuilder(initial.wristRollPolePairs),
+      pinchSpeedErpm = NumberBuilder(initial.pinchSpeedErpm),
+      pinchAccelerationErpm = NumberBuilder(initial.pinchAccelerationErpm),
+      pinchGearRatio = NumberBuilder(initial.pinchGearRatio),
+      pinchPolePairs = NumberBuilder(initial.pinchPolePairs),
       swivel = NumberBuilder(initial.swivel),
       shoulder = NumberBuilder(initial.shoulder),
       elbow = NumberBuilder(initial.elbow),
@@ -180,8 +309,40 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings> {
       pinch = NumberBuilder(initial.pinch),
       ik = NumberBuilder(initial.ikIncrement),
       useIK = initial.useIK {
-    speedErpm.addListener(notifyListeners);
-    accelerationErpmPerSecond.addListener(notifyListeners);
+    upperArmLength.addListener(notifyListeners);
+    forearmLength.addListener(notifyListeners);
+    gripperLength.addListener(notifyListeners);
+    bracketLength.addListener(notifyListeners);
+    baseOffset.addListener(notifyListeners);
+    motorMountLength.addListener(notifyListeners);
+    swivelSpeedErpm.addListener(notifyListeners);
+    swivelAccelerationErpm.addListener(notifyListeners);
+    swivelGearRatio.addListener(notifyListeners);
+    swivelPolePairs.addListener(notifyListeners);
+    shoulderSpeedErpm.addListener(notifyListeners);
+    shoulderAccelerationErpm.addListener(notifyListeners);
+    shoulderGearRatio.addListener(notifyListeners);
+    shoulderPolePairs.addListener(notifyListeners);
+    elbowSpeedErpm.addListener(notifyListeners);
+    elbowAccelerationErpm.addListener(notifyListeners);
+    elbowGearRatio.addListener(notifyListeners);
+    elbowPolePairs.addListener(notifyListeners);
+    armRollSpeedErpm.addListener(notifyListeners);
+    armRollAccelerationErpm.addListener(notifyListeners);
+    armRollGearRatio.addListener(notifyListeners);
+    armRollPolePairs.addListener(notifyListeners);
+    liftSpeedErpm.addListener(notifyListeners);
+    liftAccelerationErpm.addListener(notifyListeners);
+    liftGearRatio.addListener(notifyListeners);
+    liftPolePairs.addListener(notifyListeners);
+    wristRollSpeedErpm.addListener(notifyListeners);
+    wristRollAccelerationErpm.addListener(notifyListeners);
+    wristRollGearRatio.addListener(notifyListeners);
+    wristRollPolePairs.addListener(notifyListeners);
+    pinchSpeedErpm.addListener(notifyListeners);
+    pinchAccelerationErpm.addListener(notifyListeners);
+    pinchGearRatio.addListener(notifyListeners);
+    pinchPolePairs.addListener(notifyListeners);
     swivel.addListener(notifyListeners);
     shoulder.addListener(notifyListeners);
     elbow.addListener(notifyListeners);
@@ -192,11 +353,57 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings> {
     ik.addListener(notifyListeners);
   }
 
+  /// Whether every joint speed and acceleration is a positive, finite number.
+  bool get _jointLimitsAreValid => [
+    swivelSpeedErpm,
+    swivelAccelerationErpm,
+    shoulderSpeedErpm,
+    shoulderAccelerationErpm,
+    elbowSpeedErpm,
+    elbowAccelerationErpm,
+    armRollSpeedErpm,
+    armRollAccelerationErpm,
+    liftSpeedErpm,
+    liftAccelerationErpm,
+    wristRollSpeedErpm,
+    wristRollAccelerationErpm,
+    pinchSpeedErpm,
+    pinchAccelerationErpm,
+  ].every((limit) => limit.isValid && limit.value.isFinite && limit.value >= 0);
+
+  /// Whether every link length is a positive, finite number.
+  bool get _linkLengthsAreValid => [
+    upperArmLength,
+    forearmLength,
+    gripperLength,
+    bracketLength,
+    baseOffset,
+    motorMountLength,
+  ].every((length) => length.isValid && length.value.isFinite && length.value > 0);
+
+  /// Whether every gear ratio and pole-pair count is a usable, positive number.
+  bool get _gearRatiosAreValid => [
+    swivelGearRatio,
+    shoulderGearRatio,
+    elbowGearRatio,
+    armRollGearRatio,
+    liftGearRatio,
+    wristRollGearRatio,
+    pinchGearRatio,
+    swivelPolePairs,
+    shoulderPolePairs,
+    elbowPolePairs,
+    armRollPolePairs,
+    liftPolePairs,
+    wristRollPolePairs,
+    pinchPolePairs,
+  ].every((ratio) => ratio.isValid && ratio.value.isFinite && ratio.value > 0);
+
   @override
   bool get isValid =>
-      speedErpm.isValid && speedErpm.value.isFinite && speedErpm.value >= 0 && speedErpm.value <= 327670 &&
-      accelerationErpmPerSecond.isValid && accelerationErpmPerSecond.value.isFinite &&
-      accelerationErpmPerSecond.value >= 0 && accelerationErpmPerSecond.value <= 327670 &&
+      _linkLengthsAreValid &&
+      _jointLimitsAreValid &&
+      _gearRatiosAreValid &&
       swivel.isValid &&
       shoulder.isValid &&
       elbow.isValid &&
@@ -214,8 +421,40 @@ class ArmSettingsBuilder extends ValueBuilder<ArmSettings> {
 
   @override
   ArmSettings get value => ArmSettings(
-    speedErpm: speedErpm.value,
-    accelerationErpmPerSecond: accelerationErpmPerSecond.value,
+    upperArmLength: upperArmLength.value,
+    forearmLength: forearmLength.value,
+    gripperLength: gripperLength.value,
+    bracketLength: bracketLength.value,
+    baseOffset: baseOffset.value,
+    motorMountLength: motorMountLength.value,
+    swivelSpeedErpm: swivelSpeedErpm.value,
+    swivelAccelerationErpm: swivelAccelerationErpm.value,
+    swivelGearRatio: swivelGearRatio.value,
+    swivelPolePairs: swivelPolePairs.value,
+    shoulderSpeedErpm: shoulderSpeedErpm.value,
+    shoulderAccelerationErpm: shoulderAccelerationErpm.value,
+    shoulderGearRatio: shoulderGearRatio.value,
+    shoulderPolePairs: shoulderPolePairs.value,
+    elbowSpeedErpm: elbowSpeedErpm.value,
+    elbowAccelerationErpm: elbowAccelerationErpm.value,
+    elbowGearRatio: elbowGearRatio.value,
+    elbowPolePairs: elbowPolePairs.value,
+    armRollSpeedErpm: armRollSpeedErpm.value,
+    armRollAccelerationErpm: armRollAccelerationErpm.value,
+    armRollGearRatio: armRollGearRatio.value,
+    armRollPolePairs: armRollPolePairs.value,
+    liftSpeedErpm: liftSpeedErpm.value,
+    liftAccelerationErpm: liftAccelerationErpm.value,
+    liftGearRatio: liftGearRatio.value,
+    liftPolePairs: liftPolePairs.value,
+    wristRollSpeedErpm: wristRollSpeedErpm.value,
+    wristRollAccelerationErpm: wristRollAccelerationErpm.value,
+    wristRollGearRatio: wristRollGearRatio.value,
+    wristRollPolePairs: wristRollPolePairs.value,
+    pinchSpeedErpm: pinchSpeedErpm.value,
+    pinchAccelerationErpm: pinchAccelerationErpm.value,
+    pinchGearRatio: pinchGearRatio.value,
+    pinchPolePairs: pinchPolePairs.value,
     shoulder: shoulder.value,
     elbow: elbow.value,
     swivel: swivel.value,

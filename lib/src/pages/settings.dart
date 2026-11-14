@@ -206,15 +206,66 @@ class SettingsPage extends ReactiveWidget<SettingsBuilder> {
       ValueEditor<ArmSettings>(
         name: "Arm settings",
         children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Text(
+              "Speeds and accelerations are in electrical RPM. Gear ratio is the number of motor "
+              "turns per joint turn, and pole pairs is a property of each motor: 21 for the "
+              "AKH70-48 and 14 for the AK45-36 and AK40-10.",
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Text(
+              "Link lengths are measured in meters and set the size of the arm "
+              "drawn on the arm page and the reach of its inverse kinematics. "
+              "The two bars pin to the rigid coupler bar; the next arm bar is "
+              "mounted on the coupler's front pin, parallel to it. The lower "
+              "motor sits on a link that pivots at the base, so its bar's pivot "
+              "moves with it.",
+            ),
+          ),
+          NumberEditor(name: "Four-bar bar length (m)", model: model.arm.upperArmLength),
+          NumberEditor(name: "Base pin spacing (m)", model: model.arm.baseOffset),
+          NumberEditor(name: "Lower motor mount length (m)", model: model.arm.motorMountLength),
+          NumberEditor(name: "Coupler bar length (m)", model: model.arm.bracketLength),
+          NumberEditor(name: "Coupler to wrist (m)", model: model.arm.forearmLength),
+          NumberEditor(name: "Gripper length (m)", model: model.arm.gripperLength),
           NumberEditor(name: "Swivel increment (radians/tick)", model: model.arm.swivel),
-          NumberEditor(name: "Motor speed (electrical RPM)", model: model.arm.speedErpm),
-          NumberEditor(name: "Motor acceleration (electrical RPM/s)", model: model.arm.accelerationErpmPerSecond),
+          NumberEditor(name: "Swivel speed (ERPM)", model: model.arm.swivelSpeedErpm),
+          NumberEditor(name: "Swivel acceleration (ERPM/s)", model: model.arm.swivelAccelerationErpm),
+          NumberEditor(name: "Swivel gear ratio", model: model.arm.swivelGearRatio),
+          NumberEditor(name: "Swivel pole pairs", model: model.arm.swivelPolePairs),
           NumberEditor(name: "Shoulder increment", model: model.arm.shoulder),
+          NumberEditor(name: "Shoulder speed (ERPM)", model: model.arm.shoulderSpeedErpm),
+          NumberEditor(name: "Shoulder acceleration (ERPM/s)", model: model.arm.shoulderAccelerationErpm),
+          NumberEditor(name: "Shoulder gear ratio", model: model.arm.shoulderGearRatio),
+          NumberEditor(name: "Shoulder pole pairs", model: model.arm.shoulderPolePairs),
           NumberEditor(name: "Elbow increment", model: model.arm.elbow),
+          NumberEditor(name: "Elbow speed (ERPM)", model: model.arm.elbowSpeedErpm),
+          NumberEditor(name: "Elbow acceleration (ERPM/s)", model: model.arm.elbowAccelerationErpm),
+          NumberEditor(name: "Elbow gear ratio", model: model.arm.elbowGearRatio),
+          NumberEditor(name: "Elbow pole pairs", model: model.arm.elbowPolePairs),
           NumberEditor(name: "Arm roll increment", model: model.arm.armRoll),
-          NumberEditor(name: "Wrist roll increment", model: model.arm.wristRoll),
+          NumberEditor(name: "Arm roll speed (ERPM)", model: model.arm.armRollSpeedErpm),
+          NumberEditor(name: "Arm roll acceleration (ERPM/s)", model: model.arm.armRollAccelerationErpm),
+          NumberEditor(name: "Arm roll gear ratio", model: model.arm.armRollGearRatio),
+          NumberEditor(name: "Arm roll pole pairs", model: model.arm.armRollPolePairs),
           NumberEditor(name: "Wrist pitch increment", model: model.arm.lift),
+          NumberEditor(name: "Wrist pitch speed (ERPM)", model: model.arm.liftSpeedErpm),
+          NumberEditor(name: "Wrist pitch acceleration (ERPM/s)", model: model.arm.liftAccelerationErpm),
+          NumberEditor(name: "Wrist pitch gear ratio", model: model.arm.liftGearRatio),
+          NumberEditor(name: "Wrist pitch pole pairs", model: model.arm.liftPolePairs),
+          NumberEditor(name: "Wrist roll increment", model: model.arm.wristRoll),
+          NumberEditor(name: "Wrist roll speed (ERPM)", model: model.arm.wristRollSpeedErpm),
+          NumberEditor(name: "Wrist roll acceleration (ERPM/s)", model: model.arm.wristRollAccelerationErpm),
+          NumberEditor(name: "Wrist roll gear ratio", model: model.arm.wristRollGearRatio),
+          NumberEditor(name: "Wrist roll pole pairs", model: model.arm.wristRollPolePairs),
           NumberEditor(name: "Pinch increment", model: model.arm.pinch),
+          NumberEditor(name: "Pinch speed (ERPM)", model: model.arm.pinchSpeedErpm),
+          NumberEditor(name: "Pinch acceleration (ERPM/s)", model: model.arm.pinchAccelerationErpm),
+          NumberEditor(name: "Pinch gear ratio", model: model.arm.pinchGearRatio),
+          NumberEditor(name: "Pinch pole pairs", model: model.arm.pinchPolePairs),
         ],
       ),
     ],
