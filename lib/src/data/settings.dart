@@ -351,6 +351,7 @@ class ArmSettings {
     "pinch": pinch,
     "lift": lift,
     "wristRoll": wristRoll,
+    "armRoll": armRoll,
     "useIK": useIK,
     "ikIncrement": ikIncrement,
   };
